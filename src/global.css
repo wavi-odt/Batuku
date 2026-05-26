@@ -1,0 +1,232 @@
+/* ─────────────────────────────────────────────────────────────────
+   global.css — Reset, base e classes utilitárias do Batuku
+   Sem Tailwind. Tudo escrito à mão sobre os tokens.
+   ───────────────────────────────────────────────────────────────── */
+
+/* ─── Reset ───────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; cursor: pointer; background: none; border: 0; color: inherit; }
+a { color: inherit; text-decoration: none; }
+ul { list-style: none; padding: 0; margin: 0; }
+
+/* ─── Base ────────────────────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+body {
+    font-family: var(--font-sans);
+    font-size: var(--fs-base);
+    line-height: var(--lh-base);
+    color: var(--color-ink);
+    background-color: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* ─── Layout primitives ───────────────────────────────────────────── */
+.container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: 0 var(--container-px);
+}
+
+.section {
+    padding: var(--section-py) 0;
+}
+
+/* ─── Eyebrow / label texto pequeno em maiúsculas ─────────────────── */
+.label-eyebrow {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-ink-mute);
+}
+
+/* ─── BOTÕES ──────────────────────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: 0;
+    border-radius: var(--radius-md);
+    padding: 14px 22px;
+    font-size: var(--fs-base);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out);
+}
+
+.btn:hover { transform: translateY(-1px); }
+
+.btn--primary {
+    background-color: var(--color-coral);
+    color: #fff;
+}
+.btn--primary:hover { background-color: var(--color-coral-soft); }
+
+.btn--ghost {
+    background-color: transparent;
+    color: var(--color-ink);
+    border: 1px solid var(--color-border-strong);
+}
+.btn--ghost:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.btn--sm { padding: 10px 18px; font-size: var(--fs-sm); border-radius: var(--radius-sm); }
+
+/* Aliases legacy — para Login/Register/etc. que ainda usam estas classes.
+   Mantêm o mesmo visual do .btn novo. Podes apagar quando migrares todas as páginas. */
+.btn-primary,
+.btn-secondary,
+.btn-ghost,
+.btn-danger {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border-radius: var(--radius-md);
+    padding: 14px 22px;
+    font-size: var(--fs-base);
+    font-weight: var(--fw-semibold);
+    text-decoration: none;
+    cursor: pointer;
+    border: 0;
+    transition: background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+.btn-primary   { background-color: var(--color-coral); color: #fff; }
+.btn-primary:hover { background-color: var(--color-coral-soft); }
+
+.btn-secondary { background-color: var(--color-ocean); color: #fff; }
+.btn-secondary:hover { background-color: #5C84FF; }
+
+.btn-ghost     { background-color: transparent; color: var(--color-ink); border: 1px solid var(--color-border-strong); }
+.btn-ghost:hover { background-color: rgba(255, 255, 255, 0.04); border-color: rgba(255, 255, 255, 0.3); }
+
+.btn-danger    { background-color: transparent; color: var(--color-danger); border: 1px solid var(--color-danger); }
+.btn-danger:hover { background-color: var(--color-danger); color: #fff; }
+
+/* ─── PILL ─────────────────────────────────────────────────────────── */
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    border: 1px solid var(--color-border-strong);
+    background-color: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-full);
+    padding: 6px 14px;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-soft);
+}
+.pill__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--color-coral);
+}
+
+/* ─── CARDS ────────────────────────────────────────────────────────── */
+.card {
+    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg-2) 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-7);
+    transition: border-color var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+.card:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+}
+
+/* ─── BADGES (mantém legado, valores actualizados) ─────────────────── */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    border-radius: var(--radius-full);
+    padding: 3px 10px;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    border: 1px solid transparent;
+}
+.badge--coral   { color: var(--color-coral);   background: var(--color-coral-dim);   border-color: rgba(232, 93, 60, 0.3); }
+.badge--ocean   { color: var(--color-ocean);   background: var(--color-ocean-dim);   border-color: rgba(59, 110, 255, 0.3); }
+.badge--mustard { color: var(--color-mustard); background: var(--color-mustard-dim); border-color: rgba(230, 165, 50, 0.3); }
+.badge--green   { color: var(--color-green);   background: var(--color-green-dim);   border-color: rgba(79, 174, 124, 0.3); }
+
+/* ─── INPUTS ───────────────────────────────────────────────────────── */
+.input {
+    display: block;
+    width: 100%;
+    border-radius: var(--radius-md);
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    padding: 12px 14px;
+    color: var(--color-ink);
+    font-size: var(--fs-base);
+    outline: none;
+    transition: border-color var(--duration-fast) var(--ease-out);
+}
+.input:focus { border-color: var(--color-coral); }
+.input::placeholder { color: var(--color-ink-mute); }
+
+/* ─── LINKS ────────────────────────────────────────────────────────── */
+.link {
+    color: var(--color-ink-soft);
+    transition: color var(--duration-fast) var(--ease-out);
+}
+.link:hover { color: var(--color-ink); }
+
+.link--coral { color: var(--color-coral); }
+.link--coral:hover { color: var(--color-coral-soft); }
+
+/* ─── DIVIDER ──────────────────────────────────────────────────────── */
+.divider {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin: var(--space-3) 0;
+}
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: var(--color-border);
+}
+.divider span {
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+}
+
+/* ─── REVEAL ON SCROLL ────────────────────────────────────────────── */
+.reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
+}
+.reveal.in { opacity: 1; transform: none; }
+
+/* ─── SCROLLBAR (dark) ────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: var(--radius-full); }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+
+/* ─── ACESSIBILIDADE — reduce motion ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+    .reveal { opacity: 1; transform: none; }
+}

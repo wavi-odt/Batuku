@@ -1,0 +1,98 @@
+/* ─── NavbarPublic ────────────────────────────────────────────────── */
+
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-nav);
+    background-color: rgba(10, 10, 11, 0.72);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--nav-h);
+    gap: var(--space-6);
+}
+
+.nav__brand {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-shrink: 0;
+}
+
+.nav__logo {
+    width: 36px;
+    height: 36px;
+}
+
+.nav__wordmark {
+    font-weight: var(--fw-semibold);
+    font-size: 19px;
+    letter-spacing: var(--tracking-snug);
+    color: var(--color-ink);
+}
+
+.nav__links {
+    display: flex;
+    gap: var(--space-8);
+    flex: 1;
+    justify-content: center;
+}
+
+.nav__link {
+    font-size: 14px;
+    color: var(--color-ink-soft);
+    transition: color var(--duration-fast) var(--ease-out);
+}
+.nav__link:hover { color: var(--color-ink); }
+.nav__link.is-active { color: var(--color-coral); font-weight: var(--fw-medium); }
+
+.nav__cta {
+    display: flex;
+    gap: var(--space-2);
+    flex-shrink: 0;
+}
+
+.nav__burger {
+    display: none;
+    color: var(--color-ink);
+}
+
+/* ─── Mobile ──────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+    .nav__links,
+    .nav__cta { display: none; }
+
+    .nav__burger { display: inline-flex; }
+}
+
+.nav__mobile {
+    display: none;
+    flex-direction: column;
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-4) var(--container-px);
+    background-color: var(--color-bg);
+}
+
+@media (max-width: 860px) {
+    .nav__mobile { display: flex; }
+}
+
+.nav__mobile-link {
+    padding: var(--space-3) 0;
+    font-size: var(--fs-md);
+    color: var(--color-ink-soft);
+    border-bottom: 1px solid var(--color-border);
+}
+.nav__mobile-link:last-of-type { border-bottom: 0; }
+
+.nav__mobile-cta {
+    display: flex;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+}

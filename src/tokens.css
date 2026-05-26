@@ -1,0 +1,145 @@
+/* ─────────────────────────────────────────────────────────────────
+   tokens.css — Design tokens do Batuku
+   Apenas variáveis CSS. Sem regras, sem imports.
+   Importado uma vez em main.jsx.
+   ───────────────────────────────────────────────────────────────── */
+
+:root {
+
+    /* ═══ COLORS · BASE / NEUTRALS ═══════════════════════════════════ */
+    --color-bg:             #0A0A0B;
+    --color-bg-2:           #101013;
+    --color-surface:        #15151A;
+    --color-surface-2:      #1C1C24;
+    --color-border:         rgba(255, 255, 255, 0.08);
+    --color-border-strong:  rgba(255, 255, 255, 0.16);
+
+    /* ═══ COLORS · INK (texto sobre dark) ════════════════════════════ */
+    --color-ink:        #F5F1EA;
+    --color-ink-soft:   #C7C0B5;
+    --color-ink-mute:   #9A938A;
+
+    /* ═══ COLORS · BRAND ═════════════════════════════════════════════ */
+    --color-coral:       #E85D3C;   /* primário · acento principal       */
+    --color-coral-soft:  #F08266;   /* hover do primário                 */
+    --color-coral-dim:   rgba(232, 93, 60, 0.16);
+    --color-ocean:       #3B6EFF;   /* secundário · azul                 */
+    --color-ocean-dim:   rgba(59, 110, 255, 0.16);
+    --color-mustard:     #E6A532;   /* gamificação · dourado             */
+    --color-mustard-dim: rgba(230, 165, 50, 0.16);
+    --color-green:       #4FAE7C;   /* sucesso · delta positivo          */
+    --color-green-dim:   rgba(79, 174, 124, 0.16);
+    --color-pink:        #F2C4B8;
+    --color-danger:      #F87171;
+
+    /* ═══ COLORS · LEGADO (manter durante a migração) ════════════════ */
+    --batuku-blue:             #1A3FA8;
+    --batuku-blue-light:       #2F5FD4;
+    --batuku-blue-light-light: #2FEFFF;
+    --batuku-blue-pale:        #E8EDFB;
+    --batuku-gold:             #C9860A;
+    --batuku-gold-bold:        #6E5415;
+    --batuku-gold-light:       #F5A623;
+    --batuku-gold-pastel:      #FFEE8C;
+    --batuku-gold-pale:        #FEF3E2;
+    --batuku-dark:             #0D1B3E;
+    --batuku-dark-light:       #0D1B5F;
+    --batuku-muted:            #5C6A8A;
+    --batuku-green:            #0F6E56;
+    --batuku-green-pale:       #E1F5EE;
+
+    /* ═══ TYPOGRAPHY ═════════════════════════════════════════════════ */
+    --font-sans: 'Space Grotesk', system-ui, -apple-system, Segoe UI, sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    /* Escala tipográfica */
+    --fs-xs:      12px;
+    --fs-sm:      13px;
+    --fs-base:    15px;
+    --fs-md:      17px;
+    --fs-lg:      19px;
+    --fs-xl:      22px;
+    --fs-2xl:     28px;
+    --fs-3xl:     36px;
+    --fs-4xl:     48px;
+    --fs-display: clamp(48px, 6vw, 84px);
+
+    /* Alturas de linha */
+    --lh-tight: 1.05;
+    --lh-snug:  1.25;
+    --lh-base:  1.5;
+    --lh-loose: 1.6;
+
+    /* Pesos */
+    --fw-regular:  400;
+    --fw-medium:   500;
+    --fw-semibold: 600;
+    --fw-bold:     700;
+
+    /* Tracking */
+    --tracking-tight: -0.03em;
+    --tracking-snug:  -0.02em;
+    --tracking-base:   0;
+    --tracking-wide:   0.08em;
+    --tracking-wider:  0.16em;
+
+    /* ═══ SPACING (escala de 4px) ════════════════════════════════════ */
+    --space-1:  4px;
+    --space-2:  8px;
+    --space-3:  12px;
+    --space-4:  16px;
+    --space-5:  20px;
+    --space-6:  24px;
+    --space-7:  28px;
+    --space-8:  32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-20: 80px;
+    --space-24: 96px;
+    --space-32: 128px;
+
+    /* ═══ RADII ═════════════════════════════════════════════════════ */
+    --radius-xs:   4px;
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   14px;
+    --radius-xl:   18px;
+    --radius-2xl:  24px;
+    --radius-full: 9999px;
+
+    /* ═══ SHADOWS ═══════════════════════════════════════════════════ */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4);
+    --shadow-glow-coral: 0 0 40px rgba(232, 93, 60, 0.25);
+
+    /* ═══ LAYOUT ════════════════════════════════════════════════════ */
+    --container-max: 1280px;
+    --container-px:  32px;
+    --section-py:    96px;
+    --nav-h:         72px;
+
+    /* ═══ MOTION ════════════════════════════════════════════════════ */
+    --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out:   cubic-bezier(0.65, 0, 0.35, 1);
+    --duration-fast: 120ms;
+    --duration-base: 200ms;
+    --duration-slow: 400ms;
+
+    /* ═══ Z-INDEX ═══════════════════════════════════════════════════ */
+    --z-nav:     50;
+    --z-modal:   100;
+    --z-toast:   200;
+}
+
+/* ─── Mobile overrides ────────────────────────────────────────────── */
+@media (max-width: 760px) {
+    :root {
+        --container-px: 20px;
+        --section-py:   64px;
+        --fs-2xl:       24px;
+        --fs-3xl:       30px;
+        --fs-4xl:       38px;
+    }
+}

@@ -1,0 +1,52 @@
+/* ─── How It Works ────────────────────────────────────────────────── */
+
+.how__head { margin-bottom: var(--space-12); }
+
+.how__title {
+    font-size: var(--fs-4xl);
+    letter-spacing: var(--tracking-snug);
+    font-weight: var(--fw-semibold);
+    margin: var(--space-3) 0 0;
+    line-height: var(--lh-tight);
+    max-width: 720px;
+}
+
+.how__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+@media (max-width: 860px) { .how__grid { grid-template-columns: 1fr; } }
+
+.how__step {
+    position: relative;
+    padding-top: var(--space-7);
+    border-top: 1px solid var(--color-border-strong);
+}
+
+.how__step-num {
+    position: absolute;
+    top: -10px;
+    left: 0;
+    padding-right: var(--space-4);
+    background-color: var(--color-bg);
+    font-size: var(--fs-sm);
+    color: var(--color-coral);
+    font-weight: var(--fw-semibold);
+    font-family: var(--font-mono);
+}
+
+.how__step-title {
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-semibold);
+    margin: var(--space-2) 0 var(--space-3);
+    letter-spacing: var(--tracking-snug);
+}
+
+.how__step-body {
+    font-size: var(--fs-base);
+    line-height: var(--lh-base);
+    color: var(--color-ink-soft);
+    margin: 0;
+}

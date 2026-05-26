@@ -1,0 +1,82 @@
+/* ─── Features ────────────────────────────────────────────────────── */
+
+.features__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: var(--space-8);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-12);
+}
+
+.features__title {
+    font-size: var(--fs-4xl);
+    letter-spacing: var(--tracking-snug);
+    font-weight: var(--fw-semibold);
+    margin: var(--space-3) 0 0;
+    line-height: var(--lh-tight);
+}
+
+.features__lede {
+    max-width: 380px;
+    color: var(--color-ink-soft);
+    font-size: var(--fs-md);
+    line-height: var(--lh-base);
+    margin: 0;
+}
+
+.features__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+}
+
+@media (max-width: 1000px) { .features__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px)  { .features__grid { grid-template-columns: 1fr; } }
+
+.features__card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    min-height: 240px;
+}
+
+.features__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+}
+
+.features__card--coral   .features__icon { background-color: var(--color-coral-dim);   color: var(--color-coral); }
+.features__card--ocean   .features__icon { background-color: var(--color-ocean-dim);   color: var(--color-ocean); }
+.features__card--mustard .features__icon { background-color: var(--color-mustard-dim); color: var(--color-mustard); }
+.features__card--green   .features__icon { background-color: var(--color-green-dim);   color: var(--color-green); }
+
+.features__card-title {
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-semibold);
+    margin: 0 0 var(--space-2);
+    letter-spacing: var(--tracking-snug);
+}
+
+.features__card-body {
+    font-size: 14px;
+    line-height: var(--lh-base);
+    color: var(--color-ink-soft);
+    margin: 0;
+}
+
+.features__link {
+    margin-top: auto;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+}
+
+.features__card--coral   .features__link { color: var(--color-coral); }
+.features__card--ocean   .features__link { color: var(--color-ocean); }
+.features__card--mustard .features__link { color: var(--color-mustard); }
+.features__card--green   .features__link { color: var(--color-green); }

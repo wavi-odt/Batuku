@@ -1,0 +1,84 @@
+/* ─── Discord ─────────────────────────────────────────────────────── */
+
+.discord__card {
+    padding: var(--space-12) var(--space-16);
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, rgba(88, 101, 242, 0.6), rgba(40, 30, 60, 0.4));
+    border: 1px solid rgba(120, 130, 240, 0.4);
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+}
+
+@media (max-width: 1000px) {
+    .discord__card {
+        grid-template-columns: 1fr;
+        gap: var(--space-8);
+        padding: var(--space-10) var(--space-8);
+    }
+}
+
+.discord__eyebrow { color: #C7C8FF; }
+
+.discord__title {
+    font-size: clamp(32px, 3.8vw, 46px);
+    letter-spacing: var(--tracking-snug);
+    font-weight: var(--fw-semibold);
+    margin: var(--space-3) 0 var(--space-4);
+    line-height: 1.1;
+}
+
+.discord__lede {
+    font-size: var(--fs-md);
+    line-height: var(--lh-base);
+    color: var(--color-ink-soft);
+    margin: 0 0 var(--space-6);
+}
+
+.discord__btn {
+    background-color: #5865F2;
+    color: #fff;
+}
+.discord__btn:hover { background-color: #4651D6; }
+
+/* ─── Chat ────────────────────────────────────────────────────────── */
+.discord__chat {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.discord__msg {
+    display: flex;
+    gap: var(--space-3);
+    align-items: flex-start;
+    padding: 12px 14px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    font-size: 14px;
+}
+
+.discord__msg-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.discord__msg-body { flex: 1; }
+
+.discord__msg-head {
+    display: flex;
+    gap: var(--space-2);
+    align-items: baseline;
+}
+
+.discord__msg-head strong { font-size: 13px; }
+
+.discord__msg-time {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+}
+
+.discord__msg-text { color: var(--color-ink-soft); }
