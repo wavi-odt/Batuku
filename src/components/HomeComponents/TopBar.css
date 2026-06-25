@@ -1,0 +1,113 @@
+/* ─── TopBar ──────────────────────────────────────────────────────── */
+
+.topbar {
+    grid-area: topbar;
+    height: 64px;
+    background-color: rgba(10, 10, 11, 0.72);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 0 28px;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+@media (max-width: 900px) {
+    .topbar { padding: 0 16px; }
+}
+
+/* ─── Search ──────────────────────────────────────────────────────── */
+.topbar__search {
+    flex: 1;
+    max-width: 520px;
+    position: relative;
+}
+
+.topbar__search-input {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 10px 16px 10px 42px;
+    color: var(--color-ink);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color var(--duration-fast) var(--ease-out);
+}
+.topbar__search-input::placeholder { color: var(--color-ink-mute); }
+.topbar__search-input:focus { border-color: var(--color-coral); }
+
+.topbar__search-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-ink-mute);
+    pointer-events: none;
+}
+
+.topbar__spacer { flex: 1; }
+
+/* ─── Buttons ─────────────────────────────────────────────────────── */
+.topbar__action,
+.topbar__publish {
+    height: 38px;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-soft);
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    position: relative;
+    transition: background-color var(--duration-fast) var(--ease-out),
+                color var(--duration-fast) var(--ease-out);
+    text-decoration: none;
+}
+
+.topbar__action {
+    width: 38px;
+}
+.topbar__action:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--color-ink);
+}
+
+.topbar__publish {
+    padding: 0 14px;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: var(--fw-semibold);
+    color: var(--color-coral);
+    background-color: var(--color-coral-dim);
+}
+.topbar__publish:hover {
+    background-color: rgba(232, 93, 60, 0.25);
+}
+
+.topbar__action-dot {
+    position: absolute;
+    top: 8px;
+    right: 9px;
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-coral);
+    border: 2px solid var(--color-bg);
+    border-radius: 50%;
+}
+
+.topbar__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 1px solid var(--color-border-strong);
+    flex-shrink: 0;
+}

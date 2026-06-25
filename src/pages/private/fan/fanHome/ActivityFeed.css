@@ -1,0 +1,55 @@
+/* ─── Activity Feed ───────────────────────────────────────────────── */
+
+.activity {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+}
+
+.activity__title {
+    font-size: 15px;
+    font-weight: var(--fw-semibold);
+    margin: 0 0 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity__item {
+    display: flex;
+    align-items: start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+.activity__item:last-child { border-bottom: 0; }
+
+.activity__dot {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.activity__dot--badge   { background-color: rgba(230, 165, 50, 0.15); color: var(--color-mustard); }
+.activity__dot--follow  { background-color: rgba(232, 93, 60, 0.15);  color: var(--color-coral); }
+.activity__dot--comment { background-color: rgba(59, 110, 255, 0.15); color: var(--color-ocean); }
+.activity__dot--like    { background-color: rgba(242, 196, 184, 0.15); color: var(--color-pink); }
+.activity__dot--level   { background-color: rgba(79, 174, 124, 0.15); color: var(--color-green); }
+
+.activity__body { flex: 1; }
+
+.activity__text {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--color-ink-soft);
+}
+
+.activity__time {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    margin-top: 3px;
+}

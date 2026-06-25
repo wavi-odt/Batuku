@@ -1,0 +1,79 @@
+/* ─── Following Artists ───────────────────────────────────────────── */
+
+.following {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 700px) { .following { grid-template-columns: repeat(2, 1fr); } }
+
+.follow-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color var(--duration-base) var(--ease-out),
+                transform var(--duration-base) var(--ease-out);
+    position: relative;
+    color: inherit;
+    font-family: inherit;
+}
+.follow-card:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+}
+
+.follow-card__avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.follow-card__live {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(50%);
+    background-color: var(--color-coral);
+    color: #fff;
+    font-size: 9px;
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    border: 2px solid var(--color-bg);
+}
+
+.follow-card__name {
+    font-size: 14px;
+    font-weight: var(--fw-semibold);
+    margin: 0 0 2px;
+}
+
+.follow-card__genre {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    margin: 0 0 10px;
+}
+
+.follow-card__new {
+    font-size: 10px;
+    color: var(--color-mustard);
+    background-color: rgba(230, 165, 50, 0.1);
+    border: 1px solid rgba(230, 165, 50, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 3px 8px;
+    display: inline-block;
+}
+
+.follow-card__none {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+}

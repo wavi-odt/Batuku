@@ -1,0 +1,85 @@
+/* ─── Continue Listening — Track cards ────────────────────────────── */
+
+.continue {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 1100px) { .continue { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px)  { .continue { grid-template-columns: repeat(2, 1fr); } }
+
+.track-card {
+    background: linear-gradient(180deg, var(--color-surface), var(--color-bg-2));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 10px;
+    cursor: pointer;
+    transition: border-color var(--duration-base) var(--ease-out),
+                transform var(--duration-base) var(--ease-out);
+    text-align: left;
+    color: inherit;
+    width: 100%;
+    font-family: inherit;
+}
+.track-card:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+}
+
+.track-card__cover {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.track-card__play {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: var(--color-coral);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity var(--duration-base) var(--ease-out),
+                transform var(--duration-base) var(--ease-out);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+.track-card:hover .track-card__play {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.track-card__title {
+    font-size: 14px;
+    font-weight: var(--fw-semibold);
+    margin: 0 4px 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-card__artist {
+    font-size: 12px;
+    color: var(--color-ink-mute);
+    margin: 0 4px 8px;
+}
+
+.track-card__progress {
+    height: 3px;
+    background-color: rgba(255, 255, 255, 0.06);
+    border-radius: 2px;
+    margin: 0 4px;
+    overflow: hidden;
+}
+
+.track-card__progress-fill {
+    height: 100%;
+    background-color: var(--color-coral);
+    border-radius: 2px;
+}

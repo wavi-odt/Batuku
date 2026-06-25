@@ -1,0 +1,92 @@
+/* ─── Pending Comments ────────────────────────────────────────────── */
+
+.comments-card__title {
+    font-size: 14px;
+    font-weight: var(--fw-semibold);
+    margin: 0 0 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comments-card__count {
+    font-size: 10px;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    background-color: var(--color-coral-dim);
+    color: var(--color-coral);
+    border: 1px solid rgba(232, 93, 60, 0.3);
+}
+
+.comment-row {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+.comment-row:last-child { border-bottom: 0; }
+
+.comment-row__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.comment-row__avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.comment-row__user {
+    font-size: 13px;
+    font-weight: var(--fw-semibold);
+}
+
+.comment-row__track {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+}
+
+.comment-row__time {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    margin-left: auto;
+}
+
+.comment-row__text {
+    font-size: 13px;
+    color: var(--color-ink-soft);
+    line-height: var(--lh-base);
+    margin: 0 0 8px;
+    padding-left: 36px;
+}
+
+.comment-row__actions {
+    display: flex;
+    gap: 8px;
+    padding-left: 36px;
+}
+
+.comment-row__btn {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    background-color: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--color-border);
+    color: var(--color-ink-soft);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color var(--duration-fast) var(--ease-out);
+}
+.comment-row__btn:hover { background-color: rgba(255, 255, 255, 0.08); }
+
+.comment-row__btn--primary {
+    background-color: var(--color-coral-dim);
+    border-color: rgba(232, 93, 60, 0.3);
+    color: var(--color-coral);
+}
+.comment-row__btn--primary:hover { background-color: rgba(232, 93, 60, 0.25); }

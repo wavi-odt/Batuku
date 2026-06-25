@@ -1,0 +1,35 @@
+/* ─── Discord Card ────────────────────────────────────────────────── */
+
+.discord-card {
+    background: linear-gradient(135deg, rgba(88, 101, 242, 0.2), rgba(40, 30, 60, 0.4));
+    border: 1px solid rgba(120, 130, 240, 0.3);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+}
+
+.discord-card__title {
+    font-size: 16px;
+    font-weight: var(--fw-semibold);
+    margin: 8px 0 6px;
+}
+
+.discord-card__sub {
+    font-size: 12px;
+    color: var(--color-ink-soft);
+    margin: 0 0 14px;
+}
+.discord-card__sub strong { color: var(--color-ink); font-weight: var(--fw-semibold); }
+
+.discord-card__btn {
+    background-color: #5865F2;
+    color: #fff;
+    border-radius: var(--radius-md);
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: var(--fw-semibold);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color var(--duration-fast) var(--ease-out);
+}
+.discord-card__btn:hover { background-color: #4651D6; }

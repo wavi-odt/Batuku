@@ -1,0 +1,98 @@
+/* ─── Level Card ──────────────────────────────────────────────────── */
+
+.level-card {
+    position: relative;
+    overflow: hidden;
+    padding: 22px;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, rgba(232, 93, 60, 0.18), rgba(230, 165, 50, 0.10));
+    border: 1px solid rgba(232, 93, 60, 0.35);
+}
+
+.level-card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 18px;
+}
+
+.level-card__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-coral);
+    font-weight: var(--fw-semibold);
+}
+
+.level-card__rank {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    text-align: right;
+}
+.level-card__rank strong {
+    color: var(--color-ink);
+    font-weight: var(--fw-semibold);
+}
+
+.level-card__num-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.level-card__num {
+    font-size: 56px;
+    line-height: 1;
+    font-weight: var(--fw-semibold);
+    letter-spacing: -0.03em;
+}
+
+.level-card__num-label {
+    font-size: 14px;
+    color: var(--color-ink-mute);
+}
+
+.level-card__bar {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.level-card__bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-coral), var(--color-mustard));
+    border-radius: 3px;
+    transition: width var(--duration-slow) var(--ease-out);
+}
+
+.level-card__bar-label {
+    font-size: 12px;
+    color: var(--color-ink-mute);
+}
+.level-card__bar-label strong { color: var(--color-ink); font-weight: var(--fw-semibold); }
+
+.level-card__stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.level-card__stat-v {
+    font-size: 20px;
+    font-weight: var(--fw-semibold);
+    line-height: 1;
+}
+
+.level-card__stat-l {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}

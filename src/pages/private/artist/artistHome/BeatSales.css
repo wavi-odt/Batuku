@@ -1,0 +1,70 @@
+/* ─── Beat Sales ──────────────────────────────────────────────────── */
+
+.sales-card__title {
+    font-size: 14px;
+    font-weight: var(--fw-semibold);
+    margin: 0 0 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sales-card__revenue {
+    background: linear-gradient(135deg, rgba(79, 174, 124, 0.12), transparent);
+    border: 1px solid rgba(79, 174, 124, 0.25);
+    border-radius: var(--radius-md);
+    padding: 14px;
+    margin-bottom: 12px;
+}
+
+.sales-card__revenue-label {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+}
+
+.sales-card__revenue-value {
+    font-size: 26px;
+    font-weight: var(--fw-semibold);
+    color: var(--color-green);
+    letter-spacing: var(--tracking-snug);
+}
+
+.sales-card__revenue-delta {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    margin-top: 4px;
+}
+
+.sales-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+.sales-row:last-child { border-bottom: 0; }
+
+.sales-row__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.sales-row__title {
+    font-size: 13px;
+    font-weight: var(--fw-semibold);
+}
+
+.sales-row__sub {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+}
+
+.sales-row__price {
+    font-size: 14px;
+    font-weight: var(--fw-semibold);
+    color: var(--color-green);
+}

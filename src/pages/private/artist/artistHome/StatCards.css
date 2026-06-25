@@ -1,0 +1,60 @@
+/* ─── Stat Cards (4 up) ───────────────────────────────────────────── */
+
+.stats4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 28px;
+}
+
+@media (max-width: 1100px) { .stats4 { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px)  { .stats4 { grid-template-columns: 1fr; } }
+
+.stat-card {
+    background: linear-gradient(180deg, var(--color-surface), var(--color-bg-2));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+}
+
+.stat-card__label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-ink-mute);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stat-card__icon {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.stat-card__icon--coral   { background-color: rgba(232, 93, 60, 0.15);  color: var(--color-coral); }
+.stat-card__icon--ocean   { background-color: rgba(59, 110, 255, 0.15); color: var(--color-ocean); }
+.stat-card__icon--mustard { background-color: rgba(230, 165, 50, 0.15); color: var(--color-mustard); }
+.stat-card__icon--green   { background-color: rgba(79, 174, 124, 0.15); color: var(--color-green); }
+
+.stat-card__value {
+    font-size: 30px;
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-snug);
+    line-height: 1;
+}
+
+.stat-card__delta {
+    font-size: 12px;
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+.stat-card__delta--up   { color: var(--color-green); }
+.stat-card__delta--down { color: var(--color-danger); }
+.stat-card__delta-period { color: var(--color-ink-mute); }

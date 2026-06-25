@@ -1,0 +1,50 @@
+/* ─── Recommended ─────────────────────────────────────────────────── */
+
+.reco {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+@media (max-width: 1100px) { .reco { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 600px)  { .reco { grid-template-columns: 1fr; } }
+
+.reco__card {
+    background: linear-gradient(180deg, var(--color-surface), var(--color-bg-2));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color var(--duration-base) var(--ease-out),
+                transform var(--duration-base) var(--ease-out);
+    text-align: left;
+    color: inherit;
+    font-family: inherit;
+}
+.reco__card:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+}
+
+.reco__title {
+    font-size: 15px;
+    font-weight: var(--fw-semibold);
+    margin: 0;
+    letter-spacing: var(--tracking-snug);
+}
+
+.reco__artist {
+    font-size: 12px;
+    color: var(--color-ink-mute);
+    margin-top: 2px;
+}
+
+.reco__reason {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    font-style: italic;
+    margin-top: auto;
+}

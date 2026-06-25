@@ -5,16 +5,18 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaDiscord, FaGoogle, FaApple } from 'react-icons/fa'
-import { HiMail, HiLockClosed, HiEye, HiEyeOff } from 'react-icons/hi'
+import { HiUser, HiLockClosed, HiEye, HiEyeOff } from 'react-icons/hi'
 import AuthSide from '../../components/AuthComponents/AuthSide.jsx'
+import { saveAuth, getRole } from '../../utils/auth.js'
 import '../../components/AuthComponents/auth.css'
 
 export default function Login() {
     const navigate = useNavigate();
     const [showPass, setShowPass] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [error, setError]     = useState('');
-    const [form, setForm]       = useState({ email: '', password: '', remember: true });
+    const [loading, setLoading]   = useState(false);
+    const [error, setError]       = useState('');
+    // campo chama-se "identifier" internamente — pode ser email ou username
+    const [form, setForm] = useState({ identifier: '', password: '', remember: true });
 
     const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -23,16 +25,25 @@ export default function Login() {
         setError('');
         setLoading(true);
         try {
-            // TODO: substituir pela tua chamada real ao backend (Spring Boot)
-            const res = await fetch('/api/auth/login', {
+            // O backend (JwtAuthenticationController) espera o campo "username".
+            // Enviamos o que o utilizador escreveu — pode ser email ou username.
+            // O JwtUserDetailsService tenta os dois automaticamente.
+            const res = await fetch('http://localhost:8080/authenticate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: form.email, password: form.password }),
+                body: JSON.stringify({
+                    username: form.identifier,
+                    password: form.password,
+                }),
             });
-            if (!res.ok) throw new Error('Email ou password inválidos.');
-            // const data = await res.json();
-            // guarda token, faz navigate
-            navigate('/');
+
+            if (!res.ok) throw new Error('Email/username ou password inválidos.');
+
+            const data = await res.json();
+
+            saveAuth(data.token);
+            const role = getRole();
+            navigate(role === 'artist' ? '/dashboard' : '/home');
         } catch (err) {
             setError(err.message || 'Não foi possível entrar. Tenta novamente.');
         } finally {
@@ -73,21 +84,22 @@ export default function Login() {
                         </button>
                     </div>
 
-                    <div className="divider"><span>ou com email</span></div>
+                    <div className="divider"><span>ou com email / username</span></div>
 
+                    {/* Campo aceita email OU username */}
                     <div className="auth__field">
-                        <label htmlFor="email" className="auth__label">Email</label>
+                        <label htmlFor="identifier" className="auth__label">Email ou username</label>
                         <div className="auth__input-wrap">
-                            <HiMail size={18} className="auth__icon" />
+                            <HiUser size={18} className="auth__icon" />
                             <input
-                                id="email"
-                                type="email"
+                                id="identifier"
+                                type="text"
                                 className="input"
-                                placeholder="tu@batuku.cv"
-                                autoComplete="email"
+                                placeholder="tu@batuku.cv ou djossa_cv"
+                                autoComplete="username"
                                 required
-                                value={form.email}
-                                onChange={(e) => update('email', e.target.value)}
+                                value={form.identifier}
+                                onChange={(e) => update('identifier', e.target.value)}
                             />
                         </div>
                     </div>
