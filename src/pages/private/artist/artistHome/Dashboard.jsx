@@ -4,6 +4,7 @@
 
 import AppShell      from '../../../../components/HomeComponents/AppShell.jsx'
 import { homeData }  from '../../../../data/home.js'
+import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import VerifyBanner  from './VerifyBanner.jsx'
 import StatCards     from './StatCards.jsx'
 import GrowthChart   from './GrowthChart.jsx'
@@ -15,14 +16,15 @@ import BeatSales     from './BeatSales.jsx'
 import './Dashboard.css'
 
 export default function Dashboard() {
-    const u = homeData.artist;
+    const u        = homeData.artist;
+    const realUser = useCurrentUser();
 
     return (
         <AppShell role="artist">
 
             {/* ─── Greeting ──────────────────────────────────────── */}
             <div className="dash__greet">
-                <h1 className="dash__greet-title">Olá, {u.name}.</h1>
+                <h1 className="dash__greet-title">Olá, {realUser?.name || u.name}.</h1>
                 <p className="dash__greet-sub">
                     A tua música está em <strong>#{u.rank} no ranking semanal</strong> ·{' '}
                     {u.followers.toLocaleString('pt-PT')} seguidores ·{' '}

@@ -7,18 +7,20 @@
    por um fetch que devolva o mesmo shape (ver data/profile.js).
    ───────────────────────────────────────────────────────────────── */
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FaTrophy, FaCheckCircle, FaPlus, FaCog } from 'react-icons/fa'
+import { FaTrophy, FaCheckCircle, FaCamera, FaCog } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
 import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
 import { profileData } from '../../../data/profile'
+import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import {
     FanOverview, FanPlaylists, FanAchievements, FanFollowing, FanActivity,
 } from './FanPanels'
 import {
     ArtistOverview, ArtistTracks, ArtistAboutPanel, ArtistAchievements,
 } from './ArtistPanels'
+import AvatarUploader from './AvatarUploader'
 import './Profile.css'
 
 /* ─── Tab maps ────────────────────────────────────────────────────── */
@@ -38,7 +40,7 @@ const ARTIST_TABS = [
 ];
 
 /* ─── Header ──────────────────────────────────────────────────────── */
-function ProfileHeader({ role, data }) {
+function ProfileHeader({ role, data, avatarUrl, onAvatarEdit }) {
     const isArtist = role === 'artist';
     return (
         <>
@@ -56,9 +58,20 @@ function ProfileHeader({ role, data }) {
             </div>
 
             <div className="prof__header">
-                <div className={'prof__avatar' + (isArtist ? ' prof__avatar--artist' : '')}>
-                    <ArtistArtwork shape={data.avatar.shape} hue={data.avatar.hue} rounded={0} />
-                    <span className="prof__avatar-edit"><FaPlus size={13} /></span>
+                <div
+                    className={'prof__avatar' + (isArtist ? ' prof__avatar--artist' : '')}
+                    role="button"
+                    tabIndex={0}
+                    onClick={onAvatarEdit}
+                    onKeyDown={e => e.key === 'Enter' && onAvatarEdit()}
+                    title="Alterar avatar"
+                    style={{ cursor: 'pointer' }}
+                >
+                    {avatarUrl
+                        ? <img src={avatarUrl} alt="Avatar" className="prof__avatar-img" />
+                        : <ArtistArtwork shape={data.avatar.shape} hue={data.avatar.hue} rounded={0} />
+                    }
+                    <span className="prof__avatar-edit"><FaCamera size={13} /></span>
                 </div>
 
                 <div className="prof__identity">
@@ -126,16 +139,44 @@ function ProfileStats({ role, data }) {
 
 /* ─── Page ────────────────────────────────────────────────────────── */
 export default function Profile({ role = 'fan' }) {
-    const tabs = role === 'artist' ? ARTIST_TABS : FAN_TABS;
-    const data = role === 'artist' ? profileData.artist : profileData.fan;
-    const [active, setActive] = useState(0);
+    const tabs    = role === 'artist' ? ARTIST_TABS : FAN_TABS;
+    const mock    = role === 'artist' ? profileData.artist : profileData.fan;
+    const realUser = useCurrentUser();
+
+    const data = {
+        ...mock,
+        ...(realUser?.name     && { name:     realUser.name }),
+        ...(realUser?.handle   && { handle:   realUser.handle }),
+        ...(realUser?.bio      && { bio:      realUser.bio }),
+        ...(realUser?.joined   && { joined:   realUser.joined }),
+        ...(realUser?.location && {
+            country:  realUser.location,
+            location: realUser.location,
+            ...(role === 'artist' && mock.about && {
+                about: { ...mock.about, location: realUser.location },
+            }),
+        }),
+    };
+
+    const [active, setActive]             = useState(0);
+    const [avatarUrl, setAvatarUrl]       = useState(null);
+    const [showUploader, setShowUploader] = useState(false);
+
+    useEffect(() => {
+        if (realUser?.picture) setAvatarUrl(realUser.picture);
+    }, [realUser?.picture]);
 
     const ActivePanel = tabs[active].Panel;
 
     return (
         <AppShell role={role}>
             <div style={{ marginTop: -8 }}>
-                <ProfileHeader role={role} data={data} />
+                <ProfileHeader
+                    role={role}
+                    data={data}
+                    avatarUrl={avatarUrl}
+                    onAvatarEdit={() => setShowUploader(true)}
+                />
                 <ProfileStats role={role} data={data} />
 
                 <div className="prof__tabs">
@@ -158,6 +199,15 @@ export default function Profile({ role = 'fan' }) {
                     />
                 </div>
             </div>
+
+            {showUploader && (
+                <AvatarUploader
+                    currentAvatarUrl={avatarUrl}
+                    isArtist={role === 'artist'}
+                    onSuccess={url => setAvatarUrl(url)}
+                    onClose={() => setShowUploader(false)}
+                />
+            )}
         </AppShell>
     );
 }

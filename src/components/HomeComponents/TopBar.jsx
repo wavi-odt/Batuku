@@ -7,10 +7,13 @@ import { Link } from 'react-router-dom'
 import { HiSearch, HiBell, HiPlus } from 'react-icons/hi'
 import { homeData } from '../../data/home'
 import ArtistArtwork from '../PublicComponets/ArtistArtwork'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
 import './TopBar.css'
 
 export default function TopBar({ role = 'fan', notifications = true }) {
-    const user = role === 'artist' ? homeData.artist : homeData.fan;
+    const mockUser = role === 'artist' ? homeData.artist : homeData.fan;
+    const realUser = useCurrentUser();
+    const user     = mockUser;
     const placeholder = role === 'artist'
         ? 'Procurar nas tuas faixas, fãs, comentários…'
         : 'Procurar artistas, faixas, géneros…';
@@ -41,7 +44,9 @@ export default function TopBar({ role = 'fan', notifications = true }) {
             </button>
 
             <Link to={role === 'artist' ? '/artist/profile' : '/profile'} className="topbar__avatar" aria-label="O meu perfil">
-                <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />
+                {realUser?.picture
+                    ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                    : <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />}
             </Link>
         </header>
     );

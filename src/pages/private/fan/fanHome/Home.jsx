@@ -4,6 +4,7 @@
 
 import AppShell           from '../../../../components/HomeComponents/AppShell.jsx'
 import { homeData }       from '../../../../data/home.js'
+import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import LevelCard          from './LevelCard.jsx'
 import BecomeArtistBanner from './BecomeArtistBanner.jsx'
 import ContinueListening  from './ContinueListening.jsx'
@@ -14,7 +15,9 @@ import DiscordCard        from './DiscordCard.jsx'
 import './Home.css'
 
 export default function Home() {
-    const u = homeData.fan;
+    const u        = homeData.fan;
+    const realUser = useCurrentUser();
+    const firstName = (realUser?.name || u.name).split(' ')[0];
 
     return (
         <AppShell role="fan">
@@ -22,7 +25,7 @@ export default function Home() {
             {/* ─── Greeting + Level Card ─────────────────────────── */}
             <div className="home__greet">
                 <div className="home__hello">
-                    <h1 className="home__hello-title">Bom dia, {u.name.split(' ')[0]}.</h1>
+                    <h1 className="home__hello-title">Bom dia, {firstName}.</h1>
                     <p className="home__hello-sub">
                         Tens <strong>{u.streak} dias seguidos</strong> de streak.
                         Continua a ouvir para subir no ranking.

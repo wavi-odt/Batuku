@@ -29,6 +29,7 @@
 .sidebar__logo {
     width: 28px;
     height: 28px;
+    display: block;
 }
 
 .sidebar__brand-name {

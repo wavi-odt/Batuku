@@ -40,6 +40,22 @@ export function isLoggedIn() {
     return !!localStorage.getItem('token');
 }
 
+export function getUser() {
+    const token = localStorage.getItem('token');
+    if (!token) return null;
+    const payload = decodeJwtPayload(token);
+    if (!payload) return null;
+
+    const rawHandle = payload.username || payload.preferred_username || null;
+    return {
+        id:      payload.sub || payload.userId || null,
+        name:    payload.name || payload.displayName || payload.preferred_username || null,
+        email:   payload.email || null,
+        handle:  rawHandle ? (`@${rawHandle}`).replace('@@', '@') : null,
+        picture: payload.picture || payload.avatarUrl || payload.avatar_url || null,
+    };
+}
+
 // Guarda apenas o token — o role é sempre derivado do JWT
 export function saveAuth(token) {
     localStorage.setItem('token', token);

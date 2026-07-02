@@ -73,10 +73,12 @@ export default function Login() {
                     {error && <div className="auth__error" role="alert">{error}</div>}
 
                     <div className="auth__oauth">
-                        <button type="button" className="auth__oauth-btn auth__oauth-btn--discord">
+                        <button type="button" className="auth__oauth-btn auth__oauth-btn--discord"
+                            onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/discord'}>
                             <FaDiscord size={18} /> Discord
                         </button>
-                        <button type="button" className="auth__oauth-btn auth__oauth-btn--google">
+                        <button type="button" className="auth__oauth-btn auth__oauth-btn--google"
+                            onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}>
                             <FaGoogle size={16} /> Google
                         </button>
                         <button type="button" className="auth__oauth-btn auth__oauth-btn--apple">

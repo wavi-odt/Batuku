@@ -8,6 +8,7 @@ import { HiUser, HiShieldCheck, HiLockClosed, HiLogout, HiChevronUp } from 'reac
 import { FaCog } from 'react-icons/fa'
 import { homeData } from '../../data/home'
 import { logout } from '../../utils/auth'
+import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { ICONS } from './icons'
 import ArtistArtwork from '../PublicComponets/ArtistArtwork'
 import logo from '../../assets/batuku.png'
@@ -21,8 +22,15 @@ const menuItems = (role) => [
 ];
 
 export default function Sidebar({ role = 'fan' }) {
-    const nav  = role === 'artist' ? homeData.artistNav : homeData.fanNav;
-    const user = role === 'artist' ? homeData.artist     : homeData.fan;
+    const nav      = role === 'artist' ? homeData.artistNav : homeData.fanNav;
+    const mockUser = role === 'artist' ? homeData.artist    : homeData.fan;
+    const realUser = useCurrentUser();
+
+    const user = {
+        ...mockUser,
+        ...(realUser?.name   && { name:   realUser.name }),
+        ...(realUser?.handle && { handle: realUser.handle }),
+    };
 
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
@@ -80,7 +88,9 @@ export default function Sidebar({ role = 'fan' }) {
                     <div className="sidebar__menu">
                         <div className="sidebar__menu-header">
                             <div className="sidebar__menu-avatar">
-                                <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />
+                                {realUser?.picture
+                                    ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                    : <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />}
                             </div>
                             <div>
                                 <div className="sidebar__menu-name">{user.name}</div>
@@ -118,7 +128,9 @@ export default function Sidebar({ role = 'fan' }) {
                     aria-label="Menu do perfil"
                 >
                     <div className="sidebar__profile-avatar">
-                        <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />
+                        {realUser?.picture
+                            ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                            : <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />}
                     </div>
                     <div className="sidebar__profile-info">
                         <div className="sidebar__profile-name">{user.name}</div>

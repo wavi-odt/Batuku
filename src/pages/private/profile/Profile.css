@@ -70,6 +70,12 @@
 }
 .prof__avatar--artist { border-radius: 50%; }
 
+.prof__avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .prof__avatar-edit {
     position: absolute;
     bottom: 6px;
@@ -84,7 +90,9 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    transition: background var(--duration-fast);
 }
+.prof__avatar:hover .prof__avatar-edit { background: var(--color-coral-soft); }
 
 .prof__identity {
     flex: 1;

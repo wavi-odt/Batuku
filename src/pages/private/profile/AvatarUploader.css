@@ -1,0 +1,166 @@
+/* ─── AvatarUploader — modal de upload de avatar ──────────────────── */
+
+.av-up-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    background: rgba(10, 10, 11, 0.75);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.av-up-modal {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ─── Header ──────────────────────────────────────────────────────── */
+.av-up-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.av-up-modal__title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.av-up-modal__close {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
+    transition: background var(--duration-fast), color var(--duration-fast);
+}
+.av-up-modal__close:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--color-ink);
+}
+
+/* ─── Body ────────────────────────────────────────────────────────── */
+.av-up-modal__body {
+    padding: 24px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ─── Pré-visualização do avatar ──────────────────────────────────── */
+.av-up__avatar {
+    width: 112px;
+    height: 112px;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 3px solid var(--color-border-strong);
+    background: var(--color-bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    flex-shrink: 0;
+    transition: border-color var(--duration-base);
+}
+.av-up__avatar--artist { border-radius: 50%; }
+.av-up__avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.av-up__placeholder { color: var(--color-ink-mute); }
+
+/* ─── Zona de drag-and-drop ───────────────────────────────────────── */
+.av-up-drop {
+    position: relative;
+    border: 1.5px dashed var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    padding: 22px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color var(--duration-fast), background var(--duration-fast);
+}
+.av-up-drop:hover {
+    border-color: var(--color-coral);
+    background: rgba(232, 93, 60, 0.04);
+}
+.av-up-drop--ready {
+    border-style: solid;
+    border-color: var(--color-coral);
+    background: var(--color-coral-dim);
+}
+
+.av-up-drop__input {
+    display: none;
+}
+
+.av-up-drop__icon { color: var(--color-ink-mute); }
+.av-up-drop--ready .av-up-drop__icon { color: var(--color-coral); }
+
+.av-up-drop__hint {
+    margin: 0;
+    font-size: 14px;
+    color: var(--color-ink-soft);
+    line-height: 1.45;
+}
+.av-up-drop__hint strong { color: var(--color-ink); }
+
+.av-up-drop__sub {
+    margin: 0;
+    font-size: 12px;
+    color: var(--color-ink-mute);
+}
+
+/* ─── Erro ────────────────────────────────────────────────────────── */
+.av-up-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(248, 113, 113, 0.10);
+    border: 1px solid rgba(248, 113, 113, 0.28);
+    color: var(--color-danger);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* ─── Footer ──────────────────────────────────────────────────────── */
+.av-up-modal__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 16px 22px;
+    border-top: 1px solid var(--color-border);
+}
+
+/* ─── Spinner de loading ──────────────────────────────────────────── */
+.av-up-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: av-up-spin 0.65s linear infinite;
+    flex-shrink: 0;
+}
+@keyframes av-up-spin { to { transform: rotate(360deg); } }

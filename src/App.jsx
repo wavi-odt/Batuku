@@ -7,6 +7,7 @@ import Dashboard from "./pages/private/artist/artistHome/Dashboard.jsx";
 import FanHome from "./pages/private/fan/fanHome/Home.jsx";
 import Profile from "./pages/private/profile/Profile.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import OAuthCallback from "./pages/public/OAuthCallback.jsx";
 import { getRole } from "./utils/auth.js";
 
 function HomeRouter() {
@@ -23,8 +24,9 @@ function App() {
             <Routes>
                 {/* Públicas */}
                 <Route path="/" element={<Landing />} />
-                <Route path="/login"    element={<Login />} />
-                <Route path="/register" element={<Register />} />
+                <Route path="/login"           element={<Login />} />
+                <Route path="/register"        element={<Register />} />
+                <Route path="/oauth2/callback" element={<OAuthCallback />} />
 
                 {/* Privadas */}
                 <Route path="/home"        element={<ProtectedRoute><HomeRouter /></ProtectedRoute>} />
