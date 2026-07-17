@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Landing from './pages/public/Landing'
 import NotFound from './pages/Denied/notFound'
 import Login from "./pages/public/Login.jsx";
@@ -6,13 +6,10 @@ import Register from "./pages/public/Register.jsx";
 import Dashboard from "./pages/private/artist/artistHome/Dashboard.jsx";
 import FanHome from "./pages/private/fan/fanHome/Home.jsx";
 import Profile from "./pages/private/profile/Profile.jsx";
-import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import RoleRoute from "./components/RoleRoute.jsx";
 import OAuthCallback from "./pages/public/OAuthCallback.jsx";
+import AdminHome from "./pages/private/admin/AdminHome.jsx";
 import { getRole } from "./utils/auth.js";
-
-function HomeRouter() {
-    return getRole() === 'artist' ? <Navigate to="/dashboard" replace /> : <FanHome />;
-}
 
 function ProfileRouter() {
     return <Profile role={getRole()} />;
@@ -29,12 +26,14 @@ function App() {
                 <Route path="/oauth2/callback" element={<OAuthCallback />} />
 
                 {/* Privadas */}
-                <Route path="/home"        element={<ProtectedRoute><HomeRouter /></ProtectedRoute>} />
-                <Route path="/profile"     element={<ProtectedRoute><ProfileRouter /></ProtectedRoute>} />
-                <Route path="/dashboard"   element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                <Route path="/artists"     element={<ProtectedRoute><div className="p-8">Artistas - em breve</div></ProtectedRoute>} />
-                <Route path="/marketplace" element={<ProtectedRoute><div className="p-8">Marketplace - em breve</div></ProtectedRoute>} />
-                <Route path="/community"   element={<ProtectedRoute><div className="p-8">Comunidade - em breve</div></ProtectedRoute>} />
+                <Route path="/home"        element={<RoleRoute roles={['fan']}><FanHome /></RoleRoute>} />
+                <Route path="/dashboard"   element={<RoleRoute roles={['artist']}><Dashboard /></RoleRoute>} />
+                <Route path="/admin"       element={<RoleRoute roles={['admin']}><AdminHome /></RoleRoute>} />
+
+                <Route path="/profile"     element={<RoleRoute roles={['fan', 'artist']}><ProfileRouter /></RoleRoute>} />
+                <Route path="/artists"     element={<RoleRoute roles={['fan', 'artist']}><div className="p-8">Artistas - em breve</div></RoleRoute>} />
+                <Route path="/marketplace" element={<RoleRoute roles={['fan', 'artist']}><div className="p-8">Marketplace - em breve</div></RoleRoute>} />
+                <Route path="/community"   element={<RoleRoute roles={['fan', 'artist']}><div className="p-8">Comunidade - em breve</div></RoleRoute>} />
 
                 <Route path="/*" element={<NotFound />} />
             </Routes>

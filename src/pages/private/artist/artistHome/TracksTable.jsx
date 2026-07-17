@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   TracksTable.jsx — Tabela das faixas do artista com métricas.
+﻿/* ─────────────────────────────────────────────────────────────────
+   TracksTable.jsx, Tabela das faixas do artista com métricas.
    ───────────────────────────────────────────────────────────────── */
 
 import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
@@ -29,7 +29,7 @@ export default function TracksTable({ tracks }) {
                 {tracks.map((t, i) => (
                     <div key={i} className="tracks-row">
                         <div className="tracks-row__cover">
-                            <ArtistArtwork shape={t.shape} hue={t.hue} rounded={0} />
+                            <ArtistArtwork shape={t.shape} hue={t.hue} image={t.image} rounded={0} />
                         </div>
                         <div>
                             <div className="tracks-row__title">{t.title}</div>

@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Recommended.jsx — Faixas recomendadas pela IA (com motivo).
+﻿/* ─────────────────────────────────────────────────────────────────
+   Recommended.jsx, Faixas recomendadas pela IA (com motivo).
    ───────────────────────────────────────────────────────────────── */
 
 import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
@@ -22,7 +22,7 @@ export default function Recommended({ tracks }) {
             <div className="reco">
                 {tracks.map((t, i) => (
                     <button key={i} type="button" className="reco__card">
-                        <ArtistArtwork shape={t.shape} hue={t.hue} rounded={10} />
+                        <ArtistArtwork shape={t.shape} hue={t.hue} image={t.image} rounded={10} />
                         <div>
                             <h3 className="reco__title">{t.title}</h3>
                             <div className="reco__artist">{t.artist}</div>

@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   NavbarPublic — Barra de navegação pública.
+﻿/* ─────────────────────────────────────────────────────────────────
+   NavbarPublic, Barra de navegação pública.
    Sticky no topo. Menu mobile com toggle simples (sem headlessui).
    ───────────────────────────────────────────────────────────────── */
 

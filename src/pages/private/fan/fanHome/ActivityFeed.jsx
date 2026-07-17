@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   ActivityFeed.jsx — Lista de atividade recente do fã.
+﻿/* ─────────────────────────────────────────────────────────────────
+   ActivityFeed.jsx, Lista de atividade recente do fã.
    ───────────────────────────────────────────────────────────────── */
 
 import { FaAward, FaUsers, FaHeart } from 'react-icons/fa'

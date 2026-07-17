@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   pages/artist/Dashboard.jsx — Painel do artista verificado.
+﻿/* ─────────────────────────────────────────────────────────────────
+   pages/artist/Dashboard.jsx, Painel do artista verificado.
    ───────────────────────────────────────────────────────────────── */
 
 import AppShell      from '../../../../components/HomeComponents/AppShell.jsx'

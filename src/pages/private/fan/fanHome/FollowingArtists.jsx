@@ -1,9 +1,12 @@
-/* ─────────────────────────────────────────────────────────────────
-   FollowingArtists.jsx — Grelha dos artistas que o fã segue.
+﻿/* ─────────────────────────────────────────────────────────────────
+   FollowingArtists.jsx, Grelha dos artistas que o fã segue.
    ───────────────────────────────────────────────────────────────── */
 
 import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import { ARTISTS } from '../../../../data/batuku.js'
 import './FollowingArtists.css'
+
+const IMG_BY_NAME = Object.fromEntries(ARTISTS.map(a => [a.name, a.image]));
 
 export default function FollowingArtists({ artists, followingCount }) {
     return (
@@ -22,7 +25,7 @@ export default function FollowingArtists({ artists, followingCount }) {
                 {artists.map((a, i) => (
                     <button key={i} type="button" className="follow-card">
                         <div className="follow-card__avatar">
-                            <ArtistArtwork shape={a.shape} hue={a.hue} rounded={0} />
+                            <ArtistArtwork shape={a.shape} hue={a.hue} image={IMG_BY_NAME[a.name]} rounded={0} />
                             {a.isLive && <span className="follow-card__live">● Ao vivo</span>}
                         </div>
                         <div className="follow-card__name">{a.name}</div>

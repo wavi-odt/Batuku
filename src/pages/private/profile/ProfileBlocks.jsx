@@ -1,11 +1,14 @@
-/* ─────────────────────────────────────────────────────────────────
-   ProfileBlocks.jsx — Blocos reutilizáveis das tabs do perfil.
+﻿/* ─────────────────────────────────────────────────────────────────
+   ProfileBlocks.jsx, Blocos reutilizáveis das tabs do perfil.
    Recebem dados via props (alimentados por data/profile.js → fetch).
    ───────────────────────────────────────────────────────────────── */
 
 import { FaPlay, FaAward, FaUsers, FaRegComment, FaRegHeart } from 'react-icons/fa'
 import { HiOutlineLibrary, HiArrowUp } from 'react-icons/hi'
 import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
+import { ARTISTS } from '../../../data/batuku.js'
+
+const IMG_BY_NAME = Object.fromEntries(ARTISTS.map(a => [a.name, a.image]));
 
 const BADGE_EMOJI = {
     sunrise: '🌅', fire: '🔥', compass: '🧭', heart: '❤️', star: '⭐',
@@ -53,7 +56,7 @@ export function PlaylistGrid({ playlists }) {
             {playlists.map((pl, i) => (
                 <button key={i} type="button" className="playlist-item">
                     <div className="playlist-item__cover">
-                        <ArtistArtwork shape={pl.shape} hue={pl.hue} rounded={0} />
+                        <ArtistArtwork shape={pl.shape} hue={pl.hue} image={pl.image} rounded={0} />
                     </div>
                     <div>
                         <div className="playlist-item__name">{pl.name}</div>
@@ -72,7 +75,7 @@ export function FeaturedTracks({ tracks }) {
                 <div key={i} className="ftrack">
                     <div className="ftrack__n">{i + 1}</div>
                     <div className="ftrack__cover">
-                        <ArtistArtwork shape={t.shape} hue={t.hue} rounded={0} />
+                        <ArtistArtwork shape={t.shape} hue={t.hue} image={t.image} rounded={0} />
                     </div>
                     <div>
                         <div className="ftrack__title">{t.title}</div>
@@ -132,7 +135,7 @@ export function FollowingGrid({ artists }) {
             {artists.map((a, i) => (
                 <div key={i} className="follow-card">
                     <div className="follow-card__avatar">
-                        <ArtistArtwork shape={a.shape} hue={a.hue} rounded={0} />
+                        <ArtistArtwork shape={a.shape} hue={a.hue} image={IMG_BY_NAME[a.name]} rounded={0} />
                         {a.isLive && <span className="follow-card__live">● Ao vivo</span>}
                     </div>
                     <div className="follow-card__name">{a.name}</div>

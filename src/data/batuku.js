@@ -1,7 +1,23 @@
-/* ─────────────────────────────────────────────────────────────────
-   data/batuku.js — Dados placeholder da landing.
+﻿/* ─────────────────────────────────────────────────────────────────
+   data/batuku.js, Dados placeholder da landing.
    Substituir nomes / preços / textos por dados reais.
    ───────────────────────────────────────────────────────────────── */
+
+import BeatImg0 from '../assets/beats/img.png'
+import BeatImg1 from '../assets/beats/img_1.png'
+import BeatImg2 from '../assets/beats/img_2.png'
+import BeatImg3 from '../assets/beats/img_3.png'
+import BeatImg4 from '../assets/beats/img_4.png'
+
+import Djossa from '../assets/artists/djossa.png'
+import Naia from '../assets/artists/naia.png'
+import Bento from '../assets/artists/Bento Lima.png'
+import Ines from '../assets/artists/Inês.png'
+import Yuri from '../assets/artists/Yuri Brava.png'
+import Khris from '../assets/artists/Khris T.png'
+import Mada from '../assets/artists/Madá.png'
+import Soso from '../assets/artists/Sosó Mendes.png'
+
 
 export const STATS = [
     { value: '1.2k+', label: 'Artistas cabo-verdianos' },
@@ -11,22 +27,22 @@ export const STATS = [
 ];
 
 export const ARTISTS = [
-    { name: 'Djossa',         city: 'Praia',      genre: 'Funaná',    hue: 14,  shape: 'circles' },
-    { name: 'Naia',           city: 'Mindelo',    genre: 'Morna',     hue: 220, shape: 'arch' },
-    { name: 'Bento Lima',     city: 'São Filipe', genre: 'Coladeira', hue: 42,  shape: 'stripes' },
-    { name: 'Inês d\u2019Praia', city: 'Praia',   genre: 'Batuque',   hue: 340, shape: 'split' },
-    { name: 'Yuri Brava',     city: 'Sal',        genre: 'Cabo Love', hue: 145, shape: 'orbit' },
-    { name: 'Khris T.',       city: 'Mindelo',    genre: 'Kizomba',   hue: 280, shape: 'wave' },
-    { name: 'Madá',           city: 'Tarrafal',   genre: 'Tabanka',   hue: 8,   shape: 'sun' },
-    { name: 'Sosó Mendes',    city: 'Boa Vista',  genre: 'Kola',      hue: 195, shape: 'triangles' },
+    { name: 'Djossa',              city: 'Praia',      genre: 'Funaná',    hue: 14,  shape: 'circles',   image: Djossa },
+    { name: 'Naia',                city: 'Mindelo',    genre: 'Morna',     hue: 220, shape: 'arch',       image: Naia },
+    { name: 'Bento Lima',          city: 'São Filipe', genre: 'Coladeira', hue: 42,  shape: 'stripes',    image: Bento },
+    { name: 'Inês d’Praia',  city: 'Praia',      genre: 'Batuque',   hue: 340, shape: 'split',      image: Ines },
+    { name: 'Yuri Brava',          city: 'Sal',        genre: 'Cabo Love', hue: 145, shape: 'orbit',      image: Yuri },
+    { name: 'Khris T.',            city: 'Mindelo',    genre: 'Kizomba',   hue: 280, shape: 'wave',       image: Khris },
+    { name: 'Madá',                city: 'Tarrafal',   genre: 'Tabanka',   hue: 8,   shape: 'sun',        image: Mada },
+    { name: 'Sosó Mendes',         city: 'Boa Vista',  genre: 'Kola',      hue: 195, shape: 'triangles',  image: Soso },
 ];
 
 export const BEATS = [
-    { title: 'Mar Salgado',  producer: 'Prod. Djo',   bpm: 92,  key: 'Am', price: 19.99, genre: 'Funaná',    hue: 14 },
-    { title: 'Noite di Lua', producer: 'Prod. Naia',  bpm: 78,  key: 'Dm', price: 24.99, genre: 'Morna',     hue: 220 },
-    { title: 'Riba Mar',     producer: 'Prod. Yuri',  bpm: 102, key: 'G',  price: 14.99, genre: 'Cabo Love', hue: 145 },
-    { title: 'Tabanka 81',   producer: 'Prod. Madá',  bpm: 88,  key: 'F',  price: 29.99, genre: 'Tabanka',   hue: 8 },
-    { title: 'Sodade Beat',  producer: 'Prod. Bento', bpm: 84,  key: 'Em', price: 17.50, genre: 'Coladeira', hue: 42 },
+    { title: 'Mar Salgado',  producer: 'Prod. Djo',   bpm: 92,  key: 'Am', price: 19.99, genre: 'Funaná',    hue: 14,  image: BeatImg0 },
+    { title: 'Noite di Lua', producer: 'Prod. Naia',  bpm: 78,  key: 'Dm', price: 24.99, genre: 'Morna',     hue: 220, image: BeatImg1 },
+    { title: 'Riba Mar',     producer: 'Prod. Yuri',  bpm: 102, key: 'G',  price: 14.99, genre: 'Cabo Love', hue: 145, image: BeatImg2 },
+    { title: 'Tabanka 81',   producer: 'Prod. Madá',  bpm: 88,  key: 'F',  price: 29.99, genre: 'Tabanka',   hue: 8,   image: BeatImg3 },
+    { title: 'Sodade Beat',  producer: 'Prod. Bento', bpm: 84,  key: 'Em', price: 17.50, genre: 'Coladeira', hue: 42,  image: BeatImg4 },
 ];
 
 export const STEPS = [
@@ -45,7 +61,7 @@ export const LEADERBOARD = [
 
 export const TESTIMONIALS = [
     {
-        quote: 'Antes do Batuku, espalhava as minhas músicas por cinco apps diferentes. Agora a comunidade chega até mim — e os números são reais.',
+        quote: 'Antes do Batuku, espalhava as minhas músicas por cinco apps diferentes. Agora a comunidade chega até mim, e os números são reais.',
         name: 'Djossa',
         role: 'Funaná · Praia',
         hue: 14,
@@ -66,14 +82,14 @@ export const TESTIMONIALS = [
 
 export const FAQ = [
     { q: 'O Batuku é grátis?',                a: 'Sim. Criar conta, publicar faixas, seguir artistas e usar o Discord é grátis para sempre. Só pagas comissão (8%) quando vendes beats no marketplace.' },
-    { q: 'Posso publicar música em crioulo?', a: 'Claro. Aceitamos todas as línguas e géneros — crioulo, português, inglês ou misturas. Os filtros de descoberta respeitam as variantes.' },
+    { q: 'Posso publicar música em crioulo?', a: 'Claro. Aceitamos todas as línguas e géneros, crioulo, português, inglês ou misturas. Os filtros de descoberta respeitam as variantes.' },
     { q: 'Como funciona a gamificação?',      a: 'Cada interação (ouvir, seguir, comentar, partilhar) gera pontos para o artista. Os pontos sobem no ranking semanal e desbloqueiam badges, destaques na homepage e oportunidades curadas.' },
-    { q: 'Preciso de viver em Cabo Verde?',   a: 'Não. Se a tua música respira CV — onde quer que estejas no mundo — tens lugar aqui. A diáspora é parte da casa.' },
-    { q: 'Quem está por trás do Batuku?',     a: 'Uma equipa pequena de cabo-verdianos a viver entre Praia, Lisboa e Boston. Independentes, sem grandes investidores — guiados pela comunidade.' },
+    { q: 'Preciso de viver em Cabo Verde?',   a: 'Não. Se a tua música respira CV, onde quer que estejas no mundo, tens lugar aqui. A diáspora é parte da casa.' },
+    { q: 'Quem está por trás do Batuku?',     a: 'Uma equipa pequena de cabo-verdianos a viver entre Praia, Lisboa e Boston. Independentes, sem grandes investidores, guiados pela comunidade.' },
 ];
 
 export const FEATURES = [
-    { icon: 'chart',      title: 'Análises em tempo real', body: 'Reproduções, seguidores, mapas de calor por ilha e previsões de crescimento — sem jargão.' },
+    { icon: 'chart',      title: 'Análises em tempo real', body: 'Reproduções, seguidores, mapas de calor por ilha e previsões de crescimento, sem jargão.' },
     { icon: 'storefront', title: 'Marketplace de beats',   body: 'Compra e vende instrumentais com pagamentos seguros. Comissão justa de 8%.' },
     { icon: 'trophy',     title: 'Gamificação',            body: 'Ganha pontos a cada interação, sobe no ranking semanal e desbloqueia destaques.' },
     { icon: 'discord',    title: 'Comunidade Discord',     body: 'Liga-te a outros artistas, produtores e fãs. Sessões ao vivo, feedback, colaborações.' },

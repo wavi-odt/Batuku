@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   icons.js — Mapeamento de ícones partilhado pelo AppShell e secções.
+﻿/* ─────────────────────────────────────────────────────────────────
+   icons.js, Mapeamento de ícones partilhado pelo AppShell e secções.
    Usa react-icons que já está instalado no projeto.
    ───────────────────────────────────────────────────────────────── */
 
@@ -18,7 +18,7 @@ import {
     FaCog, FaAward,
 } from 'react-icons/fa'
 
-/* Ícones por nome lógico — usa este mapa em vez de imports espalhados. */
+/* Ícones por nome lógico, usa este mapa em vez de imports espalhados. */
 export const ICONS = {
     home:     HiHome,
     compass:  FaCompass,

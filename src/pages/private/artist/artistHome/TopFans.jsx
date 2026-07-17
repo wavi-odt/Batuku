@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   TopFans.jsx — Lista dos fãs que mais ouvem o artista.
+﻿/* ─────────────────────────────────────────────────────────────────
+   TopFans.jsx, Lista dos fãs que mais ouvem o artista.
    ───────────────────────────────────────────────────────────────── */
 
 import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
@@ -18,7 +18,7 @@ export default function TopFans({ fans }) {
                         #{i + 1}
                     </div>
                     <div className="fans-row__avatar">
-                        <ArtistArtwork shape="split" hue={f.hue} rounded={0} />
+                        <ArtistArtwork shape="split" hue={f.hue} image={f.image} rounded={0} />
                     </div>
                     <div className="fans-row__info">
                         <div className="fans-row__name">{f.name}</div>

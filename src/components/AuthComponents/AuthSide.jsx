@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   AuthSide — Coluna esquerda partilhada nas páginas de auth.
+﻿/* ─────────────────────────────────────────────────────────────────
+   AuthSide, Coluna esquerda partilhada nas páginas de auth.
    Mostra um painel visual com headline + paredeo de capas + citação.
    ───────────────────────────────────────────────────────────────── */
 
@@ -24,7 +24,7 @@ export default function AuthSide({ title, accent, lede, quote, author }) {
                     <div key={i} className="auth__side-col">
                         <div className={'auth__side-col-track' + (i === 1 ? ' is-reverse' : '')}>
                             {[...col, ...col].map((a, j) => (
-                                <ArtistArtwork key={j} shape={a.shape} hue={a.hue} rounded={12} showGloss={false} />
+                                <ArtistArtwork key={j} shape={a.shape} hue={a.hue} image={a.image} rounded={12} showGloss={false} />
                             ))}
                         </div>
                     </div>

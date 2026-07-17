@@ -1,7 +1,16 @@
-/* ─────────────────────────────────────────────────────────────────
-   data/home.js — Dados mock para a Home (Fã) e Dashboard (Artista).
+﻿/* ─────────────────────────────────────────────────────────────────
+   data/home.js, Dados mock para a Home (Fã) e Dashboard (Artista).
    Substituir por chamadas reais quando o backend estiver pronto.
    ───────────────────────────────────────────────────────────────── */
+
+import DjossaImg from '../assets/artists/djossa.png'
+import NaiaImg   from '../assets/artists/naia.png'
+import BentoImg  from '../assets/artists/Bento Lima.png'
+import InesImg   from '../assets/artists/Inês.png'
+import YuriImg   from '../assets/artists/Yuri Brava.png'
+import KhrisImg  from '../assets/artists/Khris T.png'
+import MadaImg   from '../assets/artists/Madá.png'
+import SosoImg   from '../assets/artists/Sosó Mendes.png'
 
 export const homeData = {
 
@@ -39,18 +48,18 @@ export const homeData = {
     },
 
     continueListening: [
-        { title: 'Mar Salgado',  artist: 'Djossa',     shape: 'circles', hue: 14,  progress: 64, duration: '3:42' },
-        { title: 'Noite di Lua', artist: 'Naia',       shape: 'arch',    hue: 220, progress: 22, duration: '4:18' },
-        { title: 'Riba Mar',     artist: 'Yuri Brava', shape: 'orbit',   hue: 145, progress: 88, duration: '2:56' },
-        { title: 'Tabanka 81',   artist: 'Madá',       shape: 'sun',     hue: 8,   progress: 41, duration: '3:24' },
-        { title: 'Sodade Beat',  artist: 'Bento Lima', shape: 'stripes', hue: 42,  progress: 12, duration: '3:08' },
+        { title: 'Mar Salgado',  artist: 'Djossa',     shape: 'circles', hue: 14,  progress: 64, duration: '3:42', image: DjossaImg },
+        { title: 'Noite di Lua', artist: 'Naia',       shape: 'arch',    hue: 220, progress: 22, duration: '4:18', image: NaiaImg },
+        { title: 'Riba Mar',     artist: 'Yuri Brava', shape: 'orbit',   hue: 145, progress: 88, duration: '2:56', image: YuriImg },
+        { title: 'Tabanka 81',   artist: 'Madá',       shape: 'sun',     hue: 8,   progress: 41, duration: '3:24', image: MadaImg },
+        { title: 'Sodade Beat',  artist: 'Bento Lima', shape: 'stripes', hue: 42,  progress: 12, duration: '3:08', image: BentoImg },
     ],
 
     recommended: [
-        { title: 'Praia di Mar', artist: 'Inês d\u2019Praia', shape: 'split',     hue: 340, reason: 'Porque ouves Funaná'  },
-        { title: 'Kola San Jon', artist: 'Sosó Mendes',       shape: 'triangles', hue: 195, reason: 'Novo de quem segues' },
-        { title: 'Lua Cheia',    artist: 'Khris T.',          shape: 'wave',      hue: 280, reason: 'Tendência em Mindelo' },
-        { title: 'Morabeza',     artist: 'Naia',              shape: 'arch',      hue: 220, reason: 'Top da semana'        },
+        { title: 'Praia di Mar', artist: 'Inês d\u2019Praia', shape: 'split',     hue: 340, reason: 'Porque ouves Funaná' , image: InesImg },
+        { title: 'Kola San Jon', artist: 'Sosó Mendes',       shape: 'triangles', hue: 195, reason: 'Novo de quem segues', image: SosoImg },
+        { title: 'Lua Cheia',    artist: 'Khris T.',          shape: 'wave',      hue: 280, reason: 'Tendência em Mindelo', image: KhrisImg },
+        { title: 'Morabeza',     artist: 'Naia',              shape: 'arch',      hue: 220, reason: 'Top da semana',        image: NaiaImg },
     ],
 
     followingArtists: [
@@ -66,7 +75,7 @@ export const homeData = {
         { type: 'follow',  text: 'Djossa começou a seguir-te',                                     time: 'há 2h' },
         { type: 'comment', text: 'Naia respondeu ao teu comentário em "Sodade"',                   time: 'há 5h' },
         { type: 'like',    text: 'Yuri Brava gostou da tua playlist "CV Roots"',                   time: 'ontem' },
-        { type: 'level',   text: 'Subiste para o nível 7 — desbloqueaste o destaque na homepage',  time: 'há 2 dias' },
+        { type: 'level',   text: 'Subiste para o nível 7, desbloqueaste o destaque na homepage',  time: 'há 2 dias' },
     ],
 
     artistStats: {
@@ -83,11 +92,11 @@ export const homeData = {
     }),
 
     myTracks: [
-        { title: 'Mar Salgado',   plays: 4820, likes: 318, comments: 42, trend: '+18%', shape: 'circles', hue: 14 },
-        { title: 'Sodade di Mar', plays: 3640, likes: 245, comments: 31, trend: '+12%', shape: 'arch',    hue: 14 },
+        { title: 'Mar Salgado',   plays: 4820, likes: 318, comments: 42, trend: '+18%', shape: 'circles', hue: 14, image: DjossaImg },
+        { title: 'Sodade di Mar', plays: 3640, likes: 245, comments: 31, trend: '+12%', shape: 'arch',    hue: 14, image: DjossaImg },
         { title: 'Funaná Vivo',   plays: 3120, likes: 198, comments: 22, trend: '+8%',  shape: 'sun',     hue: 14 },
-        { title: 'Praia Quente',  plays: 2840, likes: 156, comments: 18, trend: '-3%',  shape: 'stripes', hue: 14 },
-        { title: 'Coração di CV', plays: 2210, likes: 124, comments: 14, trend: '+22%', shape: 'split',   hue: 14 },
+        { title: 'Praia Quente',  plays: 2840, likes: 156, comments: 18, trend: '-3%',  shape: 'stripes', hue: 14, image: DjossaImg },
+        { title: 'Coração di CV', plays: 2210, likes: 124, comments: 14, trend: '+22%', shape: 'split',   hue: 14, image: DjossaImg },
     ],
 
     topFans: [
@@ -138,6 +147,7 @@ export const homeData = {
         album: 'Funaná Vivo',
         shape: 'circles',
         hue: 14,
+        image: DjossaImg,
         progress: 64,
         duration: '3:42',
         current: '2:21',

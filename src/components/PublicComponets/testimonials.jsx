@@ -1,9 +1,11 @@
-/* ─────────────────────────────────────────────────────────────────
-   Testimonials — Citações de artistas reais.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Testimonials, Citações de artistas reais.
    ───────────────────────────────────────────────────────────────── */
 
-import { TESTIMONIALS } from '../../data/batuku.js'
+import { TESTIMONIALS, ARTISTS } from '../../data/batuku.js'
 import ArtistArtwork from './ArtistArtwork.jsx'
+
+const IMG_BY_NAME = Object.fromEntries(ARTISTS.map(a => [a.name, a.image]));
 import useReveal from '../../hooks/useReveal.js'
 import './testimonials.css'
 
@@ -24,7 +26,7 @@ export default function Testimonials() {
                             <p className="testimonial__text">{t.quote}</p>
                             <div className="testimonial__author">
                                 <div className="testimonial__avatar">
-                                    <ArtistArtwork shape="split" hue={t.hue} rounded={0} showGloss={false} />
+                                    <ArtistArtwork shape="split" hue={t.hue} image={IMG_BY_NAME[t.name]} rounded={0} showGloss={false} />
                                 </div>
                                 <div>
                                     <div className="testimonial__name">{t.name}</div>

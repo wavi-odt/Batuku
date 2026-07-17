@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Marketplace — Preview do marketplace de beats.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Marketplace, Preview do marketplace de beats.
    ───────────────────────────────────────────────────────────────── */
 
 import { Link } from 'react-router-dom'
@@ -55,7 +55,7 @@ export default function Marketplace() {
                             {BEATS.map((b, i) => (
                                 <div key={i} className="beat">
                                     <div className="beat__cover">
-                                        <ArtistArtwork shape="circles" hue={b.hue} rounded={0} showGloss={false} />
+                                        <ArtistArtwork shape="circles" hue={b.hue} image={b.image} rounded={0} showGloss={false} />
                                     </div>
                                     <div className="beat__meta">
                                         <div className="beat__title">{b.title}</div>

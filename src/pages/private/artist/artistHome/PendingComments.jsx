@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   PendingComments.jsx — Comentários por responder nas faixas.
+﻿/* ─────────────────────────────────────────────────────────────────
+   PendingComments.jsx, Comentários por responder nas faixas.
    ───────────────────────────────────────────────────────────────── */
 
 import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
@@ -17,7 +17,7 @@ export default function PendingComments({ comments }) {
                 <div key={i} className="comment-row">
                     <div className="comment-row__head">
                         <div className="comment-row__avatar">
-                            <ArtistArtwork shape="circles" hue={c.hue} rounded={0} />
+                            <ArtistArtwork shape="circles" hue={c.hue} image={c.image} rounded={0} />
                         </div>
                         <span className="comment-row__user">{c.user}</span>
                         <span className="comment-row__track">· em {c.track}</span>

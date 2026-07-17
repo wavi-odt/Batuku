@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   ContinueListening.jsx — Carrossel das faixas onde o fã parou.
+﻿/* ─────────────────────────────────────────────────────────────────
+   ContinueListening.jsx, Carrossel das faixas onde o fã parou.
    ───────────────────────────────────────────────────────────────── */
 
 import { FaPlay } from 'react-icons/fa'
@@ -21,7 +21,7 @@ export default function ContinueListening({ tracks }) {
                 {tracks.map((t, i) => (
                     <button key={i} type="button" className="track-card">
                         <div className="track-card__cover">
-                            <ArtistArtwork shape={t.shape} hue={t.hue} rounded={10} />
+                            <ArtistArtwork shape={t.shape} hue={t.hue} image={t.image} rounded={10} />
                             <span className="track-card__play" aria-hidden="true">
                                 <FaPlay size={12} />
                             </span>

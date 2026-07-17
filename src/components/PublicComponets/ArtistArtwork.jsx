@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   ArtistArtwork — Gera "capas de álbum" em SVG por artista.
+﻿/* ─────────────────────────────────────────────────────────────────
+   ArtistArtwork, Gera "capas de álbum" em SVG por artista.
    Usa `shape` + `hue` para uma composição única reproduzível.
    ───────────────────────────────────────────────────────────────── */
 
@@ -69,6 +69,7 @@ export default function ArtistArtwork({
     shape = 'circles',
     hue = 14,
     name,
+    image = null,
     rounded = 14,
     showGloss = true,
 }) {
@@ -81,10 +82,19 @@ export default function ArtistArtwork({
 
     return (
         <div className="artwork" style={{ borderRadius: rounded }}>
-            <svg className="artwork__svg" viewBox="0 0 100 100" preserveAspectRatio="none"
-                 style={{ background: bg }} aria-hidden="true">
-                {Composition(fg, fg2, ink)}
-            </svg>
+            {image ? (
+                <img
+                    className="artwork__photo"
+                    src={image}
+                    alt={name || ''}
+                    draggable={false}
+                />
+            ) : (
+                <svg className="artwork__svg" viewBox="0 0 100 100" preserveAspectRatio="none"
+                     style={{ background: bg }} aria-hidden="true">
+                    {Composition(fg, fg2, ink)}
+                </svg>
+            )}
             {showGloss && <div className="artwork__gloss" aria-hidden="true" />}
             {name && <div className="artwork__name">{name}</div>}
         </div>

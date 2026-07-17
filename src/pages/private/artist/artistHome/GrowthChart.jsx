@@ -1,6 +1,6 @@
-/* ─────────────────────────────────────────────────────────────────
-   GrowthChart.jsx — Gráfico de linha (SVG) das reproduções, 30 dias.
-   Sem libs externas — desenha path + área a partir dos dados.
+﻿/* ─────────────────────────────────────────────────────────────────
+   GrowthChart.jsx, Gráfico de linha (SVG) das reproduções, 30 dias.
+   Sem libs externas, desenha path + área a partir dos dados.
    ───────────────────────────────────────────────────────────────── */
 
 import { useState } from 'react'

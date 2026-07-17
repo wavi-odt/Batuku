@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+﻿import { useState, useRef } from 'react'
 import { FaTimes, FaCamera, FaCheck, FaExclamationTriangle } from 'react-icons/fa'
 import './AvatarUploader.css'
 
@@ -59,7 +59,7 @@ export default function AvatarUploader({ currentAvatarUrl, isArtist, onSuccess, 
             const data = await res.json()
 
             if (!res.ok) {
-                setError(data.error ?? `Erro ${res.status} — tenta novamente.`)
+                setError(data.error ?? `Erro ${res.status}, tenta novamente.`)
                 return
             }
 

@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   MiniPlayer.jsx — Player sticky no fundo da app.
+﻿/* ─────────────────────────────────────────────────────────────────
+   MiniPlayer.jsx, Player sticky no fundo da app.
    Estado local para play/pause. Liga ao backend através de props futuras.
    ───────────────────────────────────────────────────────────────── */
 
@@ -24,7 +24,7 @@ export default function MiniPlayer() {
             {/* Track info */}
             <div className="player__track">
                 <div className="player__cover">
-                    <ArtistArtwork shape={np.shape} hue={np.hue} rounded={0} />
+                    <ArtistArtwork shape={np.shape} hue={np.hue} image={np.image} rounded={0} />
                 </div>
                 <div className="player__info">
                     <div className="player__title">{np.title}</div>

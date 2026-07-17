@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Hero — Headline editorial + parede de artistas animada à direita.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Hero, Headline editorial + parede de artistas animada à direita.
    ───────────────────────────────────────────────────────────────── */
 
 import { Link } from 'react-router-dom'
@@ -28,7 +28,7 @@ export default function Hero() {
                         </h1>
                         <p className="hero__lede">
                             Descobre música cabo-verdiana, acompanha os teus artistas favoritos e
-                            ganha pontos por cada interação. Tudo num só lugar — feito por nós, para nós.
+                            ganha pontos por cada interação. Tudo num só lugar, feito por nós, para nós.
                         </p>
                         <div className="hero__actions">
                             <Link to="/register" className="btn btn--primary">Começar grátis →</Link>
@@ -38,7 +38,7 @@ export default function Hero() {
                             <div className="hero__avatars">
                                 {ARTISTS.slice(0, 4).map((a, i) => (
                                     <div key={i} className="hero__avatar">
-                                        <ArtistArtwork shape={a.shape} hue={a.hue} rounded={0} showGloss={false} />
+                                        <ArtistArtwork shape={a.shape} hue={a.hue} image={a.image} rounded={0} showGloss={false} />
                                     </div>
                                 ))}
                             </div>
@@ -69,7 +69,7 @@ function HeroWall() {
                     <div className={'hero__wall-track' + (i === 1 ? ' is-reverse' : '')}>
                         {[...col, ...col].map((a, j) => (
                             <div key={j} className="hero__wall-item">
-                                <ArtistArtwork shape={a.shape} hue={a.hue} name={a.name} rounded={14} />
+                                <ArtistArtwork shape={a.shape} hue={a.hue} image={a.image} name={a.name} rounded={14} />
                             </div>
                         ))}
                     </div>

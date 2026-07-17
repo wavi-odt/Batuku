@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   pages/profile/Profile.jsx — Página "O meu perfil" (Fã + Artista).
+﻿/* ─────────────────────────────────────────────────────────────────
+   pages/profile/Profile.jsx, Página "O meu perfil" (Fã + Artista).
 
    Tabs funcionais; cada painel lê de data/profile.js.
    Recebe `role` por prop (default 'fan'). Quando ligares o backend,

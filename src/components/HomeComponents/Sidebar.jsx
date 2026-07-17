@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Sidebar.jsx — Navegação lateral. Adapta-se ao role (fan/artist).
+﻿/* ─────────────────────────────────────────────────────────────────
+   Sidebar.jsx, Navegação lateral. Adapta-se ao role (fan/artist).
    ───────────────────────────────────────────────────────────────── */
 
 import { useState, useRef, useEffect } from 'react'
@@ -49,7 +49,7 @@ export default function Sidebar({ role = 'fan' }) {
 
     function handleLogout() {
         logout();
-        navigate('/login');
+        navigate('/');
     }
 
     return (

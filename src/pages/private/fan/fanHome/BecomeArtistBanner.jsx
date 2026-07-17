@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   BecomeArtistBanner.jsx — CTA inline para o fã se tornar artista.
+﻿/* ─────────────────────────────────────────────────────────────────
+   BecomeArtistBanner.jsx, CTA inline para o fã se tornar artista.
    ───────────────────────────────────────────────────────────────── */
 
 import { Link } from 'react-router-dom'

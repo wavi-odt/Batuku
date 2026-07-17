@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Features — Quatro cartões com as razões para usar o Batuku.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Features, Quatro cartões com as razões para usar o Batuku.
    ───────────────────────────────────────────────────────────────── */
 
 import { FaChartLine, FaStore, FaTrophy, FaDiscord } from 'react-icons/fa'
@@ -28,7 +28,7 @@ export default function Features() {
                         <h2 className="features__title">Tudo num só lugar.</h2>
                     </div>
                     <p className="features__lede">
-                        Quatro ferramentas pensadas para artistas independentes —
+                        Quatro ferramentas pensadas para artistas independentes,
                         sem complicações, sem taxas escondidas.
                     </p>
                 </div>

@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   AppShell.jsx — Layout principal das páginas autenticadas.
+﻿/* ─────────────────────────────────────────────────────────────────
+   AppShell.jsx, Layout principal das páginas autenticadas.
    Compõe Sidebar + TopBar + (children) + MiniPlayer.
    ───────────────────────────────────────────────────────────────── */
 

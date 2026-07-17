@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   NotFound.jsx — Página 404.
+﻿/* ─────────────────────────────────────────────────────────────────
+   NotFound.jsx, Página 404.
    Visual rich: capas a flutuar, headline editorial, CTA para voltar.
    Usa apenas tokens + global.css. Sem dependências novas.
    ───────────────────────────────────────────────────────────────── */
@@ -13,7 +13,7 @@ import './notFound.css'
 export default function NotFound() {
     const navigate = useNavigate();
 
-    /* Capas flutuantes (decorativas) — posições absolutas em %.
+    /* Capas flutuantes (decorativas), posições absolutas em %.
        Cada uma com rotação + delay diferentes na animação. */
     const FLOATERS = [
         { top:  '8%', left:   '6%', size: 110, rot: -12, delay: '0s',   ...ARTISTS[0] },
@@ -42,7 +42,7 @@ export default function NotFound() {
                             animationDelay: f.delay,
                         }}
                     >
-                        <ArtistArtwork shape={f.shape} hue={f.hue} rounded={12} showGloss={false} />
+                        <ArtistArtwork shape={f.shape} hue={f.hue} image={f.image} rounded={12} showGloss={false} />
                     </div>
                 ))}
             </div>
@@ -59,7 +59,7 @@ export default function NotFound() {
 
                 <p className="nf__lede">
                     O link que seguiste pode ter mudado, expirado ou nunca ter existido.
-                    Volta atrás ou explora outros artistas — há muito por descobrir.
+                    Volta atrás ou explora outros artistas, há muito por descobrir.
                 </p>
 
                 <div className="nf__actions">

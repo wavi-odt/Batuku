@@ -1,5 +1,13 @@
+﻿import DjossaImg   from '../assets/artists/djossa.png'
+import NaiaImg     from '../assets/artists/naia.png'
+import MadaImg     from '../assets/artists/Madá.png'
+import Playlist0   from '../assets/playlists/img.png'
+import Playlist1   from '../assets/playlists/img_1.png'
+import Playlist2   from '../assets/playlists/img_2.png'
+import Playlist3   from '../assets/playlists/img_3.png'
+
 /* ─────────────────────────────────────────────────────────────────
-   data/profile.js — Dados do perfil (Fã + Artista).
+   data/profile.js, Dados do perfil (Fã + Artista).
 
    ⚠️  TUDO AQUI É MOCK. Para ligar ao backend, substitui o objeto
    `profileData` pelo resultado de um fetch. Estrutura sugerida:
@@ -7,7 +15,7 @@
        const { data } = await api.get(`/users/${id}/profile`);
        // data deve ter o mesmo shape que profileData.fan / .artist
 
-   Os componentes do perfil leem só deste ficheiro — não precisas
+   Os componentes do perfil leem só deste ficheiro, não precisas
    de tocar em mais lado nenhum quando ligares a API.
    ───────────────────────────────────────────────────────────────── */
 
@@ -51,16 +59,16 @@ export const profileData = {
         ],
 
         playlists: [
-            { name: 'CV Roots',         tracks: 42, hue: 14,  shape: 'circles' },
-            { name: 'Morna pra Chorar', tracks: 28, hue: 220, shape: 'arch' },
-            { name: 'Funaná no Carro',  tracks: 35, hue: 42,  shape: 'sun' },
-            { name: 'Diáspora Vibes',   tracks: 51, hue: 145, shape: 'wave' },
+            { name: 'CV Roots',         tracks: 42, hue: 14,  shape: 'circles', image: Playlist0 },
+            { name: 'Morna pra Chorar', tracks: 28, hue: 220, shape: 'arch',    image: Playlist1 },
+            { name: 'Funaná no Carro',  tracks: 35, hue: 42,  shape: 'sun',     image: Playlist2 },
+            { name: 'Diáspora Vibes',   tracks: 51, hue: 145, shape: 'wave',    image: Playlist3 },
         ],
 
         recentlyPlayed: [
-            { title: 'Mar Salgado',  artist: 'Djossa', hue: 14,  shape: 'circles' },
-            { title: 'Noite di Lua', artist: 'Naia',   hue: 220, shape: 'arch' },
-            { title: 'Tabanka 81',   artist: 'Madá',   hue: 8,   shape: 'sun' },
+            { title: 'Mar Salgado',  artist: 'Djossa', hue: 14,  shape: 'circles', image: DjossaImg },
+            { title: 'Noite di Lua', artist: 'Naia',   hue: 220, shape: 'arch', image: NaiaImg },
+            { title: 'Tabanka 81',   artist: 'Madá',   hue: 8,   shape: 'sun', image: MadaImg },
         ],
 
         followingList: [
@@ -80,7 +88,7 @@ export const profileData = {
             { type: 'like',     text: 'Gostaste de "Mar Salgado" de Djossa',                        time: 'há 3h' },
             { type: 'playlist', text: 'Adicionaste 4 faixas à playlist "CV Roots"',                time: 'há 5h' },
             { type: 'comment',  text: 'Comentaste em "Noite di Lua" de Naia',                       time: 'ontem' },
-            { type: 'level',    text: 'Subiste para o nível 7 — destaque na homepage desbloqueado', time: 'há 2 dias' },
+            { type: 'level',    text: 'Subiste para o nível 7, destaque na homepage desbloqueado', time: 'há 2 dias' },
             { type: 'follow',   text: 'Yuri Brava começou a seguir-te',                             time: 'há 3 dias' },
             { type: 'badge',    text: 'Ganhaste o badge "Explorador" 🧭',                           time: 'há 4 dias' },
         ],
@@ -119,11 +127,11 @@ export const profileData = {
         ],
 
         featuredTracks: [
-            { title: 'Mar Salgado',   plays: 4820, duration: '3:42', hue: 14, shape: 'circles' },
-            { title: 'Sodade di Mar', plays: 3640, duration: '4:08', hue: 14, shape: 'arch' },
-            { title: 'Funaná Vivo',   plays: 3120, duration: '3:18', hue: 14, shape: 'sun' },
-            { title: 'Praia Quente',  plays: 2840, duration: '2:56', hue: 14, shape: 'stripes' },
-            { title: 'Coração di CV', plays: 2210, duration: '3:33', hue: 14, shape: 'split' },
+            { title: 'Mar Salgado',   plays: 4820, duration: '3:42', hue: 14, image: DjossaImg, shape: 'circles' },
+            { title: 'Sodade di Mar', plays: 3640, duration: '4:08', hue: 14, image: DjossaImg, shape: 'arch' },
+            { title: 'Funaná Vivo',   plays: 3120, duration: '3:18', hue: 14, image: DjossaImg, shape: 'sun' },
+            { title: 'Praia Quente',  plays: 2840, duration: '2:56', hue: 14, image: DjossaImg, shape: 'stripes' },
+            { title: 'Coração di CV', plays: 2210, duration: '3:33', hue: 14, image: DjossaImg, shape: 'split' },
         ],
 
         badges: [

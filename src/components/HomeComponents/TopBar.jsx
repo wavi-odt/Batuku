@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   TopBar.jsx — Barra superior: pesquisa, notificações, avatar.
+﻿/* ─────────────────────────────────────────────────────────────────
+   TopBar.jsx, Barra superior: pesquisa, notificações, avatar.
    Mostra botão "Publicar" extra para artistas.
    ───────────────────────────────────────────────────────────────── */
 

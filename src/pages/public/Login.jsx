@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Login.jsx — Página de entrar na conta.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Login.jsx, Página de entrar na conta.
    ───────────────────────────────────────────────────────────────── */
 
 import { useState } from 'react'
@@ -15,7 +15,7 @@ export default function Login() {
     const [showPass, setShowPass] = useState(false);
     const [loading, setLoading]   = useState(false);
     const [error, setError]       = useState('');
-    // campo chama-se "identifier" internamente — pode ser email ou username
+    // campo chama-se "identifier" internamente, pode ser email ou username
     const [form, setForm] = useState({ identifier: '', password: '', remember: true });
 
     const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -26,7 +26,7 @@ export default function Login() {
         setLoading(true);
         try {
             // O backend (JwtAuthenticationController) espera o campo "username".
-            // Enviamos o que o utilizador escreveu — pode ser email ou username.
+            // Enviamos o que o utilizador escreveu, pode ser email ou username.
             // O JwtUserDetailsService tenta os dois automaticamente.
             const res = await fetch('http://localhost:8080/authenticate', {
                 method: 'POST',
@@ -58,7 +58,7 @@ export default function Login() {
                 accent="volta."
                 lede="Continua a apoiar artistas cabo-verdianos, descobre novas faixas e acompanha o teu ranking semanal."
                 quote="Aqui não estou só. Sinto a comunidade do outro lado."
-                author="— Djossa · Funaná · Praia"
+                author=", Djossa · Funaná · Praia"
             />
 
             <section className="auth__form-col">

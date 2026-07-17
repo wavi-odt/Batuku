@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Footer — Rodapé com colunas de links e copyright.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Footer, Rodapé com colunas de links e copyright.
    ───────────────────────────────────────────────────────────────── */
 
 import { Link } from 'react-router-dom'
@@ -59,7 +59,7 @@ export default function Footer() {
 
                 <div className="footer__bottom">
                     <span>© 2026 Batuku. Todos os direitos reservados.</span>
-                    <span>Feito com o coração 🇨🇻 — Praia · Lisboa · Boston</span>
+                    <span>Feito com o coração 🇨🇻, Praia · Lisboa · Boston</span>
                 </div>
             </div>
         </footer>

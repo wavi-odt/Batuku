@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   useReveal — Adiciona class `in` quando o elemento entra no viewport.
+﻿/* ─────────────────────────────────────────────────────────────────
+   useReveal, Adiciona class `in` quando o elemento entra no viewport.
    Combina com a class `reveal` em global.css.
    ───────────────────────────────────────────────────────────────── */
 

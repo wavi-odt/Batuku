@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   PublishCard.jsx — CTA destacado para publicar nova faixa.
+﻿/* ─────────────────────────────────────────────────────────────────
+   PublishCard.jsx, CTA destacado para publicar nova faixa.
    ───────────────────────────────────────────────────────────────── */
 
 import { Link } from 'react-router-dom'

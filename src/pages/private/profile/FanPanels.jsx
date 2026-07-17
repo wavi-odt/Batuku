@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   FanPanels.jsx — Painéis das tabs do perfil de Fã.
+﻿/* ─────────────────────────────────────────────────────────────────
+   FanPanels.jsx, Painéis das tabs do perfil de Fã.
    ───────────────────────────────────────────────────────────────── */
 
 import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
@@ -41,7 +41,7 @@ export function FanOverview({ fan }) {
                     {fan.recentlyPlayed.map((t, i) => (
                         <div key={i} className="playlist-item prof-recent">
                             <div className="playlist-item__cover prof-recent__cover">
-                                <ArtistArtwork shape={t.shape} hue={t.hue} rounded={0} />
+                                <ArtistArtwork shape={t.shape} hue={t.hue} image={t.image} rounded={0} />
                             </div>
                             <div>
                                 <div className="playlist-item__name prof-recent__name">{t.title}</div>

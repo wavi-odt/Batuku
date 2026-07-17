@@ -1,4 +1,4 @@
-function decodeJwtPayload(token) {
+﻿function decodeJwtPayload(token) {
     try {
         const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
         return JSON.parse(atob(base64));
@@ -7,7 +7,7 @@ function decodeJwtPayload(token) {
     }
 }
 
-// Role é sempre lido do JWT — nunca de um valor guardado em separado.
+// Role é sempre lido do JWT, nunca de um valor guardado em separado.
 export function getRole() {
     const token = localStorage.getItem('token');
     if (!token) return null;
@@ -56,7 +56,7 @@ export function getUser() {
     };
 }
 
-// Guarda apenas o token — o role é sempre derivado do JWT
+// Guarda apenas o token, o role é sempre derivado do JWT
 export function saveAuth(token) {
     localStorage.setItem('token', token);
 }

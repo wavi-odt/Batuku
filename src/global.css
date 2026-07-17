@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   global.css — Reset, base e classes utilitárias do Batuku
+﻿/* ─────────────────────────────────────────────────────────────────
+   global.css, Reset, base e classes utilitárias do Batuku
    Sem Tailwind. Tudo escrito à mão sobre os tokens.
    ───────────────────────────────────────────────────────────────── */
 
@@ -82,7 +82,7 @@ body {
 
 .btn--sm { padding: 10px 18px; font-size: var(--fs-sm); border-radius: var(--radius-sm); }
 
-/* Aliases legacy — para Login/Register/etc. que ainda usam estas classes.
+/* Aliases legacy, para Login/Register/etc. que ainda usam estas classes.
    Mantêm o mesmo visual do .btn novo. Podes apagar quando migrares todas as páginas. */
 .btn-primary,
 .btn-secondary,
@@ -222,7 +222,7 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
 ::-webkit-scrollbar-track { background: var(--color-bg); }
 
-/* ─── ACESSIBILIDADE — reduce motion ──────────────────────────────── */
+/* ─── ACESSIBILIDADE, reduce motion ──────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;

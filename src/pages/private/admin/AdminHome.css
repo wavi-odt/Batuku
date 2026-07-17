@@ -1,0 +1,166 @@
+﻿/* ─────────────────────────────────────────────────────────────────
+   pages/private/admin/AdminHome.css
+   Depende apenas de tokens.css (variáveis globais). Sem AppShell,
+   página de trabalho interno, layout próprio e independente.
+   ───────────────────────────────────────────────────────────────── */
+
+.admin-page {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding: var(--space-8) var(--container-px);
+}
+
+.admin-page__inner {
+    max-width: 880px;
+    margin: 0 auto;
+}
+
+/* ─── Cabeçalho ───────────────────────────────────────────────────── */
+.admin-head {
+    margin-bottom: var(--space-8);
+}
+.admin-head__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+}
+.admin-head__logout {
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+.admin-head__title {
+    font-size: var(--fs-2xl);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--tracking-snug);
+    margin: 0 0 6px;
+    color: var(--color-ink);
+}
+.admin-head__sub {
+    font-size: var(--fs-base);
+    color: var(--color-ink-mute);
+    margin: 0;
+}
+
+/* ─── Métricas ────────────────────────────────────────────────────── */
+.admin-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
+}
+@media (max-width: 760px) {
+    .admin-metrics { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 420px) {
+    .admin-metrics { grid-template-columns: 1fr; }
+}
+
+.admin-metric {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+}
+.admin-metric--alert {
+    border-color: rgba(248, 113, 113, 0.4);
+    background: linear-gradient(180deg, rgba(248, 113, 113, 0.08), var(--color-surface) 60%);
+}
+
+.admin-metric__value {
+    font-size: var(--fs-3xl);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--tracking-snug);
+    line-height: 1;
+    color: var(--color-ink);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.admin-metric--alert .admin-metric__value { color: var(--color-danger); }
+.admin-metric__flag { color: var(--color-danger); }
+
+.admin-metric__label {
+    margin-top: 8px;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+}
+
+/* ─── Ferramentas ─────────────────────────────────────────────────── */
+.admin-tools {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+}
+@media (max-width: 700px) {
+    .admin-tools { grid-template-columns: 1fr; }
+}
+
+.admin-tool {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    background: linear-gradient(180deg, var(--color-surface) 0%, var(--color-bg-2) 100%);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-5);
+    text-align: left;
+}
+
+.admin-tool--active {
+    cursor: pointer;
+    transition: border-color var(--duration-base) var(--ease-out),
+        transform var(--duration-base) var(--ease-out);
+}
+.admin-tool--active:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+}
+.admin-tool--active:focus-visible {
+    outline: 2px solid var(--color-coral);
+    outline-offset: 2px;
+}
+
+.admin-tool--disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.admin-tool__icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.admin-tool__icon--green   { background: var(--color-green-dim);   color: var(--color-green); }
+.admin-tool__icon--mustard { background: var(--color-mustard-dim); color: var(--color-mustard); }
+
+.admin-tool__body { min-width: 0; }
+
+.admin-tool__title-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.admin-tool__title-row .badge {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.admin-tool__title {
+    font-size: var(--fs-md);
+    font-weight: var(--fw-semibold);
+    margin: 0;
+    color: var(--color-ink);
+}
+
+.admin-tool__desc {
+    margin: 6px 0 0;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    line-height: var(--lh-base);
+}

@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Ranking — Gamificação. Mostra leaderboard + pontos por interação.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Ranking, Gamificação. Mostra leaderboard + pontos por interação.
    ───────────────────────────────────────────────────────────────── */
 
 import { LEADERBOARD, ARTISTS } from '../../data/batuku.js'
@@ -39,7 +39,7 @@ export default function Ranking() {
                                     #{r.rank}
                                 </div>
                                 <div className="ranking__avatar">
-                                    <ArtistArtwork shape={ARTISTS[i].shape} hue={ARTISTS[i].hue} rounded={0} showGloss={false} />
+                                    <ArtistArtwork shape={ARTISTS[i].shape} hue={ARTISTS[i].hue} image={ARTISTS[i].image} rounded={0} showGloss={false} />
                                 </div>
                                 <div className="ranking__row-meta">
                                     <div className="ranking__row-name">{r.name}</div>

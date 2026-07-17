@@ -1,4 +1,4 @@
-/* ─── NotFound (404) ──────────────────────────────────────────────── */
+﻿/* ─── NotFound (404) ──────────────────────────────────────────────── */
 
 .nf {
     position: relative;
@@ -117,7 +117,7 @@
     margin: 0;
 }
 
-/* ─── Mobile — esconde os capas para não competir com o texto ────── */
+/* ─── Mobile, esconde os capas para não competir com o texto ────── */
 @media (max-width: 760px) {
     .nf__floaters { display: none; }
     .nf__code     { font-size: clamp(110px, 35vw, 180px); }

@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   StatCards.jsx — Quatro métricas de topo do artista.
+﻿/* ─────────────────────────────────────────────────────────────────
+   StatCards.jsx, Quatro métricas de topo do artista.
    ───────────────────────────────────────────────────────────────── */
 
 import { FaPlay, FaUsers, FaAward, FaTrophy } from 'react-icons/fa'

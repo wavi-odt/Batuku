@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   BeatSales.jsx — Receita do mês + últimas vendas de beats.
+﻿/* ─────────────────────────────────────────────────────────────────
+   BeatSales.jsx, Receita do mês + últimas vendas de beats.
    ───────────────────────────────────────────────────────────────── */
 
 import './BeatSales.css'

@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   DiscordCard.jsx — Card lateral com link para o servidor Discord.
+﻿/* ─────────────────────────────────────────────────────────────────
+   DiscordCard.jsx, Card lateral com link para o servidor Discord.
    ───────────────────────────────────────────────────────────────── */
 
 import { FaDiscord } from 'react-icons/fa'

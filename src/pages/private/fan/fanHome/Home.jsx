@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   pages/fan/Home.jsx — Página inicial do utilizador comum (fã).
+﻿/* ─────────────────────────────────────────────────────────────────
+   pages/fan/Home.jsx, Página inicial do utilizador comum (fã).
    ───────────────────────────────────────────────────────────────── */
 
 import AppShell           from '../../../../components/HomeComponents/AppShell.jsx'

@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Register.jsx — Página de criar conta.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Register.jsx, Página de criar conta.
    ───────────────────────────────────────────────────────────────── */
 
 import { useState, useMemo } from 'react'
@@ -92,7 +92,7 @@ export default function Register() {
                 accent="cena."
                 lede="Cria a tua conta grátis. Como fã descobres artistas e ganhas pontos. Como artista publicas a tua música e cresces."
                 quote="Vendi o primeiro beat três dias depois de me registar. Coisa séria."
-                author="— Bento Lima · Produtor · São Filipe"
+                author=", Bento Lima · Produtor · São Filipe"
             />
 
             <section className="auth__form-col">

@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Artists — Grelha 4×2 com artistas em destaque.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Artists, Grelha 4×2 com artistas em destaque.
    ───────────────────────────────────────────────────────────────── */
 
 import { Link } from 'react-router-dom'
@@ -25,7 +25,7 @@ export default function Artists() {
                 <div className="artists__grid reveal">
                     {ARTISTS.map((a, i) => (
                         <Link key={i} to={`/artist/${i}`} className="artists__card">
-                            <ArtistArtwork shape={a.shape} hue={a.hue} rounded={14} />
+                            <ArtistArtwork shape={a.shape} hue={a.hue} image={a.image} rounded={14} />
                             <div className="artists__meta">
                                 <div>
                                     <div className="artists__name">{a.name}</div>

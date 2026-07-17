@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   VerifyBanner.jsx — Confirma estado de artista verificado.
+﻿/* ─────────────────────────────────────────────────────────────────
+   VerifyBanner.jsx, Confirma estado de artista verificado.
    ───────────────────────────────────────────────────────────────── */
 
 import { HiBadgeCheck } from 'react-icons/hi'

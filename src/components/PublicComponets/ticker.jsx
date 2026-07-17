@@ -1,5 +1,5 @@
-/* ─────────────────────────────────────────────────────────────────
-   Ticker — Marquee horizontal de géneros musicais. Decorativo.
+﻿/* ─────────────────────────────────────────────────────────────────
+   Ticker, Marquee horizontal de géneros musicais. Decorativo.
    ───────────────────────────────────────────────────────────────── */
 
 import { GENRES } from '../../data/batuku.js'

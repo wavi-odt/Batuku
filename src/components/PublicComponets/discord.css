@@ -64,6 +64,7 @@
     height: 28px;
     border-radius: 50%;
     flex-shrink: 0;
+    object-fit: cover;
 }
 
 .discord__msg-body { flex: 1; }
