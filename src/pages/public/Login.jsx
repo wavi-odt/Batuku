@@ -43,7 +43,9 @@ export default function Login() {
 
             saveAuth(data.token);
             const role = getRole();
-            navigate(role === 'artist' ? '/dashboard' : '/home');
+            if (role === 'admin') navigate('/admin');
+            else if (role === 'artist') navigate('/dashboard');
+            else navigate('/home');
         } catch (err) {
             setError(err.message || 'Não foi possível entrar. Tenta novamente.');
         } finally {

@@ -29,7 +29,7 @@ const TOOLS = [
         desc: 'Pesquisar e criar perfis por reclamar a partir do Spotify.',
         icon: <FaSpotify size={20} />,
         accent: 'green',
-        to: '/admin/spotify-import',
+        to: '/admin/artist-import',
         status: 'active',
     },
     {
