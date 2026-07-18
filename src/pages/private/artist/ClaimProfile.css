@@ -1,0 +1,457 @@
+/* ─────────────────────────────────────────────────────────────────
+   ClaimProfile.css — Fluxo de reclamação de perfil Spotify
+   ───────────────────────────────────────────────────────────────── */
+
+.claim-page {
+    max-width: 620px;
+    margin: 0 auto;
+    padding-bottom: 60px;
+}
+
+.claim-back {
+    display: inline-block;
+    color: var(--color-ink-mute);
+    font-size: 13px;
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: color 120ms;
+}
+.claim-back:hover { color: var(--color-ink); }
+
+.claim-page__title {
+    font-size: var(--fs-2xl);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--tracking-snug);
+    margin: 0 0 28px;
+}
+
+/* ── Stepper ─────────────────────────────────────────────────────────── */
+.claim-stepper {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 28px;
+    position: relative;
+}
+.claim-stepper::before {
+    content: '';
+    position: absolute;
+    top: 13px;
+    left: 13px;
+    right: 13px;
+    height: 1px;
+    background: var(--color-border);
+    z-index: 0;
+}
+
+.claim-stepper__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.claim-stepper__dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--color-bg);
+    border: 2px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--color-ink-mute);
+    transition: background 200ms, border-color 200ms, color 200ms;
+}
+.claim-stepper__step.is-done .claim-stepper__dot {
+    background: var(--color-green-dim);
+    border-color: var(--color-green);
+    color: var(--color-green);
+}
+.claim-stepper__step.is-active .claim-stepper__dot {
+    background: var(--color-coral);
+    border-color: var(--color-coral);
+    color: #fff;
+}
+
+.claim-stepper__label {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    text-align: center;
+    white-space: nowrap;
+}
+.claim-stepper__step.is-active .claim-stepper__label {
+    color: var(--color-ink);
+    font-weight: 600;
+}
+
+/* ── Card wrapper ────────────────────────────────────────────────────── */
+.claim-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    padding: 32px;
+}
+
+/* ── Step layout ─────────────────────────────────────────────────────── */
+.claim-step__title {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 8px;
+    color: var(--color-ink);
+}
+.claim-step__desc {
+    font-size: 13px;
+    color: var(--color-ink-mute);
+    line-height: 1.6;
+    margin: 0 0 24px;
+}
+.claim-step__footer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-border);
+}
+.claim-step--center {
+    text-align: center;
+    padding: 12px 0;
+}
+
+/* ── Spotify search ──────────────────────────────────────────────────── */
+.claim-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.claim-search__icon {
+    position: absolute;
+    left: 13px;
+    pointer-events: none;
+    flex-shrink: 0;
+}
+.claim-search__input {
+    width: 100%;
+    padding: 11px 14px 11px 38px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-bg-2);
+    color: var(--color-ink);
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 120ms;
+}
+.claim-search__input:focus { border-color: #1DB954; }
+.claim-search__input::placeholder { color: var(--color-ink-mute); }
+
+.claim-search__spinner {
+    position: absolute;
+    right: 13px;
+    width: 15px;
+    height: 15px;
+    border: 2px solid var(--color-border);
+    border-top-color: #1DB954;
+    border-radius: 50%;
+    animation: claim-spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+@keyframes claim-spin { to { transform: rotate(360deg); } }
+
+/* ── Artist results ──────────────────────────────────────────────────── */
+.claim-artists {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+.claim-artist {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 11px;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background 120ms, border-color 120ms;
+}
+.claim-artist:hover { background: rgba(255,255,255,0.04); }
+.claim-artist.is-selected {
+    background: rgba(29,185,84,0.08);
+    border-color: rgba(29,185,84,0.3);
+}
+.claim-artist__img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.claim-artist__img--placeholder { background: var(--color-bg-2); }
+.claim-artist__info { flex: 1; min-width: 0; }
+.claim-artist__name { font-size: 14px; font-weight: 600; color: var(--color-ink); }
+.claim-artist__meta { font-size: 12px; color: var(--color-ink-mute); margin-top: 1px; }
+.claim-artist__check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--color-green-dim);
+    color: var(--color-green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.claim-selected-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: var(--color-green);
+    background: var(--color-green-dim);
+    padding: 7px 12px;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    border: 1px solid rgba(79,174,124,0.25);
+}
+
+/* ── Camera ──────────────────────────────────────────────────────────── */
+.claim-camera {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/3;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #111;
+    margin-bottom: 8px;
+}
+.claim-camera--landscape { aspect-ratio: 16/10; }
+
+.claim-camera__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.claim-camera__video--mirror { transform: scaleX(-1); }
+
+.claim-camera__preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.claim-camera__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.55);
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    text-align: center;
+    padding: 16px;
+}
+.claim-camera__overlay--err { color: var(--color-danger); }
+
+.claim-camera__shutter {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #fff;
+    color: #111;
+    border: 4px solid rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    transition: transform 120ms, background 120ms;
+}
+.claim-camera__shutter:hover {
+    background: #e8e8e8;
+    transform: translateX(-50%) scale(1.06);
+}
+.claim-camera__shutter:disabled { opacity: 0.45; }
+
+.claim-camera__retake {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 13px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,0.18);
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 120ms;
+}
+.claim-camera__retake:hover { background: rgba(0,0,0,0.85); }
+
+/* ── Document mode tabs ──────────────────────────────────────────────── */
+.claim-doc-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 14px;
+    background: var(--color-bg-2);
+    border-radius: 10px;
+    padding: 4px;
+}
+.claim-doc-tab {
+    flex: 1;
+    padding: 8px;
+    border-radius: 7px;
+    border: 0;
+    background: transparent;
+    color: var(--color-ink-mute);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    transition: background 120ms, color 120ms;
+}
+.claim-doc-tab.is-active {
+    background: var(--color-surface);
+    color: var(--color-ink);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+}
+
+/* ── File upload zone ────────────────────────────────────────────────── */
+.claim-file-zone {
+    position: relative;
+    border: 2px dashed var(--color-border);
+    border-radius: 14px;
+    padding: 44px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 120ms, background 120ms;
+    margin-bottom: 8px;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    overflow: hidden;
+}
+.claim-file-zone:hover:not(.has-file) { border-color: var(--color-border-strong); background: rgba(255,255,255,0.02); }
+.claim-file-zone.has-file { cursor: default; }
+.claim-file-zone__icon { color: var(--color-ink-mute); }
+.claim-file-zone__label { font-size: 14px; font-weight: 500; color: var(--color-ink-soft); }
+.claim-file-zone__hint  { font-size: 12px; color: var(--color-ink-mute); }
+.claim-file-input { display: none; }
+.claim-file-preview {
+    max-width: 100%;
+    max-height: 240px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+/* ── Confirm summary ─────────────────────────────────────────────────── */
+.claim-summary {
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+.claim-summary__row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+.claim-summary__row:last-child { border-bottom: 0; }
+.claim-summary__label {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    min-width: 80px;
+    flex-shrink: 0;
+}
+.claim-summary__value { font-size: 13px; color: var(--color-ink); }
+.claim-summary__artist {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.claim-summary__artist-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.claim-summary__thumb {
+    width: 72px;
+    height: 54px;
+    object-fit: cover;
+    border-radius: 6px;
+    background: var(--color-bg-2);
+}
+
+.claim-note {
+    font-size: 12px;
+    color: var(--color-ink-mute);
+    line-height: 1.5;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 10px 13px;
+}
+
+.claim-error {
+    font-size: 13px;
+    color: var(--color-danger);
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* ── Success ─────────────────────────────────────────────────────────── */
+.claim-success__icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--color-green-dim);
+    color: var(--color-green);
+    font-size: 26px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    border: 2px solid rgba(79,174,124,0.3);
+}
+
+@media (max-width: 520px) {
+    .claim-card { padding: 20px 16px; }
+    .claim-stepper__label { display: none; }
+}

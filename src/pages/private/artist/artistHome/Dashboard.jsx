@@ -33,7 +33,7 @@ export default function Dashboard() {
             </div>
 
             {/* ─── Verify banner ─────────────────────────────────── */}
-            <VerifyBanner provider={u.verifiedOn} />
+            <VerifyBanner provider={realUser?.spotifyArtistId ? 'spotify' : undefined} />
 
             {/* ─── Stats ─────────────────────────────────────────── */}
             <StatCards stats={homeData.artistStats} />

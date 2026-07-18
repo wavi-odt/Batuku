@@ -1,4 +1,4 @@
-﻿/* ─────────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────────
    pages/private/admin/AdminHome.jsx, Painel de administração.
    Rota /admin, acessível só a ROLE_ADMIN (ver RoleRoute.jsx).
 
@@ -9,18 +9,13 @@
    (sem AppShell), simples cabeçalho + conteúdo.
    ───────────────────────────────────────────────────────────────── */
 
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaSpotify, FaFlag, FaExclamationTriangle } from 'react-icons/fa'
-import { logout } from '../../../utils/auth.js'
+import { logout, getToken } from '../../../utils/auth.js'
 import './AdminHome.css'
 
-/* Dados de exemplo, substituir por fetch ao backend quando pronto. */
-const METRICS = [
-    { label: 'Perfis de artista importados', value: 12 },
-    { label: 'Pedidos de reclamação pendentes', value: 3, alert: true },
-    { label: 'Utilizadores registados', value: 248 },
-    { label: 'Contas ARTIST ativas', value: 9 },
-];
+const API = 'http://localhost:8080/api/admin'
 
 const TOOLS = [
     {
@@ -47,7 +42,7 @@ function MetricCard({ label, value, alert }) {
     return (
         <div className={'admin-metric' + (alert && value > 0 ? ' admin-metric--alert' : '')}>
             <div className="admin-metric__value">
-                {value}
+                {value ?? '—'}
                 {alert && value > 0 && <FaExclamationTriangle size={15} className="admin-metric__flag" aria-hidden="true" />}
             </div>
             <div className="admin-metric__label">{label}</div>
@@ -87,6 +82,26 @@ function ToolCard({ tool }) {
 
 export default function AdminHome() {
     const navigate = useNavigate();
+    const [metrics, setMetrics] = useState([
+        { label: 'Perfis de artista importados',    value: null },
+        { label: 'Pedidos de reclamação pendentes', value: null, alert: true },
+        { label: 'Utilizadores registados',         value: null },
+        { label: 'Contas ARTIST ativas',            value: null },
+    ]);
+
+    useEffect(() => {
+        fetch(`${API}/metrics`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+        })
+            .then(res => res.ok ? res.json() : Promise.reject())
+            .then(data => setMetrics([
+                { label: 'Perfis de artista importados',    value: data.importedArtists },
+                { label: 'Pedidos de reclamação pendentes', value: data.pendingClaimRequests, alert: true },
+                { label: 'Utilizadores registados',         value: data.totalUsers },
+                { label: 'Contas ARTIST ativas',            value: data.activeArtistAccounts },
+            ]))
+            .catch(() => {});
+    }, []);
 
     function handleLogout() {
         logout();
@@ -109,7 +124,7 @@ export default function AdminHome() {
                 </header>
 
                 <section className="admin-metrics">
-                    {METRICS.map((m) => <MetricCard key={m.label} {...m} />)}
+                    {metrics.map((m) => <MetricCard key={m.label} {...m} />)}
                 </section>
 
                 <section className="admin-tools">

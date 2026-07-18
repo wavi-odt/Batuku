@@ -6,12 +6,17 @@ import './ArtistImport.css'
 
 const API = 'http://localhost:8080/api/admin/artist-profiles'
 
+function formatFollowers(n) {
+    if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace('.', ',')}M`
+    if (n >= 1_000) return `${Math.round(n / 1_000)}K`
+    return n.toLocaleString('pt-PT')
+}
+
 export default function ArtistImport() {
-    const [query, setQuery]     = useState('');
-    const [results, setResults] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError]     = useState('');
-    const [imported, setImported] = useState(new Set());
+    const [query, setQuery]       = useState('');
+    const [results, setResults]   = useState([]);
+    const [loading, setLoading]   = useState(false);
+    const [error, setError]       = useState('');
 
     async function handleSearch(e) {
         e.preventDefault();
@@ -42,7 +47,7 @@ export default function ArtistImport() {
                 body: JSON.stringify({ spotifyArtistId }),
             });
             if (!res.ok) throw new Error(`Erro ${res.status}`);
-            setImported(prev => new Set([...prev, spotifyArtistId]));
+            setResults(prev => prev.map(a => a.id === spotifyArtistId ? { ...a, imported: true } : a));
         } catch (err) {
             alert(err.message);
         }
@@ -79,17 +84,38 @@ export default function ArtistImport() {
                 <ul className="artist-import__list">
                     {results.map(artist => (
                         <li key={artist.id} className="artist-import__item">
-                            {artist.imageUrl && (
-                                <img src={artist.imageUrl} alt={artist.name} className="artist-import__img" />
-                            )}
+                            <div className="artist-import__avatar">
+                                {artist.imageUrl
+                                    ? <img src={artist.imageUrl} alt={artist.name} className="artist-import__img" />
+                                    : <span className="artist-import__initials">{artist.name?.[0]?.toUpperCase() ?? '?'}</span>
+                                }
+                            </div>
+
                             <div className="artist-import__info">
                                 <div className="artist-import__name">{artist.name}</div>
+
                                 {artist.genres?.length > 0 && (
-                                    <div className="artist-import__genres">{artist.genres.join(', ')}</div>
+                                    <div className="artist-import__genres">
+                                        {artist.genres.slice(0, 4).map(g => (
+                                            <span key={g} className="artist-import__tag">{g}</span>
+                                        ))}
+                                    </div>
                                 )}
+
                                 <div className="artist-import__meta">
                                     {artist.followers != null && (
-                                        <span>{artist.followers.toLocaleString('pt-PT')} seguidores</span>
+                                        <span>{formatFollowers(artist.followers)} seguidores</span>
+                                    )}
+                                    {artist.popularity != null && (
+                                        <span className="artist-import__pop">
+                                            <span className="artist-import__pop-track">
+                                                <span
+                                                    className="artist-import__pop-fill"
+                                                    style={{ width: `${artist.popularity}%` }}
+                                                />
+                                            </span>
+                                            {artist.popularity}
+                                        </span>
                                     )}
                                     {artist.spotifyUrl && (
                                         <a
@@ -98,17 +124,18 @@ export default function ArtistImport() {
                                             rel="noreferrer"
                                             className="artist-import__spotify"
                                         >
-                                            Spotify ↗
+                                            ↗ Spotify
                                         </a>
                                     )}
                                 </div>
                             </div>
+
                             <button
-                                className={`btn ${imported.has(artist.id) ? 'btn--ghost' : 'btn--primary'}`}
+                                className={`btn ${artist.imported ? 'btn--ghost' : 'btn--primary'}`}
                                 onClick={() => handleImport(artist.id)}
-                                disabled={imported.has(artist.id)}
+                                disabled={artist.imported}
                             >
-                                {imported.has(artist.id) ? 'Importado' : 'Importar'}
+                                {artist.imported ? 'Importado' : 'Importar'}
                             </button>
                         </li>
                     ))}

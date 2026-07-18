@@ -25,13 +25,14 @@ export function useCurrentUser() {
                 if (!data) return
                 setUser(prev => ({
                     ...prev,
-                    name:     data.name     || data.displayName              || prev?.name,
-                    email:    data.email                                      || prev?.email,
-                    handle:   data.username ? `@${data.username}` : (data.handle || prev?.handle),
-                    picture:  data.avatarUrl || data.picture || data.avatar   || prev?.picture,
-                    location: data.country                                                    || prev?.location,
-                    joined:   formatJoined(data.createdAt || data.joinedAt || data.memberSince) || prev?.joined,
-                    bio:      data.bio || data.description                                       || prev?.bio,
+                    name:             data.name     || data.displayName              || prev?.name,
+                    email:            data.email                                      || prev?.email,
+                    handle:           data.username ? `@${data.username}` : (data.handle || prev?.handle),
+                    picture:          data.avatarUrl || data.picture || data.avatar   || prev?.picture,
+                    location:         data.country                                    || prev?.location,
+                    joined:           formatJoined(data.createdAt || data.joinedAt || data.memberSince) || prev?.joined,
+                    bio:              data.bio || data.description                    || prev?.bio,
+                    spotifyArtistId:  data.spotifyArtistId || data.spotifyId          || prev?.spotifyArtistId || null,
                 }))
             })
             .catch(() => {})
