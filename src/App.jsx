@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { PlayerProvider } from './context/PlayerContext'
 import Landing from './pages/public/Landing'
 import NotFound from './pages/Denied/notFound'
 import Login from "./pages/public/Login.jsx";
@@ -15,6 +16,7 @@ import ArtistDetail from "./pages/private/artist/ArtistDetail.jsx";
 import TrackDetail from "./pages/private/track/TrackDetail.jsx";
 import PlaylistDetail from "./pages/private/playlist/PlaylistDetail.jsx";
 import UserDetail from "./pages/private/user/UserDetail.jsx";
+import ClaimProfile from "./pages/private/artist/ClaimProfile.jsx";
 import { getRole } from "./utils/auth.js";
 
 function ProfileRouter() {
@@ -23,6 +25,7 @@ function ProfileRouter() {
 
 function App() {
     return (
+        <PlayerProvider>
         <BrowserRouter>
             <Routes>
                 {/* Públicas */}
@@ -38,7 +41,8 @@ function App() {
                 <Route path="/admin/artist-import" element={<ProtectedRoute role="admin"><ArtistImport /></ProtectedRoute>} />
 
                 <Route path="/profile"      element={<RoleRoute roles={['fan', 'artist']}><ProfileRouter /></RoleRoute>} />
-                <Route path="/artists/:id"   element={<RoleRoute roles={['fan', 'artist']}><ArtistDetail /></RoleRoute>} />
+                <Route path="/artists/:id"    element={<RoleRoute roles={['fan', 'artist']}><ArtistDetail /></RoleRoute>} />
+                <Route path="/claim-profile" element={<RoleRoute roles={['artist']}><ClaimProfile /></RoleRoute>} />
                 <Route path="/tracks/:id"    element={<RoleRoute roles={['fan', 'artist']}><TrackDetail /></RoleRoute>} />
                 <Route path="/playlists/:id" element={<RoleRoute roles={['fan', 'artist']}><PlaylistDetail /></RoleRoute>} />
                 <Route path="/users/:id"     element={<RoleRoute roles={['fan', 'artist']}><UserDetail /></RoleRoute>} />
@@ -49,6 +53,7 @@ function App() {
                 <Route path="/*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>
+        </PlayerProvider>
     )
 }
 
