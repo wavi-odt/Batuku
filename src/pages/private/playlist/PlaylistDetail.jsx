@@ -13,7 +13,7 @@ export default function PlaylistDetail() {
     const [error,    setError]    = useState('');
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/playlists/${id}`, {
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/playlists/${id}`, {
             headers: { Authorization: `Bearer ${getToken()}` },
         })
             .then(res => { if (!res.ok) throw new Error(`Erro ${res.status}`); return res.json(); })

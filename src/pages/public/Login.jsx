@@ -28,7 +28,7 @@ export default function Login() {
             // O backend (JwtAuthenticationController) espera o campo "username".
             // Enviamos o que o utilizador escreveu, pode ser email ou username.
             // O JwtUserDetailsService tenta os dois automaticamente.
-            const res = await fetch('http://localhost:8080/authenticate', {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/authenticate`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -76,11 +76,11 @@ export default function Login() {
 
                     <div className="auth__oauth">
                         <button type="button" className="auth__oauth-btn auth__oauth-btn--discord"
-                            onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/discord'}>
+                            onClick={() => window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/discord`}>
                             <FaDiscord size={18} /> Discord
                         </button>
                         <button type="button" className="auth__oauth-btn auth__oauth-btn--google"
-                            onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}>
+                            onClick={() => window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`}>
                             <FaGoogle size={16} /> Google
                         </button>
                         <button type="button" className="auth__oauth-btn auth__oauth-btn--apple">

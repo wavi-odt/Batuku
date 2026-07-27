@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { getUser } from '../utils/auth'
 
-const API = 'http://localhost:8080'
+const API = import.meta.env.VITE_API_BASE_URL
 
 function formatJoined(dateStr) {
     if (!dateStr) return null

@@ -70,7 +70,7 @@ export default function TopBar({ role = 'fan', notifications = true }) {
     async function doSearch(q) {
         try {
             const res = await fetch(
-                `http://localhost:8080/api/search?q=${encodeURIComponent(q)}`,
+                `${import.meta.env.VITE_API_BASE_URL}/api/search?q=${encodeURIComponent(q)}`,
                 { headers: { Authorization: `Bearer ${getToken()}` } }
             );
             if (!res.ok) throw new Error();

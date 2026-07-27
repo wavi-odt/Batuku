@@ -4,7 +4,7 @@ import { getToken } from '../../../utils/auth.js'
 import './AdminHome.css'
 import './ArtistImport.css'
 
-const API = 'http://localhost:8080/api/admin/artist-profiles'
+const API = `${import.meta.env.VITE_API_BASE_URL}/api/admin/artist-profiles`
 
 function formatFollowers(n) {
     if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace('.', ',')}M`

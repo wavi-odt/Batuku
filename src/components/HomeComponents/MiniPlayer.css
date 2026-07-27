@@ -10,20 +10,25 @@ iframe[src*="spotify"] {
 /* ─── Mini Player ─────────────────────────────────────────────────── */
 
 .player {
-    grid-area: player;
-    position: sticky;
+    position: fixed;
     bottom: 0;
+    left: 0;
+    right: 0;
     height: 78px;
     background-color: rgba(10, 10, 11, 0.92);
     backdrop-filter: blur(16px) saturate(140%);
     -webkit-backdrop-filter: blur(16px) saturate(140%);
     border-top: 1px solid var(--color-border);
-    display: grid;
     grid-template-columns: 1fr 1.4fr 1fr;
     align-items: center;
     padding: 0 24px;
     gap: 24px;
     z-index: 30;
+    display: none;
+}
+
+body.has-player .player {
+    display: grid;
 }
 
 /* ─── Track info ──────────────────────────────────────────────────── */
@@ -190,7 +195,7 @@ iframe[src*="spotify"] {
 
 /* ─── Mobile ──────────────────────────────────────────────────────── */
 @media (max-width: 700px) {
-    .player {
+    body.has-player .player {
         grid-template-columns: 1fr auto;
         padding: 0 14px;
         gap: 12px;

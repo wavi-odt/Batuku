@@ -26,7 +26,7 @@ function StepSpotify({ selected, onSelect, onNext }) {
         timerRef.current = setTimeout(async () => {
             try {
                 const res = await fetch(
-                    `http://localhost:8080/api/spotify/search/artists?q=${encodeURIComponent(q)}`,
+                    `${import.meta.env.VITE_API_BASE_URL}/api/spotify/search/artists?q=${encodeURIComponent(q)}`,
                     { headers: { Authorization: `Bearer ${getToken()}` } }
                 );
                 setResults(res.ok ? await res.json() : []);
@@ -475,7 +475,7 @@ export default function ClaimProfile() {
             body.append('spotifyArtistId', spotifyArtist.id);
             body.append('selfie',      selfieBlob, 'selfie.jpg');
             body.append('idDocument',  docBlob, docBlob instanceof File ? docBlob.name : 'document.jpg');
-            const res = await fetch('http://localhost:8080/api/artist-claims', {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-claims`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${getToken()}` },
                 body,

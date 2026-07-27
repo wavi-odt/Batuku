@@ -1,5 +1,8 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom'
+import { useEffect } from 'react'
 import { PlayerProvider } from './context/PlayerContext'
+import { usePlayer } from './context/PlayerContext'
+import MiniPlayer from './components/HomeComponents/MiniPlayer'
 import Landing from './pages/public/Landing'
 import NotFound from './pages/Denied/notFound'
 import Login from "./pages/public/Login.jsx";
@@ -23,36 +26,53 @@ function ProfileRouter() {
     return <Profile role={getRole()} />;
 }
 
+// Layout route que mantém o MiniPlayer montado entre navegações privadas
+function PlayerLayer() {
+    const { track } = usePlayer()
+
+    useEffect(() => {
+        document.body.classList.toggle('has-player', !!track)
+        return () => document.body.classList.remove('has-player')
+    }, [track])
+
+    return (
+        <>
+            <Outlet />
+            <MiniPlayer />
+        </>
+    )
+}
+
 function App() {
     return (
         <PlayerProvider>
-        <BrowserRouter>
-            <Routes>
-                {/* Públicas */}
-                <Route path="/" element={<Landing />} />
-                <Route path="/login"           element={<Login />} />
-                <Route path="/register"        element={<Register />} />
-                <Route path="/oauth2/callback" element={<OAuthCallback />} />
+            <BrowserRouter>
+                <Routes>
+                    {/* Públicas */}
+                    <Route path="/" element={<Landing />} />
+                    <Route path="/login"           element={<Login />} />
+                    <Route path="/register"        element={<Register />} />
+                    <Route path="/oauth2/callback" element={<OAuthCallback />} />
 
-                {/* Privadas */}
-                <Route path="/home"        element={<RoleRoute roles={['fan']}><FanHome /></RoleRoute>} />
-                <Route path="/dashboard"   element={<RoleRoute roles={['artist']}><Dashboard /></RoleRoute>} />
-                <Route path="/admin"              element={<ProtectedRoute role="admin"><AdminHome /></ProtectedRoute>} />
-                <Route path="/admin/artist-import" element={<ProtectedRoute role="admin"><ArtistImport /></ProtectedRoute>} />
+                    {/* Admin (sem player) */}
+                    <Route path="/admin"              element={<ProtectedRoute role="admin"><AdminHome /></ProtectedRoute>} />
+                    <Route path="/admin/artist-import" element={<ProtectedRoute role="admin"><ArtistImport /></ProtectedRoute>} />
 
-                <Route path="/profile"      element={<RoleRoute roles={['fan', 'artist']}><ProfileRouter /></RoleRoute>} />
-                <Route path="/artists/:id"    element={<RoleRoute roles={['fan', 'artist']}><ArtistDetail /></RoleRoute>} />
-                <Route path="/claim-profile" element={<RoleRoute roles={['artist']}><ClaimProfile /></RoleRoute>} />
-                <Route path="/tracks/:id"    element={<RoleRoute roles={['fan', 'artist']}><TrackDetail /></RoleRoute>} />
-                <Route path="/playlists/:id" element={<RoleRoute roles={['fan', 'artist']}><PlaylistDetail /></RoleRoute>} />
-                <Route path="/users/:id"     element={<RoleRoute roles={['fan', 'artist']}><UserDetail /></RoleRoute>} />
-                <Route path="/artists"     element={<RoleRoute roles={['fan', 'artist']}><div className="p-8">Artistas - em breve</div></RoleRoute>} />
-                <Route path="/marketplace" element={<RoleRoute roles={['fan', 'artist']}><div className="p-8">Marketplace - em breve</div></RoleRoute>} />
-                <Route path="/community"   element={<RoleRoute roles={['fan', 'artist']}><div className="p-8">Comunidade - em breve</div></RoleRoute>} />
+                    {/* Privadas — MiniPlayer persiste entre estas rotas */}
+                    <Route element={<PlayerLayer />}>
+                        <Route path="/home"        element={<RoleRoute roles={['fan']}><FanHome /></RoleRoute>} />
+                        <Route path="/dashboard"   element={<RoleRoute roles={['artist']}><Dashboard /></RoleRoute>} />
+                        <Route path="/profile"     element={<RoleRoute roles={['fan', 'artist']}><ProfileRouter /></RoleRoute>} />
+                        <Route path="/artists/:id"    element={<RoleRoute roles={['fan', 'artist']}><ArtistDetail /></RoleRoute>} />
+                        <Route path="/claim-profile"  element={<RoleRoute roles={['artist']}><ClaimProfile /></RoleRoute>} />
+                        <Route path="/tracks/:id"     element={<RoleRoute roles={['fan', 'artist']}><TrackDetail /></RoleRoute>} />
+                        <Route path="/playlists/:id"  element={<RoleRoute roles={['fan', 'artist']}><PlaylistDetail /></RoleRoute>} />
+                        <Route path="/users/:id"      element={<RoleRoute roles={['fan', 'artist']}><UserDetail /></RoleRoute>} />
+                    </Route>
 
-                <Route path="/*" element={<NotFound />} />
-            </Routes>
-        </BrowserRouter>
+                    <Route path="/*" element={<NotFound />} />
+                </Routes>
+            </BrowserRouter>
         </PlayerProvider>
     )
 }

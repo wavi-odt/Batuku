@@ -3,9 +3,8 @@
    Compõe Sidebar + TopBar + (children) + MiniPlayer.
    ───────────────────────────────────────────────────────────────── */
 
-import Sidebar    from './Sidebar'
-import TopBar     from './TopBar'
-import MiniPlayer from './MiniPlayer'
+import Sidebar from './Sidebar'
+import TopBar  from './TopBar'
 import './AppShell.css'
 
 function AppShell({ role = 'fan', children }) {
@@ -16,7 +15,6 @@ function AppShell({ role = 'fan', children }) {
             <main className="shell__main">
                 {children}
             </main>
-            <MiniPlayer />
         </div>
     );
 }

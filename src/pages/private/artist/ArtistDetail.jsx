@@ -33,9 +33,9 @@ export default function ArtistDetail() {
     useEffect(() => {
         const auth = { headers: { Authorization: `Bearer ${getToken()}` } };
         Promise.all([
-            fetch(`http://localhost:8080/api/artists/${id}`, auth),
-            fetch(`http://localhost:8080/api/artist-follows/${id}/status`, auth),
-            fetch(`http://localhost:8080/api/artists/${id}/top-tracks?market=PT`, auth),
+            fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artists/${id}`, auth),
+            fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-follows/${id}/status`, auth),
+            fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artists/${id}/top-tracks?market=PT`, auth),
         ])
             .then(([artistRes, statusRes, topRes]) => Promise.all([
                 artistRes.ok ? artistRes.json() : Promise.reject(new Error(`Erro ${artistRes.status}`)),
@@ -121,7 +121,7 @@ export default function ArtistDetail() {
                             onClick={async () => {
                                 const next = !following;
                                 try {
-                                    const res = await fetch(`http://localhost:8080/api/artist-follows/${id}`, {
+                                    const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-follows/${id}`, {
                                         method: next ? 'POST' : 'DELETE',
                                         headers: { Authorization: `Bearer ${getToken()}` },
                                     });

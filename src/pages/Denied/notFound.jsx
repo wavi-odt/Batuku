@@ -4,14 +4,18 @@
    Usa apenas tokens + global.css. Sem dependências novas.
    ───────────────────────────────────────────────────────────────── */
 
+import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { HiArrowLeft, HiHome, HiSearch } from 'react-icons/hi'
+import { usePlayer } from '../../context/PlayerContext'
 import { ARTISTS } from '../../data/batuku'
 import ArtistArtwork from '../../components/PublicComponets/ArtistArtwork'
 import './notFound.css'
 
 export default function NotFound() {
     const navigate = useNavigate();
+    const { setTrack } = usePlayer()
+    useEffect(() => { setTrack(null) }, [])
 
     /* Capas flutuantes (decorativas), posições absolutas em %.
        Cada uma com rotação + delay diferentes na animação. */

@@ -2,8 +2,7 @@
 import { FaTimes, FaCamera, FaCheck, FaExclamationTriangle } from 'react-icons/fa'
 import './AvatarUploader.css'
 
-// Base URL: define VITE_API_BASE_URL em .env; fallback para localhost em dev
-const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
+const API_BASE = import.meta.env.VITE_API_BASE_URL
 const MAX_SIZE = 5 * 1024 * 1024 // 5 MB
 
 export default function AvatarUploader({ currentAvatarUrl, isArtist, onSuccess, onClose }) {

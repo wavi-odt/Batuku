@@ -11,6 +11,12 @@
     position: sticky;
     top: 0;
     height: 100vh;
+    overflow-y: auto;
+    transition: padding-bottom 200ms ease;
+}
+
+body.has-player .sidebar {
+    padding-bottom: 96px;
 }
 
 @media (max-width: 900px) {

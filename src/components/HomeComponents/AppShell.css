@@ -3,11 +3,10 @@
 .shell {
     display: grid;
     grid-template-columns: 248px 1fr;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto 1fr;
     grid-template-areas:
         'sidebar topbar'
-        'sidebar main'
-        'sidebar player';
+        'sidebar main';
     min-height: 100vh;
     background-color: var(--color-bg);
 }
@@ -23,8 +22,7 @@
         grid-template-columns: 1fr;
         grid-template-areas:
             'topbar'
-            'main'
-            'player';
+            'main';
     }
     .shell__main { padding: var(--space-5) var(--space-5) 120px; }
 }

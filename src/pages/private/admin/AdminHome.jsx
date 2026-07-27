@@ -15,7 +15,7 @@ import { FaSpotify, FaFlag, FaExclamationTriangle } from 'react-icons/fa'
 import { logout, getToken } from '../../../utils/auth.js'
 import './AdminHome.css'
 
-const API = 'http://localhost:8080/api/admin'
+const API = `${import.meta.env.VITE_API_BASE_URL}/api/admin`
 
 const TOOLS = [
     {

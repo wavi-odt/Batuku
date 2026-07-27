@@ -13,7 +13,7 @@ export default function TrackDetail() {
     const [error,   setError]   = useState('');
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/tracks/${id}`, {
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tracks/${id}`, {
             headers: { Authorization: `Bearer ${getToken()}` },
         })
             .then(res => { if (!res.ok) throw new Error(`Erro ${res.status}`); return res.json(); })

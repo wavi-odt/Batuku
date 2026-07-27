@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+import { usePlayer } from '../../context/PlayerContext'
 import NavbarPublic from '../../components/PublicComponets/NavbarPublic.jsx'
 import Hero         from '../../components/PublicComponets/hero'
 import Ticker       from '../../components/PublicComponets/ticker'
@@ -14,6 +16,9 @@ import CTA          from '../../components/PublicComponets/cta'
 import Footer       from '../../components/PublicComponets/footer'
 
 export default function Landing() {
+    const { setTrack } = usePlayer()
+    useEffect(() => { setTrack(null) }, [])
+
     return (
         <div>
             <NavbarPublic />

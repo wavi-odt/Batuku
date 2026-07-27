@@ -31,7 +31,7 @@ export default function UserDetail() {
     const [followers,  setFollowers]  = useState(0);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/users/${id}`, {
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/${id}`, {
             headers: { Authorization: `Bearer ${getToken()}` },
         })
             .then(res => { if (!res.ok) throw new Error(`Erro ${res.status}`); return res.json(); })
@@ -47,7 +47,7 @@ export default function UserDetail() {
     async function toggleFollow() {
         const next = !following;
         try {
-            const res = await fetch(`http://localhost:8080/api/follows/${id}`, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/follows/${id}`, {
                 method: next ? 'POST' : 'DELETE',
                 headers: { Authorization: `Bearer ${getToken()}` },
             });

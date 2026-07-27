@@ -8,6 +8,7 @@ import { HiUser, HiShieldCheck, HiLockClosed, HiLogout, HiChevronUp } from 'reac
 import { FaCog } from 'react-icons/fa'
 import { homeData } from '../../data/home'
 import { logout } from '../../utils/auth'
+import { usePlayer } from '../../context/PlayerContext'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { ICONS } from './icons'
 import ArtistArtwork from '../PublicComponets/ArtistArtwork'
@@ -32,6 +33,7 @@ export default function Sidebar({ role = 'fan' }) {
         ...(realUser?.handle && { handle: realUser.handle }),
     };
 
+    const { setTrack } = usePlayer()
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
     const navigate = useNavigate();
@@ -48,6 +50,7 @@ export default function Sidebar({ role = 'fan' }) {
     }, [menuOpen]);
 
     function handleLogout() {
+        setTrack(null)
         logout();
         navigate('/');
     }
