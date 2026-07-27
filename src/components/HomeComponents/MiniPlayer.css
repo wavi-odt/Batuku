@@ -117,6 +117,7 @@ body.has-player .player {
 .player__btn.is-liked   { color: var(--color-coral); }
 .player__btn.is-active  { color: var(--color-coral); }
 .player__btn:disabled   { opacity: 0.3; cursor: default; }
+.player__btn--soon      { opacity: 0.25; cursor: not-allowed; }
 
 .player__btn--play {
     background-color: var(--color-ink);
@@ -127,6 +128,14 @@ body.has-player .player {
 .player__btn--play:hover {
     background-color: #fff;
     color: var(--color-bg);
+}
+
+/* ─── Audio error ─────────────────────────────────────────────────── */
+.player__audio-error {
+    font-size: 11px;
+    color: var(--color-danger, #e05);
+    text-align: center;
+    padding: 2px 0;
 }
 
 /* ─── Progress ────────────────────────────────────────────────────── */

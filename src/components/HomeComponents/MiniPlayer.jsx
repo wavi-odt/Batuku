@@ -38,12 +38,13 @@ export default function MiniPlayer() {
     const userPausedRef  = useRef(false)
     const isSpotifyRef   = useRef(false)
 
-    const [playing,  setPlaying]  = useState(false)
-    const [position, setPosition] = useState(0)   // always ms
-    const [duration, setDuration] = useState(0)   // always ms
-    const [liked,    setLiked]    = useState(false)
-    const [volume,   setVolume]   = useState(70)
-    const [repeat,   setRepeat]   = useState(false)
+    const [playing,    setPlaying]    = useState(false)
+    const [position,   setPosition]   = useState(0)   // always ms
+    const [duration,   setDuration]   = useState(0)   // always ms
+    const [liked,      setLiked]      = useState(false)
+    const [volume,     setVolume]     = useState(70)
+    const [repeat,     setRepeat]     = useState(false)
+    const [audioError, setAudioError] = useState(null)
 
     useEffect(() => { repeatRef.current    = repeat    }, [repeat])
     useEffect(() => { nextTrackRef.current = nextTrack }, [nextTrack])
@@ -151,6 +152,11 @@ export default function MiniPlayer() {
                 nextTrackRef.current?.()
             }
         })
+        audio.addEventListener('error', () => {
+            const err = audio.error
+            console.error('[MiniPlayer] Erro de áudio — código:', err?.code, '| mensagem:', err?.message)
+            setAudioError('Não foi possível carregar esta faixa.')
+        })
         audioRef.current = audio
         return audio
     }
@@ -159,6 +165,7 @@ export default function MiniPlayer() {
     useEffect(() => {
         lastPlayPosRef.current = 0
         userPausedRef.current  = false
+        setAudioError(null)
 
         if (!track) {
             ctrlRef.current?.pause?.()
@@ -316,7 +323,14 @@ export default function MiniPlayer() {
             {/* Playback controls */}
             <div className="player__controls">
                 <div className="player__btns">
-                    <button type="button" className="player__btn" aria-label="Aleatório">
+                    {/* TODO: shuffle — embaralhar a queue restante (PlayerContext.shuffleQueue) */}
+                    <button
+                        type="button"
+                        className="player__btn player__btn--soon"
+                        aria-label="Aleatório (em breve)"
+                        title="Aleatório — em breve"
+                        disabled
+                    >
                         <FaRandom size={14} />
                     </button>
                     <button
@@ -355,6 +369,9 @@ export default function MiniPlayer() {
                         <FaSyncAlt size={14} />
                     </button>
                 </div>
+                {audioError && (
+                    <div className="player__audio-error" role="alert">{audioError}</div>
+                )}
                 <div className="player__progress">
                     <span className="player__time">{fmtTime(position)}</span>
                     <div className="player__bar" role="slider" aria-label="Posição da faixa" onClick={handleSeek}>
