@@ -33,6 +33,7 @@ export function useCurrentUser() {
                     joined:           formatJoined(data.createdAt || data.joinedAt || data.memberSince) || prev?.joined,
                     bio:              data.bio || data.description                    || prev?.bio,
                     spotifyArtistId:  data.spotifyArtistId || data.spotifyId          || prev?.spotifyArtistId || null,
+                    artistProfileId:  data.artistProfileId                            ?? prev?.artistProfileId ?? null,
                 }))
             })
             .catch(() => {})

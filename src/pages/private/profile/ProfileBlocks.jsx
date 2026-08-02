@@ -149,14 +149,15 @@ export function FollowingGrid({ artists }) {
 
 /* Reutilizados pelo overview + tab "Sobre" do artista */
 export function ArtistAbout({ artist }) {
+    const about = artist.about || {};
     return (
         <div className="prof-card">
             <CardTitle>Sobre</CardTitle>
-            <p className="prof__bio" style={{ marginBottom: 16 }}>{artist.bio}</p>
-            <div className="about-row"><span className="about-row__label">Localização</span><span className="about-row__value">{artist.about.location}</span></div>
-            <div className="about-row"><span className="about-row__label">Género</span><span className="about-row__value">{artist.about.genre}</span></div>
-            <div className="about-row"><span className="about-row__label">Línguas</span><span className="about-row__value">{artist.about.languages}</span></div>
-            {artist.about.forHire && (
+            {artist.bio && <p className="prof__bio" style={{ marginBottom: 16 }}>{artist.bio}</p>}
+            {about.location  && <div className="about-row"><span className="about-row__label">Localização</span><span className="about-row__value">{about.location}</span></div>}
+            {about.genre     && <div className="about-row"><span className="about-row__label">Género</span><span className="about-row__value">{about.genre}</span></div>}
+            {about.languages && <div className="about-row"><span className="about-row__label">Línguas</span><span className="about-row__value">{about.languages}</span></div>}
+            {about.forHire && (
                 <div className="forhire">
                     <span className="forhire__dot" />
                     <div className="forhire__text">

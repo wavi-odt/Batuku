@@ -1,0 +1,308 @@
+/* ─── EditProfileModal ───────────────────────────────────────────────── */
+
+.ep-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-modal);
+    background: rgba(10, 10, 11, 0.78);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+.ep-modal {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 600px;
+    max-height: calc(100vh - 48px);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+.ep-modal__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+.ep-modal__title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.ep-modal__close {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
+    transition: background var(--duration-fast), color var(--duration-fast);
+}
+.ep-modal__close:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--color-ink);
+}
+
+/* ── Tabs ────────────────────────────────────────────────────────────── */
+.ep-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 0 22px;
+    border-bottom: 1px solid var(--color-border);
+    overflow-x: auto;
+    flex-shrink: 0;
+}
+
+.ep-tab {
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-ink-mute);
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: color 120ms;
+    margin-bottom: -1px;
+}
+.ep-tab:hover { color: var(--color-ink-soft); }
+.ep-tab.is-active { color: var(--color-ink); border-bottom-color: var(--color-coral); }
+
+/* ── Body (scrollable) ───────────────────────────────────────────────── */
+.ep-modal__body {
+    padding: 24px 22px 8px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* ── Save button — cinzento sem alterações, coral com alterações ─────── */
+.ep-save-btn:disabled {
+    background: var(--color-bg-2);
+    color: var(--color-ink-mute);
+    cursor: not-allowed;
+    opacity: 1;
+}
+.ep-save-btn:disabled:hover { background: var(--color-bg-2); }
+
+/* ── Form layout ─────────────────────────────────────────────────────── */
+.ep-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ep-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+@media (max-width: 520px) { .ep-grid { grid-template-columns: 1fr; } }
+
+.ep-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.ep-field__label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-ink-soft);
+}
+
+.ep-textarea {
+    resize: vertical;
+    min-height: 88px;
+    line-height: 1.5;
+}
+
+/* ── Hint text ───────────────────────────────────────────────────────── */
+.ep-hint {
+    font-size: 13px;
+    color: var(--color-ink-mute);
+    margin: 0;
+}
+
+/* ── Links tab ───────────────────────────────────────────────────────── */
+.ep-links-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.ep-link-row {
+    display: grid;
+    grid-template-columns: 26px 130px 1fr 32px;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    transition: border-color 120ms;
+}
+.ep-link-row:focus-within { border-color: var(--color-border-strong); }
+
+@media (max-width: 520px) {
+    .ep-link-row {
+        grid-template-columns: 26px 1fr 32px;
+        grid-template-rows: auto auto;
+    }
+    .ep-link-select { grid-column: 2; }
+    .ep-link-input  { grid-column: 2; }
+    .ep-link-remove { grid-column: 3; grid-row: 1; align-self: center; }
+}
+
+.ep-link-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.ep-link-select {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    color: var(--color-ink);
+    font-size: 13px;
+    font-family: inherit;
+    padding: 6px 8px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 120ms;
+}
+.ep-link-select:focus { border-color: var(--color-coral); }
+
+.ep-link-input {
+    font-size: 13px;
+}
+
+.ep-link-remove {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
+    transition: background var(--duration-fast), color var(--duration-fast);
+}
+.ep-link-remove:hover {
+    background: rgba(248, 113, 113, 0.12);
+    color: var(--color-danger);
+}
+
+.ep-add-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    border: 1.5px dashed var(--color-border-strong);
+    background: transparent;
+    color: var(--color-ink-mute);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms, color 120ms, background 120ms;
+    align-self: flex-start;
+}
+.ep-add-link:hover {
+    border-color: var(--color-coral);
+    color: var(--color-coral);
+    background: var(--color-coral-dim);
+}
+
+/* ── Messages ────────────────────────────────────────────────────────── */
+.ep-msg {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    margin: 4px 0 0;
+}
+.ep-msg--error { color: var(--color-danger); }
+.ep-msg--ok    { color: var(--color-green); }
+
+/* ── Footer (inside form) ────────────────────────────────────────────── */
+.ep-form__footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 0 16px;
+    border-top: 1px solid var(--color-border);
+    margin-top: 4px;
+}
+
+/* ── Location select ─────────────────────────────────────────────────── */
+.ep-location-select {
+    cursor: pointer;
+}
+
+/* ── Chip multi-select ───────────────────────────────────────────────── */
+.ep-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 2px;
+}
+
+.ep-chip {
+    padding: 6px 13px;
+    border-radius: 999px;
+    border: 1.5px solid var(--color-border-strong);
+    background: transparent;
+    color: var(--color-ink-mute);
+    font-size: 13px;
+    font-weight: 500;
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 120ms, background 120ms, color 120ms;
+    white-space: nowrap;
+}
+.ep-chip:hover {
+    border-color: var(--color-coral);
+    color: var(--color-coral);
+}
+.ep-chip.is-on {
+    background: var(--color-coral-dim);
+    border-color: var(--color-coral);
+    color: var(--color-coral);
+    font-weight: 600;
+}
+.ep-chip.is-disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ── Field hint ──────────────────────────────────────────────────────── */
+.ep-field__hint {
+    font-size: 12px;
+    color: var(--color-ink-mute);
+    font-weight: 400;
+}
+
+/* ── Loading ─────────────────────────────────────────────────────────── */
+.ep-loading {
+    color: var(--color-ink-mute);
+    font-size: 14px;
+    text-align: center;
+    padding: 32px 0;
+    margin: 0;
+}

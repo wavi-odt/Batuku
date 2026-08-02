@@ -336,6 +336,24 @@
     opacity: 0; transition: opacity 150ms;
 }
 .ftrack:hover .ftrack__play { opacity: 1; }
+.ftrack__cover-img { width: 100%; height: 100%; object-fit: cover; }
+.ftrack__cover-placeholder { width: 100%; height: 100%; background: var(--color-bg-2); }
+.ftrack__spotify-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    color: #1DB954;
+    text-decoration: none;
+    margin-top: 2px;
+}
+.ftrack__spotify-link:hover { text-decoration: underline; }
+.ftrack__empty {
+    font-size: 13px;
+    color: var(--color-ink-mute);
+    padding: 20px 0;
+    text-align: center;
+}
 
 /* ─── About list (artist) ─────────────────────────────────────────── */
 .about-row { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--color-border); font-size: 13px; }

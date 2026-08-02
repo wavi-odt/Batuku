@@ -8,7 +8,6 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { FaTrophy, FaCheckCircle, FaCamera, FaCog } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
 import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
@@ -21,6 +20,7 @@ import {
     ArtistOverview, ArtistTracks, ArtistAboutPanel, ArtistAchievements,
 } from './ArtistPanels'
 import AvatarUploader from './AvatarUploader'
+import EditProfileModal from './EditProfileModal'
 import './Profile.css'
 
 /* ─── Tab maps ────────────────────────────────────────────────────── */
@@ -40,7 +40,7 @@ const ARTIST_TABS = [
 ];
 
 /* ─── Header ──────────────────────────────────────────────────────── */
-function ProfileHeader({ role, data, avatarUrl, onAvatarEdit }) {
+function ProfileHeader({ role, data, avatarUrl, onAvatarEdit, onEditProfile }) {
     const isArtist = role === 'artist';
     return (
         <>
@@ -98,9 +98,9 @@ function ProfileHeader({ role, data, avatarUrl, onAvatarEdit }) {
                             Ver como público
                         </button>
                     )}
-                    <Link to="/settings" className="btn-primary" style={{ padding: '10px 18px', fontSize: 14 }}>
+                    <button type="button" className="btn-primary" style={{ padding: '10px 18px', fontSize: 14 }} onClick={onEditProfile}>
                         <FaCog size={14} /> Editar perfil
-                    </Link>
+                    </button>
                 </div>
             </div>
         </>
@@ -137,34 +137,62 @@ function ProfileStats({ role, data }) {
     );
 }
 
+const API = import.meta.env.VITE_API_BASE_URL
+
 /* ─── Page ────────────────────────────────────────────────────────── */
 export default function Profile({ role = 'fan' }) {
     const tabs    = role === 'artist' ? ARTIST_TABS : FAN_TABS;
     const mock    = role === 'artist' ? profileData.artist : profileData.fan;
     const realUser = useCurrentUser();
 
-    const data = {
-        ...mock,
-        ...(realUser?.name     && { name:     realUser.name }),
-        ...(realUser?.handle   && { handle:   realUser.handle }),
-        ...(realUser?.bio      && { bio:      realUser.bio }),
-        ...(realUser?.joined   && { joined:   realUser.joined }),
-        ...(realUser?.location && {
-            country:  realUser.location,
-            location: realUser.location,
-            ...(role === 'artist' && mock.about && {
-                about: { ...mock.about, location: realUser.location },
-            }),
-        }),
-    };
-
-    const [active, setActive]             = useState(0);
-    const [avatarUrl, setAvatarUrl]       = useState(null);
-    const [showUploader, setShowUploader] = useState(false);
+    const [active, setActive]               = useState(0);
+    const [avatarUrl, setAvatarUrl]         = useState(null);
+    const [showUploader, setShowUploader]   = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [userOverrides, setUserOverrides] = useState({});
+    const [artistMe, setArtistMe]           = useState(null);
 
     useEffect(() => {
         if (realUser?.picture) setAvatarUrl(realUser.picture);
     }, [realUser?.picture]);
+
+    useEffect(() => {
+        if (role !== 'artist') return;
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        fetch(`${API}/api/artists/me`, { headers: { Authorization: `Bearer ${token}` } })
+            .then(r => r.ok ? r.json() : null)
+            .then(me => { if (me) setArtistMe(me); })
+            .catch(() => {});
+    }, [role]);
+
+    const artistAbout = role === 'artist' ? {
+        ...mock.about,
+        ...(artistMe?.location  && { location:  artistMe.location }),
+        ...(artistMe?.genres?.length && { genre: artistMe.genres.join(' · ') }),
+        ...(artistMe?.languages?.length && { languages: artistMe.languages.join(', ') }),
+    } : mock.about;
+
+    const data = {
+        ...mock,
+        ...(realUser?.name     && { name:     realUser.name }),
+        ...(realUser?.handle   && { handle:   realUser.handle }),
+        ...(realUser?.joined   && { joined:   realUser.joined }),
+        ...(role === 'artist'
+            ? {
+                bio:      artistMe?.bio      ?? mock.bio,
+                location: artistMe?.location ?? mock.location,
+                about:    artistAbout,
+            }
+            : {
+                ...(realUser?.bio      && { bio:      realUser.bio }),
+                ...(realUser?.location && { country: realUser.location, location: realUser.location }),
+            }
+        ),
+        spotifyArtistId:  realUser?.spotifyArtistId  ?? null,
+        artistProfileId:  realUser?.artistProfileId  ?? null,
+        ...userOverrides,
+    };
 
     const ActivePanel = tabs[active].Panel;
 
@@ -176,6 +204,7 @@ export default function Profile({ role = 'fan' }) {
                     data={data}
                     avatarUrl={avatarUrl}
                     onAvatarEdit={() => setShowUploader(true)}
+                    onEditProfile={() => setShowEditModal(true)}
                 />
                 <ProfileStats role={role} data={data} />
 
@@ -206,6 +235,14 @@ export default function Profile({ role = 'fan' }) {
                     isArtist={role === 'artist'}
                     onSuccess={url => setAvatarUrl(url)}
                     onClose={() => setShowUploader(false)}
+                />
+            )}
+
+            {showEditModal && (
+                <EditProfileModal
+                    role={role}
+                    onClose={() => setShowEditModal(false)}
+                    onProfileUpdated={updates => setUserOverrides(prev => ({ ...prev, ...updates }))}
                 />
             )}
         </AppShell>

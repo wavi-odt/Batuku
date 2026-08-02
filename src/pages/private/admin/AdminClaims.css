@@ -1,0 +1,307 @@
+/* ─────────────────────────────────────────────────────────────────
+   pages/private/admin/AdminClaims.css
+   Layout de revisão de pedidos de reclamação de perfil.
+   Depende de AdminHome.css (admin-page, admin-head, admin-back)
+   e de tokens.css. Sem AppShell — ferramenta interna.
+   ───────────────────────────────────────────────────────────────── */
+
+/* Wider container when detail panel is open */
+.admin-page__inner--wide {
+    max-width: 1140px;
+}
+
+/* ─── Layout split ────────────────────────────────────────────────── */
+.claims-layout {
+    display: block;
+}
+.claims-layout--split {
+    display: flex;
+    gap: var(--space-6);
+    align-items: flex-start;
+}
+
+/* ─── Lista de pedidos ─────────────────────────────────────────────── */
+.claims-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    width: 100%;
+}
+.claims-layout--split .claims-list {
+    width: 296px;
+    flex-shrink: 0;
+    position: sticky;
+    top: var(--space-8);
+}
+
+.claims-row {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    cursor: pointer;
+    transition: border-color var(--duration-base) var(--ease-out),
+                transform var(--duration-base) var(--ease-out);
+    outline: none;
+}
+.claims-row:hover { border-color: var(--color-border-strong); transform: translateY(-1px); }
+.claims-row:focus-visible { outline: 2px solid var(--color-coral); outline-offset: 2px; }
+.claims-row--active { border-color: var(--color-coral); }
+
+.claims-row__artist {
+    font-size: var(--fs-md);
+    font-weight: var(--fw-semibold);
+    color: var(--color-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.claims-row__user {
+    margin-top: 4px;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.claims-row__date {
+    margin-top: 4px;
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+}
+
+/* ─── Painel de detalhe ─────────────────────────────────────────────── */
+.claims-detail {
+    flex: 1;
+    min-width: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+}
+
+.claims-detail__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-4);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.claims-detail__artist {
+    font-size: var(--fs-xl);
+    font-weight: var(--fw-bold);
+    color: var(--color-ink);
+    letter-spacing: var(--tracking-snug);
+}
+.claims-detail__user {
+    margin-top: 4px;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+}
+.claims-detail__date {
+    margin-top: 4px;
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+}
+
+.claims-detail__close {
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--color-ink-mute);
+    font-size: var(--fs-sm);
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out),
+                border-color var(--duration-fast) var(--ease-out);
+}
+.claims-detail__close:hover {
+    color: var(--color-ink);
+    border-color: var(--color-border-strong);
+}
+
+/* ─── Perfil Spotify reclamado ──────────────────────────────────────── */
+.claims-spotify {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-4);
+    margin-bottom: var(--space-5);
+}
+.claims-spotify__img {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.claims-spotify__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+.claims-spotify__label {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: #1DB954;
+}
+.claims-spotify__name {
+    font-size: var(--fs-md);
+    font-weight: var(--fw-semibold);
+    color: var(--color-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.claims-spotify__id {
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+    font-family: monospace;
+}
+
+/* ─── Documentos ────────────────────────────────────────────────────── */
+.claims-docs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    margin-bottom: var(--space-6);
+}
+.claims-doc {
+    margin: 0;
+}
+.claims-doc__label {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-ink-mute);
+    margin-bottom: var(--space-2);
+}
+.claims-doc__img {
+    display: block;
+    width: 100%;
+    min-height: 300px;
+    max-height: 500px;
+    object-fit: contain;
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+}
+
+/* ─── Ações ─────────────────────────────────────────────────────────── */
+.claims-actions {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+}
+.claims-actions .btn,
+.claims-actions .btn-danger {
+    padding: 10px 20px;
+    font-size: var(--fs-sm);
+}
+.claims-actions .btn:disabled,
+.claims-actions .btn-danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ─── Banner de sucesso ─────────────────────────────────────────────── */
+.claims-banner {
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    margin-bottom: var(--space-6);
+}
+.claims-banner--ok {
+    background: var(--color-green-dim);
+    border: 1px solid rgba(79, 174, 124, 0.3);
+    color: var(--color-green);
+}
+
+/* ─── Estados vazios / loading / erro ───────────────────────────────── */
+.claims-empty {
+    padding: var(--space-10) 0;
+    text-align: center;
+    font-size: var(--fs-base);
+    color: var(--color-ink-mute);
+    margin: 0;
+}
+.claims-empty--error { color: var(--color-danger); }
+
+/* ─── Modal de confirmação ──────────────────────────────────────────── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    padding: 24px;
+}
+
+.modal-box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6);
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+
+.modal-title {
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-bold);
+    color: var(--color-ink);
+    margin: 0 0 var(--space-3);
+}
+
+.modal-body {
+    font-size: var(--fs-sm);
+    color: var(--color-ink-soft);
+    line-height: var(--lh-base);
+    margin: 0 0 var(--space-6);
+}
+
+.modal-error {
+    font-size: var(--fs-sm);
+    color: var(--color-danger);
+    margin: calc(var(--space-6) * -1 + var(--space-3)) 0 var(--space-4);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3);
+}
+
+/* ─── Responsivo ─────────────────────────────────────────────────────── */
+@media (max-width: 860px) {
+    .claims-layout--split {
+        flex-direction: column;
+    }
+    .claims-layout--split .claims-list {
+        width: 100%;
+        position: static;
+    }
+    .claims-docs {
+        grid-template-columns: 1fr;
+    }
+}

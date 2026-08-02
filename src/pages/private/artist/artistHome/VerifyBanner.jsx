@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { HiBadgeCheck } from 'react-icons/hi'
 import { SiSpotify } from 'react-icons/si'
+import { getToken } from '../../../../utils/auth.js'
 import './VerifyBanner.css'
 
 const PROVIDER_LABEL = {
@@ -9,21 +11,36 @@ const PROVIDER_LABEL = {
 };
 
 export default function VerifyBanner({ provider }) {
-    if (provider) {
-        const label = PROVIDER_LABEL[provider] || provider;
+    const [claimPending, setClaimPending] = useState(false);
+
+    useEffect(() => {
+        if (provider) return;
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-claims/me`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+        })
+            .then(res => res.ok ? res.json() : [])
+            .then(list => { if (list.some(c => c.status === 'PENDING')) setClaimPending(true); })
+            .catch(() => {});
+    }, [provider]);
+
+    if (provider) return null;
+
+    if (claimPending) {
         return (
-            <div className="verify-card verify-card--verified">
-                <div className="verify-card__icon">
-                    <HiBadgeCheck size={22} />
+            <div className="verify-card verify-card--pending">
+                <div className="verify-card__icon verify-card__icon--pending">
+                    <SiSpotify size={20} />
                 </div>
                 <div className="verify-card__body">
-                    <p className="verify-card__title">Artista verificado via {label} ✓</p>
+                    <p className="verify-card__title">Pedido em avaliação</p>
                     <p className="verify-card__sub">
-                        A tua conta está ligada ao {label} Artists. Podes publicar livremente,
-                        vender beats e aparecer na descoberta.
+                        O teu pedido de verificação está a ser analisado pelo admin.
+                        Receberás uma notificação quando for processado.
                     </p>
                 </div>
-                <button type="button" className="verify-card__btn">Gerir ligação</button>
+                <span className="verify-card__claim-btn verify-card__claim-btn--pending">
+                    A ser avaliado
+                </span>
             </div>
         );
     }

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom'
 import { useEffect } from 'react'
 import { PlayerProvider } from './context/PlayerContext'
 import { usePlayer } from './context/PlayerContext'
@@ -12,12 +12,12 @@ import Register from "./pages/public/Register.jsx";
 import Dashboard from "./pages/private/artist/artistHome/Dashboard.jsx";
 import FanHome from "./pages/private/fan/fanHome/Home.jsx";
 import Profile from "./pages/private/profile/Profile.jsx";
-import Settings from "./pages/private/profile/Settings.jsx";
 import RoleRoute from "./components/RoleRoute.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import OAuthCallback from "./pages/public/OAuthCallback.jsx";
 import AdminHome from "./pages/private/admin/AdminHome.jsx";
 import ArtistImport from "./pages/private/admin/ArtistImport.jsx";
+import AdminClaims from "./pages/private/admin/AdminClaims.jsx";
 import ArtistDetail from "./pages/private/artist/ArtistDetail.jsx";
 
 import PlaylistDetail from "./pages/private/playlist/PlaylistDetail.jsx";
@@ -74,6 +74,7 @@ function App() {
                         {/* Admin (sem player) */}
                         <Route path="/admin"               element={<ProtectedRoute role="admin"><AdminHome /></ProtectedRoute>} />
                         <Route path="/admin/artist-import" element={<ProtectedRoute role="admin"><ArtistImport /></ProtectedRoute>} />
+                        <Route path="/admin/claims"        element={<ProtectedRoute role="admin"><AdminClaims /></ProtectedRoute>} />
 
                         {/* Privadas — MiniPlayer persiste entre estas rotas */}
                         <Route element={<PlayerLayer />}>
@@ -90,7 +91,7 @@ function App() {
                             <Route path="/comments"       element={<RoleRoute roles={['artist']}><Comments /></RoleRoute>} />
                             <Route path="/dashboard"      element={<RoleRoute roles={['artist']}><Dashboard /></RoleRoute>} />
                             <Route path="/profile"        element={<RoleRoute roles={['fan', 'artist']}><ProfileRouter /></RoleRoute>} />
-                            <Route path="/settings"       element={<RoleRoute roles={['fan', 'artist']}><Settings /></RoleRoute>} />
+                            <Route path="/settings"       element={<Navigate to="/profile" replace />} />
                             <Route path="/artists/:id"    element={<RoleRoute roles={['fan', 'artist']}><ArtistDetail /></RoleRoute>} />
                             <Route path="/claim-profile"  element={<RoleRoute roles={['artist']}><ClaimProfile /></RoleRoute>} />
                             <Route path="/playlists/new"  element={<RoleRoute roles={['fan', 'artist']}><PlaylistCreate /></RoleRoute>} />

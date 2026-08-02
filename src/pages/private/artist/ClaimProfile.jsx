@@ -109,30 +109,38 @@ function StepSpotify({ selected, onSelect, onNext }) {
 function StepSelfie({ blob, onCapture, onNext, onBack }) {
     const videoRef  = useRef(null);
     const streamRef = useRef(null);
+    const fileRef   = useRef(null);
+    const [mode,    setMode]    = useState('camera');
     const [ready,   setReady]   = useState(false);
     const [camErr,  setCamErr]  = useState('');
     const [preview, setPreview] = useState(() => blob ? URL.createObjectURL(blob) : null);
 
     useEffect(() => {
-        if (!blob) startCamera();
+        if (mode === 'camera' && !preview) startCamera();
         return stopCamera;
-    }, []);
+    }, [mode]);
 
     async function startCamera() {
         setCamErr('');
+        let stream;
         try {
-            const stream = await navigator.mediaDevices.getUserMedia({
+            stream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 720 } },
             });
-            streamRef.current = stream;
-            if (videoRef.current) {
-                videoRef.current.srcObject = stream;
-                await videoRef.current.play();
-            }
-            setReady(true);
         } catch {
-            setCamErr('Não foi possível aceder à câmara. Verifica as permissões do browser.');
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            } catch (err) {
+                setCamErr(`Câmara indisponível: ${err.name} — ${err.message}`);
+                return;
+            }
         }
+        streamRef.current = stream;
+        if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            try { await videoRef.current.play(); } catch { /* autoplay bloqueado */ }
+        }
+        setReady(true);
     }
 
     function stopCamera() {
@@ -157,42 +165,105 @@ function StepSelfie({ blob, onCapture, onNext, onBack }) {
     function handleRetake() {
         setPreview(null);
         onCapture(null);
-        startCamera();
+        if (mode === 'camera') startCamera();
+    }
+
+    function switchMode(m) {
+        stopCamera();
+        setPreview(null);
+        onCapture(null);
+        setMode(m);
+    }
+
+    function handleFile(e) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setPreview(URL.createObjectURL(file));
+        onCapture(file);
     }
 
     return (
         <div className="claim-step">
             <h2 className="claim-step__title">Tira uma selfie</h2>
             <p className="claim-step__desc">
-                Olha diretamente para a câmara com boa iluminação. A foto tem de ser tirada
-                agora — não são aceites imagens carregadas de ficheiro.
+                Uma foto do teu rosto com boa iluminação. O admin irá verificar a correspondência
+                com o documento de identidade.
             </p>
 
-            <div className="claim-camera">
-                {!preview ? (
-                    <>
-                        <video ref={videoRef} className="claim-camera__video claim-camera__video--mirror" muted playsInline />
-                        {!ready && !camErr && (
-                            <div className="claim-camera__overlay">A iniciar câmara…</div>
-                        )}
-                        {camErr && (
-                            <div className="claim-camera__overlay claim-camera__overlay--err">{camErr}</div>
-                        )}
-                        {ready && (
-                            <button className="claim-camera__shutter" onClick={handleCapture} aria-label="Tirar selfie">
-                                <FaCamera size={20} />
-                            </button>
-                        )}
-                    </>
-                ) : (
-                    <>
-                        <img src={preview} alt="Selfie" className="claim-camera__preview" />
-                        <button className="claim-camera__retake" onClick={handleRetake}>
-                            <FaRedo size={11} /> Repetir
-                        </button>
-                    </>
-                )}
+            <div className="claim-doc-tabs">
+                <button
+                    className={'claim-doc-tab' + (mode === 'camera' ? ' is-active' : '')}
+                    onClick={() => switchMode('camera')}
+                >
+                    <FaCamera size={12} /> Câmara
+                </button>
+                <button
+                    className={'claim-doc-tab' + (mode === 'file' ? ' is-active' : '')}
+                    onClick={() => switchMode('file')}
+                >
+                    <FaFileImage size={12} /> Ficheiro
+                </button>
             </div>
+
+            {mode === 'camera' && (
+                <div className="claim-camera">
+                    {!preview ? (
+                        <>
+                            <video ref={videoRef} className="claim-camera__video claim-camera__video--mirror" muted playsInline />
+                            {!ready && !camErr && (
+                                <div className="claim-camera__overlay">A iniciar câmara…</div>
+                            )}
+                            {camErr && (
+                                <div className="claim-camera__overlay claim-camera__overlay--err">{camErr}</div>
+                            )}
+                            {ready && (
+                                <button className="claim-camera__shutter" onClick={handleCapture} aria-label="Tirar selfie">
+                                    <FaCamera size={20} />
+                                </button>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <img src={preview} alt="Selfie" className="claim-camera__preview" />
+                            <button className="claim-camera__retake" onClick={handleRetake}>
+                                <FaRedo size={11} /> Repetir
+                            </button>
+                        </>
+                    )}
+                </div>
+            )}
+
+            {mode === 'file' && (
+                <div
+                    className={'claim-file-zone' + (preview ? ' has-file' : '')}
+                    onClick={() => !preview && fileRef.current?.click()}
+                >
+                    {preview ? (
+                        <>
+                            <img src={preview} alt="Selfie" className="claim-file-preview" />
+                            <button
+                                className="claim-camera__retake"
+                                onClick={e => { e.stopPropagation(); handleRetake(); fileRef.current.value = ''; }}
+                            >
+                                <FaRedo size={11} /> Trocar
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <FaFileImage size={30} className="claim-file-zone__icon" />
+                            <p className="claim-file-zone__label">Clica para selecionar foto</p>
+                            <p className="claim-file-zone__hint">JPG ou PNG · máx. 10 MB</p>
+                        </>
+                    )}
+                    <input
+                        ref={fileRef}
+                        type="file"
+                        accept="image/*"
+                        className="claim-file-input"
+                        onChange={handleFile}
+                    />
+                </div>
+            )}
 
             <div className="claim-step__footer">
                 <button className="btn-ghost" onClick={onBack}>← Voltar</button>
@@ -416,6 +487,25 @@ function StepConfirm({ spotifyArtist, selfieBlob, docBlob, onBack, onSubmit, sub
     );
 }
 
+/* ── Claim pendente ───────────────────────────────────────────────────── */
+function ClaimPending({ claim }) {
+    return (
+        <div className="claim-step claim-step--center">
+            <div className="claim-success__icon claim-success__icon--pending">⏳</div>
+            <h2 className="claim-step__title">Pedido em revisão</h2>
+            <p className="claim-step__desc">
+                Já submeteste um pedido de verificação
+                {claim?.artistName ? <> para <strong>{claim.artistName}</strong></> : null}.
+                Aguarda que o admin processe o pedido antes de submeteres um novo.
+                O processo pode demorar até 48 horas.
+            </p>
+            <Link to="/dashboard" className="btn-primary">
+                Voltar ao dashboard
+            </Link>
+        </div>
+    );
+}
+
 /* ── Sucesso ──────────────────────────────────────────────────────────── */
 function StepSuccess() {
     return (
@@ -466,6 +556,21 @@ export default function ClaimProfile() {
     const [submitting,    setSubmitting]    = useState(false);
     const [submitErr,     setSubmitErr]     = useState('');
     const [done,          setDone]          = useState(false);
+    const [checking,      setChecking]      = useState(true);
+    const [pendingClaim,  setPendingClaim]  = useState(null);
+
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-claims/me`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+        })
+            .then(res => res.ok ? res.json() : [])
+            .then(list => {
+                const pending = list.find(c => c.status === 'PENDING');
+                if (pending) setPendingClaim(pending);
+            })
+            .catch(() => {})
+            .finally(() => setChecking(false));
+    }, []);
 
     async function handleSubmit() {
         setSubmitting(true);
@@ -495,10 +600,14 @@ export default function ClaimProfile() {
                 <Link to="/dashboard" className="claim-back">← Dashboard</Link>
                 <h1 className="claim-page__title">Reclamar perfil Spotify</h1>
 
-                {!done && <Stepper current={step} />}
+                {!done && !pendingClaim && !checking && <Stepper current={step} />}
 
                 <div className="claim-card">
-                    {done ? (
+                    {checking ? (
+                        <p className="claim-checking">A verificar…</p>
+                    ) : pendingClaim ? (
+                        <ClaimPending claim={pendingClaim} />
+                    ) : done ? (
                         <StepSuccess />
                     ) : step === 0 ? (
                         <StepSpotify

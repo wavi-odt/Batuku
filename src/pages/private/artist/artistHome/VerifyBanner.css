@@ -77,6 +77,25 @@
 }
 .verify-card__claim-btn:hover { background: #1ed760; }
 
+/* ── Estado pendente ────────────────────────────────────────────── */
+.verify-card--pending {
+    background: linear-gradient(135deg, rgba(245,158,11,0.10), rgba(245,158,11,0.03));
+    border-color: rgba(245,158,11,0.30);
+}
+
+.verify-card__icon--pending {
+    background-color: rgba(245,158,11,0.15);
+    color: #f59e0b;
+}
+
+.verify-card__claim-btn--pending {
+    background: rgba(245,158,11,0.18);
+    color: #f59e0b;
+    border: 1px solid rgba(245,158,11,0.35);
+    cursor: default;
+    pointer-events: none;
+}
+
 @media (max-width: 700px) {
     .verify-card { flex-direction: column; align-items: stretch; text-align: center; }
     .verify-card__claim-btn { text-align: center; }

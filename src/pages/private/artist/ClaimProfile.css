@@ -450,6 +450,18 @@
     margin: 0 auto 20px;
     border: 2px solid rgba(79,174,124,0.3);
 }
+.claim-success__icon--pending {
+    background: rgba(245,158,11,0.12);
+    color: #f59e0b;
+    border-color: rgba(245,158,11,0.3);
+}
+
+.claim-checking {
+    text-align: center;
+    color: var(--color-ink-mute);
+    font-size: 13px;
+    padding: 24px 0;
+}
 
 @media (max-width: 520px) {
     .claim-card { padding: 20px 16px; }
