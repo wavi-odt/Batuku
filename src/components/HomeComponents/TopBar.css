@@ -102,6 +102,8 @@
     border-radius: 50%;
 }
 
+.topbar__notif-wrap { position: relative; }
+
 .topbar__avatar {
     width: 36px;
     height: 36px;

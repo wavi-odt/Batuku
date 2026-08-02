@@ -1,0 +1,48 @@
+/* ─── Settings, Editar perfil ─────────────────────────────────────── */
+
+.settings-page { max-width: 720px; margin: 0 auto; padding: 28px 24px 64px; }
+
+.settings-back {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--color-ink-mute);
+    margin-bottom: 14px;
+}
+.settings-back:hover { color: var(--color-ink-soft); }
+
+.settings-page__title {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 24px;
+}
+
+.settings-list { display: flex; flex-direction: column; gap: 20px; }
+
+.settings-card { display: flex; flex-direction: column; }
+
+.settings-card__title { font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+.settings-card__desc { font-size: 13px; color: var(--color-ink-mute); margin: 0 0 20px; }
+
+.settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 6px;
+}
+@media (max-width: 560px) { .settings-grid { grid-template-columns: 1fr; } }
+
+.settings-field { display: flex; flex-direction: column; gap: 6px; }
+.settings-field__label { font-size: 13px; font-weight: 500; color: var(--color-ink-soft); }
+
+.settings-msg {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    margin: 14px 0 0;
+}
+.settings-msg--error { color: var(--color-danger); }
+.settings-msg--ok    { color: var(--color-green); }
+
+.settings-card__footer { margin-top: 18px; display: flex; justify-content: flex-end; }

@@ -138,7 +138,7 @@ export const homeData = {
         { icon: 'store',   label: 'Marketplace',       to: '/marketplace', badge: 3 },
         { icon: 'users',   label: 'Os meus fãs',       to: '/fans' },
         { icon: 'comment', label: 'Comentários',       to: '/comments',    badge: 3 },
-        { icon: 'discord', label: 'Comunidade',        to: '/community' },
+       /* { icon: 'discord', label: 'Comunidade',        to: '/community' },*/
     ],
 
     nowPlaying: {

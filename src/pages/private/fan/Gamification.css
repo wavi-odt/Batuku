@@ -1,0 +1,15 @@
+.gam-page { max-width: 900px; margin: 0 auto; padding: 28px 24px 64px; }
+.gam-page__title { font-size: 26px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 20px; }
+
+.gam-grid { display: grid; grid-template-columns: 1fr 320px; gap: 24px; align-items: start; }
+@media (max-width: 900px) { .gam-grid { grid-template-columns: 1fr; } }
+
+.gam-leaderboard { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.gam-leaderboard__row {
+    display: flex; align-items: center; gap: 10px; padding: 9px 8px; border-radius: var(--radius-md);
+    font-size: 13px;
+}
+.gam-leaderboard__row.is-you { background: var(--color-coral-dim); }
+.gam-leaderboard__rank { width: 28px; color: var(--color-ink-mute); font-family: var(--font-mono); }
+.gam-leaderboard__name { flex: 1; font-weight: 500; }
+.gam-leaderboard__pts { color: var(--color-ink-mute); font-family: var(--font-mono); font-size: 12px; }

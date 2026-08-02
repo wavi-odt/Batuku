@@ -1,0 +1,354 @@
+/* ─── Achievements page ────────────────────────────────────────────── */
+
+/* ─── Header ───────────────────────────────────────────────────────── */
+.ach__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: var(--space-8);
+    gap: var(--space-5);
+}
+
+.ach__title {
+    font-size: clamp(28px, 3.4vw, 40px);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-snug);
+    margin: 0 0 6px;
+    line-height: 1.1;
+}
+
+.ach__subtitle {
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.ach__subtitle-sep { color: var(--color-border-strong); }
+
+.ach__streak {
+    color: var(--color-coral);
+    font-weight: var(--fw-semibold);
+}
+
+/* ─── Layout principal ─────────────────────────────────────────────── */
+.ach__split {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: var(--space-7);
+    align-items: start;
+}
+
+@media (max-width: 1000px) { .ach__split { grid-template-columns: 1fr; } }
+
+.ach__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+}
+
+/* ─── Desafios ─────────────────────────────────────────────────────── */
+.ach__challenges {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ach__challenge {
+    background: linear-gradient(180deg, var(--color-surface), var(--color-bg-2));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5) var(--space-6);
+    transition: border-color var(--duration-base) var(--ease-out);
+}
+
+.ach__challenge:hover { border-color: var(--color-border-strong); }
+
+.ach__challenge--done {
+    border-color: rgba(79, 174, 124, 0.35);
+    background: linear-gradient(180deg,
+        rgba(79, 174, 124, 0.06) 0%,
+        var(--color-bg-2) 100%
+    );
+}
+
+.ach__challenge-row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+
+.ach__challenge-icon {
+    font-size: 22px;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.ach__challenge-info { flex: 1; min-width: 0; }
+
+.ach__challenge-title {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    margin-bottom: 3px;
+}
+
+.ach__challenge-desc {
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+    line-height: 1.4;
+}
+
+.ach__challenge-xp {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    color: var(--color-mustard);
+    background-color: var(--color-mustard-dim);
+    border: 1px solid rgba(230, 165, 50, 0.3);
+    border-radius: var(--radius-full);
+    padding: 3px 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.ach__challenge-bar {
+    height: 6px;
+    background-color: rgba(255, 255, 255, 0.07);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.ach__challenge-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-coral), var(--color-mustard));
+    border-radius: 3px;
+    transition: width var(--duration-slow) var(--ease-out);
+}
+
+.ach__challenge-foot {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--color-ink-mute);
+}
+
+.ach__challenge-expires { color: var(--color-coral); }
+
+.ach__challenge-done-label {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    color: var(--color-green);
+    letter-spacing: 0.04em;
+}
+
+/* ─── Leaderboard ──────────────────────────────────────────────────── */
+.ach__leaderboard {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+}
+
+.ach__lb-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.ach__lb-title {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+}
+
+.ach__lb-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ach__lb-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 6px;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.ach__lb-row:hover { background-color: rgba(255, 255, 255, 0.04); }
+
+.ach__lb-row--me {
+    background-color: var(--color-coral-dim);
+    border: 1px solid rgba(232, 93, 60, 0.25);
+    border-radius: var(--radius-sm);
+}
+.ach__lb-row--me:hover { background-color: rgba(232, 93, 60, 0.14); }
+
+.ach__lb-rank {
+    width: 28px;
+    font-size: 14px;
+    text-align: center;
+    flex-shrink: 0;
+    color: var(--color-ink-mute);
+    font-variant-numeric: tabular-nums;
+}
+
+.ach__lb-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.ach__lb-name {
+    flex: 1;
+    font-size: 12px;
+    font-weight: var(--fw-medium);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.ach__lb-pts {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.ach__lb-gap {
+    text-align: center;
+    color: var(--color-ink-mute);
+    font-size: 12px;
+    padding: 4px 0;
+    letter-spacing: 0.2em;
+}
+
+/* ─── Badges ───────────────────────────────────────────────────────── */
+.ach__badges {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 1100px) { .ach__badges { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 700px)  { .ach__badges { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 480px)  { .ach__badges { grid-template-columns: repeat(2, 1fr); } }
+
+.ach__badge {
+    background: linear-gradient(180deg, var(--color-surface), var(--color-bg-2));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5) var(--space-4);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    transition:
+        border-color var(--duration-base) var(--ease-out),
+        transform    var(--duration-base) var(--ease-out);
+}
+
+.ach__badge:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-2px);
+}
+
+.ach__badge--locked {
+    opacity: 0.45;
+    filter: saturate(0.3);
+}
+.ach__badge--locked:hover { opacity: 0.65; filter: saturate(0.5); }
+
+.ach__badge-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 4px;
+}
+
+/* Tier colours */
+.ach__badge-icon--gold    { background: rgba(230, 165, 50, 0.18); box-shadow: 0 0 0 1px rgba(230, 165, 50, 0.35); }
+.ach__badge-icon--coral   { background: var(--color-coral-dim);   box-shadow: 0 0 0 1px rgba(232,  93, 60, 0.35); }
+.ach__badge-icon--ocean   { background: var(--color-ocean-dim);   box-shadow: 0 0 0 1px rgba( 59, 110,255, 0.35); }
+.ach__badge-icon--pink    { background: rgba(242, 196, 184, 0.18);box-shadow: 0 0 0 1px rgba(242, 196,184, 0.35); }
+.ach__badge-icon--mustard { background: var(--color-mustard-dim); box-shadow: 0 0 0 1px rgba(230, 165, 50, 0.35); }
+.ach__badge-icon--green   { background: var(--color-green-dim);   box-shadow: 0 0 0 1px rgba( 79, 174,124, 0.35); }
+.ach__badge-icon--locked  { background: rgba(255,255,255,0.05);   box-shadow: 0 0 0 1px rgba(255,255,255,0.10); }
+
+.ach__badge-name {
+    font-size: 12px;
+    font-weight: var(--fw-semibold);
+    line-height: 1.2;
+}
+
+.ach__badge-desc {
+    font-size: 10px;
+    color: var(--color-ink-mute);
+    line-height: 1.4;
+}
+
+.ach__badge-meta {
+    font-size: 10px;
+    color: var(--color-ink-mute);
+    margin-top: 2px;
+}
+
+.ach__badge-xp {
+    color: var(--color-mustard);
+    font-weight: var(--fw-semibold);
+}
+
+/* ─── Milestones ───────────────────────────────────────────────────── */
+.ach__milestones {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 1000px) { .ach__milestones { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 550px)  { .ach__milestones { grid-template-columns: repeat(2, 1fr); } }
+
+.ach__milestone {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5) var(--space-4);
+    text-align: center;
+}
+
+.ach__milestone-value {
+    font-size: var(--fs-2xl);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-snug);
+    line-height: 1;
+    margin-bottom: 6px;
+}
+
+.ach__milestone-unit {
+    font-size: var(--fs-base);
+    color: var(--color-ink-soft);
+    margin-left: 2px;
+}
+
+.ach__milestone-label {
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-wide);
+}

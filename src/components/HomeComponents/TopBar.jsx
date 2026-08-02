@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { HiSearch, HiBell, HiPlus, HiX } from 'react-icons/hi'
+import { usePublish } from '../../context/PublishContext.jsx'
 import { homeData } from '../../data/home'
 import ArtistArtwork from '../PublicComponets/ArtistArtwork'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
@@ -43,14 +44,19 @@ function ResultGroup({ label, items, renderItem }) {
     );
 }
 
-export default function TopBar({ role = 'fan', notifications = true }) {
+export default function TopBar({ role = 'fan' }) {
     const mockUser = role === 'artist' ? homeData.artist : homeData.fan;
     const realUser = useCurrentUser();
     const user     = mockUser;
+    const { openPublish } = usePublish();
 
     const [query,   setQuery]   = useState('');
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(false);
+
+    const [notifOpen, setNotifOpen] = useState(false);
+    const [unread, setUnread]       = useState(0);
+    const notifRef = useRef(null);
 
     const timerRef   = useRef(null);
     const wrapperRef = useRef(null);
@@ -110,6 +116,9 @@ export default function TopBar({ role = 'fan', notifications = true }) {
         function onMouseDown(e) {
             if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
                 handleClose();
+            }
+            if (notifRef.current && !notifRef.current.contains(e.target)) {
+                setNotifOpen(false);
             }
         }
         document.addEventListener('mousedown', onMouseDown);
@@ -220,17 +229,22 @@ export default function TopBar({ role = 'fan', notifications = true }) {
             <div className="topbar__spacer" />
 
             {role === 'artist' && (
-                <Link to="/publish" className="topbar__publish">
+                <button type="button" className="topbar__publish" onClick={openPublish}>
                     <HiPlus size={16} /> Publicar
-                </Link>
+                </button>
             )}
 
-            <button className="topbar__action" aria-label="Notificações">
-                <HiBell size={18} />
-                {notifications && <span className="topbar__action-dot" />}
-            </button>
+            <div className="topbar__notif-wrap" ref={notifRef}>
+                <button className="topbar__action" aria-label="Notificações" onClick={() => setNotifOpen(v => !v)}>
+                    <HiBell size={18} />
+                    {unread > 0 && <span className="topbar__action-dot" />}
+                </button>
+                {notifOpen && (
+                    <NotificationsPanel onClose={() => setNotifOpen(false)} onUnreadChange={setUnread} />
+                )}
+            </div>
 
-            <Link to={role === 'artist' ? '/artist/profile' : '/profile'} className="topbar__avatar" aria-label="O meu perfil">
+            <Link to="/profile" className="topbar__avatar" aria-label="O meu perfil">
                 {realUser?.picture
                     ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                     : <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />}

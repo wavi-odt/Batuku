@@ -1,12 +1,14 @@
-﻿/* ─────────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────────
    PublishCard.jsx, CTA destacado para publicar nova faixa.
    ───────────────────────────────────────────────────────────────── */
 
-import { Link } from 'react-router-dom'
 import { HiUpload, HiPlus } from 'react-icons/hi'
+import { usePublish } from '../../../../context/PublishContext.jsx'
 import './PublishCard.css'
 
 export default function PublishCard() {
+    const { openPublish } = usePublish();
+
     return (
         <div className="publish-card">
             <div className="publish-card__bg-shape" aria-hidden="true" />
@@ -18,9 +20,9 @@ export default function PublishCard() {
                     Vai à descoberta em minutos.
                 </p>
             </div>
-            <Link to="/publish" className="publish-card__btn">
+            <button type="button" className="publish-card__btn" onClick={openPublish}>
                 <HiPlus size={16} /> Nova publicação
-            </Link>
+            </button>
         </div>
     );
 }

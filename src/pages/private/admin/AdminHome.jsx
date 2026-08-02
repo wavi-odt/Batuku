@@ -33,8 +33,8 @@ const TOOLS = [
         desc: 'Rever e aprovar pedidos de artistas a reclamar o seu perfil importado.',
         icon: <FaFlag size={20} />,
         accent: 'mustard',
-        to: null,
-        status: 'soon',
+        to: '/admin/claims',
+        status: 'active',
     },
 ];
 
