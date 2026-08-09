@@ -3,6 +3,9 @@ import { useEffect } from 'react'
 import { PlayerProvider } from './context/PlayerContext'
 import { usePlayer } from './context/PlayerContext'
 import { PublishProvider } from './context/PublishContext'
+import { ToastProvider } from './context/ToastContext'
+import { LikeProvider } from './context/LikeContext'
+import { PendingCommentsProvider } from './context/PendingCommentsContext'
 import MiniPlayer from './components/HomeComponents/MiniPlayer'
 import PublishModal from './pages/private/artist/Publish.jsx'
 import Landing from './pages/public/Landing'
@@ -19,6 +22,7 @@ import AdminHome from "./pages/private/admin/AdminHome.jsx";
 import ArtistImport from "./pages/private/admin/ArtistImport.jsx";
 import AdminClaims from "./pages/private/admin/AdminClaims.jsx";
 import ArtistDetail from "./pages/private/artist/ArtistDetail.jsx";
+import ReleaseDetail from "./pages/private/release/ReleaseDetail.jsx";
 
 import PlaylistDetail from "./pages/private/playlist/PlaylistDetail.jsx";
 import PlaylistCreate from "./pages/private/playlist/PlaylistCreate.jsx";
@@ -32,7 +36,7 @@ import Achievements  from "./pages/private/fan/achievements/Achievements.jsx";
 import Marketplace   from "./pages/private/fan/marketplace/Marketplace.jsx";
 import Community     from "./pages/private/fan/community/Community.jsx";
 import Tracks        from "./pages/private/artist/tracks/Tracks.jsx";
-import Analytics     from "./pages/private/artist/analytics/Analytics.jsx";
+import Analytics     from "./pages/private/artist/stats/Analytics.jsx";
 import Fans          from "./pages/private/artist/fans/Fans.jsx";
 import Comments      from "./pages/private/artist/comments/Comments.jsx";
 
@@ -62,7 +66,10 @@ function PlayerLayer() {
 function App() {
     return (
         <PlayerProvider>
+            <LikeProvider>
+            <PendingCommentsProvider>
             <PublishProvider>
+            <ToastProvider>
                 <BrowserRouter>
                     <Routes>
                         {/* Públicas */}
@@ -93,7 +100,8 @@ function App() {
                             <Route path="/profile"        element={<RoleRoute roles={['fan', 'artist']}><ProfileRouter /></RoleRoute>} />
                             <Route path="/settings"       element={<Navigate to="/profile" replace />} />
                             <Route path="/artists/:id"    element={<RoleRoute roles={['fan', 'artist']}><ArtistDetail /></RoleRoute>} />
-                            <Route path="/claim-profile"  element={<RoleRoute roles={['artist']}><ClaimProfile /></RoleRoute>} />
+                            <Route path="/releases/:id"  element={<RoleRoute roles={['fan', 'artist']}><ReleaseDetail /></RoleRoute>} />
+                            <Route path="/claim-profile"  element={<RoleRoute roles={['fan', 'artist']}><ClaimProfile /></RoleRoute>} />
                             <Route path="/playlists/new"  element={<RoleRoute roles={['fan', 'artist']}><PlaylistCreate /></RoleRoute>} />
                             <Route path="/playlists/:id"  element={<RoleRoute roles={['fan', 'artist']}><PlaylistDetail /></RoleRoute>} />
                             <Route path="/users/:id"      element={<RoleRoute roles={['fan', 'artist']}><UserDetail /></RoleRoute>} />
@@ -105,7 +113,10 @@ function App() {
                     {/* Modal global — renderizado fora das rotas via portal */}
                     <PublishModal />
                 </BrowserRouter>
+            </ToastProvider>
             </PublishProvider>
+            </PendingCommentsProvider>
+            </LikeProvider>
         </PlayerProvider>
     )
 }

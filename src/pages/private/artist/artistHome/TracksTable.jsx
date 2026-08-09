@@ -1,9 +1,22 @@
-﻿/* ─────────────────────────────────────────────────────────────────
-   TracksTable.jsx, Tabela das faixas do artista com métricas.
-   ───────────────────────────────────────────────────────────────── */
-
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import { Link } from 'react-router-dom'
 import './TracksTable.css'
+
+function Cover({ coverUrl, title }) {
+    if (coverUrl) {
+        return <img src={coverUrl} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 4 }} />
+    }
+    const hue = (title?.charCodeAt(0) ?? 0) * 37 % 360
+    return (
+        <div style={{
+            width: '100%', height: '100%', borderRadius: 4,
+            background: `hsl(${hue} 45% 30%)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            color: '#fff', fontSize: 18,
+        }}>
+            ♪
+        </div>
+    )
+}
 
 export default function TracksTable({ tracks }) {
     return (
@@ -11,9 +24,9 @@ export default function TracksTable({ tracks }) {
             <div className="dash__head">
                 <div>
                     <h2 className="dash__head-title">As tuas faixas com melhor desempenho</h2>
-                    <div className="dash__head-sub">Ordenadas por reproduções esta semana</div>
+                    <div className="dash__head-sub">Ordenadas por reproduções no período</div>
                 </div>
-                <a href="#" className="dash__head-link">Ver todas →</a>
+                <Link to="/tracks" className="dash__head-link">Ver todas →</Link>
             </div>
 
             <div className="tracks-table">
@@ -22,30 +35,19 @@ export default function TracksTable({ tracks }) {
                     <div>Faixa</div>
                     <div className="tracks-row__r">Reproduções</div>
                     <div className="tracks-row__r">Likes</div>
-                    <div className="tracks-row__r">Comentários</div>
-                    <div className="tracks-row__r">Tendência</div>
                 </div>
 
-                {tracks.map((t, i) => (
-                    <div key={i} className="tracks-row">
+                {tracks.map(t => (
+                    <div key={t.id} className="tracks-row">
                         <div className="tracks-row__cover">
-                            <ArtistArtwork shape={t.shape} hue={t.hue} image={t.image} rounded={0} />
+                            <Cover coverUrl={t.coverUrl} title={t.title} />
                         </div>
-                        <div>
-                            <div className="tracks-row__title">{t.title}</div>
-                            <div className="tracks-row__sub">
-                                Publicada há {i + 1} {i === 0 ? 'semana' : 'semanas'}
-                            </div>
-                        </div>
+                        <div className="tracks-row__title">{t.title}</div>
                         <div className="tracks-row__num">{t.plays.toLocaleString('pt-PT')}</div>
-                        <div className="tracks-row__num">{t.likes}</div>
-                        <div className="tracks-row__num">{t.comments}</div>
-                        <div className={'tracks-row__trend ' + (t.trend.startsWith('-') ? 'tracks-row__trend--down' : 'tracks-row__trend--up')}>
-                            {t.trend}
-                        </div>
+                        <div className="tracks-row__num">{t.likes.toLocaleString('pt-PT')}</div>
                     </div>
                 ))}
             </div>
         </section>
-    );
+    )
 }

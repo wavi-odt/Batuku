@@ -428,6 +428,30 @@
 
 .cmt__composer-submit:disabled { opacity: .4; cursor: default; }
 
+/* ── Avatar com iniciais ──────────────────────────────────────── */
+.cmt__avatar,
+.cmt__reply-avatar,
+.cmt__composer-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-hover);
+}
+
+.cmt__initials {
+    font-size: .72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    line-height: 1;
+}
+
+/* Badge "· Artista" na linha do autor da resposta */
+.cmt__reply-badge {
+    font-weight: 400;
+    font-size: .7rem;
+    color: var(--text-muted);
+}
+
 /* ── Empty ────────────────────────────────────────────────────── */
 .cmt__empty {
     padding: 3rem;
@@ -437,6 +461,11 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     font-size: .9rem;
+}
+
+.cmt__empty--error {
+    color: oklch(65% .22 27);
+    border-color: oklch(65% .22 27 / .3);
 }
 
 @media (max-width: 700px) {

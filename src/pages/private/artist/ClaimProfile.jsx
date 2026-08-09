@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { SiSpotify } from 'react-icons/si'
 import { FaCamera, FaRedo, FaCheck, FaFileImage } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
-import { getToken } from '../../../utils/auth.js'
+import { getToken, getRole } from '../../../utils/auth.js'
 import './ClaimProfile.css'
 
 const STEPS = ['Perfil Spotify', 'Selfie', 'Documento', 'Confirmar'];
@@ -488,7 +488,7 @@ function StepConfirm({ spotifyArtist, selfieBlob, docBlob, onBack, onSubmit, sub
 }
 
 /* ── Claim pendente ───────────────────────────────────────────────────── */
-function ClaimPending({ claim }) {
+function ClaimPending({ claim, backTo }) {
     return (
         <div className="claim-step claim-step--center">
             <div className="claim-success__icon claim-success__icon--pending">⏳</div>
@@ -499,15 +499,15 @@ function ClaimPending({ claim }) {
                 Aguarda que o admin processe o pedido antes de submeteres um novo.
                 O processo pode demorar até 48 horas.
             </p>
-            <Link to="/dashboard" className="btn-primary">
-                Voltar ao dashboard
+            <Link to={backTo} className="btn-primary">
+                Voltar
             </Link>
         </div>
     );
 }
 
 /* ── Sucesso ──────────────────────────────────────────────────────────── */
-function StepSuccess() {
+function StepSuccess({ backTo }) {
     return (
         <div className="claim-step claim-step--center">
             <div className="claim-success__icon">✓</div>
@@ -517,8 +517,8 @@ function StepSuccess() {
                 Receberás uma notificação quando o pedido for processado.
                 O processo pode demorar até 48 horas.
             </p>
-            <Link to="/dashboard" className="btn-primary">
-                Voltar ao dashboard
+            <Link to={backTo} className="btn-primary">
+                Voltar
             </Link>
         </div>
     );
@@ -549,6 +549,9 @@ function Stepper({ current }) {
 
 /* ── Página principal ────────────────────────────────────────────────── */
 export default function ClaimProfile() {
+    const role = getRole();
+    const backTo = role === 'fan' ? '/home' : '/dashboard';
+
     const [step,          setStep]          = useState(0);
     const [spotifyArtist, setSpotifyArtist] = useState(null);
     const [selfieBlob,    setSelfieBlob]    = useState(null);
@@ -595,9 +598,9 @@ export default function ClaimProfile() {
     }
 
     return (
-        <AppShell role="artist">
+        <AppShell role={role}>
             <div className="claim-page">
-                <Link to="/dashboard" className="claim-back">← Dashboard</Link>
+                <Link to={backTo} className="claim-back">← {role === 'fan' ? 'Início' : 'Dashboard'}</Link>
                 <h1 className="claim-page__title">Reclamar perfil Spotify</h1>
 
                 {!done && !pendingClaim && !checking && <Stepper current={step} />}
@@ -606,9 +609,9 @@ export default function ClaimProfile() {
                     {checking ? (
                         <p className="claim-checking">A verificar…</p>
                     ) : pendingClaim ? (
-                        <ClaimPending claim={pendingClaim} />
+                        <ClaimPending claim={pendingClaim} backTo={backTo} />
                     ) : done ? (
-                        <StepSuccess />
+                        <StepSuccess backTo={backTo} />
                     ) : step === 0 ? (
                         <StepSpotify
                             selected={spotifyArtist}

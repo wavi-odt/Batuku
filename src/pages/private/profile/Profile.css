@@ -444,6 +444,78 @@
 .prof-activity .activity__time { font-size: 12px; color: var(--color-ink-mute); margin-top: 3px; }
 
 
+/* ─── Release cards grid ─────────────────────────────────────────── */
+.rel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 14px;
+    margin-top: 12px;
+}
+.rel-grid--full {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.rel-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    cursor: default;
+}
+.rel-card--link {
+    text-decoration: none;
+    cursor: pointer;
+}
+.rel-card--link:hover .rel-card__title { color: var(--color-coral); }
+.rel-card--link:hover .rel-card__cover img { opacity: 0.85; }
+.rel-card__cover {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--color-bg-2);
+}
+.rel-card__cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.rel-card__cover-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
+}
+.rel-card__badge {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    font-size: 10px;
+    font-weight: var(--fw-semibold);
+    background: rgba(10,10,11,0.72);
+    color: var(--color-ink-soft);
+    padding: 2px 7px;
+    border-radius: 20px;
+    backdrop-filter: blur(4px);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.rel-card__info { padding: 0 2px; }
+.rel-card__title {
+    font-size: 13px;
+    font-weight: var(--fw-semibold);
+    color: var(--color-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.rel-card__sub {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    margin-top: 2px;
+}
+
 /* ─── Empty state partilhado ─────────────────────────────────────── */
 .user-detail__empty {
     min-height: 160px;
@@ -463,3 +535,61 @@
 }
 .prof-recent__cover { width: 40px; height: 40px; }
 .prof-recent__name { font-size: 13px; }
+
+/* ─── Follow card (usado no perfil de fã) ────────────────────────── */
+.follow-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    font-family: inherit;
+    display: block;
+    transition: border-color var(--duration-base) var(--ease-out),
+                transform var(--duration-base) var(--ease-out);
+}
+.follow-card:hover { border-color: var(--color-border-strong); transform: translateY(-2px); }
+
+.follow-card__avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    overflow: hidden;
+    background: var(--color-bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
+}
+.follow-card__avatar-img { width: 100%; height: 100%; object-fit: cover; }
+.follow-card__avatar-empty { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.follow-card__name { font-size: 14px; font-weight: var(--fw-semibold); margin: 0 0 2px; }
+.follow-card__genre { font-size: 11px; color: var(--color-ink-mute); margin: 0; }
+
+/* versão compacta 2 colunas para o painel lateral */
+.prof-following--compact { grid-template-columns: repeat(2, 1fr); }
+@media (max-width: 1000px) { .prof-following--compact { grid-template-columns: repeat(4, 1fr); } }
+@media (max-width: 600px)  { .prof-following--compact { grid-template-columns: repeat(2, 1fr); } }
+
+/* ─── Playlist cover extras ──────────────────────────────────────── */
+.playlist-item__cover--fav {
+    background: linear-gradient(135deg, oklch(0.55 0.2 340), oklch(0.45 0.18 14));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+}
+.playlist-item__cover-img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
+.playlist-item__cover-empty {
+    width: 100%;
+    height: 100%;
+    background: var(--color-bg-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
+    border-radius: 4px;
+}

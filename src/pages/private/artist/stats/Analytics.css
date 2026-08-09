@@ -1,0 +1,473 @@
+/* ─── Analytics page ─────────────────────────────────────────────── */
+
+/* ─── Header ────────────────────────────────────────────────────── */
+.anl__header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-5);
+    margin-bottom: var(--space-7);
+    flex-wrap: wrap;
+}
+
+.anl__title {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-snug);
+    margin: 0 0 4px;
+    line-height: 1.1;
+}
+
+.anl__subtitle {
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    margin: 0;
+}
+
+.anl__period-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 3px;
+}
+
+.anl__period-tab {
+    padding: 5px 16px;
+    border-radius: var(--radius-full);
+    border: none;
+    background: transparent;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    color: var(--color-ink-mute);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out),
+                color     var(--duration-fast) var(--ease-out);
+}
+
+.anl__period-tab:hover { color: var(--color-ink-soft); }
+
+.anl__period-tab--active {
+    background: var(--color-coral);
+    color: #fff;
+}
+
+/* ─── KPI cards ─────────────────────────────────────────────────── */
+.anl__kpis {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: var(--space-7);
+}
+
+@media (max-width: 900px) { .anl__kpis { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .anl__kpis { grid-template-columns: 1fr; } }
+
+.anl__kpi {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5) var(--space-6);
+    position: relative;
+    overflow: hidden;
+    transition: border-color var(--duration-fast);
+}
+
+.anl__kpi::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+}
+
+.anl__kpi:has(.anl__kpi-icon--coral)   { border-left-color: transparent; }
+.anl__kpi:has(.anl__kpi-icon--coral)::before   { background: var(--color-coral);   }
+.anl__kpi:has(.anl__kpi-icon--green)::before   { background: var(--color-green);   }
+.anl__kpi:has(.anl__kpi-icon--mustard)::before { background: var(--color-mustard); }
+.anl__kpi:has(.anl__kpi-icon--ocean)::before   { background: var(--color-ocean);   }
+
+.anl__kpi-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-ink-mute);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.anl__kpi-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.anl__kpi-icon--coral   { background: rgba(232, 93,  60, 0.15); color: var(--color-coral);   }
+.anl__kpi-icon--ocean   { background: rgba( 59,110, 255, 0.15); color: var(--color-ocean);   }
+.anl__kpi-icon--mustard { background: rgba(230,165,  50, 0.15); color: var(--color-mustard); }
+.anl__kpi-icon--green   { background: rgba( 79,174, 124, 0.15); color: var(--color-green);   }
+
+.anl__kpi-val {
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: var(--tracking-snug);
+    line-height: 1;
+    margin-bottom: 8px;
+    font-variant-numeric: tabular-nums;
+}
+
+.anl__kpi-delta {
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.anl__kpi-delta--up   { color: var(--color-green); }
+.anl__kpi-delta--down { color: var(--color-danger, #e55); }
+.anl__kpi-period      { color: var(--color-ink-mute); }
+
+/* ─── Gráfico de linha ───────────────────────────────────────────── */
+.anl__line-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 22px 22px 16px;
+    margin-bottom: var(--space-7);
+    box-sizing: border-box;
+}
+
+.anl__line-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 12px;
+}
+
+.anl__line-title {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    margin: 0 0 4px;
+}
+
+.anl__line-sub {
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+    margin: 0;
+}
+
+.anl__line-total { text-align: right; flex-shrink: 0; }
+
+.anl__line-total-val {
+    font-size: var(--fs-xl);
+    font-weight: 700;
+    letter-spacing: var(--tracking-snug);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+
+.anl__line-total-label {
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+    margin-top: 3px;
+}
+
+.anl__svg-wrap { position: relative; }
+
+.anl__svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+}
+
+.anl__chart-empty {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    pointer-events: none;
+}
+
+/* Tooltip HTML */
+.anl__tooltip-html {
+    position: absolute;
+    background: var(--color-bg-2, #1a1a1f);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 7px 11px;
+    min-width: 90px;
+    pointer-events: none;
+    z-index: 10;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.anl__tooltip-date {
+    font-size: 10px;
+    color: var(--color-ink-mute);
+    margin-bottom: 2px;
+}
+
+.anl__tooltip-val {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+}
+
+/* ─── Tabela top faixas ──────────────────────────────────────────── */
+.anl__top-table {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: var(--space-7);
+}
+
+.anl__top-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px 14px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.anl__top-title {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+}
+
+.anl__top-empty {
+    padding: 24px 20px;
+    color: var(--color-ink-mute);
+    font-size: var(--fs-sm);
+    margin: 0;
+}
+
+/* 5 colunas: # | cover | info+barra | plays | likes */
+.anl__top-row {
+    display: grid;
+    grid-template-columns: 28px 40px 1fr 72px 64px;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+    transition: background var(--duration-fast) var(--ease-out);
+}
+
+.anl__top-row + .anl__top-row { border-top: 1px solid var(--color-border); }
+.anl__top-row:not(.anl__top-row--head):hover { background: rgba(255,255,255,0.02); }
+
+.anl__top-row--head {
+    font-size: 10px;
+    color: var(--color-ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: var(--fw-semibold);
+    background: rgba(255,255,255,0.02);
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.anl__top-rank {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+}
+
+.anl__top-cover {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.anl__top-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.anl__top-cover-empty {
+    width: 100%;
+    height: 100%;
+    background: var(--color-surface-2, rgba(255,255,255,.06));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
+}
+
+.anl__top-info { min-width: 0; }
+
+.anl__top-title-text {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 5px;
+}
+
+.anl__top-bar-wrap {
+    height: 3px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.anl__top-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-coral), var(--color-mustard));
+    border-radius: 99px;
+    transition: width var(--duration-slow) var(--ease-out);
+}
+
+.anl__top-num {
+    font-size: var(--fs-xs);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    color: var(--color-ink-soft);
+}
+
+/* ─── Breakdown (3 cards lado a lado) ──────────────────────────── */
+.anl__breakdown {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: var(--space-7);
+}
+
+@media (max-width: 900px) { .anl__breakdown { grid-template-columns: 1fr; } }
+
+.anl__card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+}
+
+.anl__card-title {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    margin-bottom: 16px;
+    color: var(--color-ink);
+}
+
+/* ─── Barras horizontais ─────────────────────────────────────────── */
+.anl__hbar-list {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.anl__hbar-row {
+    display: grid;
+    grid-template-columns: 100px 1fr 44px;
+    align-items: center;
+    gap: 10px;
+}
+
+.anl__hbar-label {
+    font-size: var(--fs-xs);
+    color: var(--color-ink-soft);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.anl__hbar-track {
+    height: 5px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 99px;
+    overflow: hidden;
+}
+
+.anl__hbar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width var(--duration-slow) var(--ease-out);
+}
+
+.anl__hbar-fill--coral   { background: linear-gradient(90deg, var(--color-coral),   var(--color-mustard)); }
+.anl__hbar-fill--ocean   { background: linear-gradient(90deg, var(--color-ocean),   oklch(55% .18 195)); }
+.anl__hbar-fill--mustard { background: var(--color-mustard); }
+.anl__hbar-fill--green   { background: var(--color-green); }
+.anl__hbar-fill--purple  { background: oklch(60% .18 290); }
+.anl__hbar-fill--default { background: linear-gradient(90deg, var(--color-coral), var(--color-mustard)); }
+.anl__hbar-fill--mute    { background: var(--color-ink-mute); }
+
+.anl__hbar-val {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    color: var(--color-ink-soft);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+@media (max-width: 860px) {
+    .anl__top-row { grid-template-columns: 28px 36px 1fr 72px; }
+    .anl__top-num:last-child,
+    .anl__top-row--head > div:last-child { display: none; }
+}
+
+/* ─── Layout 2 colunas (likes + donut) ─────────────────────── */
+.anl__row-2 {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 12px;
+    margin-bottom: var(--space-7);
+    align-items: stretch;
+}
+
+@media (max-width: 760px) { .anl__row-2 { grid-template-columns: 1fr; } }
+
+/* ─── Bar chart card (partilha estilo com line-card) ────────── */
+.anl__bar-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 22px 22px 16px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+/* ─── Donut card ─────────────────────────────────────────────── */
+.anl__donut-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 22px 22px 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.anl__donut-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding-top: 8px;
+}
+
+.anl__donut-svg { display: block; overflow: visible; }
+
+.anl__donut-hint {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    margin: 0;
+    text-align: center;
+}
+

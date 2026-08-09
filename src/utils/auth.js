@@ -1,4 +1,6 @@
-﻿function decodeJwtPayload(token) {
+﻿export const API = import.meta.env.VITE_API_BASE_URL
+
+function decodeJwtPayload(token) {
     try {
         const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
         return JSON.parse(atob(base64));
@@ -59,6 +61,7 @@ export function getUser() {
 // Guarda apenas o token, o role é sempre derivado do JWT
 export function saveAuth(token) {
     localStorage.setItem('token', token);
+    window.dispatchEvent(new Event('batuku:login'));
 }
 
 export function getToken() {

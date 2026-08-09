@@ -1,31 +1,78 @@
-.pl-rename { display: flex; gap: 8px; align-items: center; margin: 6px 0 4px; max-width: 360px; }
+/* ── Renomear título ───────────────────────────────────────────── */
+.pl-rename { display: flex; gap: 8px; align-items: center; margin: 6px 0 4px; }
+.pl-rename__input { max-width: 320px; font-size: 22px; font-weight: 700; }
 .pl-rename__edit {
     display: inline-flex; align-items: center; justify-content: center;
-    width: 26px; height: 26px; margin-left: 10px; border-radius: var(--radius-sm);
-    color: var(--color-ink-mute); vertical-align: middle;
+    width: 30px; height: 30px; margin-left: 10px; border-radius: var(--radius-sm);
+    color: rgba(255,255,255,0.5); vertical-align: middle;
     transition: background var(--duration-fast), color var(--duration-fast);
+    background: transparent; border: none; cursor: pointer;
 }
-.pl-rename__edit:hover { background: rgba(255,255,255,0.06); color: var(--color-ink); }
+.pl-rename__edit:hover { background: rgba(255,255,255,0.08); color: #fff; }
 
+/* ── Adicionar faixas ──────────────────────────────────────────── */
 .pl-manage { margin-bottom: var(--space-6); }
 .pl-add { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; max-width: 420px; }
 .pl-add__hint { font-size: 12px; color: var(--color-ink-mute); }
 .pl-add__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
 .pl-add__item {
     display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    padding: 8px 12px; border-radius: var(--radius-md); background: var(--color-bg-2); border: 1px solid var(--color-border);
-    font-size: 13px;
+    padding: 8px 12px; border-radius: var(--radius-md);
+    background: var(--color-bg-2); border: 1px solid var(--color-border); font-size: 13px;
 }
 .pl-add__btn {
     display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600;
-    color: var(--color-coral); background: var(--color-coral-dim); padding: 5px 10px; border-radius: var(--radius-full);
-    border: 1px solid rgba(232,93,60,0.3); white-space: nowrap;
+    color: var(--color-coral); background: var(--color-coral-dim); padding: 5px 10px;
+    border-radius: var(--radius-full); border: 1px solid rgba(232,93,60,0.3); white-space: nowrap;
+    cursor: pointer;
 }
 .pl-add__btn:hover { background: rgba(232,93,60,0.25); }
 
+/* ── Remover faixa ─────────────────────────────────────────────── */
 .pl-track-remove {
-    color: var(--color-ink-mute); opacity: 0; transition: opacity 120ms, color 120ms;
-    margin-left: 6px;
+    color: var(--color-ink-mute); opacity: 0;
+    transition: opacity 120ms, color 120ms;
+    margin-left: 2px; flex-shrink: 0;
+    background: transparent; border: none; cursor: pointer;
+    display: inline-flex; align-items: center; padding: 4px;
 }
-.detail-track-item:hover .pl-track-remove { opacity: 1; }
+.strack:hover .pl-track-remove { opacity: 1; }
 .pl-track-remove:hover { color: var(--color-danger); }
+
+/* ── Hero: fundo Favoritos (gradiente roxo→coral) ──────────────── */
+.pl-detail__hero-fav-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #4B2DA0 0%, var(--color-coral) 100%);
+}
+
+/* ── Hero: fundo sem capa (neutro) ────────────────────────────── */
+.pl-detail__hero-plain-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, oklch(0.28 0.04 260), oklch(0.22 0.03 240));
+}
+
+/* ── Capa Favoritos ────────────────────────────────────────────── */
+.pl-detail__cover-fav {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #4B2DA0 0%, var(--color-coral) 100%);
+    color: rgba(255, 255, 255, 0.85);
+    border-radius: var(--radius-md);
+}
+
+/* ── Capa sem imagem ───────────────────────────────────────────── */
+.pl-detail__cover-empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-surface-2);
+    color: var(--color-ink-mute);
+    border-radius: var(--radius-md);
+}

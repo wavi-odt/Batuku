@@ -1,39 +1,50 @@
-/* ─────────────────────────────────────────────────────────────────
-   LibraryArtists.jsx, Grelha de artistas seguidos pelo fã.
-   ───────────────────────────────────────────────────────────────── */
+import { Link } from 'react-router-dom'
+import { FaUser } from 'react-icons/fa'
 
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+function ArtistCard({ a }) {
+    return (
+        <Link to={`/artists/${a.id}`} className="lib__artist-card">
+            <div className="lib__artist-avatar">
+                {a.avatarUrl
+                    ? <img src={a.avatarUrl} alt={a.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    : <div className="lib__artist-avatar-empty"><FaUser size={28} /></div>
+                }
+            </div>
+            <div className="lib__artist-name">{a.name}</div>
+            {a.genre && <div className="lib__artist-genre">{a.genre}</div>}
+            <div className="lib__artist-followers">
+                {(a.followerCount ?? 0).toLocaleString('pt-PT')} seguidores
+            </div>
+        </Link>
+    )
+}
 
-export default function LibraryArtists({ artists }) {
+export default function LibraryArtists({ artists, loading }) {
     return (
         <section className="home__section">
             <div className="home__section-head">
                 <div>
                     <h2 className="home__section-title">Artistas seguidos</h2>
-                    <div className="home__section-sub">{artists.length} artistas</div>
+                    <div className="home__section-sub">
+                        {loading ? '…' : `${artists.length} ${artists.length === 1 ? 'artista' : 'artistas'}`}
+                    </div>
                 </div>
-                <a href="/following" className="home__section-link">Gerir →</a>
             </div>
 
-            <div className="lib__artist-grid">
-                {artists.map((a, i) => (
-                    <button key={i} type="button" className="lib__artist-card">
-                        <div className="lib__artist-avatar">
-                            <ArtistArtwork shape={a.shape} hue={a.hue} image={a.image} rounded={0} />
-                            {a.isLive && <span className="follow-card__live">● Ao vivo</span>}
-                        </div>
-                        <div className="lib__artist-name">{a.name}</div>
-                        <div className="lib__artist-genre">{a.genre}</div>
-                        <div className="lib__artist-followers">
-                            {a.followers.toLocaleString('pt-PT')} seguidores
-                        </div>
-                        {a.newTracks > 0
-                            ? <span className="follow-card__new">+{a.newTracks} novas</span>
-                            : <span className="lib__artist-nonew">Sem novidades</span>
-                        }
-                    </button>
-                ))}
-            </div>
+            {loading ? (
+                <div className="lib__tracks-empty">A carregar artistas…</div>
+            ) : artists.length === 0 ? (
+                <div className="lib__saved-empty">
+                    <FaUser size={18} />
+                    <span>Ainda não segues nenhum artista.</span>
+                </div>
+            ) : (
+                <div className="lib__artist-grid">
+                    {artists.map(a => (
+                        <ArtistCard key={a.id} a={a} />
+                    ))}
+                </div>
+            )}
         </section>
-    );
+    )
 }

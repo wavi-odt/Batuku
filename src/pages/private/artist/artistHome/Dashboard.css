@@ -35,8 +35,15 @@
     gap: 16px;
 }
 
+.dash__duo {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 16px;
+}
+
 @media (max-width: 1100px) {
     .dash__triple { grid-template-columns: 1fr; }
+    .dash__duo    { grid-template-columns: 1fr; }
 }
 
 /* ─── Shared section header (reused) ──────────────────────────────── */

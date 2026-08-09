@@ -173,7 +173,7 @@
 
 .strack {
     display: grid;
-    grid-template-columns: 32px 44px 1fr auto auto;
+    grid-template-columns: 32px 44px 1fr auto auto auto auto;
     align-items: center;
     gap: 12px;
     padding: 8px 10px;

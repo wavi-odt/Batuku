@@ -150,36 +150,68 @@ export function FollowingGrid({ artists }) {
 /* Reutilizados pelo overview + tab "Sobre" do artista */
 export function ArtistAbout({ artist }) {
     const about = artist.about || {};
+    const isEmpty = !artist.bio && !about.location && !about.genre && !about.languages && !about.forHire;
     return (
         <div className="prof-card">
             <CardTitle>Sobre</CardTitle>
-            {artist.bio && <p className="prof__bio" style={{ marginBottom: 16 }}>{artist.bio}</p>}
-            {about.location  && <div className="about-row"><span className="about-row__label">Localização</span><span className="about-row__value">{about.location}</span></div>}
-            {about.genre     && <div className="about-row"><span className="about-row__label">Género</span><span className="about-row__value">{about.genre}</span></div>}
-            {about.languages && <div className="about-row"><span className="about-row__label">Línguas</span><span className="about-row__value">{about.languages}</span></div>}
-            {about.forHire && (
-                <div className="forhire">
-                    <span className="forhire__dot" />
-                    <div className="forhire__text">
-                        <strong>Disponível para colaborações</strong>
-                        <span>Beats por encomenda · features</span>
-                    </div>
-                </div>
-            )}
+            {isEmpty
+                ? <p className="prof__bio user-detail__empty">Sem informação disponível.</p>
+                : <>
+                    {artist.bio && <p className="prof__bio" style={{ marginBottom: 16 }}>{artist.bio}</p>}
+                    {about.location  && <div className="about-row"><span className="about-row__label">Localização</span><span className="about-row__value">{about.location}</span></div>}
+                    {about.genre     && <div className="about-row"><span className="about-row__label">Género</span><span className="about-row__value">{about.genre}</span></div>}
+                    {about.languages && <div className="about-row"><span className="about-row__label">Línguas</span><span className="about-row__value">{about.languages}</span></div>}
+                    {about.forHire && (
+                        <div className="forhire">
+                            <span className="forhire__dot" />
+                            <div className="forhire__text">
+                                <strong>Disponível para colaborações</strong>
+                                <span>Beats por encomenda · features</span>
+                            </div>
+                        </div>
+                    )}
+                </>
+            }
         </div>
     );
 }
 
+function buildSocialUrl(kind, handle) {
+    if (!handle) return null;
+    const h = handle.replace(/^@/, '');
+    if (handle.startsWith('http')) return handle;
+    switch (kind) {
+        case 'instagram':  return `https://www.instagram.com/${h}`;
+        case 'tiktok':     return `https://www.tiktok.com/@${h}`;
+        case 'twitter':    return `https://twitter.com/${h}`;
+        case 'soundcloud': return `https://soundcloud.com/${h}`;
+        case 'youtube':    return `https://www.youtube.com/@${h}`;
+        case 'facebook':   return `https://www.facebook.com/${h}`;
+        case 'spotify':    return `https://open.spotify.com/artist/${h}`;
+        default:           return null;
+    }
+}
+
 export function ArtistLinks({ social }) {
+    if (!social?.length) return null;
     return (
         <div className="prof-card">
             <CardTitle>Links</CardTitle>
-            {social.map((s, i) => (
-                <a key={i} className="social-link" href="#">
-                    <span className="social-link__handle">{s.handle}</span>
-                    <span className="social-link__kind">{s.kind}</span>
-                </a>
-            ))}
+            {social.map((s, i) => {
+                const url = buildSocialUrl(s.kind, s.handle);
+                return (
+                    <a
+                        key={i}
+                        className="social-link"
+                        href={url ?? '#'}
+                        target={url ? '_blank' : undefined}
+                        rel={url ? 'noopener noreferrer' : undefined}
+                    >
+                        <span className="social-link__handle">{s.handle}</span>
+                        <span className="social-link__kind">{s.kind}</span>
+                    </a>
+                );
+            })}
         </div>
     );
 }

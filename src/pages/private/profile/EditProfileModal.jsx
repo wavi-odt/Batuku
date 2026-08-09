@@ -121,7 +121,7 @@ function ChipSelect({ options, selected, onChange, max }) {
 function sortedStr(arr) { return JSON.stringify([...(arr || [])].sort()) }
 
 /* ── Tab: Artista ────────────────────────────────────────────────────── */
-function TabArtista() {
+function TabArtista({ onSaved }) {
     const [bio, setBio]           = useState('')
     const [location, setLocation] = useState('')
     const [genres, setGenres]     = useState([])
@@ -186,6 +186,7 @@ function TabArtista() {
             ])
             setSaved({ bio, location, genres, languages })
             setDone(true)
+            onSaved?.()
         } catch (err) {
             setError(err.message)
         } finally {
@@ -255,13 +256,25 @@ function TabArtista() {
 function linksKey(ls) { return JSON.stringify(ls.map(l => l.platform + '|' + l.handle)) }
 
 /* ── Tab: Links ──────────────────────────────────────────────────────── */
-function TabLinks({ user }) {
-    const initial = (user.social || []).map((s, i) => ({ id: i, platform: s.kind || 'instagram', handle: s.handle || '' }))
-    const [links, setLinks]       = useState(initial)
-    const [savedKey, setSavedKey] = useState(linksKey(initial))
+function TabLinks({ onSaved }) {
+    const [links, setLinks]       = useState([])
+    const [savedKey, setSavedKey] = useState(linksKey([]))
+    const [loading, setLoading]   = useState(true)
     const [saving, setSaving]     = useState(false)
     const [error, setError]       = useState('')
     const [done, setDone]         = useState(false)
+
+    useEffect(() => {
+        fetch(`${API}/artists/me/links`, { headers: { Authorization: `Bearer ${getToken()}` } })
+            .then(r => r.ok ? r.json() : [])
+            .then(data => {
+                const loaded = (data || []).map((s, i) => ({ id: i, platform: s.kind || 'instagram', handle: s.handle || '' }))
+                setLinks(loaded)
+                setSavedKey(linksKey(loaded))
+            })
+            .catch(() => {})
+            .finally(() => setLoading(false))
+    }, [])
 
     const isDirty = linksKey(links) !== savedKey
 
@@ -289,12 +302,15 @@ function TabLinks({ user }) {
             if (!res.ok) throw new Error(`Erro ${res.status}`)
             setSavedKey(linksKey(links))
             setDone(true)
+            onSaved?.()
         } catch (err) {
             setError(err.message)
         } finally {
             setSaving(false)
         }
     }
+
+    if (loading) return <p className="ep-loading">A carregar…</p>
 
     return (
         <form className="ep-form" onSubmit={handleSubmit}>
@@ -421,7 +437,7 @@ function TabSeguranca() {
 }
 
 /* ── Modal principal ─────────────────────────────────────────────────── */
-export default function EditProfileModal({ role, onClose, onProfileUpdated }) {
+export default function EditProfileModal({ role, onClose, onProfileUpdated, onArtistSaved }) {
     const isArtist = role === 'artist'
     const tabs = isArtist
         ? ['Perfil', 'Artista', 'Links', 'Segurança']
@@ -451,8 +467,8 @@ export default function EditProfileModal({ role, onClose, onProfileUpdated }) {
         if (!user) return null
         switch (tabs[active]) {
             case 'Perfil':    return <TabPerfil user={user} onProfileUpdated={onProfileUpdated} />
-            case 'Artista':   return <TabArtista />
-            case 'Links':     return <TabLinks user={user} />
+            case 'Artista':   return <TabArtista onSaved={onArtistSaved} />
+            case 'Links':     return <TabLinks onSaved={onArtistSaved} />
             case 'Segurança': return <TabSeguranca />
             default:          return null
         }

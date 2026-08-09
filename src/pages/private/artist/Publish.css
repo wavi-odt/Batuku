@@ -171,9 +171,15 @@
 
 .pub-track-row {
     display: grid;
-    grid-template-columns: 1fr 200px 32px;
+    grid-template-columns: 1fr 120px 160px 32px;
     gap: .65rem;
     align-items: center;
+}
+
+.pub-track-row__genre {
+    font-size: .82rem;
+    padding-top: .42rem;
+    padding-bottom: .42rem;
 }
 
 @media (max-width: 500px) { .pub-track-row { grid-template-columns: 1fr; } }
@@ -219,4 +225,34 @@
 .pub-modal__cancel:hover {
     border-color: var(--text-secondary);
     color: var(--text-primary);
+}
+
+/* ── Agendar ──────────────────────────────────────────────────── */
+.pub-schedule {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--color-border);
+    margin-top: var(--space-3);
+}
+
+.pub-schedule__toggle {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-soft);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.pub-schedule__toggle input[type="checkbox"] { cursor: pointer; }
+
+.pub-schedule__input {
+    flex: 1;
+    min-width: 180px;
+    font-size: var(--fs-sm);
 }

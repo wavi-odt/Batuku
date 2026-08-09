@@ -13,11 +13,12 @@ import AppShell from '../../../components/HomeComponents/AppShell'
 import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
 import { profileData } from '../../../data/profile'
 import { useCurrentUser } from '../../../hooks/useCurrentUser'
+import { API } from '../../../utils/auth.js'
 import {
     FanOverview, FanPlaylists, FanAchievements, FanFollowing, FanActivity,
 } from './FanPanels'
 import {
-    ArtistOverview, ArtistTracks, ArtistAboutPanel, ArtistAchievements,
+    ArtistOverview, ArtistTracks, ArtistAboutPanel, ArtistAchievements, ArtistReleases,
 } from './ArtistPanels'
 import AvatarUploader from './AvatarUploader'
 import EditProfileModal from './EditProfileModal'
@@ -33,10 +34,11 @@ const FAN_TABS = [
 ];
 
 const ARTIST_TABS = [
-    { label: 'Visão geral', Panel: ArtistOverview },
-    { label: 'Faixas',      Panel: ArtistTracks },
-    { label: 'Sobre',       Panel: ArtistAboutPanel },
-    { label: 'Conquistas',  Panel: ArtistAchievements },
+    { label: 'Visão geral',  Panel: ArtistOverview },
+    { label: 'Faixas',       Panel: ArtistTracks },
+    { label: 'Lançamentos',  Panel: ArtistReleases },
+    { label: 'Sobre',        Panel: ArtistAboutPanel },
+    { label: 'Conquistas',   Panel: ArtistAchievements },
 ];
 
 /* ─── Header ──────────────────────────────────────────────────────── */
@@ -83,12 +85,15 @@ function ProfileHeader({ role, data, avatarUrl, onAvatarEdit, onEditProfile }) {
                     </div>
                     <div className="prof__meta">
                         <span className="prof__meta-handle">{data.handle}</span>
-                        <span className="prof__meta-dot" />
-                        <span>{isArtist ? data.about.genre : data.country}</span>
-                        <span className="prof__meta-dot" />
-                        <span>{data.location}</span>
-                        <span className="prof__meta-dot" />
-                        <span>Membro desde {data.joined}</span>
+                        {(isArtist ? data.about?.genre : data.country) && (
+                            <><span className="prof__meta-dot" /><span>{isArtist ? data.about.genre : data.country}</span></>
+                        )}
+                        {data.location && (
+                            <><span className="prof__meta-dot" /><span>{data.location}</span></>
+                        )}
+                        {data.joined && (
+                            <><span className="prof__meta-dot" /><span>Membro desde {data.joined}</span></>
+                        )}
                     </div>
                 </div>
 
@@ -137,7 +142,6 @@ function ProfileStats({ role, data }) {
     );
 }
 
-const API = import.meta.env.VITE_API_BASE_URL
 
 /* ─── Page ────────────────────────────────────────────────────────── */
 export default function Profile({ role = 'fan' }) {
@@ -151,27 +155,62 @@ export default function Profile({ role = 'fan' }) {
     const [showEditModal, setShowEditModal] = useState(false);
     const [userOverrides, setUserOverrides] = useState({});
     const [artistMe, setArtistMe]           = useState(null);
+    const [realStats, setRealStats]         = useState({ followers: null, following: null, tracksPublished: null });
 
     useEffect(() => {
         if (realUser?.picture) setAvatarUrl(realUser.picture);
     }, [realUser?.picture]);
 
-    useEffect(() => {
-        if (role !== 'artist') return;
+    function refreshArtistMe() {
         const token = localStorage.getItem('token');
         if (!token) return;
         fetch(`${API}/api/artists/me`, { headers: { Authorization: `Bearer ${token}` } })
             .then(r => r.ok ? r.json() : null)
             .then(me => { if (me) setArtistMe(me); })
             .catch(() => {});
+    }
+
+    useEffect(() => {
+        if (role !== 'artist') return;
+        refreshArtistMe();
     }, [role]);
 
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        const headers = { Authorization: `Bearer ${token}` };
+
+        if (role === 'artist' && artistMe?.id) {
+            Promise.all([
+                fetch(`${API}/api/artist-follows/${artistMe.id}/status`, { headers }).then(r => r.ok ? r.json() : null),
+                fetch(`${API}/api/tracks/artist/${artistMe.id}`, { headers }).then(r => r.ok ? r.json() : null),
+            ]).then(([followStatus, tracks]) => {
+                setRealStats(prev => ({
+                    ...prev,
+                    ...(followStatus?.followers != null && { followers: followStatus.followers }),
+                    ...(Array.isArray(tracks)           && { tracksPublished: tracks.length }),
+                }));
+            }).catch(() => {});
+        } else if (role === 'fan' && realUser?.id) {
+            fetch(`${API}/api/users/${realUser.id}`, { headers })
+                .then(r => r.ok ? r.json() : null)
+                .then(userData => {
+                    if (!userData) return;
+                    setRealStats(prev => ({
+                        ...prev,
+                        ...(userData.followers != null && { followers: userData.followers }),
+                        ...(userData.following != null && { following: userData.following }),
+                    }));
+                }).catch(() => {});
+        }
+    }, [role, artistMe?.id, realUser?.id]);
+
     const artistAbout = role === 'artist' ? {
-        ...mock.about,
-        ...(artistMe?.location  && { location:  artistMe.location }),
-        ...(artistMe?.genres?.length && { genre: artistMe.genres.join(' · ') }),
-        ...(artistMe?.languages?.length && { languages: artistMe.languages.join(', ') }),
-    } : mock.about;
+        location:  artistMe?.location                            || null,
+        genre:     artistMe?.genres?.length ? artistMe.genres.join(' · ')       : null,
+        languages: artistMe?.languages?.length ? artistMe.languages.join(', ')  : null,
+        forHire:   false,
+    } : {};
 
     const data = {
         ...mock,
@@ -180,13 +219,18 @@ export default function Profile({ role = 'fan' }) {
         ...(realUser?.joined   && { joined:   realUser.joined }),
         ...(role === 'artist'
             ? {
-                bio:      artistMe?.bio      ?? mock.bio,
-                location: artistMe?.location ?? mock.location,
+                bio:      artistMe?.bio      ?? null,
+                location: artistMe?.location ?? null,
                 about:    artistAbout,
+                social:   (artistMe?.links ?? []).map(l => ({ kind: l.kind, handle: l.handle })),
+                ...(realStats.followers       != null && { followers:       realStats.followers }),
+                ...(realStats.tracksPublished != null && { tracksPublished: realStats.tracksPublished }),
             }
             : {
                 ...(realUser?.bio      && { bio:      realUser.bio }),
                 ...(realUser?.location && { country: realUser.location, location: realUser.location }),
+                ...(realStats.followers != null && { followers: realStats.followers }),
+                ...(realStats.following != null && { following: realStats.following }),
             }
         ),
         spotifyArtistId:  realUser?.spotifyArtistId  ?? null,
@@ -243,6 +287,7 @@ export default function Profile({ role = 'fan' }) {
                     role={role}
                     onClose={() => setShowEditModal(false)}
                     onProfileUpdated={updates => setUserOverrides(prev => ({ ...prev, ...updates }))}
+                    onArtistSaved={refreshArtistMe}
                 />
             )}
         </AppShell>

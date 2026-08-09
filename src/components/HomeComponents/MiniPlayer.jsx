@@ -3,9 +3,12 @@ import {
     FaPlay, FaPause, FaStepForward, FaStepBackward,
     FaRandom, FaSyncAlt,
 } from 'react-icons/fa'
-import { HiHeart, HiVolumeUp } from 'react-icons/hi'
+import { HiVolumeUp } from 'react-icons/hi'
 import { SiSpotify } from 'react-icons/si'
 import { usePlayer } from '../../context/PlayerContext'
+import { API, getToken } from '../../utils/auth'
+import LikeButton from '../LikeButton'
+import TrackMenu from '../TrackMenu'
 import './MiniPlayer.css'
 
 function fmtTime(ms) {
@@ -29,6 +32,11 @@ export default function MiniPlayer() {
     // ── Direct audio (<audio> element, used for Batuku uploads) ──────
     const audioRef       = useRef(null)
 
+    // ── Play tracking ─────────────────────────────────────────────────
+    const playIdRef      = useRef(null)   // ID do registo Play devolvido pelo servidor
+    const positionMsRef  = useRef(0)      // posição actual em ms (actualizada por timeupdate)
+    const durationMsRef  = useRef(0)      // duração total em ms
+
     // ── Shared ────────────────────────────────────────────────────────
     const volBarRef      = useRef(null)
     const draggingRef    = useRef(false)
@@ -41,13 +49,25 @@ export default function MiniPlayer() {
     const [playing,    setPlaying]    = useState(false)
     const [position,   setPosition]   = useState(0)   // always ms
     const [duration,   setDuration]   = useState(0)   // always ms
-    const [liked,      setLiked]      = useState(false)
     const [volume,     setVolume]     = useState(70)
     const [repeat,     setRepeat]     = useState(false)
     const [audioError, setAudioError] = useState(null)
 
     useEffect(() => { repeatRef.current    = repeat    }, [repeat])
     useEffect(() => { nextTrackRef.current = nextTrack }, [nextTrack])
+
+    function getCountry() {
+        return (navigator.language || 'xx-XX').split('-')[1]?.toUpperCase() ?? 'XX'
+    }
+
+    function sendCompletion(playId, durationMs, isFullPlay) {
+        if (!playId) return
+        fetch(`${API}/api/plays/${playId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+            body: JSON.stringify({ durationPlayed: Math.floor(durationMs), isFullPlay }),
+        }).catch(() => {})
+    }
 
     // Volume: native for direct audio, best-effort postMessage for Spotify
     function applyVolume(vol) {
@@ -141,9 +161,19 @@ export default function MiniPlayer() {
         audio.volume = volumeRef.current / 100
         audio.addEventListener('play',            () => setPlaying(true))
         audio.addEventListener('pause',           () => setPlaying(false))
-        audio.addEventListener('timeupdate',      () => setPosition(Math.floor(audio.currentTime * 1000)))
-        audio.addEventListener('loadedmetadata',  () => setDuration(Math.floor(audio.duration   * 1000)))
+        audio.addEventListener('timeupdate', () => {
+            const ms = Math.floor(audio.currentTime * 1000)
+            positionMsRef.current = ms
+            setPosition(ms)
+        })
+        audio.addEventListener('loadedmetadata', () => {
+            const ms = Math.floor(audio.duration * 1000)
+            durationMsRef.current = ms
+            setDuration(ms)
+        })
         audio.addEventListener('ended', () => {
+            sendCompletion(playIdRef.current, durationMsRef.current, true)
+            playIdRef.current = null
             setPlaying(false)
             if (repeatRef.current) {
                 audio.currentTime = 0
@@ -163,6 +193,14 @@ export default function MiniPlayer() {
 
     // Load track when it changes
     useEffect(() => {
+        // Completar registo da faixa anterior
+        if (playIdRef.current && positionMsRef.current > 0) {
+            sendCompletion(playIdRef.current, positionMsRef.current, false)
+        }
+        playIdRef.current   = null
+        positionMsRef.current = 0
+        durationMsRef.current = 0
+
         lastPlayPosRef.current = 0
         userPausedRef.current  = false
         setAudioError(null)
@@ -185,6 +223,16 @@ export default function MiniPlayer() {
             const audio = getAudio()
             audio.src = track.audioUrl
             audio.play().catch(() => {})
+            if (track.id) {
+                fetch(`${API}/api/tracks/${track.id}/play`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+                    body: JSON.stringify({ country: getCountry(), context: track.playContext ?? 'direct' }),
+                })
+                    .then(r => r.ok ? r.json() : null)
+                    .then(d => { if (d?.playId) playIdRef.current = d.playId })
+                    .catch(() => {})
+            }
         } else if (track.spotifyId) {
             // ── Spotify iFrame mode ──
             isSpotifyRef.current = true
@@ -310,14 +358,8 @@ export default function MiniPlayer() {
                     <div className="player__title">{track?.name ?? 'Nada a reproduzir'}</div>
                     <div className="player__artist">{track?.artistName ?? '—'}</div>
                 </div>
-                <button
-                    type="button"
-                    className={'player__btn' + (liked ? ' is-liked' : '')}
-                    onClick={() => setLiked(v => !v)}
-                    aria-label={liked ? 'Remover gosto' : 'Gostar'}
-                >
-                    <HiHeart size={16} />
-                </button>
+                {track?.id && <LikeButton trackId={track.id} variant="icon" />}
+                {track?.id && <TrackMenu trackId={track.id} popoverAlign="left" />}
             </div>
 
             {/* Playback controls */}

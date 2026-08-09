@@ -19,7 +19,7 @@ export default function BecomeArtistBanner() {
                     verificado e desbloquear analytics, marketplace e mais visibilidade.
                 </p>
             </div>
-            <Link to="/verify-artist" className="become-artist__btn">
+            <Link to="/claim-profile" className="become-artist__btn">
                 Tornar-me artista →
             </Link>
         </div>

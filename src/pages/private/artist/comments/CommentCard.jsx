@@ -1,35 +1,70 @@
-/* ─────────────────────────────────────────────────────────────────
-   CommentCard.jsx  ·  Cartão de comentário com reply inline.
-   ───────────────────────────────────────────────────────────────── */
-
 import { useState } from 'react'
-import { FaHeart, FaThumbtack, FaReply, FaTrash, FaMusic } from 'react-icons/fa'
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
-import { homeData }  from '../../../../data/home.js'
+import { FaThumbtack, FaReply, FaTrash, FaMusic } from 'react-icons/fa'
+import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 
-const artist = homeData.artist;
+function hueFromStr(str) {
+    let n = 0
+    for (const c of str ?? '') n = (n * 31 + c.charCodeAt(0)) & 0xffff
+    return n % 360
+}
 
-export default function CommentCard({ comment, onDelete }) {
-    const [liked,      setLiked]      = useState(comment.isLiked);
-    const [likes,      setLikes]      = useState(comment.likes);
-    const [pinned,     setPinned]     = useState(comment.isPinned);
-    const [replyOpen,  setReplyOpen]  = useState(false);
-    const [replyText,  setReplyText]  = useState('');
-    const [savedReply, setSavedReply] = useState(comment.reply);
+function timeAgo(iso) {
+    if (!iso) return ''
+    const m = Math.floor((Date.now() - new Date(iso)) / 60000)
+    if (m < 1)  return 'agora mesmo'
+    if (m < 60) return `há ${m} min`
+    const h = Math.floor(m / 60)
+    if (h < 24) return `há ${h}h`
+    const d = Math.floor(h / 24)
+    if (d < 30) return `há ${d} dia${d > 1 ? 's' : ''}`
+    return new Date(iso).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' })
+}
 
-    function toggleLike() {
-        setLiked(v => !v);
-        setLikes(n => liked ? n - 1 : n + 1);
+function Av({ name, url, className }) {
+    return (
+        <div className={className}>
+            {url
+                ? <img src={url} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : <span className="cmt__initials">{name?.[0]?.toUpperCase() ?? '?'}</span>
+            }
+        </div>
+    )
+}
+
+export default function CommentCard({ comment, onDelete, onReply, onPin }) {
+    const currentUser = useCurrentUser()
+    const [pinned,     setPinned]     = useState(comment.pinned ?? false)
+    const [replyOpen,  setReplyOpen]  = useState(false)
+    const [replyText,  setReplyText]  = useState('')
+    const [savedReply, setSavedReply] = useState(comment.reply ?? null)
+    const [saving,     setSaving]     = useState(false)
+
+    const isPending = !savedReply
+    const trackHue  = hueFromStr(comment.trackTitle)
+
+    function openReply() {
+        setReplyText(savedReply?.content ?? '')
+        setReplyOpen(v => !v)
     }
 
-    function submitReply() {
-        if (!replyText.trim()) return;
-        setSavedReply({ text: replyText.trim(), time: 'agora mesmo' });
-        setReplyText('');
-        setReplyOpen(false);
+    async function togglePin() {
+        const next = !pinned
+        setPinned(next)
+        onPin?.(comment.id, next)
     }
 
-    const isPending = !savedReply;
+    async function submitReply() {
+        if (!replyText.trim() || saving) return
+        setSaving(true)
+        try {
+            const reply = await onReply(comment.id, replyText.trim(), !!savedReply)
+            setSavedReply(reply)
+            setReplyText('')
+            setReplyOpen(false)
+        } catch { } finally {
+            setSaving(false)
+        }
+    }
 
     return (
         <div className={[
@@ -41,32 +76,27 @@ export default function CommentCard({ comment, onDelete }) {
             <div className="cmt__card-body">
                 {/* ── Top row ──────────────────────────────────── */}
                 <div className="cmt__card-top">
-                    <div className="cmt__avatar">
-                        <ArtistArtwork
-                            shape={comment.shape}
-                            hue={comment.hue}
-                            rounded={0}
-                            showGloss={false}
-                        />
-                    </div>
+                    <Av name={comment.authorName} url={comment.authorAvatarUrl} className="cmt__avatar" />
 
                     <div className="cmt__meta">
                         <div className="cmt__user-row">
-                            <span className="cmt__user-name">{comment.user}</span>
-                            <span className="cmt__user-handle">{comment.handle}</span>
-                            <span className="cmt__dot" />
-                            <span
-                                className="cmt__track-pill"
-                                style={{ '--track-hue': comment.trackHue }}
-                            >
-                                <FaMusic size={9} />
-                                {comment.track}
-                            </span>
+                            <span className="cmt__user-name">{comment.authorName}</span>
+                            {comment.authorHandle && (
+                                <span className="cmt__user-handle">{comment.authorHandle}</span>
+                            )}
+                            {comment.trackTitle && (
+                                <>
+                                    <span className="cmt__dot" />
+                                    <span className="cmt__track-pill" style={{ '--track-hue': trackHue }}>
+                                        <FaMusic size={9} />
+                                        {comment.trackTitle}
+                                    </span>
+                                </>
+                            )}
                         </div>
-                        <div className="cmt__time">{comment.time}</div>
+                        <div className="cmt__time">{timeAgo(comment.createdAt)}</div>
                     </div>
 
-                    {/* Badges */}
                     <div className="cmt__badges">
                         {pinned && (
                             <span className="cmt__badge cmt__badge--pinned">
@@ -80,23 +110,15 @@ export default function CommentCard({ comment, onDelete }) {
                     </div>
                 </div>
 
-                {/* ── Comment text ─────────────────────────────── */}
-                <p className="cmt__text">{comment.text}</p>
+                {/* ── Texto ────────────────────────────────────── */}
+                <p className="cmt__text">{comment.content}</p>
 
-                {/* ── Actions ──────────────────────────────────── */}
+                {/* ── Ações ────────────────────────────────────── */}
                 <div className="cmt__actions">
                     <button
                         type="button"
-                        className={`cmt__action-btn${liked ? ' cmt__action-btn--liked' : ''}`}
-                        onClick={toggleLike}
-                    >
-                        <FaHeart size={11} /> {likes}
-                    </button>
-
-                    <button
-                        type="button"
                         className={`cmt__action-btn${pinned ? ' cmt__action-btn--pinned' : ''}`}
-                        onClick={() => setPinned(v => !v)}
+                        onClick={togglePin}
                         title={pinned ? 'Remover pin' : 'Fixar comentário'}
                     >
                         <FaThumbtack size={11} /> {pinned ? 'Fixado' : 'Fixar'}
@@ -105,7 +127,7 @@ export default function CommentCard({ comment, onDelete }) {
                     <button
                         type="button"
                         className={`cmt__action-btn${replyOpen ? ' cmt__action-btn--reply-open' : ''}`}
-                        onClick={() => setReplyOpen(v => !v)}
+                        onClick={openReply}
                     >
                         <FaReply size={11} /> {savedReply ? 'Editar resposta' : 'Responder'}
                     </button>
@@ -121,40 +143,29 @@ export default function CommentCard({ comment, onDelete }) {
                 </div>
             </div>
 
-            {/* ── Existing reply ───────────────────────────────── */}
+            {/* ── Resposta existente ───────────────────────────── */}
             {savedReply && !replyOpen && (
                 <div className="cmt__reply">
-                    <div className="cmt__reply-avatar">
-                        <ArtistArtwork
-                            shape={artist.avatar.shape}
-                            hue={artist.avatar.hue}
-                            rounded={0}
-                            showGloss={false}
-                        />
-                    </div>
+                    <Av name={currentUser?.name} url={currentUser?.picture} className="cmt__reply-avatar" />
                     <div className="cmt__reply-body">
-                        <div className="cmt__reply-author">{artist.name} <span style={{ fontWeight: 400, fontSize: '.72rem', color: 'var(--text-muted)' }}>· Artista</span></div>
-                        <div className="cmt__reply-text">{savedReply.text}</div>
-                        <div className="cmt__reply-time">{savedReply.time}</div>
+                        <div className="cmt__reply-author">
+                            {currentUser?.name ?? 'Tu'}
+                            <span className="cmt__reply-badge"> · Artista</span>
+                        </div>
+                        <div className="cmt__reply-text">{savedReply.content}</div>
+                        <div className="cmt__reply-time">{timeAgo(savedReply.createdAt)}</div>
                     </div>
                 </div>
             )}
 
-            {/* ── Reply composer ───────────────────────────────── */}
+            {/* ── Compositor de resposta ───────────────────────── */}
             {replyOpen && (
                 <div className="cmt__composer">
-                    <div className="cmt__composer-avatar">
-                        <ArtistArtwork
-                            shape={artist.avatar.shape}
-                            hue={artist.avatar.hue}
-                            rounded={0}
-                            showGloss={false}
-                        />
-                    </div>
+                    <Av name={currentUser?.name} url={currentUser?.picture} className="cmt__composer-avatar" />
                     <div className="cmt__composer-inner">
                         <textarea
                             className="cmt__composer-textarea"
-                            placeholder={`Responder a ${comment.user}…`}
+                            placeholder={`Responder a ${comment.authorName}…`}
                             value={replyText}
                             onChange={e => setReplyText(e.target.value)}
                             autoFocus
@@ -163,7 +174,7 @@ export default function CommentCard({ comment, onDelete }) {
                             <button
                                 type="button"
                                 className="cmt__composer-cancel"
-                                onClick={() => { setReplyOpen(false); setReplyText(''); }}
+                                onClick={() => { setReplyOpen(false); setReplyText('') }}
                             >
                                 Cancelar
                             </button>
@@ -171,14 +182,14 @@ export default function CommentCard({ comment, onDelete }) {
                                 type="button"
                                 className="cmt__composer-submit"
                                 onClick={submitReply}
-                                disabled={!replyText.trim()}
+                                disabled={!replyText.trim() || saving}
                             >
-                                Publicar resposta
+                                {saving ? '…' : 'Publicar resposta'}
                             </button>
                         </div>
                     </div>
                 </div>
             )}
         </div>
-    );
+    )
 }

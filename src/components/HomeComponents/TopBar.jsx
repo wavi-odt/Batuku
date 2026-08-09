@@ -160,15 +160,43 @@ export default function TopBar({ role = 'fan' }) {
                             <div className="topbar__result-empty">Sem resultados para "{query}"</div>
                         )}
 
-                        {!loading && results && hasResults && (
+                        {!loading && results && hasResults && (() => {
+                            // Utilizadores que fizeram claim de um perfil artista: artistProfileId → user
+                            const claimedMap = new Map(
+                                (results.users ?? [])
+                                    .filter(u => u.artistProfileId)
+                                    .map(u => [u.artistProfileId, u])
+                            );
+                            // IDs de artistas já cobertos por results.artists
+                            const artistResultIds = new Set((results.artists ?? []).map(a => a.id));
+
+                            // Secção Artistas:
+                            // – artistas do search, substituindo pelo utilizador se tiver claim
+                            const artistItems = [
+                                ...(results.artists ?? []).map(a => {
+                                    const claimed = claimedMap.get(a.id);
+                                    return claimed
+                                        ? { _key: `u-${claimed.id}`, to: `/users/${claimed.id}`, imageUrl: claimed.imageUrl, name: claimed.name, genre: a.genre }
+                                        : { _key: `a-${a.id}`,       to: `/artists/${a.id}`,     imageUrl: a.imageUrl,      name: a.name,      genre: a.genre };
+                                }),
+                                // utilizadores artistas cujo perfil não apareceu em results.artists
+                                ...(results.users ?? [])
+                                    .filter(u => u.artistProfileId && !artistResultIds.has(u.artistProfileId))
+                                    .map(u => ({ _key: `u-${u.id}`, to: `/users/${u.id}`, imageUrl: u.imageUrl, name: u.name, genre: 'Artista' })),
+                            ];
+
+                            // Secção Utilizadores: apenas fãs (sem artistProfileId)
+                            const fanItems = (results.users ?? []).filter(u => !u.artistProfileId);
+
+                            return (
                             <>
                                 <ResultGroup
                                     label="Artistas"
-                                    items={results.artists}
+                                    items={artistItems}
                                     renderItem={a => (
                                         <ResultItem
-                                            key={a.id}
-                                            to={`/artists/${a.id}`}
+                                            key={a._key}
+                                            to={a.to}
                                             img={a.imageUrl}
                                             imgCircle
                                             name={a.name}
@@ -207,7 +235,7 @@ export default function TopBar({ role = 'fan' }) {
                                 />
                                 <ResultGroup
                                     label="Utilizadores"
-                                    items={results.users}
+                                    items={fanItems}
                                     renderItem={u => (
                                         <ResultItem
                                             key={u.id}
@@ -221,7 +249,8 @@ export default function TopBar({ role = 'fan' }) {
                                     )}
                                 />
                             </>
-                        )}
+                            );
+                        })()}
                     </div>
                 )}
             </div>

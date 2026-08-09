@@ -135,9 +135,9 @@ export const homeData = {
         { icon: 'chart',   label: 'Dashboard',         to: '/dashboard' },
         { icon: 'music',   label: 'As minhas faixas',  to: '/tracks' },
         { icon: 'compass', label: 'Analytics',         to: '/analytics' },
-        { icon: 'store',   label: 'Marketplace',       to: '/marketplace', badge: 3 },
+        { icon: 'store',   label: 'Marketplace',       to: '/marketplace' },
         { icon: 'users',   label: 'Os meus fãs',       to: '/fans' },
-        { icon: 'comment', label: 'Comentários',       to: '/comments',    badge: 3 },
+        { icon: 'comment', label: 'Comentários',       to: '/comments' },
        /* { icon: 'discord', label: 'Comunidade',        to: '/community' },*/
     ],
 

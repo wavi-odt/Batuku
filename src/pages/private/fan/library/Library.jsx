@@ -1,56 +1,125 @@
-/* ─────────────────────────────────────────────────────────────────
-   pages/fan/library/Library.jsx, Biblioteca do fã.
-   ───────────────────────────────────────────────────────────────── */
-
-import { useState, useMemo } from 'react'
-import { Link }              from 'react-router-dom'
-import AppShell              from '../../../../components/HomeComponents/AppShell.jsx'
-import { libraryData, LIBRARY_TRACKS } from '../../../../data/library.js'
-import LibraryPlaylists      from './LibraryPlaylists.jsx'
-import LibraryTracks         from './LibraryTracks.jsx'
-import LibraryArtists        from './LibraryArtists.jsx'
+import { useState, useEffect }   from 'react'
+import AppShell                  from '../../../../components/HomeComponents/AppShell.jsx'
+import { API, getToken }         from '../../../../utils/auth.js'
+import { useToast }              from '../../../../context/ToastContext.jsx'
+import ConfirmModal              from '../../../../components/ConfirmModal.jsx'
+import LibraryPlaylists          from './LibraryPlaylists.jsx'
+import LibraryTracks             from './LibraryTracks.jsx'
+import LibraryArtists            from './LibraryArtists.jsx'
+import PlaylistCreateModal       from '../../playlist/PlaylistCreateModal.jsx'
 import './Library.css'
 
 const FILTERS = [
     { key: 'all',       label: 'Tudo'      },
     { key: 'playlists', label: 'Playlists' },
-    { key: 'artists',   label: 'Artistas'  },
     { key: 'tracks',    label: 'Faixas'    },
+    { key: 'artists',   label: 'Artistas'  },
 ];
 
-const trackById = Object.fromEntries(LIBRARY_TRACKS.map(t => [t.id, t]));
-
 export default function Library() {
-    const [filter, setFilter] = useState('all');
-    const d = libraryData;
+    const { showToast } = useToast();
+    const [filter,          setFilter]          = useState('all');
+    const [playlists,       setPlaylists]       = useState([]);
+    const [tracks,          setTracks]          = useState([]);
+    const [artists,         setArtists]         = useState([]);
+    const [loadingPl,       setLoadingPl]       = useState(true);
+    const [loadingTr,       setLoadingTr]       = useState(true);
+    const [loadingAr,       setLoadingAr]       = useState(true);
+    const [showCreate,      setShowCreate]      = useState(false);
+    const [editingPlaylist, setEditingPlaylist] = useState(null);
+    const [confirmPlaylist, setConfirmPlaylist] = useState(null);
+    const [deleting,        setDeleting]        = useState(false);
 
-    /* Estado central dos likes — determina o conteúdo dos Favoritos */
-    const [liked, setLiked] = useState(() => new Set(d.likedTrackIds));
+    useEffect(() => {
+        fetch(`${API}/api/playlists/my`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+        })
+            .then(r => r.ok ? r.json() : [])
+            .then(data => setPlaylists(Array.isArray(data) ? data : []))
+            .catch(() => {})
+            .finally(() => setLoadingPl(false));
+    }, []);
 
-    const toggleLike = (id) => {
-        setLiked(prev => {
-            const next = new Set(prev);
-            next.has(id) ? next.delete(id) : next.add(id);
-            return next;
-        });
-    };
+    useEffect(() => {
+        fetch(`${API}/api/playlists/my/tracks`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+        })
+            .then(r => r.ok ? r.json() : [])
+            .then(data => setTracks(Array.isArray(data) ? data : []))
+            .catch(() => {})
+            .finally(() => setLoadingTr(false));
+    }, []);
 
-    /* União de todas as faixas das minhas playlists (sem duplicados) */
-    const myTracks = useMemo(() => {
-        const countByTrack = {};
-        d.myPlaylists.forEach(pl => {
-            pl.trackIds.forEach(id => {
-                countByTrack[id] = (countByTrack[id] || 0) + 1;
+    useEffect(() => {
+        fetch(`${API}/api/artist-follows/my`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+        })
+            .then(r => r.ok ? r.json() : [])
+            .then(data => setArtists(Array.isArray(data) ? data : []))
+            .catch(() => {})
+            .finally(() => setLoadingAr(false));
+    }, []);
+
+    function handleCreated(newPlaylist) {
+        setPlaylists(prev => [...prev, newPlaylist]);
+    }
+
+    function handleUpdated(updated) {
+        setPlaylists(prev => prev.map(p => p.id === updated.id ? updated : p));
+    }
+
+    async function handleToggleVisibility(pl) {
+        try {
+            const res = await fetch(`${API}/api/playlists/${pl.id}/visibility`, {
+                method:  'PATCH',
+                headers: { Authorization: `Bearer ${getToken()}` },
             });
-        });
-        return [...new Set(d.myPlaylists.flatMap(pl => pl.trackIds))]
-            .map(id => ({ ...trackById[id], inPlaylists: countByTrack[id] }))
-            .filter(t => t.id);
-    }, [d.myPlaylists]);
+            if (!res.ok) throw new Error();
+            const updated = await res.json();
+            setPlaylists(prev => prev.map(p => p.id === updated.id ? updated : p));
+            showToast(updated.isPublic ? 'Playlist tornada pública' : 'Playlist tornada privada');
+        } catch {
+            showToast('Erro ao alterar visibilidade', 'error');
+        }
+    }
+
+    async function handleUnsavePlaylist(pl) {
+        try {
+            const res = await fetch(`${API}/api/playlists/${pl.id}/save`, {
+                method:  'DELETE',
+                headers: { Authorization: `Bearer ${getToken()}` },
+            });
+            if (!res.ok) throw new Error();
+            setPlaylists(prev => prev.filter(p => p.id !== pl.id));
+            showToast('Playlist removida da biblioteca');
+        } catch {
+            showToast('Erro ao remover playlist da biblioteca', 'error');
+        }
+    }
+
+    function handleDeletePlaylist(pl) {
+        setConfirmPlaylist(pl);
+    }
+
+    async function confirmDelete() {
+        setDeleting(true);
+        try {
+            const res = await fetch(`${API}/api/playlists/${confirmPlaylist.id}`, {
+                method:  'DELETE',
+                headers: { Authorization: `Bearer ${getToken()}` },
+            });
+            if (!res.ok) throw new Error();
+            setPlaylists(prev => prev.filter(p => p.id !== confirmPlaylist.id));
+            setConfirmPlaylist(null);
+            showToast('Playlist removida');
+        } catch {
+            showToast('Erro ao remover a playlist', 'error');
+        } finally {
+            setDeleting(false);
+        }
+    }
 
     const show = (key) => filter === 'all' || filter === key;
-
-    const totalPlaylists = d.myPlaylists.length + 1; /* +1 = Favoritos */
 
     return (
         <AppShell role="fan">
@@ -60,12 +129,12 @@ export default function Library() {
                 <div>
                     <h1 className="lib__title">Biblioteca</h1>
                     <p className="lib__subtitle">
-                        {totalPlaylists} playlists · {d.stats.savedArtists} artistas · {myTracks.length} faixas
+                        {loadingPl ? '…' : `${playlists.length} ${playlists.length === 1 ? 'playlist' : 'playlists'}`}
                     </p>
                 </div>
-                <Link to="/playlists/new" className="btn btn--ghost btn--sm">
+                <button type="button" className="btn btn--ghost btn--sm" onClick={() => setShowCreate(true)}>
                     + Nova playlist
-                </Link>
+                </button>
             </div>
 
             {/* ─── Filtros ─────────────────────────────────────────── */}
@@ -85,21 +154,56 @@ export default function Library() {
             {/* ─── Secções ─────────────────────────────────────────── */}
             {show('playlists') && (
                 <LibraryPlaylists
-                    myPlaylists={d.myPlaylists}
-                    savedPlaylists={d.savedPlaylists}
-                    likedCount={liked.size}
+                    playlists={playlists}
+                    loading={loadingPl}
+                    onNew={() => setShowCreate(true)}
+                    onEdit={pl => setEditingPlaylist(pl)}
+                    onDelete={handleDeletePlaylist}
+                    onToggleVisibility={handleToggleVisibility}
+                    onUnsave={handleUnsavePlaylist}
                 />
-            )}
-
-            {show('artists') && (
-                <LibraryArtists artists={d.savedArtists} />
             )}
 
             {show('tracks') && (
                 <LibraryTracks
-                    tracks={myTracks}
-                    liked={liked}
-                    toggleLike={toggleLike}
+                    tracks={tracks}
+                    loading={loadingTr}
+                />
+            )}
+
+            {show('artists') && (
+                <LibraryArtists
+                    artists={artists}
+                    loading={loadingAr}
+                />
+            )}
+
+            {/* ─── Modal criar playlist ─────────────────────────────── */}
+            {showCreate && (
+                <PlaylistCreateModal
+                    onClose={() => setShowCreate(false)}
+                    onCreated={handleCreated}
+                />
+            )}
+
+            {/* ─── Modal editar playlist ────────────────────────────── */}
+            {editingPlaylist && (
+                <PlaylistCreateModal
+                    playlist={editingPlaylist}
+                    onClose={() => setEditingPlaylist(null)}
+                    onUpdated={handleUpdated}
+                />
+            )}
+
+            {/* ─── Modal confirmar remoção ──────────────────────────── */}
+            {confirmPlaylist && (
+                <ConfirmModal
+                    title="Remover playlist"
+                    message={`Tens a certeza que queres remover "${confirmPlaylist.name}"? Esta acção não pode ser desfeita.`}
+                    confirmLabel="Remover"
+                    loading={deleting}
+                    onConfirm={confirmDelete}
+                    onClose={() => setConfirmPlaylist(null)}
                 />
             )}
 

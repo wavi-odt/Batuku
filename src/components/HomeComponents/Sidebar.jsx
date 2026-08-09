@@ -8,6 +8,7 @@ import { HiUser, HiShieldCheck, HiLockClosed, HiLogout, HiChevronUp } from 'reac
 import { FaCog } from 'react-icons/fa'
 import { homeData } from '../../data/home'
 import { logout } from '../../utils/auth'
+import { usePendingComments } from '../../context/PendingCommentsContext'
 import { usePlayer } from '../../context/PlayerContext'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { ICONS } from './icons'
@@ -26,6 +27,7 @@ export default function Sidebar({ role = 'fan' }) {
     const nav      = role === 'artist' ? homeData.artistNav : homeData.fanNav;
     const mockUser = role === 'artist' ? homeData.artist    : homeData.fan;
     const realUser = useCurrentUser();
+    const { count: pendingComments } = usePendingComments();
 
     const user = {
         ...mockUser,
@@ -67,6 +69,9 @@ export default function Sidebar({ role = 'fan' }) {
                 <div className="sidebar__section-label">Menu</div>
                 {nav.map((item) => {
                     const Icon = ICONS[item.icon];
+                    const badge = item.to === '/comments'
+                        ? (pendingComments || null)
+                        : (item.badge ?? null);
                     return (
                         <NavLink
                             key={item.label}
@@ -76,8 +81,8 @@ export default function Sidebar({ role = 'fan' }) {
                         >
                             <span className="sidebar__item-icon"><Icon size={18} /></span>
                             <span className="sidebar__item-label">{item.label}</span>
-                            {item.badge != null && (
-                                <span className="sidebar__item-badge">{item.badge}</span>
+                            {badge != null && (
+                                <span className="sidebar__item-badge">{badge}</span>
                             )}
                         </NavLink>
                     );

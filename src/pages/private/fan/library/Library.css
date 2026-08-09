@@ -137,6 +137,65 @@
     gap: 4px;
 }
 
+/* ─── Cover wrapper (posiciona o menu de 3 pontinhos) ──────────── */
+.lib__pl-cover-wrap {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+/* ─── Playlist cover (imagem real) ─────────────────────────────── */
+.lib__pl-cover--img {
+    aspect-ratio: 1;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 0;
+    position: relative;
+    background: var(--color-surface-2);
+}
+
+/* ─── Menu 3 pontinhos na capa ──────────────────────────────────── */
+.lib__pl-menu {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.lib__pl-card:hover .lib__pl-menu,
+.lib__pl-menu--open {
+    opacity: 1;
+}
+
+.lib__pl-menu__popover {
+    bottom: auto;
+    top: calc(100% + 6px);
+}
+
+/* ─── Card body link (título + meta clicáveis) ──────────────────── */
+.lib__pl-card-body {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+}
+
+.lib__pl-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.lib__pl-cover-empty {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
+}
+
 /* ─── Favoritos card ───────────────────────────────────────────── */
 .lib__pl-card--fav {
     border-color: rgba(232, 93, 60, 0.3);
@@ -170,12 +229,21 @@
 
 .lib__track-row {
     display: grid;
-    grid-template-columns: 24px 40px 1fr 110px 36px 56px;
+    grid-template-columns: 24px 40px 1fr 36px 56px 28px;
     align-items: center;
     gap: 12px;
     padding: 8px 12px;
     border-radius: var(--radius-md);
+    cursor: pointer;
     transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.lib__track-row--active .lib__track-title {
+    color: var(--color-primary);
+}
+
+.lib__track-row--active .lib__track-num {
+    color: var(--color-primary);
 }
 
 .lib__track-row:hover {
@@ -233,29 +301,14 @@
     margin-top: 2px;
 }
 
-.lib__track-playlists {
-    font-size: var(--fs-xs);
-    color: var(--color-ink-mute);
-}
-
-.lib__track-like {
-    color: var(--color-ink-mute);
-    opacity: 0;
+.lib__track-thumb-empty {
+    width: 100%;
+    height: 100%;
+    background: var(--color-surface-2);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition:
-        color   var(--duration-fast) var(--ease-out),
-        opacity var(--duration-fast) var(--ease-out);
-}
-
-.lib__track-row:hover .lib__track-like,
-.lib__track-like--active {
-    opacity: 1;
-}
-
-.lib__track-like--active {
-    color: var(--color-coral);
+    color: var(--color-ink-mute);
 }
 
 .lib__track-duration {
@@ -266,10 +319,27 @@
 
 @media (max-width: 700px) {
     .lib__track-row {
-        grid-template-columns: 40px 1fr 36px 56px;
+        grid-template-columns: 40px 1fr 36px 28px;
     }
     .lib__track-num,
-    .lib__track-playlists { display: none; }
+    .lib__track-duration { display: none; }
+}
+
+.lib__tracks-empty {
+    padding: 16px 0;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+}
+
+.lib__saved-empty {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
 }
 
 /* ─── Artist grid ──────────────────────────────────────────────────── */
@@ -289,6 +359,8 @@
     padding: 20px 16px;
     text-align: center;
     cursor: pointer;
+    text-decoration: none;
+    display: block;
     transition:
         border-color var(--duration-base) var(--ease-out),
         transform    var(--duration-base) var(--ease-out);
@@ -334,5 +406,15 @@
 
 .lib__artist-nonew {
     font-size: 11px;
+    color: var(--color-ink-mute);
+}
+
+.lib__artist-avatar-empty {
+    width: 100%;
+    height: 100%;
+    background: var(--color-surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--color-ink-mute);
 }

@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react'
-import { getUser } from '../utils/auth'
-
-const API = import.meta.env.VITE_API_BASE_URL
+import { API, getUser } from '../utils/auth'
 
 function formatJoined(dateStr) {
     if (!dateStr) return null
@@ -25,6 +23,7 @@ export function useCurrentUser() {
                 if (!data) return
                 setUser(prev => ({
                     ...prev,
+                    id:               data.id                                         || prev?.id,
                     name:             data.name     || data.displayName              || prev?.name,
                     email:            data.email                                      || prev?.email,
                     handle:           data.username ? `@${data.username}` : (data.handle || prev?.handle),
