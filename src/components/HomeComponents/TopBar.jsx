@@ -5,7 +5,8 @@ import { usePublish } from '../../context/PublishContext.jsx'
 import { homeData } from '../../data/home'
 import ArtistArtwork from '../PublicComponets/ArtistArtwork'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
-import { getToken } from '../../utils/auth.js'
+import { API, getToken } from '../../utils/auth.js'
+import NotificationsPanel from './NotificationsPanel.jsx'
 import './TopBar.css'
 
 const DEBOUNCE_MS  = 350;
@@ -57,6 +58,16 @@ export default function TopBar({ role = 'fan' }) {
     const [notifOpen, setNotifOpen] = useState(false);
     const [unread, setUnread]       = useState(0);
     const notifRef = useRef(null);
+
+    useEffect(() => {
+        if (!getToken()) return
+        fetch(`${API}/api/notifications/unread-count`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+        })
+            .then(r => r.ok ? r.json() : { count: 0 })
+            .then(data => setUnread(data.count ?? 0))
+            .catch(() => {})
+    }, []);
 
     const timerRef   = useRef(null);
     const wrapperRef = useRef(null);
@@ -266,7 +277,11 @@ export default function TopBar({ role = 'fan' }) {
             <div className="topbar__notif-wrap" ref={notifRef}>
                 <button className="topbar__action" aria-label="Notificações" onClick={() => setNotifOpen(v => !v)}>
                     <HiBell size={18} />
-                    {unread > 0 && <span className="topbar__action-dot" />}
+                    {unread > 0 && (
+                        <span className="topbar__action-badge">
+                            {unread > 9 ? '9+' : unread}
+                        </span>
+                    )}
                 </button>
                 {notifOpen && (
                     <NotificationsPanel onClose={() => setNotifOpen(false)} onUnreadChange={setUnread} />

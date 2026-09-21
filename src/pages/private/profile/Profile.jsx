@@ -8,6 +8,7 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { FaTrophy, FaCheckCircle, FaCamera, FaCog } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
 import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
@@ -149,7 +150,9 @@ export default function Profile({ role = 'fan' }) {
     const mock    = role === 'artist' ? profileData.artist : profileData.fan;
     const realUser = useCurrentUser();
 
-    const [active, setActive]               = useState(0);
+    const [searchParams, setSearchParams]   = useSearchParams()
+    const active    = parseInt(searchParams.get('tab') ?? '0', 10) || 0
+    const setActive = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('tab', String(val)); return p })
     const [avatarUrl, setAvatarUrl]         = useState(null);
     const [showUploader, setShowUploader]   = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);

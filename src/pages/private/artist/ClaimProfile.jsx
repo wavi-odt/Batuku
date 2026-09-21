@@ -4,6 +4,7 @@ import { SiSpotify } from 'react-icons/si'
 import { FaCamera, FaRedo, FaCheck, FaFileImage } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
 import { getToken, getRole } from '../../../utils/auth.js'
+import { useToast } from '../../../context/ToastContext.jsx'
 import './ClaimProfile.css'
 
 const STEPS = ['Perfil Spotify', 'Selfie', 'Documento', 'Confirmar'];
@@ -551,6 +552,7 @@ function Stepper({ current }) {
 export default function ClaimProfile() {
     const role = getRole();
     const backTo = role === 'fan' ? '/home' : '/dashboard';
+    const { showToast } = useToast();
 
     const [step,          setStep]          = useState(0);
     const [spotifyArtist, setSpotifyArtist] = useState(null);
@@ -592,6 +594,7 @@ export default function ClaimProfile() {
             setDone(true);
         } catch (e) {
             setSubmitErr(e.message);
+            showToast('Erro ao enviar pedido. Tenta novamente.', 'error');
         } finally {
             setSubmitting(false);
         }

@@ -1,0 +1,107 @@
+.notif-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 340px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55);
+    z-index: 200;
+    overflow: hidden;
+}
+
+.notif-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.notif-panel__title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-ink);
+}
+
+.notif-panel__mark-all {
+    font-size: 11px;
+    color: var(--color-primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-weight: 600;
+}
+.notif-panel__mark-all:hover { text-decoration: underline; }
+
+.notif-panel__list {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border-strong) transparent;
+}
+
+.notif-panel__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: background 0.12s;
+    position: relative;
+}
+.notif-panel__item:hover { background: rgba(255,255,255,0.04); }
+.notif-panel__item--unread { background: rgba(255,255,255,0.025); }
+
+.notif-panel__icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notif-panel__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.notif-panel__msg {
+    font-size: 13px;
+    color: var(--color-ink);
+    line-height: 1.4;
+}
+
+.notif-panel__time {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+}
+
+.notif-panel__dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-coral);
+    margin-top: 6px;
+}
+
+.notif-panel__empty {
+    padding: 28px 16px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--color-ink-mute);
+    margin: 0;
+}

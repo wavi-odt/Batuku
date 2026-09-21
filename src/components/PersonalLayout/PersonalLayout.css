@@ -1,0 +1,42 @@
+/* ─── Personal Layout ──────────────────────────────────────────────────────
+   Sem AppShell, sidebar ou MiniPlayer principal.
+   Usa tokens --p-* definidos em personal-tokens.css.
+   ─────────────────────────────────────────────────────────────────────── */
+
+.pl {
+    min-height: 100vh;
+    background-color: var(--p-bg);
+    color: var(--p-text);
+    font-family: var(--font-sans);
+}
+
+/* ─── Main ──────────────────────────────────────────────────────────────── */
+.pl__main {
+    padding: var(--space-10) var(--space-8) var(--space-16);
+}
+
+.pl__main--has-player {
+    padding-bottom: calc(var(--p-player-h) + 40px);
+}
+
+/* ─── Split variant (deixada para compatibilidade futura) ───────────────── */
+.pl--split {
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.pl__main--split {
+    flex: 1;
+    padding: 0;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.pl__main--split .pl__container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-6) var(--space-8) 0;
+}

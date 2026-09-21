@@ -33,6 +33,7 @@ export function useCurrentUser() {
                     bio:              data.bio || data.description                    || prev?.bio,
                     spotifyArtistId:  data.spotifyArtistId || data.spotifyId          || prev?.spotifyArtistId || null,
                     artistProfileId:  data.artistProfileId                            ?? prev?.artistProfileId ?? null,
+                    marketplaceRole:  data.marketplaceRole                            ?? prev?.marketplaceRole ?? null,
                 }))
             })
             .catch(() => {})

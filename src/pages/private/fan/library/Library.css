@@ -22,6 +22,19 @@
     margin: 0;
 }
 
+/* ─── Uploads pessoais link ────────────────────────────────────────── */
+.lib__uploads-link {
+    display: inline-block;
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+    text-decoration: none;
+    margin-bottom: var(--space-5);
+    transition: color 160ms ease;
+}
+.lib__uploads-link:hover {
+    color: var(--color-ink-soft);
+}
+
 /* ─── Filter tabs ──────────────────────────────────────────────────── */
 .lib__filters {
     display: flex;

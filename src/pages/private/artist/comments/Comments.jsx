@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { FaCommentAlt, FaClock, FaThumbtack, FaSearch } from 'react-icons/fa'
 import AppShell   from '../../../../components/HomeComponents/AppShell.jsx'
 import CommentCard from './CommentCard.jsx'
@@ -32,9 +33,14 @@ export default function Comments() {
     const [loading,  setLoading]  = useState(true)
     const [error,    setError]    = useState('')
     const [query,    setQuery]    = useState('')
-    const [status,   setStatus]   = useState('all')
-    const [track,    setTrack]    = useState('Todas')
-    const [sort,     setSort]     = useState('recent')
+    const [searchParams, setSearchParams] = useSearchParams()
+    const status    = searchParams.get('status') ?? 'all'
+    const track     = searchParams.get('track')  ?? 'Todas'
+    const sort      = searchParams.get('sort')   ?? 'recent'
+    const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p })
+    const setStatus = (val) => sp('status', val)
+    const setTrack  = (val) => sp('track',  val)
+    const setSort   = (val) => sp('sort',   val)
 
     useEffect(() => {
         fetch(`${API}/api/comments/artist`, {

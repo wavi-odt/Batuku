@@ -1,0 +1,285 @@
+.bum__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.bum__box {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.bum__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 0;
+    flex-shrink: 0;
+}
+
+.bum__title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0;
+}
+
+.bum__close {
+    background: none;
+    border: none;
+    color: var(--color-ink-mute);
+    cursor: pointer;
+    padding: 6px;
+    font-size: 16px;
+    line-height: 1;
+    border-radius: 6px;
+    transition: color 0.12s;
+}
+
+.bum__close:hover { color: var(--color-ink); }
+
+.bum__form {
+    padding: 20px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* ── Drop zones ──────────────────────────────────────────────── */
+.bum__files {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.bum__drop {
+    border: 1.5px dashed var(--color-border);
+    border-radius: 10px;
+    padding: 18px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    text-align: center;
+}
+
+.bum__drop:hover {
+    border-color: var(--color-primary);
+    background: rgba(var(--color-primary-rgb, 99,102,241), 0.04);
+}
+
+.bum__drop--ready {
+    border-color: var(--color-primary);
+    border-style: solid;
+}
+
+.bum__drop-input { display: none; }
+
+.bum__drop-icon { color: var(--color-ink-mute); }
+
+.bum__drop-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-ink);
+}
+
+.bum__drop-hint {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+}
+
+.bum__drop-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-primary);
+    word-break: break-all;
+}
+
+/* ── Linhas de campos ────────────────────────────────────────── */
+.bum__row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+}
+
+.bum__row--prices {
+    background: var(--color-surface-alt, rgba(255,255,255,0.03));
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: -4px;
+}
+
+.bum__field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+}
+
+.bum__field--wide { flex: 2; }
+
+.bum__label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-ink-mute);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bum__hue-preview {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.2);
+    flex-shrink: 0;
+}
+
+.bum__input {
+    background: var(--color-input-bg, rgba(255,255,255,0.06));
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 9px 12px;
+    font-size: 14px;
+    color: var(--color-ink);
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.12s;
+}
+
+.bum__input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+.bum__input--range {
+    padding: 6px 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    accent-color: var(--color-primary);
+}
+
+.bum__input--range:focus { border: none; outline: none; }
+
+select.bum__input option {
+    background: var(--color-surface);
+    color: var(--color-ink);
+}
+
+.bum__prices-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-ink-mute);
+    margin-bottom: -8px;
+}
+
+/* ── Toggle exclusiva ───────────────────────────────────────── */
+.bum__excl-toggle {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.bum__excl-btn {
+    flex: 1;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-ink-mute);
+    cursor: pointer;
+    transition: color 0.15s, border-color 0.15s, background 0.15s;
+    white-space: nowrap;
+}
+
+.bum__excl-btn--on {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: var(--color-primary);
+}
+
+.bum__excl-btn:not(.bum__excl-btn--on):hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.bum__excl-note {
+    font-size: 12px;
+    color: var(--color-ink-mute);
+    font-style: italic;
+    margin: 0;
+    padding: 9px 12px;
+    background: var(--color-input-bg, rgba(255,255,255,0.06));
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    line-height: 1.4;
+}
+
+/* ── Erro + footer ───────────────────────────────────────────── */
+.bum__error {
+    font-size: 13px;
+    color: #f87171;
+    background: rgba(248,113,113,0.08);
+    border: 1px solid rgba(248,113,113,0.25);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 0;
+}
+
+.bum__footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 4px;
+}
+
+.bum__btn {
+    padding: 11px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s;
+}
+
+.bum__btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.bum__btn--cancel {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-ink-mute);
+}
+
+.bum__btn--cancel:hover:not(:disabled) { color: var(--color-ink); }
+
+.bum__btn--submit {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.bum__btn--submit:hover:not(:disabled) { opacity: 0.88; }

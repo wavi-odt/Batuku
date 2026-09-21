@@ -1,0 +1,304 @@
+.mkt-prod__stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.mkt-prod__stat {
+    flex: 1;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.mkt-prod__stat-val {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-ink);
+    line-height: 1;
+}
+
+.mkt-prod__stat-label {
+    font-size: 12px;
+    color: var(--color-ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.mkt-prod__upload-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 20px 24px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+}
+
+.mkt-prod__upload-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin: 0 0 2px;
+}
+
+.mkt-prod__upload-sub {
+    font-size: 13px;
+    color: var(--color-ink-mute);
+    margin: 0;
+}
+
+.mkt-prod__upload-btn {
+    background: var(--color-primary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+}
+
+.mkt-prod__upload-btn:hover {
+    opacity: 0.88;
+}
+
+.mkt-prod__beat-list {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.mkt-prod__beat-header,
+.mkt-prod__beat-row {
+    display: grid;
+    grid-template-columns: 48px 1fr 100px 110px 90px 70px 80px 64px;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+}
+
+.mkt-prod__beat-header {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.mkt-prod__col {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-mute);
+}
+
+.mkt-prod__col--right {
+    text-align: right;
+}
+
+.mkt-prod__beat-row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.12s;
+}
+
+.mkt-prod__beat-row:last-child {
+    border-bottom: none;
+}
+
+.mkt-prod__beat-row:hover {
+    background: var(--color-surface-hover, rgba(255,255,255,0.03));
+}
+
+.mkt-prod__beat-cover {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    cursor: pointer;
+}
+
+.mkt-prod__beat-play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    transition: opacity 0.15s;
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.mkt-prod__beat-cover:hover .mkt-prod__beat-play,
+.mkt-prod__beat-row--playing .mkt-prod__beat-play { opacity: 1; }
+
+.mkt-prod__beat-row--playing {
+    background: rgba(var(--color-primary-rgb, 79, 174, 124), 0.06);
+}
+
+.mkt-prod__beat-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.mkt-prod__beat-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mkt-prod__beat-genre,
+.mkt-prod__beat-bpm {
+    font-size: 13px;
+    color: var(--color-ink-mute);
+}
+
+.mkt-prod__beat-num {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-ink);
+    text-align: right;
+}
+
+.mkt-prod__beat-price {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary);
+    text-align: right;
+}
+
+.mkt-prod__stat--revenue .mkt-prod__stat-val {
+    color: var(--color-primary);
+}
+
+.mkt-prod__beat-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+}
+
+.mkt-prod__action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-ink-mute);
+    cursor: pointer;
+    transition: color 0.12s, border-color 0.12s, background 0.12s;
+    flex-shrink: 0;
+}
+
+.mkt-prod__action-btn:hover {
+    color: var(--color-ink);
+    border-color: var(--color-ink-mute);
+    background: var(--color-surface-hover, rgba(255,255,255,0.05));
+}
+
+.mkt-prod__action-btn--del:hover {
+    color: #ef4444;
+    border-color: #ef4444;
+    background: rgba(239,68,68,0.08);
+}
+
+/* ─── Confirm dialog ─────────────────────────────────────── */
+
+.mkt-prod__confirm-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(6px);
+}
+
+.mkt-prod__confirm {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    padding: 28px 32px;
+    max-width: 380px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+.mkt-prod__confirm-msg {
+    font-size: 15px;
+    color: var(--color-ink);
+    margin: 0 0 20px;
+    line-height: 1.5;
+}
+
+.mkt-prod__confirm-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.mkt-prod__confirm-cancel,
+.mkt-prod__confirm-del {
+    padding: 9px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    border: none;
+}
+
+.mkt-prod__confirm-cancel {
+    background: var(--color-surface-hover, rgba(255,255,255,0.07));
+    color: var(--color-ink-mute);
+    border: 1px solid var(--color-border);
+}
+
+.mkt-prod__confirm-cancel:hover {
+    opacity: 0.8;
+}
+
+.mkt-prod__confirm-del {
+    background: #ef4444;
+    color: #fff;
+}
+
+.mkt-prod__confirm-del:hover {
+    opacity: 0.88;
+}
+
+.mkt-prod__empty-state {
+    text-align: center;
+    padding: 48px 0;
+}
+
+.mkt-prod__empty {
+    font-size: 15px;
+    color: var(--color-ink-mute);
+    margin: 0 0 4px;
+}

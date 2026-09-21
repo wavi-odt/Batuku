@@ -5,6 +5,7 @@ import {
 } from 'react-icons/fa'
 import { SiSpotify, SiTiktok, SiApplemusic } from 'react-icons/si'
 import { getToken } from '../../../utils/auth'
+import { useToast } from '../../../context/ToastContext'
 import './EditProfileModal.css'
 
 const API = `${import.meta.env.VITE_API_BASE_URL}/api`
@@ -44,18 +45,17 @@ function Msg({ error, done, doneText = 'Alterações guardadas.' }) {
 
 /* ── Tab: Perfil ─────────────────────────────────────────────────────── */
 function TabPerfil({ user, onProfileUpdated }) {
+    const { showToast } = useToast()
     const [name, setName]         = useState(user.name || '')
     const [username, setUsername] = useState(user.username || '')
     const [saved, setSaved]       = useState({ name: user.name || '', username: user.username || '' })
     const [saving, setSaving]     = useState(false)
-    const [error, setError]       = useState('')
-    const [done, setDone]         = useState(false)
 
     const isDirty = name !== saved.name || username !== saved.username
 
     async function handleSubmit(e) {
         e.preventDefault()
-        setSaving(true); setError(''); setDone(false)
+        setSaving(true)
         try {
             const res = await fetch(`${API}/users/me/nameUsername`, {
                 method: 'PUT',
@@ -67,10 +67,10 @@ function TabPerfil({ user, onProfileUpdated }) {
                 throw new Error(data.error || `Erro ${res.status}`)
             }
             setSaved({ name, username })
-            setDone(true)
+            showToast('Perfil guardado!')
             onProfileUpdated?.({ name, handle: '@' + username })
         } catch (err) {
-            setError(err.message)
+            showToast(err.message, 'error')
         } finally {
             setSaving(false)
         }
@@ -82,7 +82,6 @@ function TabPerfil({ user, onProfileUpdated }) {
                 <Field label="Nome" value={name} onChange={e => setName(e.target.value)} required />
                 <Field label="Username" value={username} onChange={e => setUsername(e.target.value)} required />
             </div>
-            <Msg error={error} done={done} />
             <div className="ep-form__footer">
                 <button type="submit" className="btn-primary ep-save-btn" disabled={!isDirty || saving}>
                     {saving ? 'A guardar…' : 'Guardar alterações'}
@@ -122,6 +121,7 @@ function sortedStr(arr) { return JSON.stringify([...(arr || [])].sort()) }
 
 /* ── Tab: Artista ────────────────────────────────────────────────────── */
 function TabArtista({ onSaved }) {
+    const { showToast } = useToast()
     const [bio, setBio]           = useState('')
     const [location, setLocation] = useState('')
     const [genres, setGenres]     = useState([])
@@ -131,8 +131,6 @@ function TabArtista({ onSaved }) {
     const [options, setOptions]   = useState({ genres: [], languages: [], locations: [] })
     const [loading, setLoading]   = useState(true)
     const [saving, setSaving]     = useState(false)
-    const [error, setError]       = useState('')
-    const [done, setDone]         = useState(false)
 
     const isDirty = bio !== saved.bio ||
                     location !== saved.location ||
@@ -176,7 +174,7 @@ function TabArtista({ onSaved }) {
 
     async function handleSubmit(e) {
         e.preventDefault()
-        setSaving(true); setError(''); setDone(false)
+        setSaving(true)
         try {
             await Promise.all([
                 callPut('/artists/me/bio',       { bio }),
@@ -185,10 +183,10 @@ function TabArtista({ onSaved }) {
                 callPut('/artists/me/languages', { languages }),
             ])
             setSaved({ bio, location, genres, languages })
-            setDone(true)
+            showToast('Perfil de artista guardado!')
             onSaved?.()
         } catch (err) {
-            setError(err.message)
+            showToast(err.message, 'error')
         } finally {
             setSaving(false)
         }
@@ -243,7 +241,6 @@ function TabArtista({ onSaved }) {
                 <ChipSelect options={options.languages} selected={languages} onChange={setLangs} />
             </div>
 
-            <Msg error={error} done={done} />
             <div className="ep-form__footer">
                 <button type="submit" className="btn-primary ep-save-btn" disabled={!isDirty || saving}>
                     {saving ? 'A guardar…' : 'Guardar alterações'}
@@ -257,12 +254,11 @@ function linksKey(ls) { return JSON.stringify(ls.map(l => l.platform + '|' + l.h
 
 /* ── Tab: Links ──────────────────────────────────────────────────────── */
 function TabLinks({ onSaved }) {
+    const { showToast } = useToast()
     const [links, setLinks]       = useState([])
     const [savedKey, setSavedKey] = useState(linksKey([]))
     const [loading, setLoading]   = useState(true)
     const [saving, setSaving]     = useState(false)
-    const [error, setError]       = useState('')
-    const [done, setDone]         = useState(false)
 
     useEffect(() => {
         fetch(`${API}/artists/me/links`, { headers: { Authorization: `Bearer ${getToken()}` } })
@@ -292,7 +288,7 @@ function TabLinks({ onSaved }) {
 
     async function handleSubmit(e) {
         e.preventDefault()
-        setSaving(true); setError(''); setDone(false)
+        setSaving(true)
         try {
             const res = await fetch(`${API}/artists/me/links`, {
                 method: 'PUT',
@@ -301,10 +297,10 @@ function TabLinks({ onSaved }) {
             })
             if (!res.ok) throw new Error(`Erro ${res.status}`)
             setSavedKey(linksKey(links))
-            setDone(true)
+            showToast('Links guardados!')
             onSaved?.()
         } catch (err) {
-            setError(err.message)
+            showToast(err.message, 'error')
         } finally {
             setSaving(false)
         }
@@ -358,7 +354,6 @@ function TabLinks({ onSaved }) {
                 <FaPlus size={11} /> Adicionar link
             </button>
 
-            <Msg error={error} done={done} doneText="Links guardados." />
             <div className="ep-form__footer">
                 <button type="submit" className="btn-primary ep-save-btn" disabled={!isDirty || saving}>
                     {saving ? 'A guardar…' : 'Guardar links'}
@@ -370,12 +365,12 @@ function TabLinks({ onSaved }) {
 
 /* ── Tab: Segurança ──────────────────────────────────────────────────── */
 function TabSeguranca() {
+    const { showToast } = useToast()
     const [current, setCurrent] = useState('')
     const [next, setNext]       = useState('')
     const [confirm, setConfirm] = useState('')
     const [saving, setSaving]   = useState(false)
     const [error, setError]     = useState('')
-    const [done, setDone]       = useState(false)
 
     const isDirty = current.length > 0 || next.length > 0 || confirm.length > 0
 
@@ -395,10 +390,10 @@ function TabSeguranca() {
                 const data = await res.json().catch(() => ({}))
                 throw new Error(data.error || `Erro ${res.status}`)
             }
-            setDone(true)
+            showToast('Palavra-passe alterada!')
             setCurrent(''); setNext(''); setConfirm('')
         } catch (err) {
-            setError(err.message)
+            showToast(err.message, 'error')
         } finally {
             setSaving(false)
         }
@@ -426,7 +421,7 @@ function TabSeguranca() {
                     onChange={e => setConfirm(e.target.value)}
                 />
             </div>
-            <Msg error={error} done={done} doneText="Palavra-passe alterada." />
+            <Msg error={error} />
             <div className="ep-form__footer">
                 <button type="submit" className="btn-primary ep-save-btn" disabled={!isDirty || saving}>
                     {saving ? 'A alterar…' : 'Alterar palavra-passe'}

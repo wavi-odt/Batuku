@@ -4,16 +4,19 @@
 
 import './LevelCard.css'
 
+const MAX_LEVEL = 10
+
 export default function LevelCard({ user }) {
-    const pct = Math.min(100, (user.points / user.nextLevelAt) * 100);
-    const remaining = user.nextLevelAt - user.points;
+    const isMaxLevel = user.level >= MAX_LEVEL
+    const pct        = isMaxLevel ? 100 : Math.min(100, (user.points / user.nextLevelAt) * 100)
+    const remaining  = isMaxLevel ? 0   : user.nextLevelAt - user.points
 
     return (
         <div className="level-card">
             <div className="level-card__head">
                 <span className="level-card__label">Nível {user.level}</span>
                 <span className="level-card__rank">
-                    Rank semanal · <strong>#{user.rank}</strong>
+                    Rank global · <strong>#{user.rank}</strong>
                 </span>
             </div>
 
@@ -28,22 +31,29 @@ export default function LevelCard({ user }) {
             </div>
 
             <div className="level-card__bar-label">
-                Faltam <strong>{remaining.toLocaleString('pt-PT')} pts</strong> para o nível {user.level + 1}
+                {isMaxLevel
+                    ? <strong>Nível máximo atingido</strong>
+                    : <>Faltam <strong>{remaining.toLocaleString('pt-PT')} pts</strong> para o nível {user.level + 1}</>
+                }
             </div>
 
             <div className="level-card__stats">
                 <div>
-                    <div className="level-card__stat-v">{user.badges}</div>
+                    <div className="level-card__stat-v">{user.badges ?? 0}</div>
                     <div className="level-card__stat-l">Badges</div>
                 </div>
-                <div>
-                    <div className="level-card__stat-v">{user.streak}</div>
-                    <div className="level-card__stat-l">Streak</div>
-                </div>
-                <div>
-                    <div className="level-card__stat-v">{user.following}</div>
-                    <div className="level-card__stat-l">A seguir</div>
-                </div>
+                {user.streak != null && (
+                    <div>
+                        <div className="level-card__stat-v">{user.streak}</div>
+                        <div className="level-card__stat-l">Streak</div>
+                    </div>
+                )}
+                {user.following != null && (
+                    <div>
+                        <div className="level-card__stat-v">{user.following}</div>
+                        <div className="level-card__stat-l">A seguir</div>
+                    </div>
+                )}
             </div>
         </div>
     );

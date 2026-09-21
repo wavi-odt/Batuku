@@ -1,16 +1,21 @@
-/* ─────────────────────────────────────────────────────────────────
-   FollowingFeed.jsx, Feed cronológico de atividade dos seguidos.
-   ───────────────────────────────────────────────────────────────── */
+import { FaMusic }          from 'react-icons/fa'
+import { Link }             from 'react-router-dom'
+import { usePlayer }        from '../../../../context/PlayerContext'
+import { toPlayerTrack }    from '../../../../utils/toPlayerTrack'
+import TimeAgo              from '../../../../components/TimeAgo.jsx'
 
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+function ArtistAvatar({ name }) {
+    return (
+        <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, color: 'var(--color-ink-mute)' }}>
+            {name.charAt(0).toUpperCase()}
+        </div>
+    )
+}
 
-const TYPE_LABEL = {
-    release: { dot: 'release', label: 'Lançamento' },
-    live:    { dot: 'live',    label: 'Ao vivo'    },
-    update:  { dot: 'update',  label: 'Atualização'},
-};
+export default function FollowingFeed({ tracks }) {
+    const { setTrack } = usePlayer()
+    const queue = tracks.map(toPlayerTrack)
 
-export default function FollowingFeed({ items }) {
     return (
         <div>
             <div className="home__section-head" style={{ marginBottom: 16 }}>
@@ -21,45 +26,42 @@ export default function FollowingFeed({ items }) {
             </div>
 
             <div className="flw__feed">
-                {items.map(item => {
-                    const meta = TYPE_LABEL[item.type] || TYPE_LABEL.update;
-                    return (
-                        <div key={item.id} className="flw__feed-item">
+                {tracks.map((t, i) => (
+                    <div key={t.id} className="flw__feed-item">
 
-                            {/* Avatar do artista */}
-                            <div className="flw__feed-avatar">
-                                <ArtistArtwork shape={item.shape} hue={item.hue} image={item.image} rounded={0} />
-                            </div>
-
-                            <div className="flw__feed-body">
-                                <div className="flw__feed-header">
-                                    <span className="flw__feed-artist">{item.artist}</span>
-                                    <span className="flw__feed-action">{item.text}</span>
-                                    <span className={`flw__feed-tag flw__feed-tag--${item.type}`}>
-                                        {meta.label}
-                                    </span>
-                                    <span className="flw__feed-time">{item.time}</span>
-                                </div>
-
-                                {/* Cartão de conteúdo (faixa/EP) */}
-                                {item.content && (
-                                    <button type="button" className="flw__feed-content">
-                                        <div className="flw__feed-content-thumb">
-                                            <ArtistArtwork
-                                                shape={item.content.shape}
-                                                hue={item.content.hue}
-                                                image={item.content.image}
-                                                rounded={6}
-                                            />
-                                        </div>
-                                        <span className="flw__feed-content-title">{item.content.title}</span>
-                                    </button>
-                                )}
-                            </div>
+                        <div className="flw__feed-avatar">
+                            <ArtistAvatar name={t.artistName} />
                         </div>
-                    );
-                })}
+
+                        <div className="flw__feed-body">
+                            <div className="flw__feed-header">
+                                <Link to={`/artists/${t.artistProfileId}`} className="flw__feed-artist" style={{ textDecoration: 'none' }}>
+                                    {t.artistName}
+                                </Link>
+                                <span className="flw__feed-action">lançou uma nova faixa</span>
+                                <span className="flw__feed-tag flw__feed-tag--release">Lançamento</span>
+                                <TimeAgo isoStr={t.createdAt} className="flw__feed-time" />
+                            </div>
+
+                            <button
+                                type="button"
+                                className="flw__feed-content"
+                                onClick={() => setTrack(queue[i], queue)}
+                            >
+                                <div className="flw__feed-content-thumb">
+                                    {t.coverUrl
+                                        ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }} />
+                                        : <div style={{ width: '100%', height: '100%', borderRadius: 6, background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <FaMusic size={14} style={{ color: 'var(--color-ink-mute)' }} />
+                                          </div>
+                                    }
+                                </div>
+                                <span className="flw__feed-content-title">{t.title}</span>
+                            </button>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
-    );
+    )
 }

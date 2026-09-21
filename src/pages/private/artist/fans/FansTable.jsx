@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import { FaSearch } from 'react-icons/fa'
-import { Link }     from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 
 const TIER_TABS = [
     { key: 'all',      label: 'Todos'      },
@@ -56,8 +56,12 @@ function Avatar({ fan }) {
 
 export default function FansTable({ fans, loading }) {
     const [query, setQuery] = useState('')
-    const [tier,  setTier]  = useState('all')
-    const [sort,  setSort]  = useState('plays')
+    const [searchParams, setSearchParams] = useSearchParams()
+    const tier    = searchParams.get('tier') ?? 'all'
+    const sort    = searchParams.get('sort') ?? 'plays'
+    const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p })
+    const setTier = (val) => sp('tier', val)
+    const setSort = (val) => sp('sort', val)
 
     const filtered = useMemo(() => {
         let list = fans

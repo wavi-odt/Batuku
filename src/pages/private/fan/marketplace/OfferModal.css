@@ -1,0 +1,206 @@
+.offer-modal__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+}
+
+.offer-modal {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    width: min(480px, 92vw);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.4);
+    overflow: hidden;
+}
+
+/* ─── Header ──────────────────────────────────────────────── */
+
+.offer-modal__header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--color-border);
+    position: relative;
+}
+
+.offer-modal__cover {
+    width: 52px;
+    height: 52px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.offer-modal__info {
+    flex: 1;
+    min-width: 0;
+}
+
+.offer-modal__eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-mustard);
+    margin: 0 0 3px;
+}
+
+.offer-modal__beat-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.offer-modal__producer {
+    font-size: 13px;
+    color: var(--color-ink-mute);
+    margin: 0;
+}
+
+.offer-modal__close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: transparent;
+    border: none;
+    font-size: 22px;
+    color: var(--color-ink-mute);
+    cursor: pointer;
+    line-height: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.12s;
+}
+.offer-modal__close:hover { color: var(--color-ink); }
+
+/* ─── Body ────────────────────────────────────────────────── */
+
+.offer-modal__body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.offer-modal__ref {
+    font-size: 13px;
+    color: var(--color-ink-mute);
+    margin: 0;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+}
+
+.offer-modal__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.offer-modal__field-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-ink-soft);
+}
+
+.offer-modal__amount-wrap {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--color-bg);
+    transition: border-color 0.15s;
+}
+.offer-modal__amount-wrap:focus-within { border-color: var(--color-primary); }
+
+.offer-modal__currency {
+    padding: 0 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-ink-mute);
+    border-right: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+}
+
+.offer-modal__amount {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 10px 14px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-ink);
+    font-variant-numeric: tabular-nums;
+}
+
+.offer-modal__message {
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--color-ink);
+    resize: vertical;
+    outline: none;
+    font-family: inherit;
+    transition: border-color 0.15s;
+}
+.offer-modal__message:focus { border-color: var(--color-primary); }
+
+.offer-modal__error {
+    font-size: 13px;
+    color: #f87171;
+    margin: 0;
+    padding: 8px 12px;
+    background: rgba(248, 113, 113, 0.08);
+    border-radius: 6px;
+    border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.offer-modal__actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.offer-modal__cancel {
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-ink-mute);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+.offer-modal__cancel:hover { color: var(--color-ink); }
+
+.offer-modal__submit {
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    background: var(--color-mustard);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+.offer-modal__submit:hover:not(:disabled) { opacity: 0.88; }
+.offer-modal__submit:disabled { opacity: 0.5; cursor: not-allowed; }

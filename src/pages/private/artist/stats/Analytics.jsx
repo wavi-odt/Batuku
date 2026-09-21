@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { FaPlay, FaUsers, FaHeart, FaCheckCircle } from 'react-icons/fa'
 import AppShell from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
@@ -20,7 +21,9 @@ const KPI_META = [
 ]
 
 export default function Analytics() {
-    const [period,  setPeriod]  = useState('30d')
+    const [searchParams, setSearchParams] = useSearchParams()
+    const period    = searchParams.get('period') ?? '30d'
+    const setPeriod = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('period', val); return p })
     const [data,    setData]    = useState(null)
     const [loading, setLoading] = useState(true)
     const [error,   setError]   = useState('')

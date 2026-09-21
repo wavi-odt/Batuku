@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { FaThumbtack, FaReply, FaTrash, FaMusic } from 'react-icons/fa'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
+import { useToast } from '../../../../context/ToastContext.jsx'
 
 function hueFromStr(str) {
     let n = 0
@@ -33,6 +34,7 @@ function Av({ name, url, className }) {
 
 export default function CommentCard({ comment, onDelete, onReply, onPin }) {
     const currentUser = useCurrentUser()
+    const { showToast } = useToast()
     const [pinned,     setPinned]     = useState(comment.pinned ?? false)
     const [replyOpen,  setReplyOpen]  = useState(false)
     const [replyText,  setReplyText]  = useState('')
@@ -61,7 +63,9 @@ export default function CommentCard({ comment, onDelete, onReply, onPin }) {
             setSavedReply(reply)
             setReplyText('')
             setReplyOpen(false)
-        } catch { } finally {
+        } catch {
+            showToast('Erro ao publicar resposta.', 'error')
+        } finally {
             setSaving(false)
         }
     }

@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { FaPlus, FaSearch, FaCompactDisc, FaTrash } from 'react-icons/fa'
 import AppShell from '../../../../components/HomeComponents/AppShell.jsx'
 import { usePublish } from '../../../../context/PublishContext.jsx'
@@ -35,16 +35,23 @@ export default function Tracks() {
 
     /* ─── Faixas ─────────────────────────────────────────────── */
     const { tracks: rawTracks, loading: tracksLoading, setTracks } = useMyTracks(aid, publishVersion);
-    const [query,  setQuery]  = useState('');
-    const [status, setStatus] = useState('all');
-    const [sort,   setSort]   = useState('recent');
+    const [query,  setQuery]  = useState('')
+    const [searchParams, setSearchParams] = useSearchParams()
+    const status     = searchParams.get('status')    ?? 'all'
+    const sort       = searchParams.get('sort')      ?? 'recent'
+    const activeTab  = searchParams.get('tab')       ?? 'tracks'
+    const relStatus  = searchParams.get('relStatus') ?? 'all'
+    const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p })
+    const setStatus    = (val) => sp('status',    val)
+    const setSort      = (val) => sp('sort',      val)
+    const setActiveTab = (val) => sp('tab',       val)
+    const setRelStatus = (val) => sp('relStatus', val)
 
     /* ─── Lançamentos ────────────────────────────────────────── */
     const { releases, loading: relLoading } = useMyReleases(aid, publishVersion);
     const [confirmRelease,  setConfirmRelease]  = useState(null);
     const [deletingRelease, setDeletingRelease] = useState(false);
     const [relQuery,  setRelQuery]  = useState('');
-    const [relStatus, setRelStatus] = useState('all');
 
     const filtered = useMemo(() => {
         let list = rawTracks;
@@ -111,8 +118,6 @@ export default function Tracks() {
         }
     }
 
-    /* ─── Tab ────────────────────────────────────────────────── */
-    const [activeTab, setActiveTab] = useState('tracks');
 
     return (
         <AppShell role="artist">

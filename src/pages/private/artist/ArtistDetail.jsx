@@ -1,5 +1,5 @@
 import { useEffect, useState, Fragment } from 'react'
-import { useParams, Link, Navigate } from 'react-router-dom'
+import { useParams, Link, Navigate, useSearchParams } from 'react-router-dom'
 import { FaUserPlus, FaUserCheck, FaPlay, FaCompactDisc, FaRegComment } from 'react-icons/fa'
 import { SiSpotify } from 'react-icons/si'
 import AppShell from '../../../components/HomeComponents/AppShell'
@@ -31,7 +31,9 @@ export default function ArtistDetail() {
     const [artist,           setArtist]           = useState(null);
     const [loading,          setLoading]          = useState(true);
     const [error,            setError]            = useState('');
-    const [active,           setActive]           = useState(0);
+    const [searchParams, setSearchParams] = useSearchParams()
+    const active    = parseInt(searchParams.get('tab') ?? '0', 10) || 0
+    const setActive = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('tab', String(val)); return p })
     const [following,        setFollowing]        = useState(false);
     const [followers,        setFollowers]        = useState(0);
     const [topTracks,        setTopTracks]        = useState([]);

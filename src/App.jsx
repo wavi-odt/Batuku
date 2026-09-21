@@ -30,6 +30,10 @@ import PlaylistCreate from "./pages/private/playlist/PlaylistCreate.jsx";
 import UserDetail from "./pages/private/user/UserDetail.jsx";
 import ClaimProfile from "./pages/private/artist/ClaimProfile.jsx";
 import Library      from "./pages/private/fan/library/Library.jsx";
+import MyUploads      from "./pages/private/personal/MyUploads.jsx";
+import ProjectDetail  from "./pages/private/personal/ProjectDetail.jsx";
+import SharedTrack    from "./pages/public/SharedTrack.jsx";
+import SharedProject  from "./pages/public/SharedProject.jsx";
 import Discover     from "./pages/private/fan/discover/Discover.jsx";
 import Following    from "./pages/private/fan/following/Following.jsx";
 import Achievements  from "./pages/private/fan/achievements/Achievements.jsx";
@@ -77,6 +81,12 @@ function App() {
                         <Route path="/login"           element={<Login />} />
                         <Route path="/register"        element={<Register />} />
                         <Route path="/oauth2/callback" element={<OAuthCallback />} />
+                        <Route path="/p/:token"        element={<SharedTrack />} />
+                        <Route path="/proj/:token"     element={<SharedProject />} />
+
+                        {/* Pessoal — qualquer utilizador autenticado, sem MiniPlayer */}
+                        <Route path="/pessoal"                  element={<ProtectedRoute><MyUploads /></ProtectedRoute>} />
+                        <Route path="/pessoal/projetos/:id"     element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
 
                         {/* Admin (sem player) */}
                         <Route path="/admin"               element={<ProtectedRoute role="admin"><AdminHome /></ProtectedRoute>} />
@@ -90,7 +100,8 @@ function App() {
                             <Route path="/discover"       element={<RoleRoute roles={['fan']}><Discover /></RoleRoute>} />
                             <Route path="/following"      element={<RoleRoute roles={['fan']}><Following /></RoleRoute>} />
                             <Route path="/achievements"   element={<RoleRoute roles={['fan']}><Achievements /></RoleRoute>} />
-                            <Route path="/marketplace"    element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
+                            <Route path="/marketplace"      element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
+                            <Route path="/marketplace/:tab" element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
                             <Route path="/community"      element={<RoleRoute roles={['fan', 'artist']}><Community /></RoleRoute>} />
                             <Route path="/tracks"         element={<RoleRoute roles={['artist']}><Tracks /></RoleRoute>} />
                             <Route path="/analytics"      element={<RoleRoute roles={['artist']}><Analytics /></RoleRoute>} />

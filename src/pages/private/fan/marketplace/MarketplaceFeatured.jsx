@@ -8,7 +8,7 @@ import ArtistArtwork  from '../../../../components/PublicComponets/ArtistArtwork
 const LICENSE_KEYS = ['lease', 'premium', 'exclusive'];
 const LICENSE_LABELS = { lease: 'Lease', premium: 'Premium', exclusive: 'Exclusiva' };
 
-export default function MarketplaceFeatured({ beat, onCart, inCart }) {
+export default function MarketplaceFeatured({ beat, onCart, inCart, onOffer, readOnly = false }) {
     const [license, setLicense] = useState('lease');
 
     const price = beat.prices[license];
@@ -58,13 +58,25 @@ export default function MarketplaceFeatured({ beat, onCart, inCart }) {
                     ))}
                 </div>
 
-                <button
-                    type="button"
-                    className="mkt__feat-buy"
-                    onClick={() => onCart(beat, license, price)}
-                >
-                    {inCart ? '✓ No carrinho' : `Comprar · €${price.toFixed(2)}`}
-                </button>
+                {!readOnly && (
+                    license === 'exclusive' && beat.exclusiveNegotiable ? (
+                        <button
+                            type="button"
+                            className="mkt__feat-buy mkt__feat-buy--offer"
+                            onClick={() => onOffer?.(beat)}
+                        >
+                            Fazer proposta →
+                        </button>
+                    ) : (
+                        <button
+                            type="button"
+                            className="mkt__feat-buy"
+                            onClick={() => onCart(beat, license, price)}
+                        >
+                            {inCart ? '✓ No carrinho' : `Comprar · €${price.toFixed(2)}`}
+                        </button>
+                    )
+                )}
             </div>
         </div>
     );

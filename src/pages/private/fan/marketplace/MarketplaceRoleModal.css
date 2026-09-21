@@ -1,0 +1,65 @@
+.mkt-modal__backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mkt-modal__content {
+    text-align: center;
+    max-width: 480px;
+    padding: 0 24px;
+}
+
+.mkt-modal__question {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+    margin: 0 0 12px;
+}
+
+.mkt-modal__sub {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.55);
+    margin: 0 0 40px;
+    line-height: 1.6;
+}
+
+.mkt-modal__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+}
+
+.mkt-modal__btn {
+    width: 260px;
+    padding: 14px 0;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s, transform 0.15s;
+}
+
+.mkt-modal__btn:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+}
+
+.mkt-modal__btn--yes {
+    background: var(--color-primary);
+    color: #fff;
+}
+
+.mkt-modal__btn--no {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.8);
+}

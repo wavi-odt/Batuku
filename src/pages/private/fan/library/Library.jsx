@@ -1,4 +1,5 @@
-import { useState, useEffect }   from 'react'
+import { useState, useEffect }              from 'react'
+import { Link, useSearchParams }           from 'react-router-dom'
 import AppShell                  from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }         from '../../../../utils/auth.js'
 import { useToast }              from '../../../../context/ToastContext.jsx'
@@ -18,7 +19,9 @@ const FILTERS = [
 
 export default function Library() {
     const { showToast } = useToast();
-    const [filter,          setFilter]          = useState('all');
+    const [searchParams, setSearchParams]       = useSearchParams();
+    const filter = searchParams.get('filter') ?? 'all';
+    const setFilter = (key) => setSearchParams({ filter: key });
     const [playlists,       setPlaylists]       = useState([]);
     const [tracks,          setTracks]          = useState([]);
     const [artists,         setArtists]         = useState([]);
@@ -138,6 +141,8 @@ export default function Library() {
             </div>
 
             {/* ─── Filtros ─────────────────────────────────────────── */}
+            <Link to="/pessoal" className="lib__uploads-link" target="_blank" rel="noopener noreferrer">Os meus projetos →</Link>
+
             <div className="lib__filters">
                 {FILTERS.map(f => (
                     <button

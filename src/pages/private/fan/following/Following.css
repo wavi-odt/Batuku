@@ -1,19 +1,28 @@
 /* ─── Following page ───────────────────────────────────────────────── */
 
 /* ─── Layout principal ─────────────────────────────────────────────── */
-.flw__split {
+.flw__page {
     display: grid;
     grid-template-columns: 1fr 340px;
     gap: var(--space-7);
     align-items: start;
 }
 
-@media (max-width: 1000px) { .flw__split { grid-template-columns: 1fr; } }
+.flw__main {
+    min-width: 0;
+}
 
 .flw__sidebar {
     display: flex;
     flex-direction: column;
     gap: var(--space-5);
+    position: sticky;
+    top: 100px;
+}
+
+@media (max-width: 1000px) {
+    .flw__page { grid-template-columns: 1fr; }
+    .flw__sidebar { position: static; }
 }
 
 /* ─── A ouvir agora ────────────────────────────────────────────────── */
@@ -435,4 +444,159 @@
     background-color: var(--color-coral-dim);
     border-color: rgba(232, 93, 60, 0.4);
     color: var(--color-coral);
+}
+
+.flw__suggest-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@keyframes suggest-exit {
+    0%   { opacity: 1; max-height: 64px; padding-top: 8px; padding-bottom: 8px; transform: translateX(0); }
+    55%  { opacity: 0; transform: translateX(14px); }
+    100% { opacity: 0; max-height: 0;    padding-top: 0;  padding-bottom: 0;  transform: translateX(14px); }
+}
+
+@keyframes suggest-enter {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.flw__suggest-row--exit {
+    animation: suggest-exit 0.35s ease-out forwards;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.flw__suggest-row--enter {
+    animation: suggest-enter 0.3s ease-out both;
+}
+
+/* ─── Spotlight (lançamento / géneros) ─────────────────────────────── */
+.flw__spotlight-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 18px;
+}
+
+.flw__spotlight-head {
+    margin-bottom: 12px;
+}
+
+.flw__spotlight-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 6px;
+    border-radius: var(--radius-sm);
+    transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.flw__spotlight-row:hover { background-color: rgba(255, 255, 255, 0.04); }
+
+.flw__spotlight-thumb {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: var(--color-surface-2);
+}
+
+.flw__spotlight-thumb-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
+}
+
+.flw__spotlight-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.flw__spotlight-title {
+    font-size: 13px;
+    font-weight: var(--fw-semibold);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.flw__spotlight-artist {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+}
+
+.flw__spotlight-time {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+}
+
+.flw__spotlight-plays {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    display: flex;
+    align-items: center;
+}
+
+.flw__spotlight-play {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--color-coral);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity var(--duration-fast) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out);
+}
+
+.flw__spotlight-row:hover .flw__spotlight-play {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.flw__genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.flw__genre-pill {
+    font-size: 11px;
+    font-weight: var(--fw-medium);
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    background-color: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--color-border);
+    color: var(--color-ink-soft);
+}
+
+/* ─── Estado vazio ─────────────────────────────────────────────────── */
+.flw__empty {
+    padding: 48px 24px;
+    text-align: center;
+}
+
+.flw__empty-title {
+    font-size: var(--fs-md);
+    font-weight: var(--fw-semibold);
+    margin: 0 0 8px;
+}
+
+.flw__empty-sub {
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    margin: 0;
 }

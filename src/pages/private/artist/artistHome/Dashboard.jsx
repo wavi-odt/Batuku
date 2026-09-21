@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import AppShell         from '../../../../components/HomeComponents/AppShell.jsx'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import { API, getToken } from '../../../../utils/auth.js'
@@ -15,7 +16,9 @@ import './Dashboard.css'
 export default function Dashboard() {
     const realUser = useCurrentUser()
     const { decrement } = usePendingComments()
-    const [period, setPeriod]   = useState('30d')
+    const [searchParams, setSearchParams] = useSearchParams()
+    const period    = searchParams.get('period') ?? '30d'
+    const setPeriod = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('period', val); return p })
     const [stats, setStats]     = useState(null)
     const [fans, setFans]       = useState([])
     const [comments, setComments] = useState([])

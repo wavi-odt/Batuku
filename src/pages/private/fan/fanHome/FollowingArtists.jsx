@@ -1,41 +1,41 @@
-﻿/* ─────────────────────────────────────────────────────────────────
-   FollowingArtists.jsx, Grelha dos artistas que o fã segue.
-   ───────────────────────────────────────────────────────────────── */
-
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
-import { ARTISTS } from '../../../../data/batuku.js'
+import { Link }       from 'react-router-dom'
 import './FollowingArtists.css'
 
-const IMG_BY_NAME = Object.fromEntries(ARTISTS.map(a => [a.name, a.image]));
+function Avatar({ name, avatarUrl }) {
+    if (avatarUrl) {
+        return <img src={avatarUrl} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+    }
+    return (
+        <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 16, color: 'var(--color-ink-mute)' }}>
+            {name.charAt(0).toUpperCase()}
+        </div>
+    )
+}
 
-export default function FollowingArtists({ artists, followingCount }) {
+export default function FollowingArtists({ artists }) {
     return (
         <div>
             <div className="home__section-head">
                 <div>
                     <h2 className="home__section-title">Quem segues</h2>
                     <div className="home__section-sub">
-                        {followingCount} artistas · novos lançamentos esta semana
+                        {artists.length} {artists.length === 1 ? 'artista' : 'artistas'}
                     </div>
                 </div>
-                <a href="#" className="home__section-link">Gerir →</a>
+                <Link to="/following" className="home__section-link">Ver novidades →</Link>
             </div>
 
             <div className="following">
-                {artists.map((a, i) => (
-                    <button key={i} type="button" className="follow-card">
+                {artists.map(a => (
+                    <Link key={a.id} to={`/artists/${a.id}`} className="follow-card" style={{ textDecoration: 'none' }}>
                         <div className="follow-card__avatar">
-                            <ArtistArtwork shape={a.shape} hue={a.hue} image={IMG_BY_NAME[a.name]} rounded={0} />
-                            {a.isLive && <span className="follow-card__live">● Ao vivo</span>}
+                            <Avatar name={a.name} avatarUrl={a.avatarUrl} />
                         </div>
                         <div className="follow-card__name">{a.name}</div>
-                        <div className="follow-card__genre">{a.genre}</div>
-                        {a.newTracks > 0
-                            ? <span className="follow-card__new">+{a.newTracks} novas</span>
-                            : <span className="follow-card__none">Sem novidades</span>}
-                    </button>
+                        <div className="follow-card__genre">{a.genre ?? 'Artista'}</div>
+                    </Link>
                 ))}
             </div>
         </div>
-    );
+    )
 }

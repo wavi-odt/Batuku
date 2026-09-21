@@ -233,6 +233,93 @@
 
 .mkt__feat-buy:hover { opacity: 0.88; }
 
+/* ─── Tabs ──────────────────────────────────────────────────────────── */
+.mkt__tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.mkt__tab {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-ink-mute);
+    cursor: pointer;
+    position: relative;
+    bottom: -1px;
+    border-bottom: 2px solid transparent;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.mkt__tab:hover { color: var(--color-ink); }
+
+.mkt__tab--active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* ─── Checkout result ────────────────────────────────────────────────── */
+.mkt__cart-result {
+    padding: 12px 0 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.mkt__cart-result-ok {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.mkt__cart-result-icon {
+    font-size: 28px;
+    color: #10b981;
+    text-align: center;
+}
+
+.mkt__cart-result-msg {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-ink);
+    text-align: center;
+    margin: 0;
+}
+
+.mkt__cart-result-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.mkt__cart-result-list li {
+    font-size: 12px;
+    color: var(--color-ink-mute);
+    text-align: center;
+}
+
+.mkt__cart-result-fail {
+    font-size: 13px;
+    color: #f87171;
+    text-align: center;
+}
+
+.mkt__cart-checkout--outline {
+    background: transparent;
+    border: 1px solid var(--color-border);
+    color: var(--color-ink-mute);
+}
+
+.mkt__cart-checkout--outline:hover { color: var(--color-ink); }
+
 /* ─── Filtros ────────────────────────────────────────────────────────── */
 .mkt__filters {
     display: flex;
@@ -468,6 +555,36 @@
     color: var(--color-green);
 }
 
+.mkt__beat-offer-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-mustard);
+    background: var(--color-mustard-dim);
+    color: var(--color-mustard);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    transition:
+        background-color var(--duration-fast) var(--ease-out),
+        opacity var(--duration-fast) var(--ease-out);
+    flex-shrink: 0;
+}
+.mkt__beat-offer-btn:hover { opacity: 0.8; }
+
+.mkt__beat-price--negotiate {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-semibold);
+    color: var(--color-mustard);
+    font-style: italic;
+}
+
+.mkt__feat-buy--offer {
+    background-color: var(--color-mustard);
+}
+
 /* Column headers */
 .mkt__beat-header {
     display: grid;
@@ -487,6 +604,12 @@
     color: var(--color-ink-mute);
 }
 
+/* Readonly row: 5 columns (no license pills, no cart) */
+.mkt__beat-row--readonly,
+.mkt__beat-header--readonly {
+    grid-template-columns: 44px 1fr 80px 76px 68px;
+}
+
 @media (max-width: 900px) {
     .mkt__beat-header,
     .mkt__beat-row {
@@ -495,6 +618,13 @@
     .mkt__beat-genre,
     .mkt__beat-bpm,
     .mkt__beat-licenses { display: none; }
+
+    .mkt__beat-header--readonly,
+    .mkt__beat-row--readonly {
+        grid-template-columns: 44px 1fr 68px;
+    }
+    .mkt__beat-row--readonly .mkt__beat-genre,
+    .mkt__beat-row--readonly .mkt__beat-bpm { display: none; }
 }
 
 /* ─── Sidebar: Carrinho ─────────────────────────────────────────────── */
