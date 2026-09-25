@@ -12,6 +12,7 @@ export default defineConfig({
     }),
     tailwindcss(),
   ],
+  define: { global: 'globalThis' },
   base: '/', // IMPORTANTE para Spring Boot
   server: {
     host: true,      // ← para testar no telemóvel

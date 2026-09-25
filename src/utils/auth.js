@@ -61,6 +61,7 @@ export function getUser() {
 // Guarda apenas o token, o role é sempre derivado do JWT
 export function saveAuth(token) {
     localStorage.setItem('token', token);
+    localStorage.removeItem('awaitingValidation');
     window.dispatchEvent(new Event('batuku:login'));
 }
 
@@ -70,4 +71,23 @@ export function getToken() {
 
 export function logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('pendingClaim');
+}
+
+export function setPendingClaim() {
+    localStorage.setItem('pendingClaim', '1');
+}
+
+export function isPendingClaim() {
+    return !!localStorage.getItem('pendingClaim');
+}
+
+export function setAwaitingValidation() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('pendingClaim');
+    localStorage.setItem('awaitingValidation', '1');
+}
+
+export function isAwaitingValidation() {
+    return !!localStorage.getItem('awaitingValidation');
 }

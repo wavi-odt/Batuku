@@ -2,10 +2,8 @@ import { useState, useRef } from 'react'
 import { createPortal }     from 'react-dom'
 import { FaMusic, FaImage, FaTimes } from 'react-icons/fa'
 import { API, getToken }    from '../../../../utils/auth.js'
+import { useGenres }        from '../../../../context/GenresContext.jsx'
 import './BeatUploadModal.css'
-
-const CV_GENRES   = ['Funaná', 'Morna', 'Coladeira', 'Batuque', 'Cabo Love', 'Kizomba', 'Tabanka', 'Kola']
-const INTL_GENRES = ['Afrobeat', 'Amapiano', 'Gqom', 'Trap', 'Boom Bap', 'Drill', 'R&B', 'Dancehall']
 const KEYS = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B',
                'Am', 'Bm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m']
 
@@ -24,6 +22,7 @@ function DropZone({ label, hint, accept, file, onPick, icon: Icon }) {
 }
 
 export default function BeatUploadModal({ onClose, onUploaded }) {
+    const { cvNames: CV_GENRES, mundialNames: INTL_GENRES } = useGenres()
     const [title,         setTitle]         = useState('')
     const [genre,         setGenre]         = useState('')
     const [bpm,           setBpm]           = useState('')

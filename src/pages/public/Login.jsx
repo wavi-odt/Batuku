@@ -3,18 +3,21 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { FaDiscord, FaGoogle, FaApple } from 'react-icons/fa'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { FaDiscord, FaGoogle } from 'react-icons/fa'
 import { HiUser, HiLockClosed, HiEye, HiEyeOff } from 'react-icons/hi'
 import AuthSide from '../../components/AuthComponents/AuthSide.jsx'
-import { saveAuth, getRole } from '../../utils/auth.js'
+import { saveAuth, getRole, setAwaitingValidation } from '../../utils/auth.js'
 import '../../components/AuthComponents/auth.css'
 
 export default function Login() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [showPass, setShowPass] = useState(false);
     const [loading, setLoading]   = useState(false);
-    const [error, setError]       = useState('');
+    const [error, setError]       = useState(
+        searchParams.get('error') === 'oauth' ? 'Não foi possível autenticar com esse método. Tenta novamente.' : ''
+    );
     // campo chama-se "identifier" internamente, pode ser email ou username
     const [form, setForm] = useState({ identifier: '', password: '', remember: true });
 
@@ -37,9 +40,16 @@ export default function Login() {
                 }),
             });
 
-            if (!res.ok) throw new Error('Email/username ou password inválidos.');
-
             const data = await res.json();
+
+            if (!res.ok) {
+                if (data?.error === 'PENDING_VALIDATION') {
+                    setAwaitingValidation();
+                    navigate('/aguardar-validacao');
+                    return;
+                }
+                throw new Error('Email/username ou password inválidos.');
+            }
 
             saveAuth(data.token);
             const role = getRole();
@@ -82,9 +92,6 @@ export default function Login() {
                         <button type="button" className="auth__oauth-btn auth__oauth-btn--google"
                             onClick={() => window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/google`}>
                             <FaGoogle size={16} /> Google
-                        </button>
-                        <button type="button" className="auth__oauth-btn auth__oauth-btn--apple">
-                            <FaApple size={18} /> Apple
                         </button>
                     </div>
 

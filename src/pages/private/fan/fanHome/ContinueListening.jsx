@@ -1,8 +1,35 @@
 import { FaPlay, FaMusic } from 'react-icons/fa'
 import { Link }            from 'react-router-dom'
+import { usePlayer }       from '../../../../context/PlayerContext'
+import { API, getToken }   from '../../../../utils/auth'
+import ClickableName       from '../../../../components/ClickableName'
 import './ContinueListening.css'
 
 export default function ContinueListening({ tracks }) {
+    const { setTrack } = usePlayer()
+
+    async function handlePlay(t) {
+        // recently-played não inclui audioUrl — buscar as tracks do artista (que já incluem)
+        const res = await fetch(`${API}/api/tracks/artist/${t.artistId}`, {
+            headers: { Authorization: `Bearer ${getToken()}` },
+        })
+        if (!res.ok) return
+        const artistTracks = await res.json()
+        const full = artistTracks.find(tr => tr.id === t.trackId)
+        if (!full?.audioUrl) return
+
+        setTrack({
+            id:              full.id,
+            name:            full.title,
+            artistName:      full.artistName,
+            artistProfileId: full.artistProfileId ?? null,
+            coverUrl:        full.coverUrl ?? t.coverUrl ?? null,
+            audioUrl:        full.audioUrl,
+            durationMs:      full.durationMs ?? null,
+            source:          'upload',
+        })
+    }
+
     return (
         <section className="home__section">
             <div className="home__section-head">
@@ -15,7 +42,12 @@ export default function ContinueListening({ tracks }) {
 
             <div className="continue">
                 {tracks.map(t => (
-                    <Link key={t.trackId} to={`/artists/${t.artistId}`} className="track-card" style={{ textDecoration: 'none' }}>
+                    <button
+                        key={t.trackId}
+                        type="button"
+                        className="track-card"
+                        onClick={() => handlePlay(t)}
+                    >
                         <div className="track-card__cover">
                             {t.coverUrl
                                 ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} />
@@ -26,8 +58,10 @@ export default function ContinueListening({ tracks }) {
                             <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
                         </div>
                         <div className="track-card__title">{t.title}</div>
-                        <div className="track-card__artist">{t.artistName}</div>
-                    </Link>
+                        <div className="track-card__artist">
+                            <ClickableName artistProfileId={t.artistId} name={t.artistName} />
+                        </div>
+                    </button>
                 ))}
             </div>
         </section>

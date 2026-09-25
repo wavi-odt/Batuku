@@ -27,14 +27,33 @@ export const discoverData = {
         image:       DjossaImg,
     },
 
-    /* ─── Géneros musicais ───────────────────────────────────────── */
-    genres: [
-        { id: 'funana',    label: 'Funaná',    hue: 14,  shape: 'circles',   tracks: 840 },
-        { id: 'morna',     label: 'Morna',     hue: 220, shape: 'arch',      tracks: 620 },
-        { id: 'coladeira', label: 'Coladeira', hue: 42,  shape: 'stripes',   tracks: 520 },
-        { id: 'tabanka',   label: 'Tabanka',   hue: 8,   shape: 'sun',       tracks: 310 },
-        { id: 'cabo-love', label: 'Cabo Love', hue: 145, shape: 'orbit',     tracks: 430 },
-        { id: 'batuque',   label: 'Batuque',   hue: 280, shape: 'wave',      tracks: 215 },
+    /* ─── Géneros mundiais ───────────────────────────────────────── */
+    genresMundiais: [
+        { id: 'pop',        label: 'Pop',         hue: 340 },
+        { id: 'hiphop',     label: 'Hip-Hop',     hue: 28  },
+        { id: 'soul',       label: 'Soul',        hue: 290 },
+        { id: 'electronic', label: 'Electrónica', hue: 200 },
+        { id: 'afrobeat',   label: 'Afrobeat',    hue: 22  },
+        { id: 'afrohouse',  label: 'Afrohouse',   hue: 35  },
+        { id: 'afrotech',   label: 'Afrotech',    hue: 195 },
+        { id: 'reggae',     label: 'Reggae',      hue: 130 },
+        { id: 'jazz',       label: 'Jazz',        hue: 240 },
+        { id: 'rock',       label: 'Rock',        hue: 5   },
+        { id: 'latin',      label: 'Latin',       hue: 15  },
+        { id: 'kizomba',    label: 'Kizomba',     hue: 320 },
+        { id: 'gospel',     label: 'Gospel',      hue: 55  },
+        { id: 'classical',  label: 'Clássico',    hue: 260 },
+    ],
+
+    /* ─── Géneros cabo-verdianos ─────────────────────────────────── */
+    genresCaboverde: [
+        { id: 'funana',    label: 'Funaná',    hue: 14,  tracks: 840 },
+        { id: 'morna',     label: 'Morna',     hue: 220, tracks: 620 },
+        { id: 'coladeira', label: 'Coladeira', hue: 42,  tracks: 520 },
+        { id: 'cabo-love', label: 'Cabo Love', hue: 145, tracks: 430 },
+        { id: 'tabanka',   label: 'Tabanka',   hue: 8,   tracks: 310 },
+        { id: 'batuku',    label: 'Batuku',    hue: 185, tracks: 210 },
+        { id: 'kotxi-po',  label: 'Kotxi Po',  hue: 95,  tracks: 140 },
     ],
 
     /* ─── Charts (top 10 semanal) ───────────────────────────────── */

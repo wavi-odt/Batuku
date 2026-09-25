@@ -2,13 +2,30 @@
    AchievementsChallenges.jsx, Desafios ativos com barra de progresso.
    ───────────────────────────────────────────────────────────────── */
 
-export default function AchievementsChallenges({ challenges }) {
+import { useState } from 'react'
+
+export default function AchievementsChallenges({ challenges, onAdvance }) {
+    const [advancing, setAdvancing] = useState(false)
+
+    const allDone   = challenges.length > 0 && challenges.every(ch => ch.completed)
+    const setIndex  = challenges[0]?.setIndex  ?? 0
+    const totalSets = challenges[0]?.totalSets ?? 3
+    const setLabel  = `Conjunto ${setIndex + 1} de ${totalSets}`
+
+    async function handleAdvance() {
+        setAdvancing(true)
+        try { await onAdvance?.() } finally { setAdvancing(false) }
+    }
+
     return (
         <div>
             <div className="home__section-head" style={{ marginBottom: 16 }}>
                 <div>
                     <h2 className="home__section-title">Desafios ativos</h2>
-                    <div className="home__section-sub">Completa para ganhar pontos de experiência</div>
+                    <div className="home__section-sub">
+                        Completa para ganhar pontos de experiência
+                        <span className="ach__set-label">{setLabel}</span>
+                    </div>
                 </div>
             </div>
 
@@ -26,7 +43,7 @@ export default function AchievementsChallenges({ challenges }) {
                                     <div className="ach__challenge-title">{ch.title}</div>
                                     <div className="ach__challenge-desc">{ch.desc}</div>
                                 </div>
-                                <span className="ach__challenge-xp">+{ch.xp} xp</span>
+                                <span className="ach__challenge-xp">+{ch.xp} pts</span>
                             </div>
 
                             {ch.completed ? (
@@ -53,6 +70,22 @@ export default function AchievementsChallenges({ challenges }) {
                     );
                 })}
             </div>
+
+            {allDone && (
+                <div className="ach__advance-wrap">
+                    <p className="ach__advance-msg">
+                        Completaste todos os desafios deste conjunto!
+                    </p>
+                    <button
+                        type="button"
+                        className="ach__advance-btn"
+                        onClick={handleAdvance}
+                        disabled={advancing}
+                    >
+                        {advancing ? 'A carregar…' : '🎯 Desbloquear próximos desafios'}
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

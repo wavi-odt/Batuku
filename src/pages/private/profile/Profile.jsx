@@ -9,21 +9,35 @@
 
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { FaTrophy, FaCheckCircle, FaCamera, FaCog } from 'react-icons/fa'
+import { FaTrophy, FaCheckCircle, FaCamera, FaCog, FaUser } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
-import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
 import { profileData } from '../../../data/profile'
 import { useCurrentUser } from '../../../hooks/useCurrentUser'
-import { API } from '../../../utils/auth.js'
+import { API, getToken } from '../../../utils/auth.js'
 import {
-    FanOverview, FanPlaylists, FanAchievements, FanFollowing, FanActivity,
+    FanOverview, FanPlaylists, FanAchievements, FanFollowing,
 } from './FanPanels'
 import {
-    ArtistOverview, ArtistTracks, ArtistAboutPanel, ArtistAchievements, ArtistReleases,
+    ArtistOverview, ArtistTracks, ArtistAboutPanel, ArtistReleases,
 } from './ArtistPanels'
 import AvatarUploader from './AvatarUploader'
 import EditProfileModal from './EditProfileModal'
 import './Profile.css'
+
+/* ─── Gamificação ─────────────────────────────────────────────────── */
+function tierFromPoints(pts) {
+    if (pts <= 200)  return 'coral';
+    if (pts <= 500)  return 'ocean';
+    if (pts <= 700)  return 'mustard';
+    if (pts <= 1000) return 'gold';
+    if (pts <= 2000) return 'green';
+    return 'pink';
+}
+
+function formatEarned(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' });
+}
 
 /* ─── Tab maps ────────────────────────────────────────────────────── */
 const FAN_TABS = [
@@ -31,7 +45,6 @@ const FAN_TABS = [
     { label: 'Playlists',   Panel: FanPlaylists },
     { label: 'Conquistas',  Panel: FanAchievements },
     { label: 'A seguir',    Panel: FanFollowing },
-    { label: 'Atividade',   Panel: FanActivity },
 ];
 
 const ARTIST_TABS = [
@@ -39,7 +52,6 @@ const ARTIST_TABS = [
     { label: 'Faixas',       Panel: ArtistTracks },
     { label: 'Lançamentos',  Panel: ArtistReleases },
     { label: 'Sobre',        Panel: ArtistAboutPanel },
-    { label: 'Conquistas',   Panel: ArtistAchievements },
 ];
 
 /* ─── Header ──────────────────────────────────────────────────────── */
@@ -72,7 +84,7 @@ function ProfileHeader({ role, data, avatarUrl, onAvatarEdit, onEditProfile }) {
                 >
                     {avatarUrl
                         ? <img src={avatarUrl} alt="Avatar" className="prof__avatar-img" />
-                        : <ArtistArtwork shape={data.avatar.shape} hue={data.avatar.hue} rounded={0} />
+                        : <div className="prof__avatar-placeholder"><FaUser size={32} /></div>
                     }
                     <span className="prof__avatar-edit"><FaCamera size={13} /></span>
                 </div>
@@ -120,8 +132,6 @@ function ProfileStats({ role, data }) {
             { v: data.followers.toLocaleString('pt-PT'), l: 'Seguidores' },
             { v: data.monthlyListeners.toLocaleString('pt-PT'), l: 'Ouvintes/mês' },
             { v: data.tracksPublished, l: 'Faixas' },
-            { v: data.points.toLocaleString('pt-PT'), l: 'Pontos' },
-            { v: '#' + data.rank, l: 'Rank' },
         ]
         : [
             { v: data.points.toLocaleString('pt-PT'), l: 'Pontos' },
@@ -158,11 +168,26 @@ export default function Profile({ role = 'fan' }) {
     const [showEditModal, setShowEditModal] = useState(false);
     const [userOverrides, setUserOverrides] = useState({});
     const [artistMe, setArtistMe]           = useState(null);
-    const [realStats, setRealStats]         = useState({ followers: null, following: null, tracksPublished: null });
+    const [realStats, setRealStats]         = useState({ followers: null, following: null, tracksPublished: null, monthlyListeners: null });
+    const [gamifProfile, setGamifProfile]   = useState(null);
+    const [allBadges,    setAllBadges]      = useState([]);
 
     useEffect(() => {
         if (realUser?.picture) setAvatarUrl(realUser.picture);
     }, [realUser?.picture]);
+
+    useEffect(() => {
+        const token = getToken();
+        if (!token) return;
+        const headers = { Authorization: `Bearer ${token}` };
+        Promise.all([
+            fetch(`${API}/api/gamification/me`,     { headers }).then(r => r.ok ? r.json() : null),
+            fetch(`${API}/api/gamification/badges`, { headers }).then(r => r.ok ? r.json() : []),
+        ]).then(([prof, badges]) => {
+            setGamifProfile(prof);
+            setAllBadges(Array.isArray(badges) ? badges : []);
+        }).catch(() => {});
+    }, []);
 
     function refreshArtistMe() {
         const token = localStorage.getItem('token');
@@ -187,11 +212,13 @@ export default function Profile({ role = 'fan' }) {
             Promise.all([
                 fetch(`${API}/api/artist-follows/${artistMe.id}/status`, { headers }).then(r => r.ok ? r.json() : null),
                 fetch(`${API}/api/tracks/artist/${artistMe.id}`, { headers }).then(r => r.ok ? r.json() : null),
-            ]).then(([followStatus, tracks]) => {
+                fetch(`${API}/api/artists/${artistMe.id}`, { headers }).then(r => r.ok ? r.json() : null),
+            ]).then(([followStatus, tracks, artistDetail]) => {
                 setRealStats(prev => ({
                     ...prev,
-                    ...(followStatus?.followers != null && { followers: followStatus.followers }),
-                    ...(Array.isArray(tracks)           && { tracksPublished: tracks.length }),
+                    ...(followStatus?.followers        != null && { followers:        followStatus.followers }),
+                    ...(Array.isArray(tracks)                 && { tracksPublished:   tracks.length }),
+                    ...(artistDetail?.monthlyListeners != null && { monthlyListeners: artistDetail.monthlyListeners }),
                 }));
             }).catch(() => {});
         } else if (role === 'fan' && realUser?.id) {
@@ -207,6 +234,27 @@ export default function Profile({ role = 'fan' }) {
                 }).catch(() => {});
         }
     }, [role, artistMe?.id, realUser?.id]);
+
+    const earnedIds  = new Set((gamifProfile?.badges ?? []).map(b => b.id));
+    const earnedMap  = Object.fromEntries((gamifProfile?.badges ?? []).map(b => [b.id, b]));
+    const realBadges = allBadges.length > 0
+        ? allBadges.map(b => {
+            const got    = earnedIds.has(b.id);
+            const earned = earnedMap[b.id];
+            return {
+                id:   b.id,
+                icon: b.iconUrl,
+                name: b.name,
+                desc: b.description,
+                xp:   b.pointsRequired,
+                tier: got ? tierFromPoints(b.pointsRequired) : 'locked',
+                got,
+                meta: got
+                    ? formatEarned(earned?.earnedAt)
+                    : `${(gamifProfile?.totalPoints ?? 0).toLocaleString('pt-PT')} / ${b.pointsRequired.toLocaleString('pt-PT')} pts`,
+            };
+        })
+        : null;
 
     const artistAbout = role === 'artist' ? {
         location:  artistMe?.location                            || null,
@@ -226,8 +274,9 @@ export default function Profile({ role = 'fan' }) {
                 location: artistMe?.location ?? null,
                 about:    artistAbout,
                 social:   (artistMe?.links ?? []).map(l => ({ kind: l.kind, handle: l.handle })),
-                ...(realStats.followers       != null && { followers:       realStats.followers }),
-                ...(realStats.tracksPublished != null && { tracksPublished: realStats.tracksPublished }),
+                ...(realStats.followers        != null && { followers:        realStats.followers }),
+                ...(realStats.tracksPublished  != null && { tracksPublished:  realStats.tracksPublished }),
+                ...(realStats.monthlyListeners != null && { monthlyListeners: realStats.monthlyListeners }),
             }
             : {
                 ...(realUser?.bio      && { bio:      realUser.bio }),
@@ -236,12 +285,19 @@ export default function Profile({ role = 'fan' }) {
                 ...(realStats.following != null && { following: realStats.following }),
             }
         ),
+        ...(realBadges   && { badges:      realBadges }),
+        ...(gamifProfile && {
+            points:      gamifProfile.totalPoints,
+            rank:        gamifProfile.rank,
+            badgesCount: (gamifProfile.badges ?? []).length,
+        }),
         spotifyArtistId:  realUser?.spotifyArtistId  ?? null,
         artistProfileId:  realUser?.artistProfileId  ?? null,
         ...userOverrides,
     };
 
-    const ActivePanel = tabs[active].Panel;
+    const safeActive  = Math.min(active, tabs.length - 1);
+    const ActivePanel = tabs[safeActive].Panel;
 
     return (
         <AppShell role={role}>
@@ -260,7 +316,7 @@ export default function Profile({ role = 'fan' }) {
                         <button
                             key={t.label}
                             type="button"
-                            className={'prof__tab' + (i === active ? ' is-active' : '')}
+                            className={'prof__tab' + (i === safeActive ? ' is-active' : '')}
                             onClick={() => setActive(i)}
                         >
                             {t.label}

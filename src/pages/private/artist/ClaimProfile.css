@@ -2,8 +2,18 @@
    ClaimProfile.css — Fluxo de reclamação de perfil Spotify
    ───────────────────────────────────────────────────────────────── */
 
+.claim-standalone {
+    min-height: 100vh;
+    background: var(--color-bg);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: var(--space-10) var(--container-px);
+}
+
 .claim-page {
     max-width: 620px;
+    width: 100%;
     margin: 0 auto;
     padding-bottom: 60px;
 }

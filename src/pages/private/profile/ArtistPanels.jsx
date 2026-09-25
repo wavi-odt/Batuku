@@ -42,7 +42,7 @@ function useTopTracks(artistProfileId) {
     return { tracks, loading };
 }
 
-function LocalTrackList({ tracks, artistName }) {
+function LocalTrackList({ tracks, artistName, artistProfileId }) {
     const { track: currentTrack, setTrack } = usePlayer();
     const [openCommentTrack, setOpenCommentTrack] = useState(null);
 
@@ -55,6 +55,7 @@ function LocalTrackList({ tracks, artistName }) {
 
     const queue = tracks.map(tr => ({
         id: tr.id, name: tr.title, artistName,
+        artistProfileId: tr.artistProfileId ?? artistProfileId ?? null,
         coverUrl: tr.coverUrl, durationMs: tr.durationMs, audioUrl: tr.audioUrl, source: 'upload',
     }));
 
@@ -208,7 +209,7 @@ export function ArtistOverview({ artist }) {
                     {localTracks.length > 0 ? (
                         <>
                             <CardTitle>Faixas · {localTracks.length}</CardTitle>
-                            <LocalTrackList tracks={localTracks} artistName={artist.name} />
+                            <LocalTrackList tracks={localTracks} artistName={artist.name} artistProfileId={artist.artistProfileId} />
                             {artist.spotifyArtistId && (
                                 <>
                                     <CardTitle style={{ marginTop: 16 }}>
@@ -271,7 +272,7 @@ export function ArtistTracks({ artist }) {
             {hasLocal && (
                 <>
                     <CardTitle>Faixas publicadas · {localTracks.length}</CardTitle>
-                    <LocalTrackList tracks={localTracks} artistName={artist.name} />
+                    <LocalTrackList tracks={localTracks} artistName={artist.name} artistProfileId={artist.artistProfileId} />
                 </>
             )}
 

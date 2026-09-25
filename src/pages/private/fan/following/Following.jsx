@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import AppShell             from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }    from '../../../../utils/auth.js'
+import { useNotifications } from '../../../../context/NotificationsContext.jsx'
 import FollowingUpdates     from './FollowingUpdates.jsx'
 import FollowingFeed        from './FollowingFeed.jsx'
 import FollowingRoster      from './FollowingRoster.jsx'
@@ -14,6 +15,9 @@ export default function Following() {
     const [tracks,      setTracks]      = useState([])
     const [suggestions, setSuggestions] = useState([])
     const [loading,     setLoading]     = useState(true)
+    const { clearRouteNotifications } = useNotifications()
+
+    useEffect(() => { clearRouteNotifications('/following') }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(() => {
         const headers = { Authorization: `Bearer ${getToken()}` }

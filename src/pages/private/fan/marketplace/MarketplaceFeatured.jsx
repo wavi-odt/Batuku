@@ -4,6 +4,7 @@
 
 import { useState }   from 'react'
 import ArtistArtwork  from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ClickableName  from '../../../../components/ClickableName.jsx'
 
 const LICENSE_KEYS = ['lease', 'premium', 'exclusive'];
 const LICENSE_LABELS = { lease: 'Lease', premium: 'Premium', exclusive: 'Exclusiva' };
@@ -31,7 +32,9 @@ export default function MarketplaceFeatured({ beat, onCart, inCart, onOffer, rea
             <div className="mkt__feat-body">
                 <div className="mkt__feat-eyebrow">Beat em Destaque</div>
                 <h2 className="mkt__feat-title">{beat.title}</h2>
-                <p className="mkt__feat-producer">{beat.producer}</p>
+                <p className="mkt__feat-producer">
+                    <ClickableName userId={beat.producerId} name={beat.producer} />
+                </p>
 
                 <div className="mkt__feat-tags">
                     <span className="mkt__feat-tag">{beat.genre}</span>
@@ -53,7 +56,11 @@ export default function MarketplaceFeatured({ beat, onCart, inCart, onOffer, rea
                             onClick={() => setLicense(k)}
                         >
                             <span className="mkt__feat-license-name">{LICENSE_LABELS[k]}</span>
-                            <span className="mkt__feat-license-price">€{beat.prices[k].toFixed(2)}</span>
+                            <span className="mkt__feat-license-price">
+                                {k === 'exclusive' && beat.exclusiveNegotiable
+                                    ? 'Negociar'
+                                    : `€${beat.prices[k].toFixed(2)}`}
+                            </span>
                         </button>
                     ))}
                 </div>

@@ -64,7 +64,7 @@ const GENRE_HUES = {
     'funaná':    14,  'morna':     220, 'coladeira': 42,
     'cabo love': 145, 'kizomba':   280, 'tabanka':   8,
     'batuque':   340, 'kola':      195, 'zouk':      260,
-    'semba':     30,  'kuduro':    60,  'afrobeats': 100,
+    'semba':     30,  'kuduro':    60,  'afrobeat':  22,
 }
 
 function useFanTopGenres() {

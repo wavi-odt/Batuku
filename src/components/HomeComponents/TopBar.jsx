@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { HiSearch, HiBell, HiPlus, HiX } from 'react-icons/hi'
+import { FaUser, FaMusic } from 'react-icons/fa'
 import { usePublish } from '../../context/PublishContext.jsx'
+import { useNotifications } from '../../context/NotificationsContext.jsx'
 import { homeData } from '../../data/home'
-import ArtistArtwork from '../PublicComponets/ArtistArtwork'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
-import { API, getToken } from '../../utils/auth.js'
+import { getToken } from '../../utils/auth.js'
 import NotificationsPanel from './NotificationsPanel.jsx'
 import './TopBar.css'
 
@@ -25,7 +26,9 @@ function ResultItem({ to, img, imgCircle, name, sub, onSelect }) {
                     alt={name}
                     className={`topbar__result-img${imgCircle ? ' topbar__result-img--circle' : ''}`}
                   />
-                : <div className={`topbar__result-img topbar__result-img--placeholder${imgCircle ? ' topbar__result-img--circle' : ''}`} />
+                : <div className={`topbar__result-img topbar__result-img--placeholder${imgCircle ? ' topbar__result-img--circle' : ''}`}>
+                    {imgCircle ? <FaUser size={14} /> : <FaMusic size={12} />}
+                  </div>
             }
             <div className="topbar__result-info">
                 <span className="topbar__result-name">{name}</span>
@@ -56,18 +59,8 @@ export default function TopBar({ role = 'fan' }) {
     const [loading, setLoading] = useState(false);
 
     const [notifOpen, setNotifOpen] = useState(false);
-    const [unread, setUnread]       = useState(0);
     const notifRef = useRef(null);
-
-    useEffect(() => {
-        if (!getToken()) return
-        fetch(`${API}/api/notifications/unread-count`, {
-            headers: { Authorization: `Bearer ${getToken()}` },
-        })
-            .then(r => r.ok ? r.json() : { count: 0 })
-            .then(data => setUnread(data.count ?? 0))
-            .catch(() => {})
-    }, []);
+    const { totalUnread: unread, refresh: refreshNotifs } = useNotifications()
 
     const timerRef   = useRef(null);
     const wrapperRef = useRef(null);
@@ -181,19 +174,21 @@ export default function TopBar({ role = 'fan' }) {
                             // IDs de artistas já cobertos por results.artists
                             const artistResultIds = new Set((results.artists ?? []).map(a => a.id));
 
+                            const isMe = (uid) => realUser?.id != null && String(uid) === String(realUser.id);
+
                             // Secção Artistas:
                             // – artistas do search, substituindo pelo utilizador se tiver claim
                             const artistItems = [
                                 ...(results.artists ?? []).map(a => {
                                     const claimed = claimedMap.get(a.id);
                                     return claimed
-                                        ? { _key: `u-${claimed.id}`, to: `/users/${claimed.id}`, imageUrl: claimed.imageUrl, name: claimed.name, genre: a.genre }
-                                        : { _key: `a-${a.id}`,       to: `/artists/${a.id}`,     imageUrl: a.imageUrl,      name: a.name,      genre: a.genre };
+                                        ? { _key: `u-${claimed.id}`, to: isMe(claimed.id) ? '/profile' : `/users/${claimed.id}`, imageUrl: claimed.imageUrl, name: claimed.name, genre: a.genre }
+                                        : { _key: `a-${a.id}`,       to: `/artists/${a.id}`,                                     imageUrl: a.imageUrl,      name: a.name,      genre: a.genre };
                                 }),
                                 // utilizadores artistas cujo perfil não apareceu em results.artists
                                 ...(results.users ?? [])
                                     .filter(u => u.artistProfileId && !artistResultIds.has(u.artistProfileId))
-                                    .map(u => ({ _key: `u-${u.id}`, to: `/users/${u.id}`, imageUrl: u.imageUrl, name: u.name, genre: 'Artista' })),
+                                    .map(u => ({ _key: `u-${u.id}`, to: isMe(u.id) ? '/profile' : `/users/${u.id}`, imageUrl: u.imageUrl, name: u.name, genre: 'Artista' })),
                             ];
 
                             // Secção Utilizadores: apenas fãs (sem artistProfileId)
@@ -250,7 +245,7 @@ export default function TopBar({ role = 'fan' }) {
                                     renderItem={u => (
                                         <ResultItem
                                             key={u.id}
-                                            to={`/users/${u.id}`}
+                                            to={isMe(u.id) ? '/profile' : `/users/${u.id}`}
                                             img={u.imageUrl}
                                             imgCircle
                                             name={u.name}
@@ -284,14 +279,14 @@ export default function TopBar({ role = 'fan' }) {
                     )}
                 </button>
                 {notifOpen && (
-                    <NotificationsPanel onClose={() => setNotifOpen(false)} onUnreadChange={setUnread} />
+                    <NotificationsPanel onClose={() => setNotifOpen(false)} />
                 )}
             </div>
 
             <Link to="/profile" className="topbar__avatar" aria-label="O meu perfil">
                 {realUser?.picture
                     ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                    : <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />}
+                    : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
             </Link>
         </header>
     );

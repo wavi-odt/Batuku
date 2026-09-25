@@ -223,6 +223,10 @@
 }
 .topbar__result-img--placeholder {
     background: var(--color-surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-mute);
 }
 
 .topbar__result-info {

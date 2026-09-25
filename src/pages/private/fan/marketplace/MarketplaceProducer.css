@@ -152,6 +152,30 @@
     background: rgba(var(--color-primary-rgb, 79, 174, 124), 0.06);
 }
 
+.mkt-prod__beat-row--sold {
+    opacity: 0.45;
+    pointer-events: none;
+}
+.mkt-prod__beat-row--sold .mkt-prod__action-btn {
+    pointer-events: none;
+}
+
+.mkt-prod__beat-sold-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
 .mkt-prod__beat-info {
     display: flex;
     align-items: center;

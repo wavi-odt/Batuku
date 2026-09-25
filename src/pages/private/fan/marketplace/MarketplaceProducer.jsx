@@ -133,8 +133,9 @@ export default function MarketplaceProducer({ playing, onPlay }) {
 
                         {myBeats.map(beat => {
                             const isPlaying = playing === beat.id
+                            const isSold    = beat.soldExclusively
                             return (
-                            <div key={beat.id} className={`mkt-prod__beat-row${isPlaying ? ' mkt-prod__beat-row--playing' : ''}`}>
+                            <div key={beat.id} className={`mkt-prod__beat-row${isPlaying ? ' mkt-prod__beat-row--playing' : ''}${isSold ? ' mkt-prod__beat-row--sold' : ''}`}>
                                 <div className="mkt-prod__beat-cover">
                                     <ArtistArtwork
                                         shape="circles"
@@ -143,18 +144,23 @@ export default function MarketplaceProducer({ playing, onPlay }) {
                                         rounded={0}
                                         showGloss={false}
                                     />
-                                    <button
-                                        type="button"
-                                        className="mkt-prod__beat-play"
-                                        aria-label={isPlaying ? 'Pausar' : 'Pré-ouvir'}
-                                        onClick={() => onPlay?.(isPlaying ? null : beat.id)}
-                                    >
-                                        {isPlaying ? <FaPause /> : <FaPlay />}
-                                    </button>
+                                    {!isSold && (
+                                        <button
+                                            type="button"
+                                            className="mkt-prod__beat-play"
+                                            aria-label={isPlaying ? 'Pausar' : 'Pré-ouvir'}
+                                            onClick={() => onPlay?.(isPlaying ? null : beat.id)}
+                                        >
+                                            {isPlaying ? <FaPause /> : <FaPlay />}
+                                        </button>
+                                    )}
                                 </div>
                                 <div className="mkt-prod__beat-info">
                                     <div className="mkt-prod__beat-title">{beat.title}</div>
-                                    {beat.isNew && <span className="mkt__beat-new">novo</span>}
+                                    {isSold
+                                        ? <span className="mkt-prod__beat-sold-badge">Vendido</span>
+                                        : beat.isNew && <span className="mkt__beat-new">novo</span>
+                                    }
                                 </div>
                                 <div className="mkt-prod__beat-genre">{beat.genre ?? '—'}</div>
                                 <div className="mkt-prod__beat-bpm">
@@ -165,15 +171,17 @@ export default function MarketplaceProducer({ playing, onPlay }) {
                                 </div>
                                 <div className="mkt-prod__beat-num">{beat.sales ?? 0}</div>
                                 <div className="mkt-prod__beat-price">
-                                    {beat.prices?.lease != null ? `€${beat.prices.lease.toFixed(2)}` : '—'}
+                                    {isSold ? '—' : beat.prices?.lease != null ? `€${beat.prices.lease.toFixed(2)}` : '—'}
                                 </div>
                                 <div className="mkt-prod__beat-actions">
                                     <button type="button" className="mkt-prod__action-btn"
-                                            aria-label="Editar" onClick={() => setEditBeat(beat)}>
+                                            aria-label="Editar" disabled={isSold}
+                                            onClick={() => !isSold && setEditBeat(beat)}>
                                         <FaEdit size={13} />
                                     </button>
                                     <button type="button" className="mkt-prod__action-btn mkt-prod__action-btn--del"
-                                            aria-label="Eliminar" onClick={() => setConfirmDel(beat)}>
+                                            aria-label="Eliminar" disabled={isSold}
+                                            onClick={() => !isSold && setConfirmDel(beat)}>
                                         <FaTrash size={12} />
                                     </button>
                                 </div>

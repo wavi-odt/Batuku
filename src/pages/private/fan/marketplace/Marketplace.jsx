@@ -4,6 +4,7 @@ import { FaSearch }                     from 'react-icons/fa'
 import AppShell                         from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }                from '../../../../utils/auth.js'
 import { useCurrentUser }               from '../../../../hooks/useCurrentUser.js'
+import { useNotifications }            from '../../../../context/NotificationsContext.jsx'
 import MarketplaceFeatured              from './MarketplaceFeatured.jsx'
 import MarketplaceGrid                  from './MarketplaceGrid.jsx'
 import MarketplaceSidebar               from './MarketplaceSidebar.jsx'
@@ -26,6 +27,9 @@ const SORT_OPTIONS = [
 
 export default function Marketplace() {
     const currentUser = useCurrentUser()
+    const { clearRouteNotifications } = useNotifications()
+
+    useEffect(() => { clearRouteNotifications('/marketplace') }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     /* ─── Role do marketplace ────────────────────────────────────── */
     const [marketplaceRole, setMarketplaceRole] = useState(currentUser?.marketplaceRole ?? undefined)
@@ -92,6 +96,20 @@ export default function Marketplace() {
     const [producers, setProducers] = useState([])
     const [loading,   setLoading]   = useState(true)
 
+    const loadBeats = useCallback(() => {
+        const headers = getToken() ? { Authorization: `Bearer ${getToken()}` } : {}
+        Promise.all([
+            fetch(`${API}/api/marketplace/beats`,          { headers }).then(r => r.ok ? r.json() : []),
+            fetch(`${API}/api/marketplace/beats/featured`, { headers }).then(r => r.ok && r.status !== 204 ? r.json() : null),
+        ])
+        .then(([b, feat]) => {
+            setBeats(Array.isArray(b) ? b : [])
+            setFeatured(feat)
+        })
+        .catch(console.error)
+    }, [])
+
+    /* Carga inicial completa */
     useEffect(() => {
         const headers = getToken() ? { Authorization: `Bearer ${getToken()}` } : {}
         Promise.all([
@@ -111,6 +129,13 @@ export default function Marketplace() {
         .catch(console.error)
         .finally(() => setLoading(false))
     }, [])
+
+    /* Recarregar beats ao navegar para as tabs que os mostram */
+    const isFirstRender = useRef(true)
+    useEffect(() => {
+        if (isFirstRender.current) { isFirstRender.current = false; return }
+        if (tabParam === 'beats' || tabParam === 'discover') loadBeats()
+    }, [tabParam, loadBeats])
 
     /* ─── Filtragem + ordenação ──────────────────────────────────── */
     const filtered = useMemo(() => {

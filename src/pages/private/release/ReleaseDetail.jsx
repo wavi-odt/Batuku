@@ -36,15 +36,16 @@ function fmtDate(iso) {
     return d ? `${parseInt(d)} de ${months[parseInt(m) - 1]} de ${y}` : y
 }
 
-function toPlayerTrack(t, fallbackCover, artistName) {
+function toPlayerTrack(t, fallbackCover, artistName, artistProfileId) {
     return {
-        id:         t.id,
-        name:       t.title,
-        artistName: t.artistName || artistName,
-        coverUrl:   t.coverUrl || fallbackCover,
-        durationMs: t.durationMs,
-        audioUrl:   t.audioUrl,
-        source:     'upload',
+        id:               t.id,
+        name:             t.title,
+        artistName:       t.artistName || artistName,
+        artistProfileId:  t.artistProfileId ?? artistProfileId ?? null,
+        coverUrl:         t.coverUrl || fallbackCover,
+        durationMs:       t.durationMs,
+        audioUrl:         t.audioUrl,
+        source:           'upload',
     }
 }
 
@@ -254,7 +255,7 @@ export default function ReleaseDetail() {
     if (error || !release) return <AppShell role={role}><div className="detail-error">{error || 'Lançamento não encontrado.'}</div></AppShell>
 
     const tracks    = release.tracks ?? []
-    const queue     = tracks.map(t => toPlayerTrack(t, release.coverUrl, release.artistName))
+    const queue     = tracks.map(t => toPlayerTrack(t, release.coverUrl, release.artistName, release.artistProfileId))
     const totalMs   = tracks.reduce((acc, t) => acc + (t.durationMs || 0), 0)
     const typeLabel = TYPE_LABEL[release.albumType] ?? release.albumType
     const dateStr   = fmtDate(release.releaseDate) ?? release.createdAt?.split('T')[0].split('-')[0]
@@ -327,7 +328,7 @@ export default function ReleaseDetail() {
                                 </h1>
                             )}
                             <div className="rel-detail__sub">
-                                <Link className="rel-detail__artist" to={`/artists/${release.artistProfileId}`}>
+                                <Link className="rel-detail__artist" to={isOwner ? '/profile' : `/artists/${release.artistProfileId}`}>
                                     {release.artistName}
                                 </Link>
                                 {dateStr && <><span className="rel-detail__dot" /><span>{dateStr}</span></>}

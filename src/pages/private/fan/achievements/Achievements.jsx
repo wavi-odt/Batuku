@@ -13,6 +13,7 @@ import { achievementsData }       from '../../../../data/achievements.js'
 import { API, getToken }          from '../../../../utils/auth.js'
 
 import { useCurrentUser }         from '../../../../hooks/useCurrentUser.js'
+import { useNotifications }      from '../../../../context/NotificationsContext.jsx'
 import '../fanHome/LevelCard.css'
 import './Achievements.css'
 
@@ -40,6 +41,9 @@ function formatEarned(iso) {
 
 export default function Achievements() {
     const currentUser = useCurrentUser()
+    const { clearRouteNotifications, refresh: refreshNotifications } = useNotifications()
+
+    useEffect(() => { clearRouteNotifications('/achievements') }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const [profile,     setProfile]     = useState(null)
     const [allBadges,   setAllBadges]   = useState([])
@@ -91,24 +95,24 @@ export default function Achievements() {
 
     /* ─── Mapear leaderboard ────────────────────────────────────── */
     const lbEntries = leaderboard.map(e => ({
-        rank:   e.rank,
-        name:   e.name,
-        points: e.totalPoints,
-        isYou:  e.userId === currentUser?.id,
-        shape:  shapeFromId(e.userId),
-        hue:    hueFromId(e.userId),
+        rank:     e.rank,
+        userId:   e.userId,
+        name:     e.name,
+        points:   e.totalPoints,
+        isYou:    String(e.userId) === String(currentUser?.id),
+        imageUrl: e.avatarUrl ?? null,
     }))
 
     /* ─── Adicionar posição do utilizador se fora do top 10 ─────── */
     const myInTop = lbEntries.some(e => e.isYou)
     if (!myInTop && profile) {
         lbEntries.push({
-            rank:   Number(profile.rank),
-            name:   currentUser?.name ?? 'Tu',
-            points: profile.totalPoints,
-            isYou:  true,
-            shape:  shapeFromId(currentUser?.id ?? 0),
-            hue:    hueFromId(currentUser?.id ?? 0),
+            rank:     Number(profile.rank),
+            userId:   currentUser?.id ?? null,
+            name:     currentUser?.name ?? 'Tu',
+            points:   profile.totalPoints,
+            isYou:    true,
+            imageUrl: currentUser?.picture ?? null,
         })
     }
 
@@ -146,7 +150,30 @@ export default function Achievements() {
 
             {/* ─── Desafios + Sidebar ─────────────────────────────── */}
             <div className="ach__split">
-                <AchievementsChallenges challenges={challenges.length > 0 ? challenges : achievementsData.challenges} />
+                <AchievementsChallenges
+                    challenges={challenges.length > 0 ? challenges : achievementsData.challenges}
+                    onAdvance={async () => {
+                        const res = await fetch(`${API}/api/gamification/challenges/advance`, {
+                            method: 'POST',
+                            headers: { Authorization: `Bearer ${getToken()}` },
+                        })
+                        if (res.status === 409) {
+                            // Backend calculou que nem todos os desafios estão completos
+                            const fresh = await fetch(`${API}/api/gamification/challenges`, {
+                                headers: { Authorization: `Bearer ${getToken()}` },
+                            })
+                            if (fresh.ok) setChallenges(await fresh.json())
+                            return
+                        }
+                        if (!res.ok) return
+                        setChallenges(await res.json())
+                        const [profRes] = await Promise.all([
+                            fetch(`${API}/api/gamification/me`, { headers: { Authorization: `Bearer ${getToken()}` } }),
+                            refreshNotifications(),
+                        ])
+                        if (profRes.ok) setProfile(await profRes.json())
+                    }}
+                />
 
                 <aside className="ach__sidebar">
                     {userCard && <LevelCard user={userCard} />}

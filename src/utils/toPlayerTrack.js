@@ -4,12 +4,13 @@ export function toPlayerTrack(t) {
         ? t.spotifyUrl?.split('/track/')?.[1]?.split('?')[0] ?? null
         : null
     return {
-        id:         t.id,
-        name:       t.title,
-        artistName: t.artistName,
-        coverUrl:   t.coverUrl ?? null,
-        audioUrl:   t.source !== 'SPOTIFY_PREVIEW' ? (t.audioUrl ?? null) : null,
+        id:              t.id,
+        name:            t.title,
+        artistName:      t.artistName,
+        artistProfileId: t.artistProfileId ?? null,
+        coverUrl:        t.coverUrl ?? null,
+        audioUrl:        t.source !== 'SPOTIFY_PREVIEW' ? (t.audioUrl ?? null) : null,
         spotifyId,
-        source:     t.source === 'SPOTIFY_PREVIEW' ? 'spotify' : 'upload',
+        source:          t.source === 'SPOTIFY_PREVIEW' ? 'spotify' : 'upload',
     }
 }

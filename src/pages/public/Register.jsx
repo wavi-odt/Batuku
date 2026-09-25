@@ -3,16 +3,14 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useState, useMemo } from 'react'
+import { useGenres } from '../../context/GenresContext.jsx'
 import { Link, useNavigate } from 'react-router-dom'
-import { FaDiscord, FaGoogle, FaApple } from 'react-icons/fa'
+import { FaDiscord, FaGoogle } from 'react-icons/fa'
 import { HiMail, HiLockClosed, HiUser, HiEye, HiEyeOff, HiMusicNote, HiHeart, HiArrowLeft, HiAtSymbol } from 'react-icons/hi'
 import AuthSide from '../../components/AuthComponents/AuthSide.jsx'
+import { saveAuth, setPendingClaim } from '../../utils/auth.js'
 import '../../components/AuthComponents/auth.css'
 
-const GENRES = [
-    'Funaná', 'Morna', 'Coladeira', 'Batuque', 'Cabo Love',
-    'Kizomba', 'Tabanka', 'Kola San Jon', 'Hip-Hop', 'Outro',
-];
 
 const COUNTRIES = [
     'Cabo Verde', 'Portugal', 'França', 'EUA', 'Países Baixos',
@@ -32,8 +30,10 @@ function strength(pw) {
 
 export default function Register() {
     const navigate = useNavigate();
-    const [step, setStep]         = useState(1);
-    const [role, setRole]         = useState('fan');
+    const { allNames: GENRES } = useGenres();
+    const [step, setStep]           = useState(1);
+    const [role, setRole]           = useState('fan');
+    const [oauthProvider, setOauthProvider] = useState(null);
     const [showPass, setShowPass] = useState(false);
     const [loading, setLoading]   = useState(false);
     const [error, setError]       = useState('');
@@ -46,6 +46,13 @@ export default function Register() {
 
     const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
     const pwStrength = useMemo(() => strength(form.password), [form.password]);
+
+    function handleOAuthWithRole(selectedRole) {
+        if (selectedRole === 'artist') {
+            sessionStorage.setItem('oauthPendingRole', 'artist')
+        }
+        window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/${oauthProvider}`
+    }
 
     async function onSubmit(e) {
         e.preventDefault();
@@ -62,7 +69,7 @@ export default function Register() {
                 email:    form.email,
                 password: form.password,
                 country:  form.country,
-                role:     role.toUpperCase(),
+                userRole: role.toUpperCase(),
             };
 
             const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, {
@@ -77,7 +84,13 @@ export default function Register() {
                 throw new Error(data.error || 'Não foi possível criar a conta.');
             }
 
-            navigate('/login');
+            if (data.pendingValidation) {
+                saveAuth(data.token);
+                setPendingClaim();
+                navigate('/claim-profile', { state: { fromRegistration: true } });
+            } else {
+                navigate('/login');
+            }
         } catch (err) {
             setError(err.message || 'Erro inesperado. Tenta novamente.');
         } finally {
@@ -152,14 +165,13 @@ export default function Register() {
                             <div className="divider"><span>ou regista-te com</span></div>
 
                             <div className="auth__oauth">
-                                <button type="button" className="auth__oauth-btn auth__oauth-btn--discord">
+                                <button type="button" className="auth__oauth-btn auth__oauth-btn--discord"
+                                    onClick={() => setOauthProvider('discord')}>
                                     <FaDiscord size={18} /> Discord
                                 </button>
-                                <button type="button" className="auth__oauth-btn auth__oauth-btn--google">
+                                <button type="button" className="auth__oauth-btn auth__oauth-btn--google"
+                                    onClick={() => setOauthProvider('google')}>
                                     <FaGoogle size={16} /> Google
-                                </button>
-                                <button type="button" className="auth__oauth-btn auth__oauth-btn--apple">
-                                    <FaApple size={18} /> Apple
                                 </button>
                             </div>
                         </>
@@ -331,7 +343,7 @@ export default function Register() {
                                     </div>
 
                                     <p className="auth__hint">
-                                        Vais poder validar o teu perfil mais tarde com a tua conta de Spotify ou Apple Music.
+                                        Após o registo, serás encaminhado para validar a tua identidade com Spotify + documento. O admin ativa a conta.
                                     </p>
                                 </>
                             )}
@@ -372,6 +384,52 @@ export default function Register() {
                     )}
                 </form>
             </section>
+
+            {/* ── Modal de role para OAuth ── */}
+            {oauthProvider && (
+                <div className="auth__role-overlay" onClick={() => setOauthProvider(null)}>
+                    <div className="auth__role-modal" onClick={e => e.stopPropagation()}>
+                        <button
+                            type="button"
+                            className="auth__role-modal-close"
+                            onClick={() => setOauthProvider(null)}
+                            aria-label="Fechar"
+                        >✕</button>
+
+                        <div className="label-eyebrow">
+                            Continuar com {oauthProvider === 'discord' ? 'Discord' : 'Google'}
+                        </div>
+                        <h2 className="auth__title">Como queres entrar?</h2>
+                        <p className="auth__sub">Escolhe o tipo de conta antes de continuar.</p>
+
+                        <div className="role-grid">
+                            <button
+                                type="button"
+                                className="role-card"
+                                onClick={() => handleOAuthWithRole('fan')}
+                            >
+                                <span className="role-card__icon"><HiHeart /></span>
+                                <h3 className="role-card__title">Sou fã</h3>
+                                <p className="role-card__desc">
+                                    Descobre artistas, faz playlists, ganha pontos a cada interação.
+                                </p>
+                            </button>
+
+                            <button
+                                type="button"
+                                className="role-card"
+                                onClick={() => handleOAuthWithRole('artist')}
+                            >
+                                <span className="role-card__icon"><HiMusicNote /></span>
+                                <h3 className="role-card__title">Sou artista</h3>
+                                <p className="role-card__desc">
+                                    Publica faixas, vende beats, acede a analytics em tempo real.
+                                </p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </main>
     );
 }

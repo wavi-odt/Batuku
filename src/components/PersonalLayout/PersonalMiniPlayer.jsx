@@ -162,10 +162,25 @@ export default function PersonalMiniPlayer({ tracks, currentIndex, onIndexChange
 
     useEffect(() => () => { audioRef.current?.pause() }, [])
 
+    const togglePlayRef = useRef(null)
+
+    useEffect(() => {
+        function onKeyDown(e) {
+            if (e.code !== 'Space' && e.key !== ' ') return
+            const tag = document.activeElement?.tagName.toLowerCase()
+            if (tag === 'input' || tag === 'textarea' || tag === 'select' || document.activeElement?.isContentEditable) return
+            e.preventDefault()
+            togglePlayRef.current?.()
+        }
+        window.addEventListener('keydown', onKeyDown)
+        return () => window.removeEventListener('keydown', onKeyDown)
+    }, [])
+
     function togglePlay() {
         const audio = ensureAudio()
         playing ? audio.pause() : audio.play().catch(() => {})
     }
+    togglePlayRef.current = togglePlay
 
     function handleWaveformClick(e) {
         if (!duration || !audioRef.current) return

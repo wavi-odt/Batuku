@@ -80,14 +80,95 @@
 }
 
 /* ─── Géneros ───────────────────────────────────────────────────────── */
+.disc__genre-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.disc__genre-group + .disc__genre-group {
+    margin-top: var(--space-4);
+}
+
+.disc__genre-toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-family: inherit;
+    color: inherit;
+}
+
+.disc__genre-toggle:hover .disc__genres-label {
+    color: var(--color-ink-soft);
+}
+
+.disc__genre-toggle:hover .disc__genres-label--cv {
+    color: var(--color-coral);
+    opacity: 0.8;
+}
+
+.disc__genres-label {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-ink-mute);
+    margin: 0;
+    transition: color var(--duration-base) var(--ease-out);
+}
+
+.disc__genres-label--cv { color: var(--color-coral); }
+
+.disc__genre-toggle:hover .disc__genres-label       { color: var(--color-ink-soft); }
+.disc__genre-toggle:hover .disc__genres-label--cv   { opacity: 0.8; }
+
+.disc__genre-chevron {
+    font-size: 18px;
+    color: var(--color-ink-mute);
+    line-height: 1;
+    display: inline-block;
+    transition: transform var(--duration-base) var(--ease-out);
+}
+
+.disc__genre-chevron--open { transform: rotate(90deg); }
+
+/* ── Expand / collapse ───────────────────────────────────────────── */
+.disc__genre-list {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s var(--ease-out);
+}
+
+.disc__genre-list--open { grid-template-rows: 1fr; }
+
+.disc__genre-list__inner {
+    min-height: 0;
+    overflow: hidden;
+    padding-top: 2px;
+}
+
 .disc__genres {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
 }
 
-@media (max-width: 900px) { .disc__genres { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 500px) { .disc__genres { grid-template-columns: 1fr 1fr; } }
+.disc__genres--world {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 900px) {
+    .disc__genres          { grid-template-columns: repeat(2, 1fr); }
+    .disc__genres--world   { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 500px) {
+    .disc__genres          { grid-template-columns: 1fr 1fr; }
+    .disc__genres--world   { grid-template-columns: 1fr 1fr; }
+}
 
 .disc__genre {
     aspect-ratio: 2.4 / 1;
@@ -128,6 +209,29 @@
 .disc__genre-count {
     font-size: var(--fs-xs);
     color: rgba(255, 255, 255, 0.6);
+}
+
+/* ─── Ver mais géneros ──────────────────────────────────────────────── */
+.disc__genre-more {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    padding: 0;
+    background: none;
+    border: none;
+    text-align: center;
+    color: var(--color-coral);
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    font-family: inherit;
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: opacity var(--duration-base) var(--ease-out);
+}
+
+.disc__genre-more:hover {
+    opacity: 0.75;
 }
 
 /* ─── Novos lançamentos ─────────────────────────────────────────────── */
@@ -319,11 +423,8 @@
     border-radius: var(--radius-lg);
     padding: 20px 16px;
     text-align: center;
-    cursor: pointer;
     transition: border-color var(--duration-base) var(--ease-out),
                 transform    var(--duration-base) var(--ease-out);
-    color: inherit;
-    font-family: inherit;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -350,7 +451,10 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    color: var(--color-ink);
+    text-decoration: none;
 }
+.disc__spot-name:hover { text-decoration: underline; }
 
 .disc__spot-tick {
     font-size: 10px;
@@ -393,3 +497,9 @@
 .disc__spot-gap { margin-bottom: 12px; }
 
 .disc__spot-follow { width: 100%; justify-content: center; }
+
+.disc__spot-follow--done {
+    color: var(--color-ink-mute);
+    border-color: var(--color-border);
+    cursor: default;
+}

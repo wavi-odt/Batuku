@@ -220,6 +220,7 @@ export default function Tracks() {
                         loading={tracksLoading}
                         onDelete={handleDeleteTrack}
                         onUpdate={handleUpdateTrack}
+                        artistProfileId={aid}
                     />
                 </>
             )}

@@ -11,11 +11,12 @@
 
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { FaSpotify, FaFlag, FaExclamationTriangle, FaDatabase, FaCheckCircle, FaTimesCircle, FaPlay } from 'react-icons/fa'
+import { FaSpotify, FaFlag, FaExclamationTriangle, FaDatabase, FaCheckCircle, FaTimesCircle, FaPlay, FaStar } from 'react-icons/fa'
 import { logout, getToken } from '../../../utils/auth.js'
 import './AdminHome.css'
 
-const API = `${import.meta.env.VITE_API_BASE_URL}/api/admin`
+const API     = `${import.meta.env.VITE_API_BASE_URL}/api/admin`
+const MKT_API = `${import.meta.env.VITE_API_BASE_URL}/api/marketplace`
 
 const MIGRATIONS = [
     {
@@ -176,6 +177,87 @@ function MigrationCard({ migration }) {
     )
 }
 
+
+function BeatsFeaturedSection() {
+    const [beats,   setBeats]   = useState([])
+    const [loading, setLoading] = useState(true)
+    const [toggling, setToggling] = useState(null) // id do beat a ser alterado
+
+    useEffect(() => {
+        fetch(`${MKT_API}/beats`, { headers: { Authorization: `Bearer ${getToken()}` } })
+            .then(r => r.ok ? r.json() : [])
+            .then(data => setBeats(Array.isArray(data) ? data : []))
+            .catch(() => {})
+            .finally(() => setLoading(false))
+    }, [])
+
+    async function toggleFeatured(beat) {
+        setToggling(beat.id)
+        try {
+            const res = await fetch(`${MKT_API}/beats/${beat.id}`, {
+                method: 'PATCH',
+                headers: {
+                    Authorization: `Bearer ${getToken()}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ isFeatured: !beat.isFeatured }),
+            })
+            if (!res.ok) throw new Error()
+            setBeats(prev => prev.map(b => b.id === beat.id ? { ...b, isFeatured: !b.isFeatured } : b))
+        } catch {
+            /* ignora */
+        } finally {
+            setToggling(null)
+        }
+    }
+
+    const featured = beats.filter(b => b.isFeatured)
+    const rest     = beats.filter(b => !b.isFeatured)
+    const sorted   = [...featured, ...rest]
+
+    return (
+        <section className="admin-section">
+            <h2 className="admin-section__title">Beat em Destaque</h2>
+            <p className="admin-section__sub">
+                O beat marcado com estrela aparece como destaque no marketplace. Se nenhum estiver marcado, é usado o beat com mais plays.
+            </p>
+
+            {loading && <p className="admin-beats__empty">A carregar beats…</p>}
+
+            {!loading && beats.length === 0 && (
+                <p className="admin-beats__empty">Ainda não há beats no marketplace.</p>
+            )}
+
+            {!loading && beats.length > 0 && (
+                <div className="admin-beats">
+                    {sorted.map(beat => (
+                        <div key={beat.id} className={`admin-beat-row${beat.isFeatured ? ' admin-beat-row--featured' : ''}`}>
+                            <div className="admin-beat-row__info">
+                                <span className="admin-beat-row__title">{beat.title}</span>
+                                <span className="admin-beat-row__meta">
+                                    {beat.producer}
+                                    {beat.genre && <> · {beat.genre}</>}
+                                    {beat.bpm   && <> · {beat.bpm} BPM</>}
+                                    {' · '}<FaPlay size={9} style={{ verticalAlign: 'middle' }} /> {beat.plays ?? 0} plays
+                                </span>
+                            </div>
+                            <button
+                                type="button"
+                                className={`admin-beat-row__star${beat.isFeatured ? ' admin-beat-row__star--on' : ''}`}
+                                onClick={() => toggleFeatured(beat)}
+                                disabled={toggling === beat.id}
+                                title={beat.isFeatured ? 'Remover destaque' : 'Marcar como destaque'}
+                            >
+                                <FaStar size={15} />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </section>
+    )
+}
+
 export default function AdminHome() {
     const navigate = useNavigate();
     const [metrics, setMetrics] = useState([
@@ -234,6 +316,8 @@ export default function AdminHome() {
                         {MIGRATIONS.map(m => <MigrationCard key={m.key} migration={m} />)}
                     </div>
                 </section>
+
+                <BeatsFeaturedSection />
             </div>
         </div>
     );

@@ -4,6 +4,8 @@ import {
     FaRandom, FaSyncAlt,
 } from 'react-icons/fa'
 import { HiVolumeUp } from 'react-icons/hi'
+import { MdOpenInFull, MdCloseFullscreen } from 'react-icons/md'
+import ClickableName from '../ClickableName'
 import { SiSpotify } from 'react-icons/si'
 import { usePlayer } from '../../context/PlayerContext'
 import { API, getToken } from '../../utils/auth'
@@ -39,7 +41,9 @@ export default function MiniPlayer() {
 
     // ── Shared ────────────────────────────────────────────────────────
     const volBarRef      = useRef(null)
+    const volBarExpRef   = useRef(null)
     const draggingRef    = useRef(false)
+    const draggingBarRef = useRef(null)
     const repeatRef      = useRef(false)
     const nextTrackRef   = useRef(nextTrack)
     const volumeRef      = useRef(70)
@@ -52,9 +56,14 @@ export default function MiniPlayer() {
     const [volume,     setVolume]     = useState(70)
     const [repeat,     setRepeat]     = useState(false)
     const [audioError, setAudioError] = useState(null)
+    const [expanded,   setExpanded]   = useState(false)
 
     useEffect(() => { repeatRef.current    = repeat    }, [repeat])
     useEffect(() => { nextTrackRef.current = nextTrack }, [nextTrack])
+    useEffect(() => {
+        document.body.style.overflow = expanded ? 'hidden' : ''
+        return () => { document.body.style.overflow = '' }
+    }, [expanded])
 
     function getCountry() {
         return (navigator.language || 'xx-XX').split('-')[1]?.toUpperCase() ?? 'XX'
@@ -256,12 +265,12 @@ export default function MiniPlayer() {
     // Global drag for volume bar
     useEffect(() => {
         function onMove(e) {
-            if (!draggingRef.current || !volBarRef.current) return
-            const r   = volBarRef.current.getBoundingClientRect()
+            if (!draggingRef.current || !draggingBarRef.current) return
+            const r   = draggingBarRef.current.getBoundingClientRect()
             const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width))
             setVolume(Math.round(pct * 100))
         }
-        function onUp() { draggingRef.current = false }
+        function onUp() { draggingRef.current = false; draggingBarRef.current = null }
         window.addEventListener('mousemove', onMove)
         window.addEventListener('mouseup',   onUp)
         return () => {
@@ -327,15 +336,111 @@ export default function MiniPlayer() {
     }
 
     function handleVolDown(e) {
-        draggingRef.current = true
+        draggingRef.current    = true
+        draggingBarRef.current = volBarRef.current
         const r   = volBarRef.current.getBoundingClientRect()
         const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width))
         setVolume(Math.round(pct * 100))
     }
 
+    function handleVolExpDown(e) {
+        if (!volBarExpRef.current) return
+        draggingRef.current    = true
+        draggingBarRef.current = volBarExpRef.current
+        const r   = volBarExpRef.current.getBoundingClientRect()
+        const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width))
+        setVolume(Math.round(pct * 100))
+    }
+
+    const togglePlayRef = useRef(null)
+    togglePlayRef.current = togglePlay
+
+    useEffect(() => {
+        function onKeyDown(e) {
+            if (e.code !== 'Space' && e.key !== ' ') return
+            const tag = document.activeElement?.tagName.toLowerCase()
+            if (tag === 'input' || tag === 'textarea' || tag === 'select' || document.activeElement?.isContentEditable) return
+            e.preventDefault()
+            togglePlayRef.current?.()
+        }
+        window.addEventListener('keydown', onKeyDown)
+        return () => window.removeEventListener('keydown', onKeyDown)
+    }, [])
+
     const pct = duration > 0 ? (position / duration) * 100 : 0
 
     return (
+        <>
+        {expanded && track && (
+            <div className="player__exp">
+                <div
+                    className="player__exp-bg"
+                    style={track.coverUrl ? { backgroundImage: `url(${track.coverUrl})` } : undefined}
+                />
+                <button
+                    type="button"
+                    className="player__exp-close"
+                    onClick={() => setExpanded(false)}
+                    aria-label="Minimizar player"
+                >
+                    <MdCloseFullscreen size={16} />
+                </button>
+                <div className="player__exp-body">
+                    <div className="player__exp-cover">
+                        {track.coverUrl
+                            ? <img src={track.coverUrl} alt={track.name} />
+                            : <div className="player__exp-cover-empty" />
+                        }
+                    </div>
+                    <div className="player__exp-info">
+                        <div className="player__exp-title">{track.name ?? 'Sem título'}</div>
+                        <div className="player__exp-artist">
+                            <ClickableName
+                                artistProfileId={track.artistProfileId}
+                                name={track.artistName ?? '—'}
+                            />
+                        </div>
+                    </div>
+                    <div className="player__exp-btns">
+                        <button type="button" className="player__btn player__btn--soon" disabled aria-label="Aleatório">
+                            <FaRandom size={14} />
+                        </button>
+                        <button type="button" className="player__btn" onClick={handlePrev} disabled={!track} aria-label="Anterior">
+                            <FaStepBackward size={16} />
+                        </button>
+                        <button type="button" className="player__btn player__btn--play player__btn--play-lg" onClick={togglePlay} aria-label={playing ? 'Pausar' : 'Reproduzir'}>
+                            {playing ? <FaPause size={16} /> : <FaPlay size={16} />}
+                        </button>
+                        <button type="button" className="player__btn" onClick={nextTrack} disabled={!hasNext} aria-label="Próxima">
+                            <FaStepForward size={16} />
+                        </button>
+                        <button type="button" className={'player__btn' + (repeat ? ' is-active' : '')} onClick={() => setRepeat(r => !r)} aria-label="Repetir">
+                            <FaSyncAlt size={14} />
+                        </button>
+                    </div>
+                    <div className="player__exp-progress">
+                        <span className="player__time">{fmtTime(position)}</span>
+                        <div className="player__exp-bar" role="slider" aria-label="Posição da faixa" onClick={handleSeek}>
+                            <div className="player__exp-bar-fill" style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className="player__time">{fmtTime(duration)}</span>
+                    </div>
+                    <div className="player__exp-volume">
+                        <HiVolumeUp size={16} />
+                        <div
+                            ref={volBarExpRef}
+                            className="player__exp-vol-bar"
+                            role="slider"
+                            aria-label="Volume"
+                            aria-valuenow={volume}
+                            onMouseDown={handleVolExpDown}
+                        >
+                            <div className="player__exp-vol-fill" style={{ width: `${volume}%` }} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )}
         <footer className="player">
 
             {/* Track info */}
@@ -348,7 +453,7 @@ export default function MiniPlayer() {
                             : <div style={{ width: '100%', height: '100%', background: 'var(--color-surface)' }} />
                         }
                     </div>
-                    {track?.source === 'spotify' && (
+                    {!track?.audioUrl && track?.spotifyId && (
                         <div className="player__spotify-badge" title="Via Spotify">
                             <SiSpotify size={9} />
                         </div>
@@ -356,7 +461,12 @@ export default function MiniPlayer() {
                 </div>
                 <div className="player__info">
                     <div className="player__title">{track?.name ?? 'Nada a reproduzir'}</div>
-                    <div className="player__artist">{track?.artistName ?? '—'}</div>
+                    <div className="player__artist">
+                        <ClickableName
+                            artistProfileId={track?.artistProfileId}
+                            name={track?.artistName ?? '—'}
+                        />
+                    </div>
                 </div>
                 {track?.id && <LikeButton trackId={track.id} variant="icon" />}
                 {track?.id && <TrackMenu trackId={track.id} popoverAlign="left" />}
@@ -423,7 +533,7 @@ export default function MiniPlayer() {
                 </div>
             </div>
 
-            {/* Volume */}
+            {/* Volume + expandir */}
             <div className="player__extras">
                 <div className="player__volume">
                     <HiVolumeUp size={16} />
@@ -438,8 +548,18 @@ export default function MiniPlayer() {
                         <div className="player__volume-fill" style={{ width: `${volume}%` }} />
                     </div>
                 </div>
+                <button
+                    type="button"
+                    className="player__expand-btn"
+                    onClick={() => setExpanded(e => !e)}
+                    aria-label={expanded ? 'Minimizar player' : 'Expandir player'}
+                    title={expanded ? 'Minimizar' : 'Expandir'}
+                >
+                    {expanded ? <MdCloseFullscreen size={14} /> : <MdOpenInFull size={14} />}
+                </button>
             </div>
 
         </footer>
+        </>
     )
 }

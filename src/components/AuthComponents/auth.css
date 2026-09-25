@@ -144,7 +144,7 @@
 /* ─── OAuth ───────────────────────────────────────────────────────── */
 .auth__oauth {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: var(--space-2);
     margin-bottom: var(--space-5);
 }
@@ -171,7 +171,50 @@
 
 .auth__oauth-btn--discord svg { color: #5865F2; }
 .auth__oauth-btn--google  svg { color: #EA4335; }
-.auth__oauth-btn--apple   svg { color: #F5F1EA; }
+
+/* ─── Modal de role para OAuth ────────────────────────────────────── */
+.auth__role-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-5);
+}
+
+.auth__role-modal {
+    background: var(--color-surface-1);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    padding: 40px;
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+}
+
+.auth__role-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--color-ink-mute);
+    font-size: 20px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: color var(--duration-fast) var(--ease-out);
+}
+.auth__role-modal-close:hover { color: var(--color-ink); }
+
+.auth__role-modal .auth__title  { font-size: var(--fs-xl); margin-bottom: var(--space-1); }
+.auth__role-modal .auth__sub    { margin-bottom: var(--space-5); }
+.auth__role-modal .role-grid    { margin-bottom: 0; }
 
 /* ─── Field ───────────────────────────────────────────────────────── */
 .auth__field {
@@ -381,7 +424,7 @@
 
 @media (max-width: 480px) {
     .auth__field-row { grid-template-columns: 1fr; }
-    .auth__oauth { grid-template-columns: 1fr; }
+    .auth__oauth { grid-template-columns: 1fr 1fr; }
 }
 
 /* ─── Select (custom-ish) ─────────────────────────────────────────── */
@@ -421,4 +464,43 @@
     font-size: var(--fs-lg);
     font-weight: var(--fw-semibold);
     letter-spacing: var(--tracking-snug);
+}
+
+/* ─── Aguardar validação ──────────────────────────────────────────── */
+.pending-validation__card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-6) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-4);
+    text-align: center;
+    margin-top: var(--space-6);
+}
+.pending-validation__icon {
+    font-size: 40px;
+    line-height: 1;
+}
+.pending-validation__text {
+    font-size: var(--fs-sm);
+    color: var(--color-ink);
+    line-height: var(--lh-base);
+    margin: 0;
+}
+.pending-validation__email {
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+    background: var(--color-surface-2, rgba(255,255,255,0.04));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 4px 14px;
+    margin: 0;
+}
+.pending-validation__sub {
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+    line-height: var(--lh-base);
+    margin: 0;
 }

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { SiSpotify } from 'react-icons/si'
 import { FaCamera, FaRedo, FaCheck, FaFileImage } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
-import { getToken, getRole } from '../../../utils/auth.js'
+import { getToken, getRole, isPendingClaim, setAwaitingValidation } from '../../../utils/auth.js'
 import { useToast } from '../../../context/ToastContext.jsx'
 import './ClaimProfile.css'
 
@@ -553,6 +553,9 @@ export default function ClaimProfile() {
     const role = getRole();
     const backTo = role === 'fan' ? '/home' : '/dashboard';
     const { showToast } = useToast();
+    const { state } = useLocation();
+    const navigate = useNavigate();
+    const fromRegistration = state?.fromRegistration === true;
 
     const [step,          setStep]          = useState(0);
     const [spotifyArtist, setSpotifyArtist] = useState(null);
@@ -591,6 +594,11 @@ export default function ClaimProfile() {
                 body,
             });
             if (!res.ok) throw new Error(`Erro ${res.status}`);
+            if (fromRegistration) {
+                setAwaitingValidation();
+                navigate('/aguardar-validacao', { replace: true });
+                return;
+            }
             setDone(true);
         } catch (e) {
             setSubmitErr(e.message);
@@ -600,54 +608,60 @@ export default function ClaimProfile() {
         }
     }
 
-    return (
-        <AppShell role={role}>
-            <div className="claim-page">
-                <Link to={backTo} className="claim-back">← {role === 'fan' ? 'Início' : 'Dashboard'}</Link>
-                <h1 className="claim-page__title">Reclamar perfil Spotify</h1>
+    const locked = isPendingClaim();
 
-                {!done && !pendingClaim && !checking && <Stepper current={step} />}
+    const content = (
+        <div className="claim-page">
+            {!locked && <Link to={backTo} className="claim-back">← {role === 'fan' ? 'Início' : 'Dashboard'}</Link>}
+            <h1 className="claim-page__title">Reclamar perfil Spotify</h1>
 
-                <div className="claim-card">
-                    {checking ? (
-                        <p className="claim-checking">A verificar…</p>
-                    ) : pendingClaim ? (
-                        <ClaimPending claim={pendingClaim} backTo={backTo} />
-                    ) : done ? (
-                        <StepSuccess backTo={backTo} />
-                    ) : step === 0 ? (
-                        <StepSpotify
-                            selected={spotifyArtist}
-                            onSelect={setSpotifyArtist}
-                            onNext={() => setStep(1)}
-                        />
-                    ) : step === 1 ? (
-                        <StepSelfie
-                            blob={selfieBlob}
-                            onCapture={setSelfieBlob}
-                            onNext={() => setStep(2)}
-                            onBack={() => setStep(0)}
-                        />
-                    ) : step === 2 ? (
-                        <StepDocument
-                            blob={docBlob}
-                            onCapture={setDocBlob}
-                            onNext={() => setStep(3)}
-                            onBack={() => setStep(1)}
-                        />
-                    ) : (
-                        <StepConfirm
-                            spotifyArtist={spotifyArtist}
-                            selfieBlob={selfieBlob}
-                            docBlob={docBlob}
-                            onBack={() => setStep(2)}
-                            onSubmit={handleSubmit}
-                            submitting={submitting}
-                            error={submitErr}
-                        />
-                    )}
-                </div>
+            {!done && !pendingClaim && !checking && <Stepper current={step} />}
+
+            <div className="claim-card">
+                {checking ? (
+                    <p className="claim-checking">A verificar…</p>
+                ) : pendingClaim ? (
+                    <ClaimPending claim={pendingClaim} backTo={backTo} />
+                ) : done ? (
+                    <StepSuccess backTo={backTo} />
+                ) : step === 0 ? (
+                    <StepSpotify
+                        selected={spotifyArtist}
+                        onSelect={setSpotifyArtist}
+                        onNext={() => setStep(1)}
+                    />
+                ) : step === 1 ? (
+                    <StepSelfie
+                        blob={selfieBlob}
+                        onCapture={setSelfieBlob}
+                        onNext={() => setStep(2)}
+                        onBack={() => setStep(0)}
+                    />
+                ) : step === 2 ? (
+                    <StepDocument
+                        blob={docBlob}
+                        onCapture={setDocBlob}
+                        onNext={() => setStep(3)}
+                        onBack={() => setStep(1)}
+                    />
+                ) : (
+                    <StepConfirm
+                        spotifyArtist={spotifyArtist}
+                        selfieBlob={selfieBlob}
+                        docBlob={docBlob}
+                        onBack={() => setStep(2)}
+                        onSubmit={handleSubmit}
+                        submitting={submitting}
+                        error={submitErr}
+                    />
+                )}
             </div>
-        </AppShell>
+        </div>
     );
+
+    if (locked) {
+        return <main className="claim-standalone">{content}</main>;
+    }
+
+    return <AppShell role={role}>{content}</AppShell>;
 }

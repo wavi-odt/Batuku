@@ -5,14 +5,14 @@
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { HiUser, HiShieldCheck, HiLockClosed, HiLogout, HiChevronUp } from 'react-icons/hi'
-import { FaCog } from 'react-icons/fa'
+import { FaCog, FaUser } from 'react-icons/fa'
 import { homeData } from '../../data/home'
 import { logout } from '../../utils/auth'
 import { usePendingComments } from '../../context/PendingCommentsContext'
+import { useNotifications } from '../../context/NotificationsContext'
 import { usePlayer } from '../../context/PlayerContext'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { ICONS } from './icons'
-import ArtistArtwork from '../PublicComponets/ArtistArtwork'
 import logo from '../../assets/batuku.png'
 import './Sidebar.css'
 
@@ -28,6 +28,7 @@ export default function Sidebar({ role = 'fan' }) {
     const mockUser = role === 'artist' ? homeData.artist    : homeData.fan;
     const realUser = useCurrentUser();
     const { count: pendingComments } = usePendingComments();
+    const { badgesPerRoute } = useNotifications();
 
     const user = {
         ...mockUser,
@@ -71,7 +72,7 @@ export default function Sidebar({ role = 'fan' }) {
                     const Icon = ICONS[item.icon];
                     const badge = item.to === '/comments'
                         ? (pendingComments || null)
-                        : (item.badge ?? null);
+                        : (badgesPerRoute[item.to] || null);
                     return (
                         <NavLink
                             key={item.label}
@@ -98,7 +99,7 @@ export default function Sidebar({ role = 'fan' }) {
                             <div className="sidebar__menu-avatar">
                                 {realUser?.picture
                                     ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                                    : <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />}
+                                    : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
                             </div>
                             <div>
                                 <div className="sidebar__menu-name">{user.name}</div>
@@ -138,7 +139,7 @@ export default function Sidebar({ role = 'fan' }) {
                     <div className="sidebar__profile-avatar">
                         {realUser?.picture
                             ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                            : <ArtistArtwork shape={user.avatar.shape} hue={user.avatar.hue} rounded={0} />}
+                            : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
                     </div>
                     <div className="sidebar__profile-info">
                         <div className="sidebar__profile-name">{user.name}</div>

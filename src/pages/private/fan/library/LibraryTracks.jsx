@@ -14,6 +14,7 @@ export default function LibraryTracks({ tracks, loading }) {
 
     const queue = tracks.map(t => ({
         id: t.id, name: t.title, coverUrl: t.coverUrl,
+        artistName: t.artistName, artistProfileId: t.artistProfileId ?? null,
         durationMs: t.durationMs, audioUrl: t.audioUrl, source: 'upload',
         playContext: 'library',
     }))

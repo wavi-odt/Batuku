@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import ClickableName from '../../../components/ClickableName'
 import { FaPlay, FaArrowLeft, FaHeart, FaMusic, FaPen, FaCheck, FaPlus, FaRegComment, FaEllipsisH, FaGlobe, FaLock, FaTrash, FaBookmark, FaRegBookmark } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
 import { getToken, getRole } from '../../../utils/auth.js'
@@ -232,14 +233,15 @@ export default function PlaylistDetail() {
     const queue = tracks
         .filter(t => t.audioUrl)
         .map(t => ({
-            id:          t.id,
-            name:        t.title,
-            artistName:  t.artistName ?? '',
-            coverUrl:    t.coverUrl ?? null,
-            durationMs:  t.durationMs,
-            audioUrl:    t.audioUrl,
-            source:      'upload',
-            playContext: 'playlist',
+            id:              t.id,
+            name:            t.title,
+            artistName:      t.artistName ?? '',
+            artistProfileId: t.artistProfileId ?? null,
+            coverUrl:        t.coverUrl ?? null,
+            durationMs:      t.durationMs,
+            audioUrl:        t.audioUrl,
+            source:          'upload',
+            playContext:     'playlist',
         }))
 
     return (
@@ -398,7 +400,7 @@ export default function PlaylistDetail() {
                             </div>
                             <ul className="strack-list">
                                 {tracks.map((t, i) => {
-                                    const queueItem    = { id: t.id, name: t.title, artistName: t.artistName ?? '', coverUrl: t.coverUrl ?? null, durationMs: t.durationMs, audioUrl: t.audioUrl, source: 'upload', playContext: 'playlist' }
+                                    const queueItem    = { id: t.id, name: t.title, artistName: t.artistName ?? '', artistProfileId: t.artistProfileId ?? null, coverUrl: t.coverUrl ?? null, durationMs: t.durationMs, audioUrl: t.audioUrl, source: 'upload', playContext: 'playlist' }
                                     const isActive     = currentTrack?.audioUrl && currentTrack.audioUrl === t.audioUrl
                                     const commentsOpen = openCommentTrack === t.id
 
@@ -418,7 +420,11 @@ export default function PlaylistDetail() {
                                                 }
                                                 <div className="strack__info">
                                                     <div className="strack__title">{t.title}</div>
-                                                    <div className="strack__sub">{isActive ? 'A reproduzir…' : (t.artistName ?? '')}</div>
+                                                    <div className="strack__sub">
+                                                    {isActive ? 'A reproduzir…' : (
+                                                        <ClickableName artistProfileId={t.artistProfileId} name={t.artistName ?? ''} />
+                                                    )}
+                                                </div>
                                                 </div>
                                                 <LikeButton trackId={t.id} />
                                                 <button

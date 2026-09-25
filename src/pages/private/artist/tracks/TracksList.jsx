@@ -2,11 +2,11 @@ import { useState, useRef } from 'react'
 import { FaPlay, FaPause, FaTrash, FaHeart, FaHeadphones, FaRegComment, FaPen, FaCheck, FaTimes, FaCamera } from 'react-icons/fa'
 import { usePlayer } from '../../../../context/PlayerContext.jsx'
 import { useToast } from '../../../../context/ToastContext.jsx'
+import { useGenres } from '../../../../context/GenresContext.jsx'
 import ConfirmModal from '../../../../components/ConfirmModal.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
 
 const STATUS_LABEL = { PUBLISHED: 'Publicada', SCHEDULED: 'Agendada', DRAFT: 'Rascunho' }
-const GENRES = ['Funaná', 'Batuku', 'Morna', 'Coladeira', 'Kizomba', 'Afrobeat', 'Hip-Hop', 'Outro']
 
 function fmtMs(ms) {
     if (!ms) return '—'
@@ -145,9 +145,10 @@ function EditRow({ track, onSave, onUpdate, onCancel }) {
     )
 }
 
-export default function TracksList({ tracks, loading, onDelete, onUpdate }) {
+export default function TracksList({ tracks, loading, onDelete, onUpdate, artistProfileId }) {
     const { track: currentTrack, setTrack } = usePlayer()
     const { showToast } = useToast()
+    const { allNames: GENRES } = useGenres()
     const [confirmTrack, setConfirmTrack] = useState(null)
     const [deleting,     setDeleting]     = useState(false)
     const [editId,       setEditId]       = useState(null)
@@ -187,6 +188,8 @@ export default function TracksList({ tracks, loading, onDelete, onUpdate }) {
 
     const queue = tracks.map(t => ({
         id: t.id, name: t.title, coverUrl: t.coverUrl,
+        artistName: t.artistName ?? null,
+        artistProfileId: t.artistProfileId ?? artistProfileId ?? null,
         durationMs: t.durationMs, audioUrl: t.audioUrl, source: 'upload',
     }))
 

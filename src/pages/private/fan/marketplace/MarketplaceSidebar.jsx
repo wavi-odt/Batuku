@@ -4,6 +4,7 @@
 
 import { useState }   from 'react'
 import ArtistArtwork  from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ClickableName  from '../../../../components/ClickableName.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
 import { useToast }   from '../../../../context/ToastContext.jsx'
 
@@ -174,7 +175,9 @@ export default function MarketplaceSidebar({ cart, onRemove, onClearCart, produc
                                     )}
                                 </div>
                                 <div className="mkt__prod-info">
-                                    <div className="mkt__prod-name">{p.name}</div>
+                                    <div className="mkt__prod-name">
+                                        <ClickableName userId={p.id} name={p.name} />
+                                    </div>
                                     <div className="mkt__prod-genre">{p.genre} · {p.beats} beats</div>
                                 </div>
                                 <div className="mkt__prod-meta">

@@ -6,6 +6,8 @@ import { PublishProvider } from './context/PublishContext'
 import { ToastProvider } from './context/ToastContext'
 import { LikeProvider } from './context/LikeContext'
 import { PendingCommentsProvider } from './context/PendingCommentsContext'
+import { NotificationsProvider } from './context/NotificationsContext'
+import { GenresProvider } from './context/GenresContext'
 import MiniPlayer from './components/HomeComponents/MiniPlayer'
 import PublishModal from './pages/private/artist/Publish.jsx'
 import Landing from './pages/public/Landing'
@@ -18,6 +20,7 @@ import Profile from "./pages/private/profile/Profile.jsx";
 import RoleRoute from "./components/RoleRoute.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import OAuthCallback from "./pages/public/OAuthCallback.jsx";
+import AguardarValidacao from "./pages/public/AguardarValidacao.jsx";
 import AdminHome from "./pages/private/admin/AdminHome.jsx";
 import ArtistImport from "./pages/private/admin/ArtistImport.jsx";
 import AdminClaims from "./pages/private/admin/AdminClaims.jsx";
@@ -34,7 +37,8 @@ import MyUploads      from "./pages/private/personal/MyUploads.jsx";
 import ProjectDetail  from "./pages/private/personal/ProjectDetail.jsx";
 import SharedTrack    from "./pages/public/SharedTrack.jsx";
 import SharedProject  from "./pages/public/SharedProject.jsx";
-import Discover     from "./pages/private/fan/discover/Discover.jsx";
+import Discover     from "./pages/private/fan/discover/Discover.jsx"
+import GenrePage    from "./pages/private/fan/genre/GenrePage.jsx";
 import Following    from "./pages/private/fan/following/Following.jsx";
 import Achievements  from "./pages/private/fan/achievements/Achievements.jsx";
 import Marketplace   from "./pages/private/fan/marketplace/Marketplace.jsx";
@@ -70,17 +74,20 @@ function PlayerLayer() {
 function App() {
     return (
         <PlayerProvider>
+            <ToastProvider>
+            <GenresProvider>
+            <NotificationsProvider>
             <LikeProvider>
             <PendingCommentsProvider>
             <PublishProvider>
-            <ToastProvider>
                 <BrowserRouter>
                     <Routes>
                         {/* Públicas */}
                         <Route path="/" element={<Landing />} />
                         <Route path="/login"           element={<Login />} />
                         <Route path="/register"        element={<Register />} />
-                        <Route path="/oauth2/callback" element={<OAuthCallback />} />
+                        <Route path="/oauth2/callback"      element={<OAuthCallback />} />
+                        <Route path="/aguardar-validacao"  element={<AguardarValidacao />} />
                         <Route path="/p/:token"        element={<SharedTrack />} />
                         <Route path="/proj/:token"     element={<SharedProject />} />
 
@@ -98,6 +105,7 @@ function App() {
                             <Route path="/home"           element={<RoleRoute roles={['fan']}><FanHome /></RoleRoute>} />
                             <Route path="/library"        element={<RoleRoute roles={['fan']}><Library /></RoleRoute>} />
                             <Route path="/discover"       element={<RoleRoute roles={['fan']}><Discover /></RoleRoute>} />
+                            <Route path="/genres/:id"     element={<RoleRoute roles={['fan']}><GenrePage /></RoleRoute>} />
                             <Route path="/following"      element={<RoleRoute roles={['fan']}><Following /></RoleRoute>} />
                             <Route path="/achievements"   element={<RoleRoute roles={['fan']}><Achievements /></RoleRoute>} />
                             <Route path="/marketplace"      element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
@@ -124,10 +132,12 @@ function App() {
                     {/* Modal global — renderizado fora das rotas via portal */}
                     <PublishModal />
                 </BrowserRouter>
-            </ToastProvider>
             </PublishProvider>
             </PendingCommentsProvider>
             </LikeProvider>
+            </NotificationsProvider>
+            </GenresProvider>
+            </ToastProvider>
         </PlayerProvider>
     )
 }

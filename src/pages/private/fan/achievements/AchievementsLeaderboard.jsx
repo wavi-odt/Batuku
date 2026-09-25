@@ -3,9 +3,21 @@
    Mostra o top 10 + posição do utilizador (com gap se necessário).
    ───────────────────────────────────────────────────────────────── */
 
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import { FaUser } from 'react-icons/fa'
+import ClickableName from '../../../../components/ClickableName'
 
 const MEDAL = { 1: '🥇', 2: '🥈', 3: '🥉' };
+
+function LbAvatar({ imageUrl, name }) {
+    return (
+        <div className="ach__lb-avatar">
+            {imageUrl
+                ? <img src={imageUrl} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : <div className="prof__avatar-placeholder"><FaUser size={12} /></div>
+            }
+        </div>
+    );
+}
 
 export default function AchievementsLeaderboard({ entries }) {
     const top10  = entries.filter(e => e.rank <= 10);
@@ -22,17 +34,16 @@ export default function AchievementsLeaderboard({ entries }) {
             <ol className="ach__lb-list">
                 {top10.map(e => (
                     <li
-                        key={e.rank}
+                        key={e.userId ?? e.rank}
                         className={`ach__lb-row${e.isYou ? ' ach__lb-row--me' : ''}`}
                     >
                         <span className="ach__lb-rank">
                             {MEDAL[e.rank] ?? `#${e.rank}`}
                         </span>
-                        <div className="ach__lb-avatar">
-                            <ArtistArtwork shape={e.shape} hue={e.hue} image={null} rounded={0} showGloss={false} />
-                        </div>
+                        <LbAvatar imageUrl={e.imageUrl} name={e.name} />
                         <span className="ach__lb-name">
-                            {e.name}{e.isYou ? ' (tu)' : ''}
+                            <ClickableName userId={e.userId} name={e.name} />
+                            {e.isYou ? ' (tu)' : ''}
                         </span>
                         <span className="ach__lb-pts">
                             {e.points.toLocaleString('pt-PT')}
@@ -40,16 +51,16 @@ export default function AchievementsLeaderboard({ entries }) {
                     </li>
                 ))}
 
-                {/* Gap + posição do utilizador se fora do top 10 */}
                 {!meInTop && me && (
                     <>
                         <li className="ach__lb-gap" aria-hidden="true">· · ·</li>
                         <li className="ach__lb-row ach__lb-row--me">
                             <span className="ach__lb-rank">#{me.rank}</span>
-                            <div className="ach__lb-avatar">
-                                <ArtistArtwork shape={me.shape} hue={me.hue} image={null} rounded={0} showGloss={false} />
-                            </div>
-                            <span className="ach__lb-name">{me.name} (tu)</span>
+                            <LbAvatar imageUrl={me.imageUrl} name={me.name} />
+                            <span className="ach__lb-name">
+                            <ClickableName userId={me.userId} name={me.name} />
+                            {' (tu)'}
+                        </span>
                             <span className="ach__lb-pts">{me.points.toLocaleString('pt-PT')}</span>
                         </li>
                     </>

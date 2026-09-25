@@ -1,64 +1,52 @@
-import { useEffect, useState, Fragment } from 'react'
-import { useParams, Link, useSearchParams } from 'react-router-dom'
-import { FaTrophy, FaUserPlus, FaUserCheck, FaPlay, FaCompactDisc, FaRegComment, FaMusic, FaGlobe } from 'react-icons/fa'
-import { SiSpotify } from 'react-icons/si'
+import { useEffect, useState } from 'react'
+import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom'
+import { FaTrophy, FaUserPlus, FaUserCheck, FaPlay, FaMusic, FaGlobe, FaUser } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
-import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
-import { API, getToken, getRole } from '../../../utils/auth.js'
+import { getToken, getRole } from '../../../utils/auth.js'
 import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import { useToast } from '../../../context/ToastContext'
-import {
-    CardTitle, BadgesGrid, PlaylistGrid, ActivityList, GenreBars, ArtistAbout, ArtistLinks,
-} from '../profile/ProfileBlocks'
-import { usePlayer } from '../../../context/PlayerContext'
-import LikeButton from '../../../components/LikeButton'
-import TrackMenu from '../../../components/TrackMenu'
-import TrackComments from '../../../components/TrackComments'
+import { CardTitle, BadgesGrid, GenreBars } from '../profile/ProfileBlocks'
 import '../profile/Profile.css'
 import '../DetailPage.css'
-import '../release/ReleaseDetail.css'
 import '../fan/library/Library.css'
 
-const TYPE_LABEL  = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape', SINGLE: 'Single' };
+const TABS = ['Visão geral', 'Playlists', 'Conquistas', 'A seguir'];
 
-const FAN_TABS    = ['Playlists', 'Conquistas', 'Atividade'];
-const ARTIST_TABS = ['Visão geral', 'Faixas', 'Lançamentos', 'Sobre', 'Conquistas'];
+const GENRE_HUES = {
+    'funaná': 14, 'morna': 220, 'coladeira': 42,
+    'cabo love': 145, 'kizomba': 280, 'tabanka': 8,
+    'batuque': 340, 'kola': 195, 'zouk': 260,
+    'semba': 30, 'kuduro': 60, 'afrobeat': 22,
+};
 
-function fmtMs(ms) {
-    if (!ms) return '—';
-    const s = Math.floor(ms / 1000);
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-}
-
-function toPlaylist(p) {
-    return { ...p, image: p.imageUrl ?? null, shape: p.shape ?? 'circles', hue: p.hue ?? 220, tracks: p.trackCount ?? p.tracks ?? 0 };
-}
-function toTrack(t) {
-    return { ...t, image: t.imageUrl ?? null, shape: t.shape ?? 'arch', hue: t.hue ?? 200 };
+function tierFromPoints(pts) {
+    if (pts <= 200)  return 'coral';
+    if (pts <= 500)  return 'ocean';
+    if (pts <= 700)  return 'mustard';
+    if (pts <= 1000) return 'gold';
+    if (pts <= 2000) return 'green';
+    return 'pink';
 }
 
 export default function UserDetail() {
     const { id } = useParams();
+    const navigate = useNavigate();
     const shellRole = getRole() === 'artist' ? 'artist' : 'fan';
-    const { track: currentTrack, setTrack } = usePlayer();
-    const { showToast } = useToast()
-    const currentUser = useCurrentUser()
+    const { showToast } = useToast();
+    const currentUser = useCurrentUser();
 
-    const [user,        setUser]        = useState(null);
-    const [loading,     setLoading]     = useState(true);
-    const [error,       setError]       = useState('');
-    const [searchParams, setSearchParams] = useSearchParams()
-    const active    = parseInt(searchParams.get('tab') ?? '0', 10) || 0
-    const setActive = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('tab', String(val)); return p })
-    const [following,   setFollowing]   = useState(false);
-    const [followers,   setFollowers]   = useState(0);
-    const [localTracks,      setLocalTracks]      = useState([]);
-    const [topTracks,        setTopTracks]        = useState([]);
-    const [releases,         setReleases]         = useState([]);
-    const [artistProfile,    setArtistProfile]    = useState(null);
-    const [resolvedArtistId, setResolvedArtistId] = useState(null);
-    const [openCommentTrack, setOpenCommentTrack] = useState(null);
+    const [user,             setUser]             = useState(null);
+    const [loading,          setLoading]          = useState(true);
+    const [error,            setError]            = useState('');
+    const [searchParams, setSearchParams]         = useSearchParams();
+    const active    = parseInt(searchParams.get('tab') ?? '0', 10) || 0;
+    const setActive = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('tab', String(val)); return p });
+    const [following,        setFollowing]        = useState(false);
+    const [followers,        setFollowers]        = useState(0);
     const [publicPlaylists,  setPublicPlaylists]  = useState([]);
+    const [followingArtists, setFollowingArtists] = useState([]);
+    const [userTopGenres,    setUserTopGenres]    = useState([]);
+    const [userRecentTracks, setUserRecentTracks] = useState([]);
 
     useEffect(() => {
         const auth = { headers: { Authorization: `Bearer ${getToken()}` } };
@@ -68,36 +56,30 @@ export default function UserDetail() {
         fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/${id}`, auth)
             .then(res => { if (!res.ok) throw new Error(`Erro ${res.status}`); return res.json(); })
             .then(async data => {
+                if (data.artistProfileId) {
+                    navigate(`/artists/${data.artistProfileId}`, { replace: true })
+                    return
+                }
                 setUser(data);
                 setFollowing(data.isFollowing ?? false);
                 setFollowers(data.followers ?? 0);
 
-                const aid = data.artistProfileId ?? null;
-                setResolvedArtistId(aid);
-                if (aid) {
-                    const safeJson = r => r.ok ? r.json() : [];
-                    const safeObj = r => r.ok ? r.json() : null;
-                    const [local, top, rels, ap] = await Promise.all([
-                        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/tracks/artist/${aid}`, auth).then(safeJson).catch(() => []),
-                        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artists/${aid}/top-tracks?market=PT`, auth).then(safeJson).catch(() => []),
-                        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/releases/artist/${aid}`, auth).then(safeJson).catch(() => []),
-                        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artists/${aid}`, auth).then(safeObj).catch(() => null),
-                    ]);
-                    const uploaded = Array.isArray(local) ? local.filter(t => t.audioUrl) : [];
-                    setLocalTracks(uploaded);
-                    setTopTracks(Array.isArray(top) ? top : []);
-                    setReleases(Array.isArray(rels) ? rels : []);
-                    setArtistProfile(ap ?? null);
-                } else {
-                    setLocalTracks([]);
-                    setTopTracks([]);
-                    setReleases([]);
-                    setArtistProfile(null);
-                    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/playlists/user/${id}`, auth)
-                        .then(r => r.ok ? r.json() : [])
-                        .then(data => setPublicPlaylists(Array.isArray(data) ? data : []))
-                        .catch(() => {});
-                }
+                const safeArr = r => r.ok ? r.json() : [];
+                const base = import.meta.env.VITE_API_BASE_URL;
+                const [pls, followed, genres, recent] = await Promise.all([
+                    fetch(`${base}/api/playlists/user/${id}`,        auth).then(safeArr).catch(() => []),
+                    fetch(`${base}/api/artist-follows/user/${id}`,   auth).then(safeArr).catch(() => []),
+                    fetch(`${base}/api/users/${id}/top-genres`,      auth).then(safeArr).catch(() => []),
+                    fetch(`${base}/api/users/${id}/recently-played`, auth).then(safeArr).catch(() => []),
+                ]);
+                setPublicPlaylists(Array.isArray(pls)     ? pls     : []);
+                setFollowingArtists(Array.isArray(followed) ? followed : []);
+                setUserTopGenres(Array.isArray(genres) ? genres.map((g, i) => ({
+                    name: g.name,
+                    pct:  g.pct,
+                    hue:  GENRE_HUES[g.name.toLowerCase()] ?? (i * 55 + 14),
+                })) : []);
+                setUserRecentTracks(Array.isArray(recent) ? recent : []);
             })
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
@@ -105,11 +87,8 @@ export default function UserDetail() {
 
     async function toggleFollow() {
         const next = !following;
-        const url = resolvedArtistId
-            ? `${import.meta.env.VITE_API_BASE_URL}/api/artist-follows/${resolvedArtistId}`
-            : `${import.meta.env.VITE_API_BASE_URL}/api/follows/${id}`;
         try {
-            const res = await fetch(url, {
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/follows/${id}`, {
                 method: next ? 'POST' : 'DELETE',
                 headers: { Authorization: `Bearer ${getToken()}` },
             });
@@ -121,11 +100,6 @@ export default function UserDetail() {
         } catch {
             showToast('Erro ao atualizar follow', 'error');
         }
-    }
-
-    function toggleComments(e, trackId) {
-        e.stopPropagation();
-        setOpenCommentTrack(prev => prev === trackId ? null : trackId);
     }
 
     if (loading) return (
@@ -142,31 +116,30 @@ export default function UserDetail() {
         </AppShell>
     );
 
-    const isArtist      = !!resolvedArtistId;
-    const isMe          = currentUser?.id != null && String(currentUser.id) === String(id);
-    const tabs          = isArtist ? ARTIST_TABS : FAN_TABS;
-    const activeTab     = tabs[active];
-    const hue           = user.avatar?.hue ?? 285;
-    const coverGradient = `linear-gradient(120deg, oklch(0.42 0.16 ${hue}), oklch(0.40 0.15 ${(hue + 60) % 360}))`;
-    const playlists     = (user.playlists      ?? []).map(toPlaylist);
-    const recentlyPlayed = (user.recentlyPlayed ?? []).map(toTrack);
-    const badges        = user.badges    ?? [];
-    const activity      = user.activity  ?? [];
-    const topGenres     = user.topGenres ?? [];
+    const isMe       = currentUser?.id != null && String(currentUser.id) === String(id);
+    const safeActive = Math.min(active, TABS.length - 1);
+    const activeTab  = TABS[safeActive];
 
-    const stats = isArtist
-        ? [
-            { v: followers != null ? followers.toLocaleString('pt-PT') : '—', l: 'Seguidores' },
-            { v: user.following != null ? user.following.toLocaleString('pt-PT') : '—', l: 'A seguir' },
-            { v: localTracks.length > 0 ? localTracks.length : '—', l: 'Faixas' },
-        ]
-        : [
-            { v: user.points    != null ? user.points.toLocaleString('pt-PT') : '—', l: 'Pontos' },
-            { v: user.rank      != null ? '#' + user.rank : '—',                     l: 'Rank semanal' },
-            { v: user.badgesCount ?? '—',                                             l: 'Badges' },
-            { v: user.following != null ? user.following.toLocaleString('pt-PT') : '—', l: 'A seguir' },
-            { v: followers != null ? followers.toLocaleString('pt-PT') : '—',        l: 'Seguidores' },
-        ];
+    const badges = (user.badges ?? []).map(b => ({
+        id:   b.id,
+        icon: b.iconUrl,
+        name: b.name,
+        desc: b.description,
+        xp:   b.pointsRequired,
+        tier: b.got ? tierFromPoints(b.pointsRequired) : 'locked',
+        got:  b.got,
+        meta: b.got
+            ? (b.earnedAt ? new Date(b.earnedAt).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' }) : '')
+            : `${(user.points ?? 0).toLocaleString('pt-PT')} / ${b.pointsRequired.toLocaleString('pt-PT')} pts`,
+    }));
+
+    const stats = [
+        { v: (user.points ?? 0).toLocaleString('pt-PT'),      l: 'Pontos' },
+        { v: user.rank != null ? '#' + user.rank : '—',        l: 'Rank semanal' },
+        { v: user.badgesCount ?? 0,                            l: 'Badges' },
+        { v: (user.following ?? 0).toLocaleString('pt-PT'),    l: 'A seguir' },
+        { v: followers.toLocaleString('pt-PT'),                l: 'Seguidores' },
+    ];
 
     return (
         <AppShell role={shellRole}>
@@ -174,7 +147,7 @@ export default function UserDetail() {
 
                 {/* ── Cover ─────────────────────────────────────────────── */}
                 <div className="prof__cover">
-                    <div className="prof__cover-art" style={{ background: coverGradient }} />
+                    <div className="prof__cover-art" style={{ background: 'linear-gradient(120deg, oklch(0.42 0.16 285), oklch(0.40 0.15 220))' }} />
                     <div className="prof__cover-grad" />
                 </div>
 
@@ -183,7 +156,7 @@ export default function UserDetail() {
                     <div className="prof__avatar">
                         {user.imageUrl
                             ? <img src={user.imageUrl} alt={user.name} className="prof__avatar-img" />
-                            : <ArtistArtwork shape={user.avatar?.shape ?? 'split'} hue={hue} rounded={0} />
+                            : <div className="prof__avatar-placeholder"><FaUser size={32} /></div>
                         }
                     </div>
 
@@ -197,26 +170,27 @@ export default function UserDetail() {
                             )}
                         </div>
                         <div className="prof__meta">
-                            {user.handle && <span className="prof__meta-handle">{user.handle}</span>}
-                            {user.country && <><span className="prof__meta-dot" /><span>{user.country}</span></>}
+                            {user.handle   && <span className="prof__meta-handle">{user.handle}</span>}
                             {user.location && <><span className="prof__meta-dot" /><span>{user.location}</span></>}
-                            {user.joined && <><span className="prof__meta-dot" /><span>Membro desde {user.joined}</span></>}
+                            {user.joined   && <><span className="prof__meta-dot" /><span>Membro desde {user.joined}</span></>}
                         </div>
                     </div>
 
-                    {!isMe && <div className="prof__actions">
-                        <button
-                            type="button"
-                            className={following ? 'btn-ghost' : 'btn-primary'}
-                            style={{ padding: '10px 18px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 7 }}
-                            onClick={toggleFollow}
-                        >
-                            {following
-                                ? <><FaUserCheck size={13} /> A seguir</>
-                                : <><FaUserPlus  size={13} /> Seguir</>
-                            }
-                        </button>
-                    </div>}
+                    {!isMe && (
+                        <div className="prof__actions">
+                            <button
+                                type="button"
+                                className={following ? 'btn-ghost' : 'btn-primary'}
+                                style={{ padding: '10px 18px', fontSize: 14, display: 'inline-flex', alignItems: 'center', gap: 7 }}
+                                onClick={toggleFollow}
+                            >
+                                {following
+                                    ? <><FaUserCheck size={13} /> A seguir</>
+                                    : <><FaUserPlus  size={13} /> Seguir</>
+                                }
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* ── Stats ─────────────────────────────────────────────── */}
@@ -231,11 +205,11 @@ export default function UserDetail() {
 
                 {/* ── Tabs ──────────────────────────────────────────────── */}
                 <div className="prof__tabs">
-                    {tabs.map((label, i) => (
+                    {TABS.map((label, i) => (
                         <button
                             key={label}
                             type="button"
-                            className={'prof__tab' + (i === active ? ' is-active' : '')}
+                            className={'prof__tab' + (i === safeActive ? ' is-active' : '')}
                             onClick={() => setActive(i)}
                         >
                             {label}
@@ -246,331 +220,91 @@ export default function UserDetail() {
                 {/* ── Content ───────────────────────────────────────────── */}
                 <div className="prof__body">
 
-                    {/* Visão geral (apenas artistas) */}
-                    {activeTab === 'Visão geral' && (() => {
-                        const ap = artistProfile;
-                        const about = {
-                            location:  ap?.location ?? ap?.city ?? null,
-                            genre:     Array.isArray(ap?.genres) ? ap.genres.join(' · ') : (ap?.genre ?? null),
-                            languages: Array.isArray(ap?.languages) ? ap.languages.join(', ') : null,
-                            forHire:   false,
-                        };
-                        const social = Array.isArray(ap?.links) ? ap.links : [];
-                        const localQueue = localTracks.map(tr => ({
-                            id: tr.id, name: tr.title, artistName: user.name,
-                            coverUrl: tr.coverUrl, durationMs: tr.durationMs, audioUrl: tr.audioUrl, source: 'upload', playContext: 'artist',
-                        }));
-                        return (
-                            <div className="prof__grid">
-                                <div>
+                    {/* Visão geral */}
+                    {activeTab === 'Visão geral' && (
+                        <div className="prof__grid">
+                            <div>
+                                {badges.length > 0 && (
                                     <div className="prof-card prof__section-gap">
-                                        {localTracks.length > 0 && (
-                                            <>
-                                                <CardTitle>Faixas · {localTracks.length}</CardTitle>
-                                                <ul className="strack-list">
-                                                    {localTracks.map((t, i) => {
-                                                        const isPlaying    = currentTrack?.audioUrl === t.audioUrl;
-                                                        const commentsOpen = openCommentTrack === t.id;
-                                                        return (
-                                                            <Fragment key={t.id}>
-                                                                <li
-                                                                    className={'strack strack--playable' + (isPlaying ? ' is-playing' : '') + (commentsOpen ? ' strack--comments-open' : '')}
-                                                                    onClick={() => setTrack({ id: t.id, name: t.title, artistName: user.name, coverUrl: t.coverUrl, durationMs: t.durationMs, audioUrl: t.audioUrl, source: 'upload' }, localQueue)}>
-                                                                    <div className="strack__num-wrap">
-                                                                        <span className="strack__num">{i + 1}</span>
-                                                                        <span className="strack__play-icon"><FaPlay size={11} /></span>
-                                                                    </div>
-                                                                    {t.coverUrl ? <img src={t.coverUrl} alt={t.title} className="strack__cover" /> : <div className="strack__cover strack__cover--placeholder" />}
-                                                                    <div className="strack__info">
-                                                                        <div className="strack__title">{t.title}</div>
-                                                                        <div className="strack__sub">{isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}</div>
-                                                                    </div>
-                                                                    <LikeButton trackId={t.id} />
-                                                                    <button
-                                                                        type="button"
-                                                                        className={'rel-comment-btn' + (commentsOpen ? ' rel-comment-btn--active' : '')}
-                                                                        onClick={e => toggleComments(e, t.id)}
-                                                                        aria-label="Comentários"
-                                                                    >
-                                                                        <FaRegComment size={13} />
-                                                                    </button>
-                                                                    <TrackMenu trackId={t.id} />
-                                                                    <span className="strack__dur">{fmtMs(t.durationMs)}</span>
-                                                                </li>
-                                                                {commentsOpen && (
-                                                                    <li className="strack-comments-row">
-                                                                        <TrackComments trackId={t.id} trackTitle={t.title} />
-                                                                    </li>
-                                                                )}
-                                                            </Fragment>
-                                                        );
-                                                    })}
-                                                </ul>
-                                            </>
-                                        )}
-                                        {topTracks.length > 0 && (
-                                            <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
-                                                <CardTitle>
-                                                    <span>Top via Spotify · {topTracks.length}</span>
-                                                    <span className="strack-source"><SiSpotify size={12} style={{ color: '#1DB954' }} /> via Spotify</span>
-                                                </CardTitle>
-                                                <ul className="strack-list">
-                                                    {topTracks.map((t, i) => {
-                                                        const isPlaying = currentTrack?.spotifyId === t.spotifyId;
-                                                        return (
-                                                            <li key={t.spotifyId ?? i}
-                                                                className={'strack strack--playable' + (isPlaying ? ' is-playing' : '')}
-                                                                onClick={() => setTrack(
-                                                                    { spotifyId: t.spotifyId, name: t.name, artistName: user.name, coverUrl: t.coverUrl, durationMs: t.durationMs, spotifyUrl: t.spotifyUrl, source: 'spotify' },
-                                                                    topTracks.map(tr => ({ spotifyId: tr.spotifyId, name: tr.name, artistName: user.name, coverUrl: tr.coverUrl, durationMs: tr.durationMs, spotifyUrl: tr.spotifyUrl, source: 'spotify' }))
-                                                                )}>
-                                                                <div className="strack__num-wrap">
-                                                                    <span className="strack__num">{i + 1}</span>
-                                                                    <span className="strack__play-icon"><FaPlay size={11} /></span>
-                                                                </div>
-                                                                {t.coverUrl ? <img src={t.coverUrl} alt={t.name} className="strack__cover" /> : <div className="strack__cover strack__cover--placeholder" />}
-                                                                <div className="strack__info">
-                                                                    <div className="strack__title">{t.name}</div>
-                                                                    <div className="strack__sub">{isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}</div>
-                                                                </div>
-                                                                <span className="strack__dur">{fmtMs(t.durationMs)}</span>
-                                                                {t.spotifyUrl && (
-                                                                    <a href={t.spotifyUrl} target="_blank" rel="noopener noreferrer" className="strack__spotify" onClick={e => e.stopPropagation()} title="Abrir no Spotify">
-                                                                        <SiSpotify size={15} />
-                                                                    </a>
-                                                                )}
-                                                            </li>
-                                                        );
-                                                    })}
-                                                </ul>
-                                            </div>
-                                        )}
-                                        {localTracks.length === 0 && topTracks.length === 0 && (
-                                            <p className="prof__bio user-detail__empty">Sem faixas disponíveis.</p>
-                                        )}
+                                        <CardTitle link={`${badges.filter(b => b.got).length} de ${badges.length}`}>
+                                            Conquistas
+                                        </CardTitle>
+                                        <BadgesGrid badges={badges.slice(0, 4)} />
                                     </div>
-                                    {releases.length > 0 && (
-                                        <div className="prof-card prof__section-gap">
-                                            <CardTitle>Lançamentos · {releases.length}</CardTitle>
-                                            <div className="rel-grid">
-                                                {releases.map(r => {
-                                                    const label = TYPE_LABEL[r.albumType] ?? r.albumType;
-                                                    const count = r.tracks?.length ?? 0;
-                                                    return (
-                                                        <Link key={r.id} to={`/releases/${r.id}`} className="rel-card rel-card--link">
-                                                            <div className="rel-card__cover">
-                                                                {r.coverUrl ? <img src={r.coverUrl} alt={r.title} /> : <div className="rel-card__cover-placeholder"><FaCompactDisc size={28} /></div>}
-                                                                <span className="rel-card__badge">{label}</span>
-                                                            </div>
-                                                            <div className="rel-card__info">
-                                                                <div className="rel-card__title" title={r.title}>{r.title}</div>
-                                                                <div className="rel-card__sub">{count} {count === 1 ? 'faixa' : 'faixas'}</div>
-                                                            </div>
-                                                        </Link>
-                                                    );
-                                                })}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="prof__col-side">
-                                    <ArtistAbout artist={{ bio: ap?.bio ?? null, about }} />
-                                    <ArtistLinks social={social} />
-                                </div>
-                            </div>
-                        );
-                    })()}
-
-                    {/* Faixas (apenas artistas) */}
-                    {activeTab === 'Faixas' && (
-                        <div className="prof-card">
-                            {localTracks.length > 0 && (() => {
-                                const localQueue = localTracks.map(tr => ({
-                                    id: tr.id, name: tr.title, artistName: user.name,
-                                    coverUrl: tr.coverUrl, durationMs: tr.durationMs, audioUrl: tr.audioUrl, source: 'upload',
-                                }));
-                                return (
-                                <>
-                                    <CardTitle>Faixas publicadas · {localTracks.length}</CardTitle>
-                                    <ul className="strack-list">
-                                        {localTracks.map((t, i) => {
-                                            const isPlaying    = currentTrack?.audioUrl === t.audioUrl;
-                                            const commentsOpen = openCommentTrack === t.id;
-                                            return (
-                                                <Fragment key={t.id}>
-                                                    <li
-                                                        className={'strack strack--playable' + (isPlaying ? ' is-playing' : '') + (commentsOpen ? ' strack--comments-open' : '')}
-                                                        onClick={() => setTrack(localQueue[i], localQueue)}
-                                                    >
-                                                        <div className="strack__num-wrap">
-                                                            <span className="strack__num">{i + 1}</span>
-                                                            <span className="strack__play-icon"><FaPlay size={11} /></span>
-                                                        </div>
-                                                        {t.coverUrl
-                                                            ? <img src={t.coverUrl} alt={t.title} className="strack__cover" />
-                                                            : <div className="strack__cover strack__cover--placeholder" />
+                                )}
+                                <div className="prof-card">
+                                    <CardTitle>Playlists</CardTitle>
+                                    {publicPlaylists.length > 0
+                                        ? <div className="lib__playlist-grid" style={{ marginTop: 14 }}>
+                                            {publicPlaylists.slice(0, 4).map(pl => (
+                                                <Link key={pl.id} to={`/playlists/${pl.id}`} className="lib__pl-card">
+                                                    <div className="lib__pl-cover lib__pl-cover--img" style={{ marginBottom: 10 }}>
+                                                        {pl.coverUrl
+                                                            ? <img src={pl.coverUrl} alt={pl.name} className="lib__pl-cover-img" />
+                                                            : <div className="lib__pl-cover-empty"><FaMusic size={26} /></div>
                                                         }
-                                                        <div className="strack__info">
-                                                            <div className="strack__title">{t.title}</div>
-                                                            <div className="strack__sub">
-                                                                {isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}
-                                                            </div>
-                                                        </div>
-                                                        <LikeButton trackId={t.id} />
-                                                        <button
-                                                            type="button"
-                                                            className={'rel-comment-btn' + (commentsOpen ? ' rel-comment-btn--active' : '')}
-                                                            onClick={e => toggleComments(e, t.id)}
-                                                            aria-label="Comentários"
-                                                        >
-                                                            <FaRegComment size={13} />
-                                                        </button>
-                                                        <TrackMenu trackId={t.id} />
-                                                        <span className="strack__dur">{fmtMs(t.durationMs)}</span>
-                                                    </li>
-                                                    {commentsOpen && (
-                                                        <li className="strack-comments-row">
-                                                            <TrackComments trackId={t.id} trackTitle={t.title} />
-                                                        </li>
-                                                    )}
-                                                </Fragment>
-                                            );
-                                        })}
-                                    </ul>
-                                </>
-                                );
-                            })()}
-
-                            {topTracks.length > 0 && (
-                                <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
-                                    <CardTitle>
-                                        <span>Top via Spotify · {topTracks.length}</span>
-                                        <span className="strack-source">
-                                            <SiSpotify size={12} style={{ color: '#1DB954' }} />
-                                            via Spotify
-                                        </span>
-                                    </CardTitle>
-                                    <ul className="strack-list">
-                                        {topTracks.map((t, i) => {
-                                            const isPlaying = currentTrack?.spotifyId === t.spotifyId;
-                                            return (
-                                                <li
-                                                    key={t.spotifyId ?? i}
-                                                    className={'strack strack--playable' + (isPlaying ? ' is-playing' : '')}
-                                                    onClick={() => setTrack(
-                                                        {
-                                                            spotifyId:  t.spotifyId,
-                                                            name:       t.name,
-                                                            artistName: user.name,
-                                                            coverUrl:   t.coverUrl,
-                                                            durationMs: t.durationMs,
-                                                            spotifyUrl: t.spotifyUrl,
-                                                            source:     'spotify',
-                                                        },
-                                                        topTracks.map(tr => ({
-                                                            spotifyId:  tr.spotifyId,
-                                                            name:       tr.name,
-                                                            artistName: user.name,
-                                                            coverUrl:   tr.coverUrl,
-                                                            durationMs: tr.durationMs,
-                                                            spotifyUrl: tr.spotifyUrl,
-                                                            source:     'spotify',
-                                                        }))
-                                                    )}
-                                                >
-                                                    <div className="strack__num-wrap">
-                                                        <span className="strack__num">{i + 1}</span>
-                                                        <span className="strack__play-icon"><FaPlay size={11} /></span>
+                                                        <span className="lib__pl-play" aria-hidden="true"><FaPlay size={11} /></span>
                                                     </div>
-                                                    {t.coverUrl
-                                                        ? <img src={t.coverUrl} alt={t.name} className="strack__cover" />
-                                                        : <div className="strack__cover strack__cover--placeholder" />
-                                                    }
-                                                    <div className="strack__info">
-                                                        <div className="strack__title">{t.name}</div>
-                                                        <div className="strack__sub">
-                                                            {isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}
-                                                        </div>
-                                                    </div>
-                                                    <span className="strack__dur">{fmtMs(t.durationMs)}</span>
-                                                    {t.spotifyUrl && (
-                                                        <a
-                                                            href={t.spotifyUrl}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            className="strack__spotify"
-                                                            onClick={e => e.stopPropagation()}
-                                                            title="Abrir no Spotify"
-                                                        >
-                                                            <SiSpotify size={15} />
-                                                        </a>
-                                                    )}
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
-                            )}
-
-                            {localTracks.length === 0 && topTracks.length === 0 && (
-                                <p className="prof__bio user-detail__empty">Sem faixas disponíveis.</p>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Lançamentos (apenas artistas) */}
-                    {activeTab === 'Lançamentos' && (
-                        <div className="prof-card">
-                            {releases.length > 0 ? (
-                                <>
-                                    <CardTitle>Lançamentos · {releases.length}</CardTitle>
-                                    <div className="rel-grid rel-grid--full">
-                                        {releases.map(r => {
-                                            const label = TYPE_LABEL[r.albumType] ?? r.albumType;
-                                            const count = r.tracks?.length ?? 0;
-                                            return (
-                                                <Link key={r.id} to={`/releases/${r.id}`} className="rel-card rel-card--link">
-                                                    <div className="rel-card__cover">
-                                                        {r.coverUrl
-                                                            ? <img src={r.coverUrl} alt={r.title} />
-                                                            : <div className="rel-card__cover-placeholder"><FaCompactDisc size={28} /></div>
-                                                        }
-                                                        <span className="rel-card__badge">{label}</span>
-                                                    </div>
-                                                    <div className="rel-card__info">
-                                                        <div className="rel-card__title" title={r.title}>{r.title}</div>
-                                                        <div className="rel-card__sub">{count} {count === 1 ? 'faixa' : 'faixas'}</div>
+                                                    <div className="lib__pl-title">{pl.name}</div>
+                                                    <div className="lib__pl-meta">
+                                                        <FaGlobe size={9} /> Pública · {pl.trackCount ?? 0} {pl.trackCount === 1 ? 'faixa' : 'faixas'}
                                                     </div>
                                                 </Link>
-                                            );
-                                        })}
-                                    </div>
-                                </>
-                            ) : (
-                                <p className="prof__bio user-detail__empty">Sem lançamentos publicados.</p>
-                            )}
-                        </div>
-                    )}
-
-                    {/* Sobre (apenas artistas) */}
-                    {activeTab === 'Sobre' && (() => {
-                        const ap = artistProfile;
-                        const about = {
-                            location:  ap?.location ?? ap?.city ?? null,
-                            genre:     Array.isArray(ap?.genres) ? ap.genres.join(' · ') : (ap?.genre ?? null),
-                            languages: Array.isArray(ap?.languages) ? ap.languages.join(', ') : null,
-                            forHire:   false,
-                        };
-                        const social = Array.isArray(ap?.links) ? ap.links : [];
-                        return (
-                            <div className="prof__grid">
-                                <ArtistAbout artist={{ bio: ap?.bio ?? null, about }} />
-                                <div className="prof__col-side">
-                                    <ArtistLinks social={social} />
+                                            ))}
+                                          </div>
+                                        : <p className="prof__bio user-detail__empty">Sem playlists públicas.</p>
+                                    }
                                 </div>
                             </div>
-                        );
-                    })()}
+
+                            <div className="prof__col-side">
+                                {userTopGenres.length > 0 && (
+                                    <div className="prof-card">
+                                        <CardTitle>Géneros preferidos</CardTitle>
+                                        <GenreBars genres={userTopGenres} />
+                                    </div>
+                                )}
+                                {followingArtists.length > 0 && (
+                                    <div className="prof-card">
+                                        <CardTitle>A seguir</CardTitle>
+                                        <div className="prof-following prof-following--compact">
+                                            {followingArtists.slice(0, 6).map(a => (
+                                                <Link key={a.id} to={`/artists/${a.id}`} className="follow-card">
+                                                    <div className="follow-card__avatar">
+                                                        {a.avatarUrl
+                                                            ? <img src={a.avatarUrl} alt={a.name} className="follow-card__avatar-img" />
+                                                            : <div className="follow-card__avatar-empty"><FaUser size={20} /></div>
+                                                        }
+                                                    </div>
+                                                    <div className="follow-card__name">{a.name}</div>
+                                                    {a.genre && <div className="follow-card__genre">{a.genre}</div>}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                                {userRecentTracks.length > 0 && (
+                                    <div className="prof-card">
+                                        <CardTitle>Ouvido recentemente</CardTitle>
+                                        {userRecentTracks.slice(0, 5).map(t => (
+                                            <div key={t.trackId} className="playlist-item prof-recent">
+                                                <div className="playlist-item__cover prof-recent__cover">
+                                                    {t.coverUrl
+                                                        ? <img src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" />
+                                                        : <div className="playlist-item__cover-empty"><FaMusic size={12} /></div>
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <div className="playlist-item__name prof-recent__name">{t.title}</div>
+                                                    <div className="playlist-item__count">{t.artistName}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Playlists */}
                     {activeTab === 'Playlists' && (
@@ -611,23 +345,26 @@ export default function UserDetail() {
                             </div>
 
                             <div className="prof__col-side">
-                                {topGenres.length > 0 && (
+                                {userTopGenres.length > 0 && (
                                     <div className="prof-card">
                                         <CardTitle>Géneros preferidos</CardTitle>
-                                        <GenreBars genres={topGenres} />
+                                        <GenreBars genres={userTopGenres} />
                                     </div>
                                 )}
-                                {recentlyPlayed.length > 0 && (
+                                {userRecentTracks.length > 0 && (
                                     <div className="prof-card">
                                         <CardTitle>Ouvido recentemente</CardTitle>
-                                        {recentlyPlayed.map((t, i) => (
-                                            <div key={i} className="playlist-item prof-recent">
+                                        {userRecentTracks.slice(0, 5).map(t => (
+                                            <div key={t.trackId} className="playlist-item prof-recent">
                                                 <div className="playlist-item__cover prof-recent__cover">
-                                                    <ArtistArtwork shape={t.shape} hue={t.hue} image={t.image} rounded={0} />
+                                                    {t.coverUrl
+                                                        ? <img src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" />
+                                                        : <div className="playlist-item__cover-empty"><FaMusic size={12} /></div>
+                                                    }
                                                 </div>
                                                 <div>
                                                     <div className="playlist-item__name prof-recent__name">{t.title}</div>
-                                                    <div className="playlist-item__count">{t.artist}</div>
+                                                    <div className="playlist-item__count">{t.artistName}</div>
                                                 </div>
                                             </div>
                                         ))}
@@ -652,18 +389,30 @@ export default function UserDetail() {
                         </div>
                     )}
 
-                    {/* Atividade */}
-                    {activeTab === 'Atividade' && (
+                    {/* A seguir */}
+                    {activeTab === 'A seguir' && (
                         <div className="prof-card">
-                            {activity.length > 0
-                                ? <>
-                                    <CardTitle>Atividade recente</CardTitle>
-                                    <ActivityList items={activity} />
-                                  </>
-                                : <p className="prof__bio user-detail__empty">Sem atividade recente.</p>
+                            <CardTitle>A seguir · {followingArtists.length}</CardTitle>
+                            {followingArtists.length === 0
+                                ? <p className="prof__bio user-detail__empty">Ainda não segue nenhum artista.</p>
+                                : <div className="prof-following">
+                                    {followingArtists.map(a => (
+                                        <Link key={a.id} to={`/artists/${a.id}`} className="follow-card">
+                                            <div className="follow-card__avatar">
+                                                {a.avatarUrl
+                                                    ? <img src={a.avatarUrl} alt={a.name} className="follow-card__avatar-img" />
+                                                    : <div className="follow-card__avatar-empty"><FaUser size={20} /></div>
+                                                }
+                                            </div>
+                                            <div className="follow-card__name">{a.name}</div>
+                                            {a.genre && <div className="follow-card__genre">{a.genre}</div>}
+                                        </Link>
+                                    ))}
+                                  </div>
                             }
                         </div>
                     )}
+
                 </div>
             </div>
         </AppShell>

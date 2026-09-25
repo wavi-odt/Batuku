@@ -4,6 +4,7 @@
 
 import { FaPlay, FaPause, FaShoppingCart, FaCheck, FaHandshake } from 'react-icons/fa'
 import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ClickableName from '../../../../components/ClickableName.jsx'
 
 const LIC_KEYS   = ['lease', 'premium', 'exclusive'];
 const LIC_ABBREV = { lease: 'L', premium: 'P', exclusive: 'E' };
@@ -76,7 +77,9 @@ export default function MarketplaceGrid({
                                     {beat.title}
                                     {beat.isNew && <span className="mkt__beat-new">novo</span>}
                                 </div>
-                                <div className="mkt__beat-producer">{beat.producer}</div>
+                                <div className="mkt__beat-producer">
+                                    <ClickableName userId={beat.producerId} name={beat.producer} />
+                                </div>
                             </div>
 
                             {/* Genre */}
@@ -93,7 +96,7 @@ export default function MarketplaceGrid({
                                             key={k}
                                             type="button"
                                             className={`mkt__beat-lic-btn${lic === k ? ' mkt__beat-lic-btn--active' : ''}`}
-                                            title={`${LIC_LABELS[k]} · €${beat.prices[k].toFixed(2)}`}
+                                            title={k === 'exclusive' && beat.exclusiveNegotiable ? `${LIC_LABELS[k]} · Negociar` : `${LIC_LABELS[k]} · €${beat.prices[k].toFixed(2)}`}
                                             onClick={() => onLicense(beat.id, k)}
                                         >
                                             {LIC_ABBREV[k]}

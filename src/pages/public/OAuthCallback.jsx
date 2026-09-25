@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { saveAuth, getRole } from '../../utils/auth.js'
+import { saveAuth, getRole, setPendingClaim } from '../../utils/auth.js'
 
 export default function OAuthCallback() {
     const navigate = useNavigate()
@@ -19,6 +19,16 @@ export default function OAuthCallback() {
         }
 
         saveAuth(token)
+
+        const pendingRole = sessionStorage.getItem('oauthPendingRole')
+        sessionStorage.removeItem('oauthPendingRole')
+
+        if (pendingRole === 'artist') {
+            setPendingClaim()
+            navigate('/claim-profile', { state: { fromRegistration: true }, replace: true })
+            return
+        }
+
         const role = getRole()
         navigate(role === 'artist' ? '/dashboard' : '/home', { replace: true })
     }, [navigate, searchParams])

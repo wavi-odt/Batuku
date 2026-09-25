@@ -1,11 +1,11 @@
 import { useEffect, useState, Fragment } from 'react'
-import { useParams, Link, Navigate, useSearchParams } from 'react-router-dom'
+import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { FaUserPlus, FaUserCheck, FaPlay, FaCompactDisc, FaRegComment } from 'react-icons/fa'
 import { SiSpotify } from 'react-icons/si'
 import AppShell from '../../../components/HomeComponents/AppShell'
 import { API, getToken, getRole } from '../../../utils/auth.js'
 import { useToast } from '../../../context/ToastContext'
-import { CardTitle, BadgesGrid, ArtistAbout, ArtistLinks } from '../profile/ProfileBlocks'
+import { CardTitle, ArtistAbout, ArtistLinks } from '../profile/ProfileBlocks'
 import { usePlayer } from '../../../context/PlayerContext'
 import LikeButton from '../../../components/LikeButton'
 import TrackMenu from '../../../components/TrackMenu'
@@ -14,7 +14,7 @@ import '../profile/Profile.css'
 import '../DetailPage.css'
 import '../release/ReleaseDetail.css'
 
-const TABS = ['Visão geral', 'Faixas', 'Lançamentos', 'Sobre', 'Conquistas'];
+const TABS = ['Visão geral', 'Faixas', 'Lançamentos', 'Sobre'];
 const TYPE_LABEL = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape', SINGLE: 'Single' };
 
 function fmtMs(ms) {
@@ -37,6 +37,7 @@ export default function ArtistDetail() {
     const [following,        setFollowing]        = useState(false);
     const [followers,        setFollowers]        = useState(0);
     const [topTracks,        setTopTracks]        = useState([]);
+    const [topTracksLoading, setTopTracksLoading] = useState(true);
     const [localTracks,      setLocalTracks]      = useState([]);
     const [releases,         setReleases]         = useState([]);
     const [openCommentTrack, setOpenCommentTrack] = useState(null);
@@ -47,28 +48,38 @@ export default function ArtistDetail() {
         Promise.all([
             fetch(`${API}/api/artists/${id}`, auth),
             fetch(`${API}/api/artist-follows/${id}/status`, auth),
-            fetch(`${API}/api/artists/${id}/top-tracks?market=PT`, auth),
             fetch(`${API}/api/tracks/artist/${id}`, auth),
             fetch(`${API}/api/releases/artist/${id}`, auth),
         ])
-            .then(([artistRes, statusRes, topRes, localRes, releasesRes]) => Promise.all([
+            .then(([artistRes, statusRes, localRes, releasesRes]) => Promise.all([
                 artistRes.ok ? artistRes.json() : Promise.reject(new Error(`Erro ${artistRes.status}`)),
                 statusRes.ok ? statusRes.json() : Promise.resolve(null),
-                topRes.ok ? topRes.json() : Promise.resolve([]),
                 localRes.ok ? localRes.json() : Promise.resolve([]),
                 releasesRes.ok ? releasesRes.json() : Promise.resolve([]),
             ]))
-            .then(([artistData, statusData, topData, localData, releasesData]) => {
+            .then(([artistData, statusData, localData, releasesData]) => {
                 setArtist(artistData);
                 setFollowing(statusData?.following ?? artistData.isFollowing ?? false);
                 setFollowers(statusData?.followers ?? artistData.followers ?? 0);
-                setTopTracks(Array.isArray(topData) ? topData : []);
                 const uploaded = Array.isArray(localData) ? localData.filter(t => t.audioUrl) : [];
                 setLocalTracks(uploaded);
                 setReleases(Array.isArray(releasesData) ? releasesData : []);
             })
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
+    }, [id]);
+
+    useEffect(() => {
+        const auth = { headers: { Authorization: `Bearer ${getToken()}` } };
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 35_000)
+        setTopTracksLoading(true);
+        fetch(`${API}/api/artists/${id}/top-tracks?market=PT`, { ...auth, signal: controller.signal })
+            .then(r => r.ok ? r.json() : [])
+            .then(data => setTopTracks(Array.isArray(data) ? data : []))
+            .catch(() => setTopTracks([]))
+            .finally(() => { clearTimeout(timeout); setTopTracksLoading(false) });
+        return () => { clearTimeout(timeout); controller.abort() }
     }, [id]);
 
     function toggleComments(e, trackId) {
@@ -90,8 +101,6 @@ export default function ArtistDetail() {
         </AppShell>
     );
 
-    if (artist.userId) return <Navigate to={`/users/${artist.userId}`} replace />;
-
     const activeTab      = TABS[active];
     const hue            = artist.hue ?? 320;
     const coverGradient  = `linear-gradient(120deg, oklch(0.42 0.16 ${hue}), oklch(0.40 0.15 ${(hue + 60) % 360}))`;
@@ -109,19 +118,21 @@ export default function ArtistDetail() {
     const social = Array.isArray(artist.links) ? artist.links : [];
 
     const localQueue = localTracks.map(tr => ({
-        id:          tr.id,
-        name:        tr.title,
-        artistName:  artist.name,
-        coverUrl:    tr.coverUrl,
-        durationMs:  tr.durationMs,
-        audioUrl:    tr.audioUrl,
-        source:      'upload',
-        playContext: 'artist',
+        id:               tr.id,
+        name:             tr.title,
+        artistName:       artist.name,
+        artistProfileId:  parseInt(id),
+        coverUrl:         tr.coverUrl,
+        durationMs:       tr.durationMs,
+        audioUrl:         tr.audioUrl,
+        source:           'upload',
+        playContext:      'artist',
     }));
 
     const stats = [
-        { v: followers != null ? followers.toLocaleString('pt-PT') : '—', l: 'Seguidores' },
-        { v: artist.tracksCount != null ? artist.tracksCount : '—',       l: 'Faixas' },
+        { v: followers != null ? followers.toLocaleString('pt-PT') : '—',                l: 'Seguidores' },
+        { v: artist.monthlyListeners != null ? artist.monthlyListeners.toLocaleString('pt-PT') : '—', l: 'Ouvintes/mês' },
+        { v: artist.tracksCount != null ? artist.tracksCount : '—',                       l: 'Faixas' },
     ];
 
     function TracksList({ nameKey = 'title' }) {
@@ -344,7 +355,12 @@ export default function ArtistDetail() {
                                             <TracksList />
                                         </>
                                     )}
-                                    {topTracks.length > 0 && (
+                                    {topTracksLoading && (
+                                        <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
+                                            <CardTitle><SiSpotify size={12} style={{ color: '#1DB954', marginRight: 6 }} />A carregar top Spotify…</CardTitle>
+                                        </div>
+                                    )}
+                                    {!topTracksLoading && topTracks.length > 0 && (
                                         <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
                                             <CardTitle>
                                                 <span>Top via Spotify · {topTracks.length}</span>
@@ -353,7 +369,7 @@ export default function ArtistDetail() {
                                             <SpotifyList />
                                         </div>
                                     )}
-                                    {localTracks.length === 0 && topTracks.length === 0 && (
+                                    {localTracks.length === 0 && !topTracksLoading && topTracks.length === 0 && (
                                         <p className="prof__bio user-detail__empty">Sem faixas disponíveis.</p>
                                     )}
                                 </div>
@@ -380,7 +396,12 @@ export default function ArtistDetail() {
                                     <TracksList />
                                 </>
                             )}
-                            {topTracks.length > 0 && (
+                            {topTracksLoading && (
+                                <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
+                                    <CardTitle><SiSpotify size={12} style={{ color: '#1DB954', marginRight: 6 }} />A carregar top Spotify…</CardTitle>
+                                </div>
+                            )}
+                            {!topTracksLoading && topTracks.length > 0 && (
                                 <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
                                     <CardTitle>
                                         <span>Top via Spotify · {topTracks.length}</span>
@@ -392,7 +413,7 @@ export default function ArtistDetail() {
                                     <SpotifyList />
                                 </div>
                             )}
-                            {localTracks.length === 0 && topTracks.length === 0 && (
+                            {localTracks.length === 0 && !topTracksLoading && topTracks.length === 0 && (
                                 <p className="prof__bio user-detail__empty">Sem faixas disponíveis.</p>
                             )}
                         </div>
@@ -422,12 +443,6 @@ export default function ArtistDetail() {
                         </div>
                     )}
 
-                    {/* Conquistas */}
-                    {activeTab === 'Conquistas' && (
-                        <div className="prof-card">
-                            <p className="prof__bio user-detail__empty">Sem conquistas ainda.</p>
-                        </div>
-                    )}
                 </div>
             </div>
         </AppShell>

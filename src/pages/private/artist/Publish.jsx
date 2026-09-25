@@ -9,10 +9,10 @@ import { FaMusic, FaImage, FaTrash, FaPlus, FaExclamationTriangle, FaTimes } fro
 import { getToken }       from '../../../utils/auth.js'
 import { usePublish }     from '../../../context/PublishContext.jsx'
 import { useToast }       from '../../../context/ToastContext.jsx'
+import { useGenres }      from '../../../context/GenresContext.jsx'
 import './Publish.css'
 
-const API    = `${import.meta.env.VITE_API_BASE_URL}/api`
-const GENRES = ['Funaná', 'Batuku', 'Morna', 'Coladeira', 'Kizomba', 'Afrobeat', 'Hip-Hop', 'Outro'];
+const API = `${import.meta.env.VITE_API_BASE_URL}/api`
 const MAX_AUDIO = 300 * 1024 * 1024;
 const MAX_IMAGE  =  5 * 1024 * 1024;
 
@@ -52,6 +52,7 @@ function TrackRow({ track, onChange, onRemove }) {
 export default function PublishModal() {
     const { isOpen, closePublish, notifyPublished } = usePublish();
     const { showToast } = useToast();
+    const { allNames: GENRES } = useGenres();
 
     const [mode,        setMode]        = useState('track');
     const [title,       setTitle]       = useState('');
