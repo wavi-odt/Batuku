@@ -1,5 +1,7 @@
 /* ─── How It Works ────────────────────────────────────────────────── */
 
+.how.section { padding-top: var(--space-16); }
+
 .how__head { margin-bottom: var(--space-12); }
 
 .how__title {

@@ -1,5 +1,7 @@
 /* ─── FAQ ─────────────────────────────────────────────────────────── */
 
+.faq.section { padding-top: var(--space-16); padding-bottom: var(--space-16); }
+
 .faq__inner { max-width: 820px; }
 
 .faq__title {

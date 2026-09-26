@@ -31,6 +31,11 @@
     }
 }
 
+.hero__grid--full {
+    grid-template-columns: 1fr;
+    max-width: 720px;
+}
+
 /* ─── Copy ────────────────────────────────────────────────────────── */
 .hero__title {
     font-size: var(--fs-display);
@@ -85,6 +90,31 @@
     color: var(--color-ink-mute);
 }
 .hero__social-text strong { color: var(--color-ink); }
+
+/* ─── Float letters ───────────────────────────────────────────────── */
+.hero__float {
+    position: relative;
+    height: 480px;
+}
+
+.hero__letter {
+    position: absolute;
+    font-size: clamp(72px, 9vw, 120px);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-tight);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
+    user-select: none;
+    animation: letter-float cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+}
+
+@keyframes letter-float {
+    0%   { transform: translateY(0px)   rotate(-1deg); }
+    50%  { transform: translateY(-12px) rotate(0.5deg); }
+    100% { transform: translateY(-22px) rotate(1deg); }
+}
+
+@media (max-width: 1000px) { .hero__float { display: none; } }
 
 /* ─── Wall ────────────────────────────────────────────────────────── */
 .hero__wall {

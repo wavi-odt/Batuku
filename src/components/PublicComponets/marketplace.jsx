@@ -3,7 +3,7 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { Link } from 'react-router-dom'
-import { BEATS } from '../../data/batuku.js'
+import { BEATS } from '../../data/landing.js'
 import ArtistArtwork from './ArtistArtwork.jsx'
 import useReveal from '../../hooks/useReveal.js'
 import './marketplace.css'
@@ -46,7 +46,7 @@ export default function Marketplace() {
 
                     <div className="marketplace__panel card">
                         <div className="marketplace__panel-head">
-                            <div className="marketplace__panel-url">marketplace.batuku.cv</div>
+                            <div className="marketplace__panel-url">representação marketplace</div>
                             <div className="marketplace__panel-dots">
                                 <span /><span /><span />
                             </div>

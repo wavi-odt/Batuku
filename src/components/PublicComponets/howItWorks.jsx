@@ -2,7 +2,7 @@
    HowItWorks, Três passos para começar.
    ───────────────────────────────────────────────────────────────── */
 
-import { STEPS } from '../../data/batuku.js'
+import { STEPS } from '../../data/landing.js'
 import useReveal from '../../hooks/useReveal.js'
 import './howItWorks.css'
 

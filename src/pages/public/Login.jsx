@@ -66,11 +66,10 @@ export default function Login() {
     return (
         <main className="auth">
             <AuthSide
+                page="login"
                 title="Bem-vindo de"
                 accent="volta."
                 lede="Continua a apoiar artistas cabo-verdianos, descobre novas faixas e acompanha o teu ranking semanal."
-                quote="Aqui não estou só. Sinto a comunidade do outro lado."
-                author=", Djossa · Funaná · Praia"
             />
 
             <section className="auth__form-col">

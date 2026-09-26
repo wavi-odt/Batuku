@@ -1,5 +1,7 @@
 /* ─── CTA ─────────────────────────────────────────────────────────── */
 
+.cta.section { padding-top: var(--space-16); }
+
 .cta {
     position: relative;
     overflow: hidden;

@@ -3,7 +3,7 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useState } from 'react'
-import { FAQ as ITEMS } from '../../data/batuku.js'
+import { FAQ as ITEMS } from '../../data/landing.js'
 import useReveal from '../../hooks/useReveal.js'
 import './faq.css'
 

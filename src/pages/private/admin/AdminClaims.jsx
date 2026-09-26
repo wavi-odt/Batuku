@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { getToken } from '../../../utils/auth.js'
+import AdminShell from './AdminShell.jsx'
 import './AdminHome.css'
 import './AdminClaims.css'
 
-const API = `${import.meta.env.VITE_API_BASE_URL}/api/admin/artist-claims`
+const API          = `${import.meta.env.VITE_API_BASE_URL}/api/admin/artist-claims`
+const PROFILES_API = `${import.meta.env.VITE_API_BASE_URL}/api/admin/artist-profiles`
 
 function ConfirmModal({ action, onConfirm, onCancel, busy, error }) {
     const isVerify = action === 'verify';
@@ -90,6 +91,19 @@ export default function AdminClaims() {
                 headers: { Authorization: `Bearer ${getToken()}` },
             });
             if (!res.ok) throw new Error(`Erro ${res.status}`);
+
+            // Após verificar, garante que o perfil de artista existe em artist_profiles
+            if (action === 'verify' && detail?.spotifyArtistId) {
+                await fetch(`${PROFILES_API}/import`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${getToken()}`,
+                    },
+                    body: JSON.stringify({ spotifyArtistId: detail.spotifyArtistId }),
+                }).catch(() => { /* ignora — perfil pode já existir */ });
+            }
+
             setClaims(prev => prev.filter(c => c.id !== id));
             closeDetail();
             setConfirm(null);
@@ -106,16 +120,11 @@ export default function AdminClaims() {
 
     return (
         <>
-        <div className="admin-page">
+        <AdminShell>
             <div className={`admin-page__inner${hasSplit ? ' admin-page__inner--wide' : ''}`}>
                 <header className="admin-head">
-                    <div className="admin-head__row">
-                        <div>
-                            <Link to="/admin" className="admin-back">← Administração</Link>
-                            <h1 className="admin-head__title">Reclamações de perfil</h1>
-                            <p className="admin-head__sub">Revê e aprova pedidos de artistas a reclamar o seu perfil importado.</p>
-                        </div>
-                    </div>
+                    <h1 className="admin-head__title">Reclamações de perfil</h1>
+                    <p className="admin-head__sub">Revê e aprova pedidos de artistas a reclamar o seu perfil importado.</p>
                 </header>
 
                 {success && (
@@ -240,7 +249,7 @@ export default function AdminClaims() {
                     </div>
                 )}
             </div>
-        </div>
+        </AdminShell>
 
         {confirm && (
             <ConfirmModal

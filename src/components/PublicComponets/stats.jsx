@@ -2,7 +2,7 @@
    Stats, Quatro métricas numa única faixa.
    ───────────────────────────────────────────────────────────────── */
 
-import { STATS } from '../../data/batuku.js'
+import { STATS } from '../../data/landing.js'
 import useReveal from '../../hooks/useReveal.js'
 import './stats.css'
 

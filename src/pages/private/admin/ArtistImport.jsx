@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { getToken } from '../../../utils/auth.js'
+import AdminShell from './AdminShell.jsx'
 import './AdminHome.css'
 import './ArtistImport.css'
 
@@ -54,16 +54,11 @@ export default function ArtistImport() {
     }
 
     return (
-        <div className="admin-page">
+        <AdminShell>
             <div className="admin-page__inner">
                 <header className="admin-head">
-                    <div className="admin-head__row">
-                        <div>
-                            <Link to="/admin" className="admin-back">← Administração</Link>
-                            <h1 className="admin-head__title">Importar artistas</h1>
-                            <p className="admin-head__sub">Pesquisa e importa perfis de artistas a partir do Spotify.</p>
-                        </div>
-                    </div>
+                    <h1 className="admin-head__title">Importar artistas</h1>
+                    <p className="admin-head__sub">Pesquisa e importa perfis de artistas a partir do Spotify.</p>
                 </header>
 
                 <form className="artist-import__search" onSubmit={handleSearch}>
@@ -141,6 +136,6 @@ export default function ArtistImport() {
                     ))}
                 </ul>
             </div>
-        </div>
+        </AdminShell>
     );
 }

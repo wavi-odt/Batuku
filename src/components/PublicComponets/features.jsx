@@ -3,7 +3,7 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { FaChartLine, FaStore, FaTrophy, FaDiscord } from 'react-icons/fa'
-import { FEATURES } from '../../data/batuku.js'
+import { FEATURES } from '../../data/landing.js'
 import useReveal from '../../hooks/useReveal.js'
 import './features.css'
 
@@ -44,7 +44,6 @@ export default function Features() {
                                     <h3 className="features__card-title">{f.title}</h3>
                                     <p className="features__card-body">{f.body}</p>
                                 </div>
-                                <a href="#" className="features__link">Saber mais →</a>
                             </article>
                         );
                     })}

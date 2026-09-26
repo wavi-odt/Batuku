@@ -3,20 +3,42 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { Link } from 'react-router-dom'
-import { FaPlay } from 'react-icons/fa'
-import { ARTISTS } from '../../data/batuku.js'
+import { useEffect, useState } from 'react'
 import ArtistArtwork from './ArtistArtwork.jsx'
 import useReveal from '../../hooks/useReveal.js'
 import './hero.css'
 
+const SHAPE_KEYS = ['circles', 'arch', 'stripes', 'split', 'orbit', 'wave', 'sun', 'triangles'];
+
+function strHash(s) {
+    let h = 0;
+    for (const c of s) h = ((h * 31) + c.charCodeAt(0)) >>> 0;
+    return h;
+}
+
+function artistToProps(artist) {
+    const h = strHash(artist.name);
+    return { hue: h % 360, shape: SHAPE_KEYS[h % SHAPE_KEYS.length] };
+}
+
 export default function Hero() {
+    const [artists, setArtists] = useState(null); // null = a carregar
     const ref = useReveal();
+
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/public/artists/hero`)
+            .then(r => r.ok ? r.json() : [])
+            .then(data => setArtists(Array.isArray(data) && data.length >= 3 ? data : []))
+            .catch(() => setArtists([]));
+    }, []);
+
+    const hasWall = artists && artists.length >= 3;
 
     return (
         <section className="hero">
             <div className="hero__bg" aria-hidden="true" />
             <div className="container">
-                <div ref={ref} className="hero__grid reveal">
+                <div ref={ref} className={`hero__grid reveal${hasWall ? '' : ' hero__grid--full'}`}>
 
                     <div className="hero__copy">
                         <span className="pill">
@@ -32,34 +54,21 @@ export default function Hero() {
                         </p>
                         <div className="hero__actions">
                             <Link to="/register" className="btn btn--primary">Começar grátis →</Link>
-                            <a href="#demo" className="btn btn--ghost"><FaPlay size={12} /> Ver demo (2 min)</a>
-                        </div>
-                        <div className="hero__social">
-                            <div className="hero__avatars">
-                                {ARTISTS.slice(0, 4).map((a, i) => (
-                                    <div key={i} className="hero__avatar">
-                                        <ArtistArtwork shape={a.shape} hue={a.hue} image={a.image} rounded={0} showGloss={false} />
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="hero__social-text">
-                                <strong>1.200+ artistas</strong> já estão a publicar
-                            </div>
                         </div>
                     </div>
 
-                    <HeroWall />
+                    {hasWall && <HeroWall artists={artists} />}
                 </div>
             </div>
         </section>
     );
 }
 
-function HeroWall() {
+function HeroWall({ artists }) {
     const cols = [
-        ARTISTS.slice(0, 4),
-        ARTISTS.slice(2, 6),
-        ARTISTS.slice(4, 8),
+        artists.slice(0, 4),
+        artists.slice(2, 6),
+        artists.slice(4, 8),
     ];
 
     return (
@@ -69,7 +78,12 @@ function HeroWall() {
                     <div className={'hero__wall-track' + (i === 1 ? ' is-reverse' : '')}>
                         {[...col, ...col].map((a, j) => (
                             <div key={j} className="hero__wall-item">
-                                <ArtistArtwork shape={a.shape} hue={a.hue} image={a.image} name={a.name} rounded={14} />
+                                <ArtistArtwork
+                                    {...artistToProps(a)}
+                                    image={a.imageUrl || null}
+                                    name={a.name}
+                                    rounded={14}
+                                />
                             </div>
                         ))}
                     </div>

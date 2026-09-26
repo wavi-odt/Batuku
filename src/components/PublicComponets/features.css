@@ -1,5 +1,7 @@
 /* ─── Features ────────────────────────────────────────────────────── */
 
+.features.section { padding-bottom: var(--space-16); }
+
 .features__head {
     display: flex;
     justify-content: space-between;

@@ -6,14 +6,15 @@
 }
 
 .footer__top {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr 1fr 1fr;
-    gap: var(--space-8);
+    display: flex;
+    justify-content: center;
 }
 
-@media (max-width: 860px) {
-    .footer__top { grid-template-columns: 1fr 1fr; gap: var(--space-8); }
-    .footer__brand { grid-column: 1 / -1; }
+.footer__brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .footer__logo-row {
@@ -37,7 +38,7 @@
     font-size: var(--fs-sm);
     color: var(--color-ink-mute);
     margin: var(--space-3) 0 0;
-    max-width: 280px;
+    max-width: 360px;
     line-height: var(--lh-base);
 }
 

@@ -4,7 +4,7 @@
 
 import { Link } from 'react-router-dom'
 import { FaHeart } from 'react-icons/fa'
-import { ARTISTS } from '../../data/batuku.js'
+import { ARTISTS } from '../../data/landing.js'
 import ArtistArtwork from './ArtistArtwork.jsx'
 import useReveal from '../../hooks/useReveal.js'
 import './artists.css'
