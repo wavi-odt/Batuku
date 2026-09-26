@@ -65,7 +65,7 @@ export default function ArtistImport() {
                     <input
                         className="input"
                         type="text"
-                        placeholder="Nome do artista…"
+                        placeholder="Nome do artista ou URL do Spotify…"
                         value={query}
                         onChange={e => setQuery(e.target.value)}
                     />
@@ -73,6 +73,9 @@ export default function ArtistImport() {
                         {loading ? 'A procurar…' : 'Procurar'}
                     </button>
                 </form>
+                <p className="admin-migration__desc" style={{ marginTop: 'var(--space-2)' }}>
+                    Cola o URL do perfil Spotify do artista (ex: <em>open.spotify.com/artist/…</em>) para encontrar um perfil específico entre vários com o mesmo nome.
+                </p>
 
                 {error && <p className="artist-import__error">{error}</p>}
 

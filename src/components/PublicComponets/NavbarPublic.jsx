@@ -9,11 +9,7 @@ import { HiMenu, HiX } from 'react-icons/hi'
 import logo from '../../assets/batuku.png'
 import '../PublicComponets/NavbarPublic.css'
 
-const NAV_LINKS = [
-    { name: 'Artistas',    href: '/artists' },
-    { name: 'Marketplace', href: '/marketplace' },
-    { name: 'Comunidade',  href: '/community' },
-];
+const NAV_LINKS = [];
 
 export default function NavbarPublic() {
     const location = useLocation();

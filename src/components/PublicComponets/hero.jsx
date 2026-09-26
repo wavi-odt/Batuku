@@ -3,9 +3,8 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import ArtistArtwork from './ArtistArtwork.jsx'
-import useReveal from '../../hooks/useReveal.js'
 import './hero.css'
 
 const SHAPE_KEYS = ['circles', 'arch', 'stripes', 'split', 'orbit', 'wave', 'sun', 'triangles'];
@@ -22,8 +21,9 @@ function artistToProps(artist) {
 }
 
 export default function Hero() {
-    const [artists, setArtists] = useState(null); // null = a carregar
-    const ref = useReveal();
+    const [artists, setArtists] = useState(null);
+    const [revealed, setRevealed] = useState(false);
+    const gridRef = useRef(null);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_BASE_URL}/api/public/artists/hero`)
@@ -32,13 +32,23 @@ export default function Hero() {
             .catch(() => setArtists([]));
     }, []);
 
+    useEffect(() => {
+        const el = gridRef.current;
+        if (!el) return;
+        const io = new IntersectionObserver(([entry]) => {
+            if (entry.isIntersecting) { setRevealed(true); io.disconnect(); }
+        }, { threshold: 0.12 });
+        io.observe(el);
+        return () => io.disconnect();
+    }, []);
+
     const hasWall = artists && artists.length >= 3;
 
     return (
         <section className="hero">
             <div className="hero__bg" aria-hidden="true" />
             <div className="container">
-                <div ref={ref} className={`hero__grid reveal${hasWall ? '' : ' hero__grid--full'}`}>
+                <div ref={gridRef} className={`hero__grid reveal${revealed ? ' in' : ''}${hasWall ? '' : ' hero__grid--full'}`}>
 
                     <div className="hero__copy">
                         <span className="pill">
