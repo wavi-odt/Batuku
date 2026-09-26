@@ -427,7 +427,7 @@ export default function ProjectDetail() {
                     </div>
 
                     <p className="pd__meta">
-                        {currentUser?.name ?? '—'}
+                        {currentUser?.name ?? ''}
                         {tracks.length > 0 && ` · ${tracks.length} ${tracks.length === 1 ? 'faixa' : 'faixas'}`}
                     </p>
 

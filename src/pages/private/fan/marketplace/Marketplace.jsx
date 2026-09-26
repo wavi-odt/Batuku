@@ -193,7 +193,7 @@ export default function Marketplace() {
     /* ─── Aguardar que o currentUser carregue antes de mostrar modal */
     const roleKnown = currentUser !== null && marketplaceRole !== undefined
 
-    /* Redirect síncrono — sem flash */
+    /* Redirect síncrono, sem flash */
     if (!tabParam) {
         const last = sessionStorage.getItem('mkt_tab')
         if (last) return <Navigate to={`/marketplace/${last}`} replace />

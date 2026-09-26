@@ -128,9 +128,9 @@ export default function Achievements() {
     } : null
 
     /* ─── Header stats ──────────────────────────────────────────── */
-    const level  = profile?.level  ?? '—'
+    const level  = profile?.level  ?? ''
     const points = profile?.totalPoints ?? 0
-    const rank   = profile?.rank   ?? '—'
+    const rank   = profile?.rank   ?? ''
 
     return (
         <AppShell>

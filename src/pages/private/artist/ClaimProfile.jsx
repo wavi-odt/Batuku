@@ -10,6 +10,8 @@ import './ClaimProfile.css'
 const STEPS = ['Perfil Spotify', 'Selfie', 'Documento', 'Confirmar'];
 const DEBOUNCE_MS = 400;
 const MIN_QUERY   = 2;
+const SPOTIFY_URL_RE = /open\.spotify\.com\/artist\/([A-Za-z0-9]{22})/;
+const SPOTIFY_ID_RE  = /^[A-Za-z0-9]{22}$/;
 
 /* ── Step 1: Pesquisa Spotify ────────────────────────────────────────── */
 function StepSpotify({ selected, onSelect, onNext }) {
@@ -22,7 +24,8 @@ function StepSpotify({ selected, onSelect, onNext }) {
         const q = e.target.value;
         setQuery(q);
         clearTimeout(timerRef.current);
-        if (q.length < MIN_QUERY) { setResults([]); return; }
+        const isSpotifyLookup = SPOTIFY_URL_RE.test(q) || SPOTIFY_ID_RE.test(q.trim());
+        if (!isSpotifyLookup && q.length < MIN_QUERY) { setResults([]); return; }
         setLoading(true);
         timerRef.current = setTimeout(async () => {
             try {
@@ -36,14 +39,14 @@ function StepSpotify({ selected, onSelect, onNext }) {
             } finally {
                 setLoading(false);
             }
-        }, DEBOUNCE_MS);
+        }, isSpotifyLookup ? 0 : DEBOUNCE_MS);
     }
 
     return (
         <div className="claim-step">
             <h2 className="claim-step__title">Qual é o teu perfil no Spotify?</h2>
             <p className="claim-step__desc">
-                Pesquisa pelo teu nome artístico e seleciona o perfil correto.
+                Pesquisa pelo teu nome artístico ou cola o URL do teu perfil Spotify.
                 O admin irá confirmar a correspondência na fase de revisão.
             </p>
 
@@ -52,7 +55,7 @@ function StepSpotify({ selected, onSelect, onNext }) {
                 <input
                     className="claim-search__input"
                     type="text"
-                    placeholder="Nome artístico…"
+                    placeholder="Nome artístico ou URL do Spotify…"
                     value={query}
                     onChange={handleChange}
                     autoFocus
@@ -132,7 +135,7 @@ function StepSelfie({ blob, onCapture, onNext, onBack }) {
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ video: true });
             } catch (err) {
-                setCamErr(`Câmara indisponível: ${err.name} — ${err.message}`);
+                setCamErr(`Câmara indisponível: ${err.name}: ${err.message}`);
                 return;
             }
         }
@@ -467,7 +470,7 @@ function StepConfirm({ spotifyArtist, selfieBlob, docBlob, onBack, onSubmit, sub
                 <div className="claim-summary__row">
                     <span className="claim-summary__label">Documento</span>
                     {!isPdf && docUrl && <img src={docUrl} alt="Documento" className="claim-summary__thumb" />}
-                    {isPdf && <span className="claim-summary__value">PDF — {docBlob.name}</span>}
+                    {isPdf && <span className="claim-summary__value">PDF: {docBlob.name}</span>}
                 </div>
             </div>
 

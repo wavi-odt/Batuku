@@ -46,7 +46,7 @@ export const STEPS = [
     { n: '03', title: 'Ganha com a tua arte', body: 'Vende beats no marketplace, recebe gorjetas e acede a oportunidades curadas.' },
 ];
 
-// Sem pontos fictícios — mostra só o conceito do ranking
+// Sem pontos fictícios, mostra só o conceito do ranking
 export const LEADERBOARD = [
     { rank: 1, name: 'Djossa',     badge: 'Ouro'   },
     { rank: 2, name: 'Naia',       badge: 'Ouro'   },
@@ -55,7 +55,7 @@ export const LEADERBOARD = [
     { rank: 5, name: 'Khris T.',   badge: 'Bronze' },
 ];
 
-// Artistas fundadores — sem citações fabricadas
+// Artistas fundadores, sem citações fabricadas
 export const FOUNDERS = [
     { name: 'Djossa',     role: 'Funaná · Praia',       hue: 14  },
     { name: 'Bento Lima', role: 'Produtor · São Filipe', hue: 42  },
@@ -64,7 +64,7 @@ export const FOUNDERS = [
 
 export const FAQ = [
     { q: 'O Batuku é grátis?',                a: 'Sim. Criar conta, publicar faixas, seguir artistas e usar o Discord é grátis para sempre. Só pagas comissão (8%) quando vendes beats no marketplace.' },
-    { q: 'Posso publicar música em crioulo?', a: 'Claro. Aceitamos todas as línguas e géneros — crioulo, português, inglês ou misturas. Os filtros de descoberta respeitam as variantes.' },
+    { q: 'Posso publicar música em crioulo?', a: 'Claro. Aceitamos todas as línguas e géneros: crioulo, português, inglês ou misturas. Os filtros de descoberta respeitam as variantes.' },
     { q: 'Como funciona a gamificação?',      a: 'Cada interação (ouvir, seguir, comentar, partilhar) gera pontos para o artista. Os pontos sobem no ranking semanal e desbloqueiam badges, destaques na homepage e oportunidades curadas.' },
     { q: 'Preciso de viver em Cabo Verde?',   a: 'Não. Se a tua música respira CV, onde quer que estejas no mundo, tens lugar aqui. A diáspora é parte da casa.' },
     { q: 'Quem está por trás do Batuku?',     a: 'Uma equipa pequena de cabo-verdianos a viver entre Praia, Lisboa e Boston. Independentes, sem grandes investidores, guiados pela comunidade.' },

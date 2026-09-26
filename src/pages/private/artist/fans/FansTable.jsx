@@ -23,7 +23,7 @@ function hueFromId(id) {
 }
 
 function timeAgo(isoStr) {
-    if (!isoStr) return '—'
+    if (!isoStr) return ''
     const m = Math.floor((Date.now() - new Date(isoStr)) / 60000)
     if (m < 1)   return 'agora mesmo'
     if (m < 60)  return `há ${m} min`

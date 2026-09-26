@@ -18,7 +18,7 @@ const TABS = ['Visão geral', 'Faixas', 'Lançamentos', 'Sobre'];
 const TYPE_LABEL = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape', SINGLE: 'Single' };
 
 function fmtMs(ms) {
-    if (!ms) return '—';
+    if (!ms) return '';
     const s = Math.floor(ms / 1000);
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 }
@@ -130,9 +130,9 @@ export default function ArtistDetail() {
     }));
 
     const stats = [
-        { v: followers != null ? followers.toLocaleString('pt-PT') : '—',                l: 'Seguidores' },
-        { v: artist.monthlyListeners != null ? artist.monthlyListeners.toLocaleString('pt-PT') : '—', l: 'Ouvintes/mês' },
-        { v: artist.tracksCount != null ? artist.tracksCount : '—',                       l: 'Faixas' },
+        { v: followers != null ? followers.toLocaleString('pt-PT') : '',                l: 'Seguidores' },
+        { v: artist.monthlyListeners != null ? artist.monthlyListeners.toLocaleString('pt-PT') : '', l: 'Ouvintes/mês' },
+        { v: artist.tracksCount != null ? artist.tracksCount : '',                       l: 'Faixas' },
     ];
 
     function TracksList({ nameKey = 'title' }) {

@@ -7,9 +7,9 @@ import './LikeButton.css'
  * Botão de like sincronizado globalmente via LikeContext.
  *
  * Props:
- *   trackId   — ID da track (obrigatório)
- *   variant   — 'default' (com contador) | 'icon' (só ícone, estilo player)
- *   size      — tamanho do ícone em px (opcional; default: 16 em icon, 13 em default)
+ *   trackId   : ID da track (obrigatório)
+ *   variant   : 'default' (com contador) | 'icon' (só ícone, estilo player)
+ *   size      : tamanho do ícone em px (opcional; default: 16 em icon, 13 em default)
  */
 export default function LikeButton({ trackId, variant = 'default', size }) {
     const { likes, fetchLikeStatus, toggleLike } = useLikes()

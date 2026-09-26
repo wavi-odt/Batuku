@@ -9,7 +9,7 @@ import { API, getToken } from '../../../../utils/auth.js'
 const STATUS_LABEL = { PUBLISHED: 'Publicada', SCHEDULED: 'Agendada', DRAFT: 'Rascunho' }
 
 function fmtMs(ms) {
-    if (!ms) return '—'
+    if (!ms) return ''
     const s = Math.floor(ms / 1000)
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 }
@@ -20,7 +20,7 @@ function fmtDate(iso) {
 }
 
 function fmtNum(n) {
-    if (n == null) return '—'
+    if (n == null) return ''
     if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
     return String(n)
 }

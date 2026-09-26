@@ -69,7 +69,7 @@ export default function AnalyticsStepChart({ dailyFollowers }) {
                 <div>
                     <h3 className="anl__line-title">Crescimento de seguidores</h3>
                     <p className="anl__line-sub">
-                        {fmtDate(dailyFollowers[0]?.day)} — {fmtDate(dailyFollowers[dailyFollowers.length - 1]?.day)}
+                        {fmtDate(dailyFollowers[0]?.day)} a {fmtDate(dailyFollowers[dailyFollowers.length - 1]?.day)}
                     </p>
                 </div>
                 <div className="anl__line-total">

@@ -89,7 +89,7 @@
     flex: 1;
 }
 
-/* ── Save button — cinzento sem alterações, coral com alterações ─────── */
+/* ── Save button: cinzento sem alterações, coral com alterações ──────── */
 .ep-save-btn:disabled {
     background: var(--color-bg-2);
     color: var(--color-ink-mute);

@@ -73,7 +73,7 @@ export default function BeatEditModal({ beat, onClose, onSaved }) {
                         <div className="bum__field">
                             <label className="bum__label">Género</label>
                             <select className="bum__input" value={genre} onChange={e => setGenre(e.target.value)}>
-                                <option value="">— Selecionar —</option>
+                                <option value="">Selecionar</option>
                                 <optgroup label="Cabo Verde">
                                     {CV_GENRES.map(g => <option key={g} value={g}>{g}</option>)}
                                 </optgroup>
@@ -94,7 +94,7 @@ export default function BeatEditModal({ beat, onClose, onSaved }) {
                         <div className="bum__field">
                             <label className="bum__label">Tom</label>
                             <select className="bum__input" value={key} onChange={e => setKey(e.target.value)}>
-                                <option value="">— Selecionar —</option>
+                                <option value="">Selecionar</option>
                                 {KEYS.map(k => <option key={k} value={k}>{k}</option>)}
                             </select>
                         </div>

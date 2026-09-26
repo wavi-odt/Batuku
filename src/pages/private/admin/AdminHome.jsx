@@ -74,7 +74,7 @@ function MetricCard({ label, value, alert, icon: Icon, accent }) {
                 </span>
             )}
             <div className="admin-metric__value">
-                {value ?? '—'}
+                {value ?? ''}
                 {alert && value > 0 && <FaExclamationTriangle size={15} className="admin-metric__flag" aria-hidden="true" />}
             </div>
             <div className="admin-metric__label">{label}</div>
@@ -233,7 +233,7 @@ function QuoteForm({ page, label, artists }) {
                     value={artistId}
                     onChange={e => handleArtistChange(e.target.value)}
                 >
-                    <option value="">— Sem artista —</option>
+                    <option value="">Sem artista</option>
                     {artists.map(a => (
                         <option key={a.id} value={a.id}>{a.name}</option>
                     ))}
@@ -487,7 +487,7 @@ export default function AdminHome() {
 
                 <section className="admin-section">
                     <h2 className="admin-section__title">Migrações</h2>
-                    <p className="admin-section__sub">Operações de manutenção de dados. Todas são idempotentes — seguras de correr mais do que uma vez.</p>
+                    <p className="admin-section__sub">Operações de manutenção de dados. Todas são idempotentes, seguras de correr mais do que uma vez.</p>
                     <div className="admin-migrations">
                         {MIGRATIONS.map(m => <MigrationCard key={m.key} migration={m} />)}
                     </div>

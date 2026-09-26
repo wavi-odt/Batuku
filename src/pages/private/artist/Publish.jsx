@@ -138,7 +138,7 @@ export default function PublishModal() {
         /* ── Álbum: upload sequencial ──────────────────────────────── */
         let albumId = null;
         try {
-            // Passo 1 — criar draft com metadata + capa
+            // Passo 1: criar draft com metadata + capa
             setProgress('A criar álbum…');
             const draftBody = new FormData();
             draftBody.append('title', title);
@@ -150,10 +150,10 @@ export default function PublishModal() {
             const draft = await draftRes.json();
             albumId = draft.id;
 
-            // Passo 2 — enviar cada faixa individualmente
+            // Passo 2: enviar cada faixa individualmente
             for (let i = 0; i < tracks.length; i++) {
                 const t = tracks[i];
-                setProgress(`A enviar faixa ${i + 1} de ${tracks.length} — "${t.title}"…`);
+                setProgress(`A enviar faixa ${i + 1} de ${tracks.length}: "${t.title}"…`);
                 const trackBody = new FormData();
                 trackBody.append('title', t.title);
                 if (t.genre) trackBody.append('genre', t.genre);
@@ -162,7 +162,7 @@ export default function PublishModal() {
                 if (!trackRes.ok) throw new Error(`Erro na faixa ${i + 1} (${trackRes.status})`);
             }
 
-            // Passo 3 — publicar
+            // Passo 3: publicar
             setProgress('A publicar…');
             const pubRes = await fetch(`${API}/releases/${albumId}/publish`, { method: 'POST', headers });
             if (!pubRes.ok) throw new Error(`Erro ao publicar (${pubRes.status})`);

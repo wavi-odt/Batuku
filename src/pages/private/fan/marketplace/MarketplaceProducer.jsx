@@ -162,16 +162,16 @@ export default function MarketplaceProducer({ playing, onPlay }) {
                                         : beat.isNew && <span className="mkt__beat-new">novo</span>
                                     }
                                 </div>
-                                <div className="mkt-prod__beat-genre">{beat.genre ?? '—'}</div>
+                                <div className="mkt-prod__beat-genre">{beat.genre ?? ''}</div>
                                 <div className="mkt-prod__beat-bpm">
-                                    {beat.bpm ?? '—'}{beat.key ? ` · ${beat.key}` : ''}
+                                    {beat.bpm ?? ''}{beat.key ? ` · ${beat.key}` : ''}
                                 </div>
                                 <div className="mkt-prod__beat-num">
                                     {(beat.plays ?? 0).toLocaleString('pt-PT')}
                                 </div>
                                 <div className="mkt-prod__beat-num">{beat.sales ?? 0}</div>
                                 <div className="mkt-prod__beat-price">
-                                    {isSold ? '—' : beat.prices?.lease != null ? `€${beat.prices.lease.toFixed(2)}` : '—'}
+                                    {isSold ? '' : beat.prices?.lease != null ? `€${beat.prices.lease.toFixed(2)}` : ''}
                                 </div>
                                 <div className="mkt-prod__beat-actions">
                                     <button type="button" className="mkt-prod__action-btn"

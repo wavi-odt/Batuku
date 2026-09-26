@@ -62,7 +62,7 @@ export default function Fans() {
                             {label}
                         </div>
                         <div className="fns__kpi-val">
-                            {loading ? '—' : (typeof value === 'number' ? value.toLocaleString('pt-PT') : value)}
+                            {loading ? '...' : (typeof value === 'number' ? value.toLocaleString('pt-PT') : value)}
                         </div>
                         <div className="fns__kpi-sub">{sub}</div>
                     </div>

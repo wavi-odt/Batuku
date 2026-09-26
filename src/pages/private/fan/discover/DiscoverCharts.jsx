@@ -20,7 +20,7 @@ function delta(track, rank) {
     const diff = track.prevRank - rank
     if (diff > 0) return <span className="disc__chart-delta disc__chart-delta--up">▲{diff}</span>
     if (diff < 0) return <span className="disc__chart-delta disc__chart-delta--down">▼{Math.abs(diff)}</span>
-    return <span className="disc__chart-delta disc__chart-delta--same">—</span>
+    return <span className="disc__chart-delta disc__chart-delta--same">=</span>
 }
 
 function ChartRow({ track, rank, queue }) {

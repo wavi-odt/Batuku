@@ -15,7 +15,7 @@ import './ReleaseDetail.css'
 const TYPE_LABEL = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape', SINGLE: 'Single' }
 
 function fmtMs(ms) {
-    if (!ms) return '—'
+    if (!ms) return ''
     const s = Math.floor(ms / 1000)
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 }

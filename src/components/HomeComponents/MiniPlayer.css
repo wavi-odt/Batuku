@@ -1,4 +1,4 @@
-/* Oculta o player visual do Spotify — o áudio continua a tocar */
+/* Oculta o player visual do Spotify, o áudio continua a tocar */
 iframe[src*="spotify"] {
     opacity: 0 !important;
     width: 0 !important;

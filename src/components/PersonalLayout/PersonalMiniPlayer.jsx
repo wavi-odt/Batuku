@@ -34,14 +34,14 @@ function buildWavePath(bars) {
         const halfH = ((h / 100) * SVG_H) / 2
         return { x, t: mid - halfH, b: mid + halfH }
     })
-    // top — esquerda para direita
+    // top, esquerda para direita
     let d = `M ${pts[0].x} ${pts[0].t}`
     for (let i = 1; i < n; i++) {
         const p = pts[i - 1], c = pts[i]
         const mx = (p.x + c.x) / 2
         d += ` C ${mx},${p.t} ${mx},${c.t} ${c.x},${c.t}`
     }
-    // bottom — direita para esquerda
+    // bottom, direita para esquerda
     d += ` L ${pts[n - 1].x},${pts[n - 1].b}`
     for (let i = n - 2; i >= 0; i--) {
         const c = pts[i], p = pts[i + 1]

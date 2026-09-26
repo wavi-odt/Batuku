@@ -10,7 +10,7 @@ export default function SharedTrack() {
     const [invalid, setInvalid] = useState(false)
 
     useEffect(() => {
-        // Endpoint público — sem Authorization header
+        // Endpoint público, sem Authorization header
         fetch(`${API}/api/shared/${token}`)
             .then(r => {
                 if (r.status === 404 || r.status === 410) return null

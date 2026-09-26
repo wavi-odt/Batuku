@@ -159,7 +159,7 @@ export default function Comments() {
                             </span>
                             {label}
                         </div>
-                        <div className="cmt__kpi-val">{loading ? '—' : value}</div>
+                        <div className="cmt__kpi-val">{loading ? '...' : value}</div>
                         <div className="cmt__kpi-sub">{sub}</div>
                     </div>
                 ))}

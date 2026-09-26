@@ -34,7 +34,7 @@ export function LikeProvider({ children }) {
             const data = await res.json()
             set(key, data.liked, data.count)
         } catch {
-            // silencioso — o botão fica no estado padrão
+            // silencioso, o botão fica no estado padrão
         } finally {
             fetchingRef.current.delete(key)
         }
@@ -60,7 +60,7 @@ export function LikeProvider({ children }) {
     }, [set])
 
     // useMemo garante que o objecto de contexto só muda quando likes muda
-    // (fetchLikeStatus e toggleLike são estáveis — mesma referência entre renders)
+    // (fetchLikeStatus e toggleLike são estáveis, mesma referência entre renders)
     const value = useMemo(
         () => ({ likes, fetchLikeStatus, toggleLike }),
         [likes, fetchLikeStatus, toggleLike]

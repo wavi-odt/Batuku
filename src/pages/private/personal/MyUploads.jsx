@@ -289,7 +289,7 @@ export default function MyUploads() {
                             />
                             <div className="mu__proj-caption" onClick={() => navigate(`/pessoal/projetos/${proj.id}`)}>
                                 <span className="mu__proj-name">{proj.name}</span>
-                                <span className="mu__proj-user">{currentUser?.name ?? '—'}</span>
+                                <span className="mu__proj-user">{currentUser?.name ?? ''}</span>
                             </div>
                             {copiedId === proj.id && (
                                 <div className="mu__copied-toast">✓ Link copiado!</div>

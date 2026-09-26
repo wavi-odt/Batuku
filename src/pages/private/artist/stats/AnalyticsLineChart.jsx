@@ -81,7 +81,7 @@ export default function AnalyticsLineChart({ dailyPlays, period, onPeriodChange 
                 <div>
                     <h3 className="anl__line-title">Reproduções ao longo do tempo</h3>
                     <p className="anl__line-sub">
-                        {fmtDate(dailyPlays[0]?.day)} — {fmtDate(dailyPlays[dailyPlays.length - 1]?.day)}
+                        {fmtDate(dailyPlays[0]?.day)} a {fmtDate(dailyPlays[dailyPlays.length - 1]?.day)}
                     </p>
                 </div>
                 {onPeriodChange ? (

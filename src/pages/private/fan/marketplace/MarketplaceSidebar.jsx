@@ -1,5 +1,5 @@
 /* ─────────────────────────────────────────────────────────────────
-   MarketplaceSidebar.jsx — Carrinho + Top Produtores.
+   MarketplaceSidebar.jsx, Carrinho + Top Produtores.
    ───────────────────────────────────────────────────────────────── */
 
 import { useState }   from 'react'

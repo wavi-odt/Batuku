@@ -4,7 +4,7 @@
 
    Segue o padrão de fetch de TrackDetail.jsx/ClaimProfile.jsx:
    loading/error/data com fetch + Authorization Bearer. Widgets
-   (.input, .btn-primary, .btn-ghost, .card) vêm de global.css —
+   (.input, .btn-primary, .btn-ghost, .card) vêm de global.css,
    nada de novo inventado aí.
    ───────────────────────────────────────────────────────────────── */
 

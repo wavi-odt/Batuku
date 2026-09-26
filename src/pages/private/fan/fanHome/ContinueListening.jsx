@@ -9,7 +9,7 @@ export default function ContinueListening({ tracks }) {
     const { setTrack } = usePlayer()
 
     async function handlePlay(t) {
-        // recently-played não inclui audioUrl — buscar as tracks do artista (que já incluem)
+        // recently-played não inclui audioUrl, buscar as tracks do artista (que já incluem)
         const res = await fetch(`${API}/api/tracks/artist/${t.artistId}`, {
             headers: { Authorization: `Bearer ${getToken()}` },
         })

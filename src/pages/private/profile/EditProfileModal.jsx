@@ -219,7 +219,7 @@ function TabArtista({ onSaved }) {
                     value={location}
                     onChange={e => setLocation(e.target.value)}
                 >
-                    <option value="">— Escolhe uma localização —</option>
+                    <option value="">Escolhe uma localização</option>
                     {Object.entries(locationGroups).map(([group, locs]) => (
                         <optgroup key={group} label={group}>
                             {locs.map(l => <option key={l} value={l}>{l}</option>)}
@@ -231,7 +231,7 @@ function TabArtista({ onSaved }) {
             <div className="ep-field">
                 <span className="ep-field__label">
                     Género musical
-                    <span className="ep-field__hint"> — máx. 3</span>
+                    <span className="ep-field__hint"> (máx. 3)</span>
                 </span>
                 <ChipSelect options={options.genres} selected={genres} onChange={setGenres} max={3} />
             </div>

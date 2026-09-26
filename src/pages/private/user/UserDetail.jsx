@@ -135,7 +135,7 @@ export default function UserDetail() {
 
     const stats = [
         { v: (user.points ?? 0).toLocaleString('pt-PT'),      l: 'Pontos' },
-        { v: user.rank != null ? '#' + user.rank : '—',        l: 'Rank semanal' },
+        { v: user.rank != null ? '#' + user.rank : '',          l: 'Rank semanal' },
         { v: user.badgesCount ?? 0,                            l: 'Badges' },
         { v: (user.following ?? 0).toLocaleString('pt-PT'),    l: 'A seguir' },
         { v: followers.toLocaleString('pt-PT'),                l: 'Seguidores' },

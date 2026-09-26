@@ -79,7 +79,7 @@ export default function MarketplaceOffers() {
                     )}
                     {o.status === 'ACCEPTED' && !o.producerReply && (
                         <div className="mkt-offers__reply mkt-offers__reply--ok">
-                            Beat adquirido — podes vê-lo em Minhas Compras.
+                            Beat adquirido. Podes vê-lo em Minhas Compras.
                         </div>
                     )}
                 </div>

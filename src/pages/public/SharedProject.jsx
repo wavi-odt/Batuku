@@ -10,7 +10,7 @@ export default function SharedProject() {
     const [invalid, setInvalid] = useState(false)
 
     useEffect(() => {
-        // Endpoint público — sem Authorization header
+        // Endpoint público, sem Authorization header
         fetch(`${API}/api/shared-project/${token}`)
             .then(r => {
                 if (r.status === 404 || r.status === 410) return null

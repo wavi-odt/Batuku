@@ -121,7 +121,7 @@ export default function Analytics() {
                                     )}
                                     {kpi.delta === 0 && (
                                         <div className="anl__kpi-delta" style={{ color: 'var(--color-ink-mute)' }}>
-                                            — sem dados anteriores
+                                            sem dados anteriores
                                         </div>
                                     )}
                                 </div>

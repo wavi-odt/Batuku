@@ -101,7 +101,7 @@ export default function AdminClaims() {
                         Authorization: `Bearer ${getToken()}`,
                     },
                     body: JSON.stringify({ spotifyArtistId: detail.spotifyArtistId }),
-                }).catch(() => { /* ignora — perfil pode já existir */ });
+                }).catch(() => { /* ignora, perfil pode já existir */ });
             }
 
             setClaims(prev => prev.filter(c => c.id !== id));

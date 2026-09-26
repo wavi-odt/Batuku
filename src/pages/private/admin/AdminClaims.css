@@ -2,7 +2,7 @@
    pages/private/admin/AdminClaims.css
    Layout de revisão de pedidos de reclamação de perfil.
    Depende de AdminHome.css (admin-page, admin-head, admin-back)
-   e de tokens.css. Sem AppShell — ferramenta interna.
+   e de tokens.css. Sem AppShell, ferramenta interna.
    ───────────────────────────────────────────────────────────────── */
 
 /* Wider container when detail panel is open */

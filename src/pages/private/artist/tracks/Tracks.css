@@ -540,7 +540,7 @@
     filter: grayscale(30%);
 }
 
-/* Badge de status (Rascunho) — canto superior direito */
+/* Badge de status (Rascunho), canto superior direito */
 .rel-mgmt-card__status-badge {
     position: absolute;
     top: 6px;

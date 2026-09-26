@@ -193,7 +193,7 @@ export default function MiniPlayer() {
         })
         audio.addEventListener('error', () => {
             const err = audio.error
-            console.error('[MiniPlayer] Erro de áudio — código:', err?.code, '| mensagem:', err?.message)
+            console.error('[MiniPlayer] Erro de áudio, código:', err?.code, ', mensagem:', err?.message)
             setAudioError('Não foi possível carregar esta faixa.')
         })
         audioRef.current = audio
@@ -397,7 +397,7 @@ export default function MiniPlayer() {
                         <div className="player__exp-artist">
                             <ClickableName
                                 artistProfileId={track.artistProfileId}
-                                name={track.artistName ?? '—'}
+                                name={track.artistName ?? ''}
                             />
                         </div>
                     </div>
@@ -464,7 +464,7 @@ export default function MiniPlayer() {
                     <div className="player__artist">
                         <ClickableName
                             artistProfileId={track?.artistProfileId}
-                            name={track?.artistName ?? '—'}
+                            name={track?.artistName ?? ''}
                         />
                     </div>
                 </div>
@@ -475,12 +475,12 @@ export default function MiniPlayer() {
             {/* Playback controls */}
             <div className="player__controls">
                 <div className="player__btns">
-                    {/* TODO: shuffle — embaralhar a queue restante (PlayerContext.shuffleQueue) */}
+                    {/* TODO: shuffle, embaralhar a queue restante (PlayerContext.shuffleQueue) */}
                     <button
                         type="button"
                         className="player__btn player__btn--soon"
                         aria-label="Aleatório (em breve)"
-                        title="Aleatório — em breve"
+                        title="Aleatório (em breve)"
                         disabled
                     >
                         <FaRandom size={14} />

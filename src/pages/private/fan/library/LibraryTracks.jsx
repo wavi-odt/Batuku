@@ -4,7 +4,7 @@ import LikeButton     from '../../../../components/LikeButton.jsx'
 import TrackMenu      from '../../../../components/TrackMenu.jsx'
 
 function fmtMs(ms) {
-    if (!ms) return '—'
+    if (!ms) return ''
     const s = Math.floor(ms / 1000)
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 }

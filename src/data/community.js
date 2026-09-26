@@ -23,7 +23,7 @@ export const communityData = {
     channels: [
         { id: 'c1', name: 'geral',              emoji: '💬', unread: 12, lastUser: 'djossa',     lastMsg: 'Novo single esta semana! 🔥' },
         { id: 'c2', name: 'sessões-praia',       emoji: '🎵', unread: 5,  lastUser: 'naia',       lastMsg: 'Quinta às 21h, quem vem?' },
-        { id: 'c3', name: 'beats-e-producao',    emoji: '🎛️', unread: 23, lastUser: 'bento_prod', lastMsg: 'Beat novo no marketplace — só €30 hoje' },
+        { id: 'c3', name: 'beats-e-producao',    emoji: '🎛️', unread: 23, lastUser: 'bento_prod', lastMsg: 'Beat novo no marketplace, só €30 hoje' },
         { id: 'c4', name: 'morna-e-funaná',      emoji: '🎸', unread: 0,  lastUser: 'khris_t',   lastMsg: 'Alguém sabe a escala de Sodade?' },
         { id: 'c5', name: 'novidades',           emoji: '📢', unread: 3,  lastUser: 'batuku',     lastMsg: 'Novo artista verificado 🎉' },
         { id: 'c6', name: 'feedback',            emoji: '🔁', unread: 8,  lastUser: 'yuri_brava', lastMsg: 'Podes dar feedback nesta track?' },
@@ -81,7 +81,7 @@ export const communityData = {
         {
             id: 'p2', user: 'rafareis', handle: '@rafareis', hue: 285, shape: 'split', image: null,
             time: 'há 34 min', channel: '#geral', type: 'playlist',
-            title: 'Playlist colaborativa — os melhores beats de 2025 já tem 80 faixas!',
+            title: 'Playlist colaborativa: os melhores beats de 2025 já tem 80 faixas!',
             excerpt: 'Começámos em janeiro e já somos 34 contribuidores. Adicionem as vossas recomendações...',
             tags: ['#playlist', '#beats'], replies: 12, reactions: 28,
         },
@@ -95,7 +95,7 @@ export const communityData = {
         {
             id: 'p4', user: 'djossa', handle: '@djossa', hue: 14, shape: 'circles', image: DjossaImg,
             time: 'há 3h', channel: '#sessões-praia', type: 'highlight',
-            title: 'A listening party da quinta foi 🔥 — obrigado a todos!',
+            title: 'A listening party da quinta foi 🔥, obrigado a todos!',
             excerpt: 'Foram quase 200 pessoas em direto. Próxima sessão já tem data: 30 de Janeiro às 21h...',
             tags: ['#listeningparty', '#comunidade'], replies: 34, reactions: 89,
         },
@@ -109,7 +109,7 @@ export const communityData = {
         {
             id: 'p6', user: 'yuri_brava', handle: '@yuribrava', hue: 145, shape: 'orbit', image: YuriImg,
             time: 'há 8h', channel: '#feedback', type: 'questao',
-            title: 'Demo nova — precisava de feedback honesto antes de publicar',
+            title: 'Demo nova. Precisava de feedback honesto antes de publicar',
             excerpt: 'É uma track de Cabo Love com influências de R&B. Deixa a tua opinião nos comentários...',
             tags: ['#feedback', '#cabolove'], replies: 18, reactions: 33,
         },
@@ -118,7 +118,7 @@ export const communityData = {
     /* ─── Online agora ───────────────────────────────────────────── */
     onlineNow: [
         { user: 'djossa',     handle: '@djossa',    hue: 14,  shape: 'circles',  image: DjossaImg, status: 'Em #sessões-praia'       },
-        { user: 'naia',       handle: '@naia',      hue: 220, shape: 'arch',      image: NaiaImg,   status: 'A ouvir — Sodade (Naia)' },
+        { user: 'naia',       handle: '@naia',      hue: 220, shape: 'arch',      image: NaiaImg,   status: 'A ouvir: Sodade (Naia)' },
         { user: 'yuri_brava', handle: '@yuribrava', hue: 145, shape: 'orbit',     image: YuriImg,   status: 'Em #beats-e-producao'    },
         { user: 'rafareis',   handle: '@rafareis',  hue: 285, shape: 'split',     image: null,      status: 'A ver o feed'            },
         { user: 'khris_t',    handle: '@khrist',    hue: 280, shape: 'wave',      image: KhrisImg,  status: 'Em #morna-e-funaná'      },

@@ -50,7 +50,7 @@ export default function AnalyticsBarChart({ dailyLikes }) {
                 <div>
                     <h3 className="anl__line-title">Likes ao longo do tempo</h3>
                     <p className="anl__line-sub">
-                        {fmtDate(dailyLikes[0]?.day)} — {fmtDate(dailyLikes[n - 1]?.day)}
+                        {fmtDate(dailyLikes[0]?.day)} a {fmtDate(dailyLikes[n - 1]?.day)}
                     </p>
                 </div>
                 <div className="anl__line-total">

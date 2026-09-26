@@ -1,4 +1,4 @@
-/* ─── Área Pessoal — Design Tokens ────────────────────────────────────────
+/* ─── Área Pessoal, Design Tokens ─────────────────────────────────────────
    Escopados a .personal-scope para nunca vazar para o resto da app.
    ─────────────────────────────────────────────────────────────────────── */
 
@@ -12,7 +12,7 @@
     --p-text:        #F2F1ED;
     --p-text-muted:  #8C8B92;
 
-    /* Accent — lilás/violeta, deliberadamente diferente do azul/dourado do Batuku */
+    /* Accent: lilás/violeta, deliberadamente diferente do azul/dourado do Batuku */
     --p-accent:      #A78BFA;
     --p-accent-dim:  rgba(167, 139, 250, 0.15);
     --p-accent-h:    #C4B5FD;

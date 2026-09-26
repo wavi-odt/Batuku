@@ -91,7 +91,7 @@ function App() {
                         <Route path="/p/:token"        element={<SharedTrack />} />
                         <Route path="/proj/:token"     element={<SharedProject />} />
 
-                        {/* Pessoal — qualquer utilizador autenticado, sem MiniPlayer */}
+                        {/* Pessoal, qualquer utilizador autenticado, sem MiniPlayer */}
                         <Route path="/pessoal"                  element={<ProtectedRoute><MyUploads /></ProtectedRoute>} />
                         <Route path="/pessoal/projetos/:id"     element={<ProtectedRoute><ProjectDetail /></ProtectedRoute>} />
 
@@ -100,7 +100,7 @@ function App() {
                         <Route path="/admin/artist-import" element={<ProtectedRoute role="admin"><ArtistImport /></ProtectedRoute>} />
                         <Route path="/admin/claims"        element={<ProtectedRoute role="admin"><AdminClaims /></ProtectedRoute>} />
 
-                        {/* Privadas — MiniPlayer persiste entre estas rotas */}
+                        {/* Privadas, MiniPlayer persiste entre estas rotas */}
                         <Route element={<PlayerLayer />}>
                             <Route path="/home"           element={<RoleRoute roles={['fan']}><FanHome /></RoleRoute>} />
                             <Route path="/library"        element={<RoleRoute roles={['fan']}><Library /></RoleRoute>} />
@@ -129,7 +129,7 @@ function App() {
                         <Route path="/*" element={<NotFound />} />
                     </Routes>
 
-                    {/* Modal global — renderizado fora das rotas via portal */}
+                    {/* Modal global, renderizado fora das rotas via portal */}
                     <PublishModal />
                 </BrowserRouter>
             </PublishProvider>

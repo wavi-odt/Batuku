@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────────────────────────────
    pages/private/fan/gamification/Gamification.jsx, Badges e pontos.
    Rota /gamification (fã). Reutiliza LevelCard.jsx (fanHome) e
-   BadgesGrid/CardTitle (profile/ProfileBlocks.jsx) tal e qual —
+   BadgesGrid/CardTitle (profile/ProfileBlocks.jsx) tal e qual,
    só a tabela de leaderboard é novo (sem precedente no projeto).
    ───────────────────────────────────────────────────────────────── */
 

@@ -59,7 +59,7 @@ export default function GenrePage() {
                 <button type="button" className="genre__back" onClick={() => navigate(-1)}>
                     <FaArrowLeft size={12} /> Descobrir
                 </button>
-                <h1 className="genre__title">{genre?.label ?? '—'}</h1>
+                <h1 className="genre__title">{genre?.label ?? ''}</h1>
                 <p className="genre__meta">
                     {tracks.length} {tracks.length === 1 ? 'faixa' : 'faixas'}
                     {releases.length > 0 && ` · ${releases.length} lançamento${releases.length !== 1 ? 's' : ''}`}
