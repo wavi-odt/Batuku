@@ -84,13 +84,8 @@ export default function Register() {
                 throw new Error(data.error || 'Não foi possível criar a conta.');
             }
 
-            if (data.pendingValidation) {
-                saveAuth(data.token);
-                setPendingClaim();
-                navigate('/claim-profile', { state: { fromRegistration: true } });
-            } else {
-                navigate('/login');
-            }
+            sessionStorage.setItem('pendingEmail', payload.email)
+            navigate('/verify-email', { state: { email: payload.email } })
         } catch (err) {
             setError(err.message || 'Erro inesperado. Tenta novamente.');
         } finally {

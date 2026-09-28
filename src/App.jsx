@@ -21,6 +21,7 @@ import RoleRoute from "./components/RoleRoute.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import OAuthCallback from "./pages/public/OAuthCallback.jsx";
 import AguardarValidacao from "./pages/public/AguardarValidacao.jsx";
+import VerifyEmail from "./pages/public/VerifyEmail.jsx";
 import AdminHome from "./pages/private/admin/AdminHome.jsx";
 import ArtistImport from "./pages/private/admin/ArtistImport.jsx";
 import AdminClaims from "./pages/private/admin/AdminClaims.jsx";
@@ -88,6 +89,7 @@ function App() {
                         <Route path="/register"        element={<Register />} />
                         <Route path="/oauth2/callback"      element={<OAuthCallback />} />
                         <Route path="/aguardar-validacao"  element={<AguardarValidacao />} />
+                        <Route path="/verify-email"        element={<VerifyEmail />} />
                         <Route path="/p/:token"        element={<SharedTrack />} />
                         <Route path="/proj/:token"     element={<SharedProject />} />
 

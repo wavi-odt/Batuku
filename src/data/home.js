@@ -128,7 +128,7 @@ export const homeData = {
         { icon: 'heart',   label: 'A seguir',    to: '/following' },
         { icon: 'trophy',  label: 'Conquistas',  to: '/achievements' },
         { icon: 'store',   label: 'Marketplace', to: '/marketplace' },
-        { icon: 'discord', label: 'Comunidade',  to: '/community' },
+       /* { icon: 'discord', label: 'Comunidade',  to: '/community' },*/
     ],
 
     artistNav: [

@@ -17,7 +17,7 @@ export default function AguardarValidacao() {
             <AuthSide
                 title="Quase lá,"
                 accent="artista."
-                lede="A tua conta está a ser verificada pela equipa Batuku. Receberás confirmação em breve."
+                lede="A verificação da tua identidade artística é necessária antes de poderes publicar música no Batuku."
                 quote="A música cabo-verdiana merece a melhor casa possível."
                 author=", Equipa Batuku"
             />

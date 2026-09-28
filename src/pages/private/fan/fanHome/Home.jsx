@@ -2,10 +2,8 @@ import { useState, useEffect }  from 'react'
 import AppShell           from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }  from '../../../../utils/auth.js'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
-import BecomeArtistBanner from './BecomeArtistBanner.jsx'
 import ContinueListening  from './ContinueListening.jsx'
 import FollowingArtists   from './FollowingArtists.jsx'
-import DiscordCard        from './DiscordCard.jsx'
 import LevelCard          from './LevelCard.jsx'
 import './Home.css'
 import './LevelCard.css'
@@ -67,23 +65,15 @@ export default function Home() {
                 )}
             </div>
 
-            {/* ─── Banner: tornar-se artista verificado ──────────── */}
-            <BecomeArtistBanner />
-
             {/* ─── Ouvido recentemente ────────────────────────────── */}
             {!loading && recentTracks.length > 0 && (
                 <ContinueListening tracks={recentTracks} />
             )}
 
-            {/* ─── Artistas seguidos + Discord ────────────────────── */}
+            {/* ─── Artistas seguidos ──────────────────────────────── */}
             {!loading && followedArtists.length > 0 && (
                 <section className="home__section">
-                    <div className="home__split">
-                        <FollowingArtists artists={followedArtists} />
-                        <div className="home__side">
-                            <DiscordCard />
-                        </div>
-                    </div>
+                    <FollowingArtists artists={followedArtists} />
                 </section>
             )}
 
@@ -91,15 +81,11 @@ export default function Home() {
             {!loading && recentTracks.length === 0 && followedArtists.length === 0 && (
                 <div style={{ padding: '40px 0', color: 'var(--color-ink-mute)', textAlign: 'center' }}>
                     <p style={{ fontSize: 16, marginBottom: 8 }}>Ainda não há actividade</p>
-                    <p style={{ fontSize: 13 }}>Descobre artistas e começa a ouvir música.</p>
+                    <p style={{ fontSize: 13, marginBottom: 24 }}>Descobre artistas e começa a ouvir música.</p>
+                    <a href="/discover" className="btn btn--primary">Descobrir</a>
                 </div>
             )}
 
-            {!loading && followedArtists.length === 0 && (
-                <div className="home__side" style={{ maxWidth: 400 }}>
-                    <DiscordCard />
-                </div>
-            )}
 
         </AppShell>
     )

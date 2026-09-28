@@ -491,43 +491,6 @@ function StepConfirm({ spotifyArtist, selfieBlob, docBlob, onBack, onSubmit, sub
     );
 }
 
-/* ── Claim pendente ───────────────────────────────────────────────────── */
-function ClaimPending({ claim, backTo }) {
-    return (
-        <div className="claim-step claim-step--center">
-            <div className="claim-success__icon claim-success__icon--pending">⏳</div>
-            <h2 className="claim-step__title">Pedido em revisão</h2>
-            <p className="claim-step__desc">
-                Já submeteste um pedido de verificação
-                {claim?.artistName ? <> para <strong>{claim.artistName}</strong></> : null}.
-                Aguarda que o admin processe o pedido antes de submeteres um novo.
-                O processo pode demorar até 48 horas.
-            </p>
-            <Link to={backTo} className="btn-primary">
-                Voltar
-            </Link>
-        </div>
-    );
-}
-
-/* ── Sucesso ──────────────────────────────────────────────────────────── */
-function StepSuccess({ backTo }) {
-    return (
-        <div className="claim-step claim-step--center">
-            <div className="claim-success__icon">✓</div>
-            <h2 className="claim-step__title">Pedido enviado!</h2>
-            <p className="claim-step__desc">
-                O admin irá verificar a tua identidade e fazer o acerto da conta.
-                Receberás uma notificação quando o pedido for processado.
-                O processo pode demorar até 48 horas.
-            </p>
-            <Link to={backTo} className="btn-primary">
-                Voltar
-            </Link>
-        </div>
-    );
-}
-
 /* ── Stepper indicator ────────────────────────────────────────────────── */
 function Stepper({ current }) {
     return (
@@ -558,7 +521,6 @@ export default function ClaimProfile() {
     const { showToast } = useToast();
     const { state } = useLocation();
     const navigate = useNavigate();
-    const fromRegistration = state?.fromRegistration === true;
 
     const [step,          setStep]          = useState(0);
     const [spotifyArtist, setSpotifyArtist] = useState(null);
@@ -566,9 +528,7 @@ export default function ClaimProfile() {
     const [docBlob,       setDocBlob]       = useState(null);
     const [submitting,    setSubmitting]    = useState(false);
     const [submitErr,     setSubmitErr]     = useState('');
-    const [done,          setDone]          = useState(false);
     const [checking,      setChecking]      = useState(true);
-    const [pendingClaim,  setPendingClaim]  = useState(null);
 
     useEffect(() => {
         fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-claims/me`, {
@@ -577,11 +537,14 @@ export default function ClaimProfile() {
             .then(res => res.ok ? res.json() : [])
             .then(list => {
                 const pending = list.find(c => c.status === 'PENDING');
-                if (pending) setPendingClaim(pending);
+                if (pending) {
+                    setAwaitingValidation();
+                    navigate('/aguardar-validacao', { replace: true });
+                }
             })
             .catch(() => {})
             .finally(() => setChecking(false));
-    }, []);
+    }, [navigate]);
 
     async function handleSubmit() {
         setSubmitting(true);
@@ -597,12 +560,8 @@ export default function ClaimProfile() {
                 body,
             });
             if (!res.ok) throw new Error(`Erro ${res.status}`);
-            if (fromRegistration) {
-                setAwaitingValidation();
-                navigate('/aguardar-validacao', { replace: true });
-                return;
-            }
-            setDone(true);
+            setAwaitingValidation();
+            navigate('/aguardar-validacao', { replace: true });
         } catch (e) {
             setSubmitErr(e.message);
             showToast('Erro ao enviar pedido. Tenta novamente.', 'error');
@@ -618,15 +577,11 @@ export default function ClaimProfile() {
             {!locked && <Link to={backTo} className="claim-back">← {role === 'fan' ? 'Início' : 'Dashboard'}</Link>}
             <h1 className="claim-page__title">Reclamar perfil Spotify</h1>
 
-            {!done && !pendingClaim && !checking && <Stepper current={step} />}
+            {!checking && <Stepper current={step} />}
 
             <div className="claim-card">
                 {checking ? (
                     <p className="claim-checking">A verificar…</p>
-                ) : pendingClaim ? (
-                    <ClaimPending claim={pendingClaim} backTo={backTo} />
-                ) : done ? (
-                    <StepSuccess backTo={backTo} />
                 ) : step === 0 ? (
                     <StepSpotify
                         selected={spotifyArtist}

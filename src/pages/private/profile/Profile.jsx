@@ -69,7 +69,6 @@ function ProfileHeader({ role, data, avatarUrl, onAvatarEdit, onEditProfile }) {
                     }}
                 />
                 <div className="prof__cover-grad" />
-                <button type="button" className="prof__cover-edit"><FaCog size={13} /> Editar capa</button>
             </div>
 
             <div className="prof__header">
@@ -111,11 +110,6 @@ function ProfileHeader({ role, data, avatarUrl, onAvatarEdit, onEditProfile }) {
                 </div>
 
                 <div className="prof__actions">
-                    {isArtist && (
-                        <button type="button" className="btn-ghost" style={{ padding: '10px 16px', fontSize: 14 }}>
-                            Ver como público
-                        </button>
-                    )}
                     <button type="button" className="btn-primary" style={{ padding: '10px 18px', fontSize: 14 }} onClick={onEditProfile}>
                         <FaCog size={14} /> Editar perfil
                     </button>
