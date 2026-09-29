@@ -48,25 +48,53 @@ function TabPerfil({ user, onProfileUpdated }) {
     const { showToast } = useToast()
     const [name, setName]         = useState(user.name || '')
     const [username, setUsername] = useState(user.username || '')
-    const [saved, setSaved]       = useState({ name: user.name || '', username: user.username || '' })
+    const [location, setLocation] = useState(user.location || '')
+    const [saved, setSaved]       = useState({ name: user.name || '', username: user.username || '', location: user.location || '' })
     const [saving, setSaving]     = useState(false)
+    const [locationOptions, setLocationOptions] = useState([])
 
-    const isDirty = name !== saved.name || username !== saved.username
+    useEffect(() => {
+        fetch(`${API}/auth/locations`)
+            .then(r => r.ok ? r.json() : [])
+            .then(setLocationOptions)
+            .catch(() => {})
+    }, [])
+
+    const locationGroups = locationOptions.reduce((acc, loc) => {
+        const g = loc.group ?? 'Outras'
+        if (!acc[g]) acc[g] = []
+        acc[g].push(loc.value)
+        return acc
+    }, {})
+
+    const isDirty = name !== saved.name || username !== saved.username || location !== saved.location
 
     async function handleSubmit(e) {
         e.preventDefault()
         setSaving(true)
         try {
-            const res = await fetch(`${API}/users/me/nameUsername`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-                body: JSON.stringify({ name, username }),
-            })
-            if (!res.ok) {
-                const data = await res.json().catch(() => ({}))
-                throw new Error(data.error || `Erro ${res.status}`)
+            const calls = [
+                fetch(`${API}/users/me/nameUsername`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+                    body: JSON.stringify({ name, username }),
+                }),
+            ]
+            if (location !== saved.location) {
+                calls.push(fetch(`${API}/users/me/location`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+                    body: JSON.stringify({ location }),
+                }))
             }
-            setSaved({ name, username })
+            const results = await Promise.all(calls)
+            for (const res of results) {
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}))
+                    throw new Error(data.error || `Erro ${res.status}`)
+                }
+            }
+            setSaved({ name, username, location })
             showToast('Perfil guardado!')
             onProfileUpdated?.({ name, handle: '@' + username })
         } catch (err) {
@@ -82,6 +110,21 @@ function TabPerfil({ user, onProfileUpdated }) {
                 <Field label="Nome" value={name} onChange={e => setName(e.target.value)} required />
                 <Field label="Username" value={username} onChange={e => setUsername(e.target.value)} required />
             </div>
+            <label className="ep-field">
+                <span className="ep-field__label">Localização</span>
+                <select
+                    className="input ep-location-select"
+                    value={location}
+                    onChange={e => setLocation(e.target.value)}
+                >
+                    <option value="">Escolhe uma localização</option>
+                    {Object.entries(locationGroups).map(([group, locs]) => (
+                        <optgroup key={group} label={group}>
+                            {locs.map(l => <option key={l} value={l}>{l}</option>)}
+                        </optgroup>
+                    ))}
+                </select>
+            </label>
             <div className="ep-form__footer">
                 <button type="submit" className="btn-primary ep-save-btn" disabled={!isDirty || saving}>
                     {saving ? 'A guardar…' : 'Guardar alterações'}

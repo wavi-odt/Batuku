@@ -181,6 +181,15 @@ body {
 .input:focus { border-color: var(--color-coral); }
 .input::placeholder { color: var(--color-ink-mute); }
 
+select option {
+    background-color: #15151A;
+    color: #F5F1EA;
+}
+select option:checked {
+    background-color: #E85D3C;
+    color: #fff;
+}
+
 /* ─── LINKS ────────────────────────────────────────────────────────── */
 .link {
     color: var(--color-ink-soft);

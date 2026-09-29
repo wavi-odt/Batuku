@@ -2,7 +2,7 @@
    Register.jsx, Página de criar conta.
    ───────────────────────────────────────────────────────────────── */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useGenres } from '../../context/GenresContext.jsx'
 import { Link, useNavigate } from 'react-router-dom'
 import { FaDiscord, FaGoogle } from 'react-icons/fa'
@@ -44,6 +44,22 @@ export default function Register() {
         terms: false,
     });
 
+    const [locationOptions, setLocationOptions] = useState([]);
+
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/locations`)
+            .then(r => r.ok ? r.json() : [])
+            .then(setLocationOptions)
+            .catch(() => {});
+    }, []);
+
+    const locationGroups = locationOptions.reduce((acc, loc) => {
+        const g = loc.group ?? 'Outras';
+        if (!acc[g]) acc[g] = [];
+        acc[g].push(loc.value);
+        return acc;
+    }, {});
+
     const update = (k, v) => setForm(f => ({ ...f, [k]: v }));
     const pwStrength = useMemo(() => strength(form.password), [form.password]);
 
@@ -69,6 +85,7 @@ export default function Register() {
                 email:    form.email,
                 password: form.password,
                 country:  form.country,
+                location: form.location || undefined,
                 userRole: role.toUpperCase(),
             };
 
@@ -325,14 +342,19 @@ export default function Register() {
 
                                         <div className="auth__field">
                                             <label htmlFor="location" className="auth__label">Localização</label>
-                                            <input
+                                            <select
                                                 id="location"
-                                                type="text"
-                                                className="input"
-                                                placeholder="Ex: Praia"
+                                                className="input auth__select"
                                                 value={form.location}
                                                 onChange={(e) => update('location', e.target.value)}
-                                            />
+                                            >
+                                                <option value="">Escolhe…</option>
+                                                {Object.entries(locationGroups).map(([group, locs]) => (
+                                                    <optgroup key={group} label={group}>
+                                                        {locs.map(l => <option key={l} value={l}>{l}</option>)}
+                                                    </optgroup>
+                                                ))}
+                                            </select>
                                         </div>
                                     </div>
 
