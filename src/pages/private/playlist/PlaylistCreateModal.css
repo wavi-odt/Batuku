@@ -84,7 +84,7 @@
 }
 
 .pcm-cover:hover {
-    border-color: var(--color-primary);
+    border-color: var(--color-coral);
 }
 
 .pcm-cover__img {

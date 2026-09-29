@@ -254,6 +254,12 @@
     cursor: pointer;
 }
 
+.ep-location-select option,
+.ep-location-select optgroup {
+    background: #15151A;
+    color: #F5F1EA;
+}
+
 /* ── Chip multi-select ───────────────────────────────────────────────── */
 .ep-chips {
     display: flex;

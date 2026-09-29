@@ -4,35 +4,51 @@
    Usa apenas tokens + global.css. Sem dependências novas.
    ───────────────────────────────────────────────────────────────── */
 
-import { useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { HiArrowLeft, HiHome, HiSearch } from 'react-icons/hi'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { HiArrowLeft } from 'react-icons/hi'
 import { usePlayer } from '../../context/PlayerContext'
-import { ARTISTS } from '../../data/batuku'
 import ArtistArtwork from '../../components/PublicComponets/ArtistArtwork'
 import './notFound.css'
+
+const SHAPE_KEYS = ['circles', 'arch', 'stripes', 'split', 'orbit', 'wave', 'sun', 'triangles'];
+function strHash(s) { let h = 0; for (const c of s) h = ((h * 31) + c.charCodeAt(0)) >>> 0; return h; }
+function artistToProps(a) { const h = strHash(a.name); return { hue: h % 360, shape: SHAPE_KEYS[h % SHAPE_KEYS.length] }; }
+
+const LAYOUTS = [
+    { top:  '8%', left:   '6%', size: 110, rot: -12, delay: '0s'   },
+    { top: '18%', left:  '78%', size: 140, rot:   8, delay: '0.4s' },
+    { top: '62%', left:   '4%', size: 130, rot:  10, delay: '0.8s' },
+    { top: '70%', left:  '82%', size: 120, rot:  -6, delay: '1.2s' },
+    { top: '38%', left:   '2%', size:  82, rot:  18, delay: '0.6s' },
+    { top: '40%', left:  '90%', size:  88, rot: -16, delay: '1.0s' },
+];
 
 export default function NotFound() {
     const navigate = useNavigate();
     const { setTrack } = usePlayer()
+    const [heroArtists, setHeroArtists] = useState(null);
+
     useEffect(() => { setTrack(null) }, [])
 
-    /* Capas flutuantes (decorativas), posições absolutas em %.
-       Cada uma com rotação + delay diferentes na animação. */
-    const FLOATERS = [
-        { top:  '8%', left:   '6%', size: 110, rot: -12, delay: '0s',   ...ARTISTS[0] },
-        { top: '18%', left:  '78%', size: 140, rot:   8, delay: '0.4s', ...ARTISTS[1] },
-        { top: '62%', left:   '4%', size: 130, rot:  10, delay: '0.8s', ...ARTISTS[2] },
-        { top: '70%', left:  '82%', size: 120, rot:  -6, delay: '1.2s', ...ARTISTS[3] },
-        { top: '38%', left:   '2%', size:  82, rot:  18, delay: '0.6s', ...ARTISTS[4] },
-        { top: '40%', left:  '90%', size:  88, rot: -16, delay: '1.0s', ...ARTISTS[5] },
-    ];
+    useEffect(() => {
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/public/artists/hero`)
+            .then(r => r.ok ? r.json() : [])
+            .then(data => setHeroArtists(Array.isArray(data) && data.length >= 6 ? data : []))
+            .catch(() => setHeroArtists([]));
+    }, []);
+
+    const FLOATERS = (heroArtists ?? []).slice(0, 6).map((a, i) => ({
+        ...LAYOUTS[i],
+        ...artistToProps(a),
+        image: a.imageUrl ?? null,
+    }));
 
     return (
         <main className="nf">
             <div className="nf__bg" aria-hidden="true" />
 
-            <div className="nf__floaters" aria-hidden="true">
+            {FLOATERS.length > 0 && <div className="nf__floaters" aria-hidden="true">
                 {FLOATERS.map((f, i) => (
                     <div
                         key={i}
@@ -49,7 +65,7 @@ export default function NotFound() {
                         <ArtistArtwork shape={f.shape} hue={f.hue} image={f.image} rounded={12} showGloss={false} />
                     </div>
                 ))}
-            </div>
+            </div>}
 
             <div className="container nf__inner">
 
@@ -70,22 +86,12 @@ export default function NotFound() {
                     <button
                         type="button"
                         className="btn btn--ghost"
-                        onClick={() => navigate(-1)}
+                        onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
                     >
                         <HiArrowLeft size={16} /> Voltar atrás
                     </button>
-                    <Link to="/" className="btn btn--primary">
-                        <HiHome size={16} /> Ir para o início
-                    </Link>
-                    <Link to="/artists" className="btn btn--ghost">
-                        <HiSearch size={16} /> Explorar artistas
-                    </Link>
                 </div>
 
-                <p className="nf__hint">
-                    Se achas que isto é um erro nosso,{' '}
-                    <Link to="/contact" className="link--coral">avisa-nos</Link>.
-                </p>
             </div>
         </main>
     );

@@ -258,8 +258,8 @@
 .mkt__tab:hover { color: var(--color-ink); }
 
 .mkt__tab--active {
-    color: var(--color-primary);
-    border-bottom-color: var(--color-primary);
+    color: var(--color-coral);
+    border-bottom-color: var(--color-coral);
     font-weight: 600;
 }
 

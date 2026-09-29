@@ -1,7 +1,9 @@
 import { useState, useEffect }  from 'react'
+import { useLocation }    from 'react-router-dom'
 import AppShell           from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }  from '../../../../utils/auth.js'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
+import { useToast }       from '../../../../context/ToastContext.jsx'
 import ContinueListening  from './ContinueListening.jsx'
 import FollowingArtists   from './FollowingArtists.jsx'
 import LevelCard          from './LevelCard.jsx'
@@ -16,8 +18,17 @@ function greeting() {
 }
 
 export default function Home() {
-    const realUser = useCurrentUser()
+    const realUser  = useCurrentUser()
+    const { showToast } = useToast()
+    const location  = useLocation()
     const firstName = (realUser?.name || 'Utilizador').split(' ')[0]
+
+    useEffect(() => {
+        if (location.state?.notice) {
+            showToast(location.state.notice, 'info')
+            window.history.replaceState({}, '')
+        }
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
     const [recentTracks,    setRecentTracks]    = useState([])
     const [followedArtists, setFollowedArtists] = useState([])
@@ -48,7 +59,7 @@ export default function Home() {
                     {followedArtists.length > 0 && (
                         <p className="home__hello-sub">
                             Segues <strong>{followedArtists.length} artistas</strong>.
-                            Vai à página <a href="/following" style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>A seguir</a> para ver novidades.
+                            Vai à página <a href="/following" style={{ color: 'var(--color-coral)', textDecoration: 'none' }}>A seguir</a> para ver novidades.
                         </p>
                     )}
                 </div>

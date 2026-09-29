@@ -25,15 +25,13 @@ const menuItems = (role) => [
 
 export default function Sidebar({ role = 'fan' }) {
     const nav      = role === 'artist' ? homeData.artistNav : homeData.fanNav;
-    const mockUser = role === 'artist' ? homeData.artist    : homeData.fan;
     const realUser = useCurrentUser();
     const { count: pendingComments } = usePendingComments();
     const { badgesPerRoute } = useNotifications();
 
     const user = {
-        ...mockUser,
-        ...(realUser?.name   && { name:   realUser.name }),
-        ...(realUser?.handle && { handle: realUser.handle }),
+        name:   realUser?.name   ?? null,
+        handle: realUser?.handle ?? null,
     };
 
     const { setTrack } = usePlayer()
@@ -144,9 +142,9 @@ export default function Sidebar({ role = 'fan' }) {
                     <div className="sidebar__profile-info">
                         <div className="sidebar__profile-name">{user.name}</div>
                         <div className="sidebar__profile-sub">
-                            {role === 'artist' && user.isVerified
+                            {role === 'artist'
                                 ? <><span className="sidebar__verified-dot" /> Verificado</>
-                                : `Nível ${user.level}`}
+                                : user.handle ?? ''}
                         </div>
                     </div>
                     <HiChevronUp

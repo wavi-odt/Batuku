@@ -30,22 +30,34 @@ export default function OAuthCallback() {
             const pendingRole = sessionStorage.getItem('oauthPendingRole')
             sessionStorage.removeItem('oauthPendingRole')
 
-            if (pendingRole === 'artist') {
-                let artistEmail = null
-                try {
-                    const res = await fetch(`${API}/api/auth/oauth2/upgrade-to-artist`, {
-                        method: 'POST',
-                        headers: { 'Authorization': `Bearer ${token}` }
+            if (pendingRole) {
+                const role = getRole()
+                const dest = role === 'artist' ? '/dashboard' : '/home'
+
+                if (!isNewUser) {
+                    const roleLabel = role === 'artist' ? 'artista' : 'fã'
+                    navigate(dest, {
+                        replace: true,
+                        state: { notice: `Já tens uma conta registada como ${roleLabel}. Entraste com essa conta.` },
                     })
-                    if (res.ok) {
-                        const data = await res.json()
-                        saveAuth(data.token)
-                        artistEmail = data.email
-                    }
-                } catch (_) {}
-                setPendingClaim()
-                navigate('/claim-profile', { state: { fromRegistration: true }, replace: true })
-                return
+                    return
+                }
+
+                if (pendingRole === 'artist') {
+                    try {
+                        const res = await fetch(`${API}/api/auth/oauth2/upgrade-to-artist`, {
+                            method: 'POST',
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        })
+                        if (res.ok) {
+                            const data = await res.json()
+                            saveAuth(data.token)
+                        }
+                    } catch (_) {}
+                    setPendingClaim()
+                    navigate('/claim-profile', { state: { fromRegistration: true }, replace: true })
+                    return
+                }
             }
 
             if (isNewUser) {

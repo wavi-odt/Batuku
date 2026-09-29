@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { FaPlay, FaPause, FaTrash, FaHeart, FaHeadphones, FaRegComment, FaPen, FaCheck, FaTimes, FaCamera } from 'react-icons/fa'
+import { HiOutlineMusicNote } from 'react-icons/hi'
 import { usePlayer } from '../../../../context/PlayerContext.jsx'
 import { useToast } from '../../../../context/ToastContext.jsx'
 import { useGenres } from '../../../../context/GenresContext.jsx'
@@ -178,7 +179,7 @@ export default function TracksList({ tracks, loading, onDelete, onUpdate, artist
         return (
             <div className="trk__table">
                 <div className="trk__empty">
-                    <div className="trk__empty-icon">🎵</div>
+                    <div className="trk__empty-icon"><HiOutlineMusicNote size={48} /></div>
                     <div className="trk__empty-title">Sem faixas</div>
                     <div className="trk__empty-sub">Tenta outro filtro ou publica a tua primeira faixa.</div>
                 </div>

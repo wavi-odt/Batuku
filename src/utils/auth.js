@@ -49,8 +49,9 @@ export function getUser() {
     if (!payload) return null;
 
     const rawHandle = payload.username || payload.preferred_username || null;
+    const rawId     = payload.userId || payload.user_id || null;
     return {
-        id:      payload.sub || payload.userId || null,
+        id:      rawId ?? null,
         name:    payload.name || payload.displayName || payload.preferred_username || null,
         email:   payload.email || null,
         handle:  rawHandle ? (`@${rawHandle}`).replace('@@', '@') : null,

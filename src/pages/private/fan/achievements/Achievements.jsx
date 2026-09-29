@@ -9,7 +9,6 @@ import AchievementsChallenges     from './AchievementsChallenges.jsx'
 import AchievementsBadges         from './AchievementsBadges.jsx'
 import AchievementsLeaderboard    from './AchievementsLeaderboard.jsx'
 import AchievementsMilestones     from './AchievementsMilestones.jsx'
-import { achievementsData }       from '../../../../data/achievements.js'
 import { API, getToken }          from '../../../../utils/auth.js'
 
 import { useCurrentUser }         from '../../../../hooks/useCurrentUser.js'
@@ -151,7 +150,7 @@ export default function Achievements() {
             {/* ─── Desafios + Sidebar ─────────────────────────────── */}
             <div className="ach__split">
                 <AchievementsChallenges
-                    challenges={challenges.length > 0 ? challenges : achievementsData.challenges}
+                    challenges={challenges}
                     onAdvance={async () => {
                         const res = await fetch(`${API}/api/gamification/challenges/advance`, {
                             method: 'POST',
@@ -187,7 +186,7 @@ export default function Achievements() {
             )}
 
             {/* ─── Milestones ─────────────────────────────────────── */}
-            <AchievementsMilestones milestones={milestones.length > 0 ? milestones : achievementsData.milestones} />
+            <AchievementsMilestones milestones={milestones} />
         </AppShell>
     )
 }

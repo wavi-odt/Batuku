@@ -254,11 +254,11 @@
 }
 
 .lib__track-row--active .lib__track-title {
-    color: var(--color-primary);
+    color: var(--color-coral);
 }
 
 .lib__track-row--active .lib__track-num {
-    color: var(--color-primary);
+    color: var(--color-coral);
 }
 
 .lib__track-row:hover {

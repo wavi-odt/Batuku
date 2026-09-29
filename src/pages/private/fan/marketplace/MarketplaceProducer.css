@@ -54,7 +54,7 @@
 }
 
 .mkt-prod__upload-btn {
-    background: var(--color-primary);
+    background: var(--color-coral);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -149,7 +149,7 @@
 .mkt-prod__beat-row--playing .mkt-prod__beat-play { opacity: 1; }
 
 .mkt-prod__beat-row--playing {
-    background: rgba(var(--color-primary-rgb, 79, 174, 124), 0.06);
+    background: rgba(232, 93, 60, 0.06);
 }
 
 .mkt-prod__beat-row--sold {
@@ -208,12 +208,12 @@
 .mkt-prod__beat-price {
     font-size: 14px;
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--color-coral);
     text-align: right;
 }
 
 .mkt-prod__stat--revenue .mkt-prod__stat-val {
-    color: var(--color-primary);
+    color: var(--color-coral);
 }
 
 .mkt-prod__beat-actions {

@@ -6,9 +6,6 @@
 import { FaPlay, FaAward, FaUsers, FaRegComment, FaRegHeart } from 'react-icons/fa'
 import { HiOutlineLibrary, HiArrowUp } from 'react-icons/hi'
 import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
-import { ARTISTS } from '../../../data/batuku.js'
-
-const IMG_BY_NAME = Object.fromEntries(ARTISTS.map(a => [a.name, a.image]));
 
 const BADGE_EMOJI = {
     sunrise: '🌅', fire: '🔥', compass: '🧭', heart: '❤️', star: '⭐',
@@ -129,23 +126,6 @@ export function ActivityList({ items }) {
     );
 }
 
-export function FollowingGrid({ artists }) {
-    return (
-        <div className="prof-following">
-            {artists.map((a, i) => (
-                <div key={i} className="follow-card">
-                    <div className="follow-card__avatar">
-                        <ArtistArtwork shape={a.shape} hue={a.hue} image={IMG_BY_NAME[a.name]} rounded={0} />
-                        {a.isLive && <span className="follow-card__live">● Ao vivo</span>}
-                    </div>
-                    <div className="follow-card__name">{a.name}</div>
-                    <div className="follow-card__genre">{a.city} · {a.genre}</div>
-                    <button type="button" className="prof-following__btn">A seguir</button>
-                </div>
-            ))}
-        </div>
-    );
-}
 
 /* Reutilizados pelo overview + tab "Sobre" do artista */
 export function ArtistAbout({ artist }) {

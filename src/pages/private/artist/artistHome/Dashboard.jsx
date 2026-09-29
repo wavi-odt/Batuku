@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useLocation } from 'react-router-dom'
 import AppShell         from '../../../../components/HomeComponents/AppShell.jsx'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import { API, getToken } from '../../../../utils/auth.js'
 import { usePendingComments } from '../../../../context/PendingCommentsContext.jsx'
+import { useToast }     from '../../../../context/ToastContext.jsx'
 import VerifyBanner     from './VerifyBanner.jsx'
 import StatCards        from './StatCards.jsx'
 import GrowthChart      from './GrowthChart.jsx'
@@ -16,7 +17,16 @@ import './Dashboard.css'
 export default function Dashboard() {
     const realUser = useCurrentUser()
     const { decrement } = usePendingComments()
+    const { showToast } = useToast()
+    const location = useLocation()
     const [searchParams, setSearchParams] = useSearchParams()
+
+    useEffect(() => {
+        if (location.state?.notice) {
+            showToast(location.state.notice, 'info')
+            window.history.replaceState({}, '')
+        }
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
     const period    = searchParams.get('period') ?? '30d'
     const setPeriod = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('period', val); return p })
     const [stats, setStats]     = useState(null)

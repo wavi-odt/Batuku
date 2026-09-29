@@ -131,7 +131,7 @@
     background: var(--color-bg);
     transition: border-color 0.15s;
 }
-.offer-modal__amount-wrap:focus-within { border-color: var(--color-primary); }
+.offer-modal__amount-wrap:focus-within { border-color: var(--color-coral); }
 
 .offer-modal__currency {
     padding: 0 14px;
@@ -167,7 +167,7 @@
     font-family: inherit;
     transition: border-color 0.15s;
 }
-.offer-modal__message:focus { border-color: var(--color-primary); }
+.offer-modal__message:focus { border-color: var(--color-coral); }
 
 .offer-modal__error {
     font-size: 13px;

@@ -6,7 +6,7 @@ import './NotificationsPanel.css'
 
 const TYPE_META = {
     LIKE:                { icon: FaHeart,       color: 'var(--color-coral)'    },
-    FOLLOW:              { icon: FaUserPlus,    color: 'var(--color-primary)'  },
+    FOLLOW:              { icon: FaUserPlus,    color: 'var(--color-ocean)'    },
     COMMENT:             { icon: FaComment,     color: '#60a5fa'                },
     BADGE:               { icon: FaTrophy,      color: '#fbbf24'                },
     CHALLENGE_COMPLETED: { icon: FaTrophy,      color: '#10b981'                },

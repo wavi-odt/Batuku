@@ -1,6 +1,8 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { FaPlus, FaSearch, FaCompactDisc, FaTrash } from 'react-icons/fa'
+import { FaPlus, FaSearch, FaCompactDisc, FaTrash, FaCheck, FaChevronDown } from 'react-icons/fa'
+import { HiOutlineMusicNote } from 'react-icons/hi'
+import { TbDisc } from 'react-icons/tb'
 import AppShell from '../../../../components/HomeComponents/AppShell.jsx'
 import { usePublish } from '../../../../context/PublishContext.jsx'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
@@ -27,6 +29,56 @@ const SORT_OPTIONS = [
     { key: 'oldest', label: 'Mais antigas'   },
 ];
 
+const REL_SORT_OPTIONS = [
+    { key: 'recent',  label: 'Mais recentes'  },
+    { key: 'oldest',  label: 'Mais antigas'   },
+    { key: 'tracks',  label: 'Mais faixas'    },
+    { key: 'alpha',   label: 'Alfabética'     },
+];
+
+function SortDropdown({ value, onChange, options }) {
+    const [open, setOpen] = useState(false)
+    const ref = useRef(null)
+    const current = options.find(o => o.key === value)
+
+    useEffect(() => {
+        if (!open) return
+        function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false) }
+        document.addEventListener('mousedown', onDown)
+        return () => document.removeEventListener('mousedown', onDown)
+    }, [open])
+
+    return (
+        <div className="trk__sort-wrap" ref={ref}>
+            <button
+                type="button"
+                className={'trk__sort-btn' + (open ? ' trk__sort-btn--open' : '')}
+                onClick={() => setOpen(o => !o)}
+            >
+                {current?.label}
+                <FaChevronDown size={8} className={'trk__sort-chevron' + (open ? ' trk__sort-chevron--open' : '')} />
+            </button>
+            {open && (
+                <div className="trk__sort-menu">
+                    {options.map(o => (
+                        <button
+                            key={o.key}
+                            type="button"
+                            className={'trk__sort-option' + (o.key === value ? ' trk__sort-option--active' : '')}
+                            onClick={() => { onChange(o.key); setOpen(false) }}
+                        >
+                            <span className="trk__sort-option-check">
+                                {o.key === value && <FaCheck size={8} />}
+                            </span>
+                            {o.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
+
 export default function Tracks() {
     const { openPublish, publishVersion, notifyPublished } = usePublish();
     const { showToast } = useToast();
@@ -41,11 +93,13 @@ export default function Tracks() {
     const sort       = searchParams.get('sort')      ?? 'recent'
     const activeTab  = searchParams.get('tab')       ?? 'tracks'
     const relStatus  = searchParams.get('relStatus') ?? 'all'
+    const relSort    = searchParams.get('relSort')   ?? 'recent'
     const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p })
     const setStatus    = (val) => sp('status',    val)
     const setSort      = (val) => sp('sort',      val)
     const setActiveTab = (val) => sp('tab',       val)
     const setRelStatus = (val) => sp('relStatus', val)
+    const setRelSort   = (val) => sp('relSort',   val)
 
     /* ─── Lançamentos ────────────────────────────────────────── */
     const { releases, loading: relLoading } = useMyReleases(aid, publishVersion);
@@ -84,8 +138,13 @@ export default function Tracks() {
             const q = relQuery.toLowerCase();
             list = list.filter(r => r.title.toLowerCase().includes(q));
         }
-        return list;
-    }, [releases, relStatus, relQuery]);
+        return [...list].sort((a, b) => {
+            if (relSort === 'oldest') return (a.id ?? 0) - (b.id ?? 0);
+            if (relSort === 'tracks') return (b.tracks?.length ?? 0) - (a.tracks?.length ?? 0);
+            if (relSort === 'alpha')  return (a.title ?? '').localeCompare(b.title ?? '', 'pt');
+            return (b.id ?? 0) - (a.id ?? 0);
+        });
+    }, [releases, relStatus, relQuery, relSort]);
 
     function handleUpdateTrack(updated) {
         setTracks(prev => prev.map(t => t.id === updated.id ? { ...t, ...updated } : t))
@@ -133,7 +192,7 @@ export default function Tracks() {
                         }
                     </p>
                 </div>
-                <button type="button" className="trk__new-btn" onClick={openPublish}>
+                <button type="button" className="trk__new-btn" onClick={() => openPublish(activeTab === 'tracks' ? 'track' : 'release')}>
                     <FaPlus size={13} />
                     {activeTab === 'tracks' ? 'Nova faixa' : 'Novo lançamento'}
                 </button>
@@ -208,11 +267,7 @@ export default function Tracks() {
                                 </button>
                             ))}
                         </div>
-                        <select className="trk__sort" value={sort} onChange={e => setSort(e.target.value)}>
-                            {SORT_OPTIONS.map(o => (
-                                <option key={o.key} value={o.key}>{o.label}</option>
-                            ))}
-                        </select>
+                        <SortDropdown value={sort} onChange={setSort} options={SORT_OPTIONS} />
                     </div>
 
                     <TracksList
@@ -276,6 +331,7 @@ export default function Tracks() {
                                 </button>
                             ))}
                         </div>
+                        <SortDropdown value={relSort} onChange={setRelSort} options={REL_SORT_OPTIONS} />
                     </div>
 
                     {relLoading ? (
@@ -285,7 +341,7 @@ export default function Tracks() {
                     ) : filteredReleases.length === 0 ? (
                         <div className="trk__table">
                             <div className="trk__empty">
-                                <div className="trk__empty-icon">💿</div>
+                                <div className="trk__empty-icon"><TbDisc size={48} /></div>
                                 <div className="trk__empty-title">
                                     {releases.length === 0 ? 'Sem lançamentos' : 'Sem resultados'}
                                 </div>

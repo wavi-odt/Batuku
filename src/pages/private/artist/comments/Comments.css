@@ -15,13 +15,13 @@
 .cmt__title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-ink);
     margin: 0 0 .2rem;
 }
 
 .cmt__subtitle {
     font-size: .85rem;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
     margin: 0;
 }
 
@@ -34,8 +34,8 @@
 }
 
 .cmt__kpi {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     padding: 1rem 1.25rem;
 }
@@ -45,7 +45,7 @@
     align-items: center;
     gap: .45rem;
     font-size: .75rem;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
     margin-bottom: .5rem;
     text-transform: uppercase;
     letter-spacing: .04em;
@@ -68,14 +68,14 @@
 .cmt__kpi-val {
     font-size: 1.6rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-ink);
     line-height: 1;
     margin-bottom: .3rem;
 }
 
 .cmt__kpi-sub {
     font-size: .75rem;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
 }
 
 /* ── Toolbar ──────────────────────────────────────────────────── */
@@ -98,7 +98,7 @@
     left: .75rem;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
     pointer-events: none;
     font-size: .8rem;
 }
@@ -106,23 +106,23 @@
 .cmt__search {
     width: 100%;
     padding: .5rem .75rem .5rem 2.1rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-ink);
     font-size: .85rem;
     outline: none;
     box-sizing: border-box;
 }
 
-.cmt__search:focus { border-color: var(--accent); }
+.cmt__search:focus { border-color: var(--color-coral); }
 
 .cmt__track-select {
     padding: .5rem .75rem;
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-sm);
+    color: var(--color-ink);
     font-size: .85rem;
     cursor: pointer;
     outline: none;
@@ -137,17 +137,17 @@
 .cmt__status-tab {
     padding: .38rem .75rem;
     border-radius: 99px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-border);
     background: transparent;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
     font-size: .78rem;
     cursor: pointer;
     transition: all .15s;
 }
 
 .cmt__status-tab--active {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--color-coral);
+    border-color: var(--color-coral);
     color: #fff;
 }
 
@@ -160,8 +160,8 @@
 
 /* ── Comment card ─────────────────────────────────────────────── */
 .cmt__card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     overflow: hidden;
     transition: border-color .15s;
@@ -210,19 +210,19 @@
 .cmt__user-name {
     font-size: .88rem;
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--color-ink);
 }
 
 .cmt__user-handle {
     font-size: .78rem;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
 }
 
 .cmt__dot {
     width: 3px;
     height: 3px;
     border-radius: 50%;
-    background: var(--text-muted);
+    background: var(--color-ink-mute);
     flex-shrink: 0;
 }
 
@@ -240,7 +240,7 @@
 
 .cmt__time {
     font-size: .75rem;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
     margin-top: .15rem;
 }
 
@@ -269,7 +269,7 @@
 /* Comment text */
 .cmt__text {
     font-size: .88rem;
-    color: var(--text-secondary);
+    color: var(--color-ink-soft);
     line-height: 1.55;
     margin-bottom: .75rem;
 }
@@ -287,15 +287,15 @@
     gap: .35rem;
     padding: .3rem .65rem;
     border-radius: 99px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--color-border);
     background: transparent;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
     font-size: .78rem;
     cursor: pointer;
     transition: all .15s;
 }
 
-.cmt__action-btn:hover { border-color: var(--accent); color: var(--accent); }
+.cmt__action-btn:hover { border-color: var(--color-coral); color: var(--color-coral); }
 
 .cmt__action-btn--liked { color: oklch(65% .22 27); border-color: oklch(65% .22 27 / .4); }
 .cmt__action-btn--liked:hover { color: oklch(65% .22 27); }
@@ -304,11 +304,11 @@
 .cmt__action-btn--pinned:hover { color: oklch(70% .18 80); }
 
 .cmt__action-btn--reply-open {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--color-coral);
+    border-color: var(--color-coral);
     color: #fff;
 }
-.cmt__action-btn--reply-open:hover { background: var(--accent); color: #fff; }
+.cmt__action-btn--reply-open:hover { background: var(--color-coral); color: #fff; }
 
 .cmt__action-btn--delete { margin-left: auto; }
 .cmt__action-btn--delete:hover { border-color: oklch(55% .22 27 / .5); color: oklch(65% .22 27); }
@@ -316,8 +316,8 @@
 /* ── Existing reply ───────────────────────────────────────────── */
 .cmt__reply {
     padding: .75rem 1.1rem;
-    background: var(--bg-hover);
-    border-top: 1px solid var(--border);
+    background: rgba(255,255,255,0.06);
+    border-top: 1px solid var(--color-border);
     display: flex;
     gap: .65rem;
     align-items: flex-start;
@@ -339,27 +339,27 @@
 .cmt__reply-author {
     font-size: .78rem;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--color-ink);
     margin-bottom: .2rem;
 }
 
 .cmt__reply-text {
     font-size: .82rem;
-    color: var(--text-secondary);
+    color: var(--color-ink-soft);
     line-height: 1.5;
 }
 
 .cmt__reply-time {
     font-size: .7rem;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
     margin-top: .2rem;
 }
 
 /* ── Reply composer ───────────────────────────────────────────── */
 .cmt__composer {
     padding: .75rem 1.1rem;
-    background: var(--bg-hover);
-    border-top: 1px solid var(--border);
+    background: rgba(255,255,255,0.06);
+    border-top: 1px solid var(--color-border);
     display: flex;
     gap: .65rem;
     align-items: flex-start;
@@ -384,10 +384,10 @@
     width: 100%;
     min-height: 64px;
     padding: .55rem .75rem;
-    background: var(--bg-surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text-primary);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    color: var(--color-ink);
     font-size: .85rem;
     line-height: 1.5;
     resize: vertical;
@@ -396,7 +396,7 @@
     font-family: inherit;
 }
 
-.cmt__composer-textarea:focus { border-color: var(--accent); }
+.cmt__composer-textarea:focus { border-color: var(--color-coral); }
 
 .cmt__composer-row {
     display: flex;
@@ -406,19 +406,19 @@
 
 .cmt__composer-cancel {
     padding: .38rem .75rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
     background: transparent;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
     font-size: .82rem;
     cursor: pointer;
 }
 
 .cmt__composer-submit {
     padding: .38rem .9rem;
-    border-radius: var(--radius);
+    border-radius: var(--radius-md);
     border: none;
-    background: var(--accent);
+    background: var(--color-coral);
     color: #fff;
     font-size: .82rem;
     font-weight: 600;
@@ -435,13 +435,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg-hover);
+    background: rgba(255,255,255,0.06);
 }
 
 .cmt__initials {
     font-size: .72rem;
     font-weight: 700;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
     line-height: 1;
 }
 
@@ -449,16 +449,16 @@
 .cmt__reply-badge {
     font-weight: 400;
     font-size: .7rem;
-    color: var(--text-muted);
+    color: var(--color-ink-mute);
 }
 
 /* ── Empty ────────────────────────────────────────────────────── */
 .cmt__empty {
     padding: 3rem;
     text-align: center;
-    color: var(--text-muted);
-    background: var(--bg-card);
-    border: 1px solid var(--border);
+    color: var(--color-ink-mute);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     font-size: .9rem;
 }

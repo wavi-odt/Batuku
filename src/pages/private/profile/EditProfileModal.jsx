@@ -44,7 +44,7 @@ function Msg({ error, done, doneText = 'Alterações guardadas.' }) {
 }
 
 /* ── Tab: Perfil ─────────────────────────────────────────────────────── */
-function TabPerfil({ user, onProfileUpdated }) {
+function TabPerfil({ user, role, onProfileUpdated }) {
     const { showToast } = useToast()
     const [name, setName]         = useState(user.name || '')
     const [username, setUsername] = useState(user.username || '')
@@ -67,7 +67,8 @@ function TabPerfil({ user, onProfileUpdated }) {
         return acc
     }, {})
 
-    const isDirty = name !== saved.name || username !== saved.username || location !== saved.location
+    const isArtist = role === 'artist'
+    const isDirty = name !== saved.name || username !== saved.username || (!isArtist && location !== saved.location)
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -96,7 +97,8 @@ function TabPerfil({ user, onProfileUpdated }) {
             }
             setSaved({ name, username, location })
             showToast('Perfil guardado!')
-            onProfileUpdated?.({ name, handle: '@' + username })
+            onProfileUpdated?.({ name, handle: '@' + username, country: location || null })
+            window.dispatchEvent(new Event('batuku:user-updated'))
         } catch (err) {
             showToast(err.message, 'error')
         } finally {
@@ -110,21 +112,23 @@ function TabPerfil({ user, onProfileUpdated }) {
                 <Field label="Nome" value={name} onChange={e => setName(e.target.value)} required />
                 <Field label="Username" value={username} onChange={e => setUsername(e.target.value)} required />
             </div>
-            <label className="ep-field">
-                <span className="ep-field__label">Localização</span>
-                <select
-                    className="input ep-location-select"
-                    value={location}
-                    onChange={e => setLocation(e.target.value)}
-                >
-                    <option value="">Escolhe uma localização</option>
-                    {Object.entries(locationGroups).map(([group, locs]) => (
-                        <optgroup key={group} label={group}>
-                            {locs.map(l => <option key={l} value={l}>{l}</option>)}
-                        </optgroup>
-                    ))}
-                </select>
-            </label>
+            {!isArtist && (
+                <label className="ep-field">
+                    <span className="ep-field__label">Localização</span>
+                    <select
+                        className="input ep-location-select"
+                        value={location}
+                        onChange={e => setLocation(e.target.value)}
+                    >
+                        <option value="">Escolhe uma localização</option>
+                        {Object.entries(locationGroups).map(([group, locs]) => (
+                            <optgroup key={group} label={group}>
+                                {locs.map(l => <option key={l} value={l}>{l}</option>)}
+                            </optgroup>
+                        ))}
+                    </select>
+                </label>
+            )}
             <div className="ep-form__footer">
                 <button type="submit" className="btn-primary ep-save-btn" disabled={!isDirty || saving}>
                     {saving ? 'A guardar…' : 'Guardar alterações'}
@@ -504,7 +508,7 @@ export default function EditProfileModal({ role, onClose, onProfileUpdated, onAr
     function renderTab() {
         if (!user) return null
         switch (tabs[active]) {
-            case 'Perfil':    return <TabPerfil user={user} onProfileUpdated={onProfileUpdated} />
+            case 'Perfil':    return <TabPerfil user={user} role={role} onProfileUpdated={onProfileUpdated} />
             case 'Artista':   return <TabArtista onSaved={onArtistSaved} />
             case 'Links':     return <TabLinks onSaved={onArtistSaved} />
             case 'Segurança': return <TabSeguranca />

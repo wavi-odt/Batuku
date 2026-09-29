@@ -64,9 +64,7 @@ export default function Register() {
     const pwStrength = useMemo(() => strength(form.password), [form.password]);
 
     function handleOAuthWithRole(selectedRole) {
-        if (selectedRole === 'artist') {
-            sessionStorage.setItem('oauthPendingRole', 'artist')
-        }
+        sessionStorage.setItem('oauthPendingRole', selectedRole)
         window.location.href = `${import.meta.env.VITE_API_BASE_URL}/oauth2/authorization/${oauthProvider}`
     }
 

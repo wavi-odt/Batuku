@@ -1,18 +1,17 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { API } from '../utils/auth'
-import { discoverData } from '../data/discover'
 
 const GenresContext = createContext({
-    genresMundiais: discoverData.genresMundiais,
-    genresCaboverde: discoverData.genresCaboverde,
+    genresMundiais: [],
+    genresCaboverde: [],
     allNames: [],
     cvNames: [],
     mundialNames: [],
 })
 
 export function GenresProvider({ children }) {
-    const [genresMundiais,  setGenresMundiais]  = useState(discoverData.genresMundiais)
-    const [genresCaboverde, setGenresCaboverde] = useState(discoverData.genresCaboverde)
+    const [genresMundiais,  setGenresMundiais]  = useState([])
+    const [genresCaboverde, setGenresCaboverde] = useState([])
 
     useEffect(() => {
         fetch(`${API}/api/genres`)

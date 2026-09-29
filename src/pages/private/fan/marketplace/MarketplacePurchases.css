@@ -100,7 +100,7 @@
 }
 
 .mkt-lib__download:hover {
-    color: var(--color-primary);
-    border-color: var(--color-primary);
-    background: var(--color-primary-dim, rgba(79,174,124,0.08));
+    color: var(--color-coral);
+    border-color: var(--color-coral);
+    background: var(--color-coral-dim);
 }

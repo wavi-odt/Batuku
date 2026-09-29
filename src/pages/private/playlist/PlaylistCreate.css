@@ -30,7 +30,7 @@
 }
 
 .pl-create-cover:hover {
-    border-color: var(--color-primary);
+    border-color: var(--color-coral);
 }
 
 .pl-create-cover__img {

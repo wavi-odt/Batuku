@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { API, getUser } from '../utils/auth'
 
 function formatJoined(dateStr) {
@@ -11,10 +11,9 @@ function formatJoined(dateStr) {
 export function useCurrentUser() {
     const [user, setUser] = useState(getUser)
 
-    useEffect(() => {
+    const refresh = useCallback(() => {
         const token = localStorage.getItem('token')
         if (!token) return
-
         fetch(`${API}/api/auth/me`, {
             headers: { Authorization: `Bearer ${token}` },
         })
@@ -23,12 +22,12 @@ export function useCurrentUser() {
                 if (!data) return
                 setUser(prev => ({
                     ...prev,
-                    id:               data.id                                         || prev?.id,
+                    id:               data.id       ?? data.userId ?? data.user_id     ?? prev?.id,
                     name:             data.name     || data.displayName              || prev?.name,
                     email:            data.email                                      || prev?.email,
                     handle:           data.username ? `@${data.username}` : (data.handle || prev?.handle),
                     picture:          data.avatarUrl || data.picture || data.avatar   || prev?.picture,
-                    location:         data.country                                    || prev?.location,
+                    location:         data.location || data.country                   || prev?.location,
                     joined:           formatJoined(data.createdAt || data.joinedAt || data.memberSince) || prev?.joined,
                     bio:              data.bio || data.description                    || prev?.bio,
                     spotifyArtistId:  data.spotifyArtistId || data.spotifyId          || prev?.spotifyArtistId || null,
@@ -38,6 +37,12 @@ export function useCurrentUser() {
             })
             .catch(() => {})
     }, [])
+
+    useEffect(() => {
+        refresh()
+        window.addEventListener('batuku:user-updated', refresh)
+        return () => window.removeEventListener('batuku:user-updated', refresh)
+    }, [refresh])
 
     return user
 }

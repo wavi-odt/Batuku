@@ -4,7 +4,6 @@ import { HiSearch, HiBell, HiPlus, HiX } from 'react-icons/hi'
 import { FaUser, FaMusic } from 'react-icons/fa'
 import { usePublish } from '../../context/PublishContext.jsx'
 import { useNotifications } from '../../context/NotificationsContext.jsx'
-import { homeData } from '../../data/home'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { getToken } from '../../utils/auth.js'
 import NotificationsPanel from './NotificationsPanel.jsx'
@@ -49,9 +48,7 @@ function ResultGroup({ label, items, renderItem }) {
 }
 
 export default function TopBar({ role = 'fan' }) {
-    const mockUser = role === 'artist' ? homeData.artist : homeData.fan;
     const realUser = useCurrentUser();
-    const user     = mockUser;
     const { openPublish } = usePublish();
 
     const [query,   setQuery]   = useState('');
@@ -285,7 +282,7 @@ export default function TopBar({ role = 'fan' }) {
 
             <Link to="/profile" className="topbar__avatar" aria-label="O meu perfil">
                 {realUser?.picture
-                    ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                    ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                     : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
             </Link>
         </header>

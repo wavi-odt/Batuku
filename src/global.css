@@ -189,6 +189,10 @@ select option:checked {
     background-color: #E85D3C;
     color: #fff;
 }
+select optgroup {
+    background-color: #101013;
+    color: #9A938A;
+}
 
 /* ─── LINKS ────────────────────────────────────────────────────────── */
 .link {

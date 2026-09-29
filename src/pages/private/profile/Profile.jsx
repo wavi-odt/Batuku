@@ -11,7 +11,6 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FaTrophy, FaCheckCircle, FaCamera, FaCog, FaUser } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
-import { profileData } from '../../../data/profile'
 import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import { API, getToken } from '../../../utils/auth.js'
 import {
@@ -123,16 +122,16 @@ function ProfileHeader({ role, data, avatarUrl, onAvatarEdit, onEditProfile }) {
 function ProfileStats({ role, data }) {
     const stats = role === 'artist'
         ? [
-            { v: data.followers.toLocaleString('pt-PT'), l: 'Seguidores' },
-            { v: data.monthlyListeners.toLocaleString('pt-PT'), l: 'Ouvintes/mês' },
-            { v: data.tracksPublished, l: 'Faixas' },
+            { v: (data.followers ?? 0).toLocaleString('pt-PT'), l: 'Seguidores' },
+            { v: (data.monthlyListeners ?? 0).toLocaleString('pt-PT'), l: 'Ouvintes/mês' },
+            { v: data.tracksPublished ?? 0, l: 'Faixas' },
         ]
         : [
-            { v: data.points.toLocaleString('pt-PT'), l: 'Pontos' },
-            { v: '#' + data.rank, l: 'Rank semanal' },
-            { v: data.badgesCount, l: 'Badges' },
-            { v: data.following, l: 'A seguir' },
-            { v: data.followers, l: 'Seguidores' },
+            { v: (data.points ?? 0).toLocaleString('pt-PT'), l: 'Pontos' },
+            { v: data.rank != null ? '#' + data.rank : '—', l: 'Rank semanal' },
+            { v: data.badgesCount ?? 0, l: 'Badges' },
+            { v: data.following ?? 0, l: 'A seguir' },
+            { v: data.followers ?? 0, l: 'Seguidores' },
         ];
 
     return (
@@ -151,7 +150,6 @@ function ProfileStats({ role, data }) {
 /* ─── Page ────────────────────────────────────────────────────────── */
 export default function Profile({ role = 'fan' }) {
     const tabs    = role === 'artist' ? ARTIST_TABS : FAN_TABS;
-    const mock    = role === 'artist' ? profileData.artist : profileData.fan;
     const realUser = useCurrentUser();
 
     const [searchParams, setSearchParams]   = useSearchParams()
@@ -258,35 +256,34 @@ export default function Profile({ role = 'fan' }) {
     } : {};
 
     const data = {
-        ...mock,
-        ...(realUser?.name     && { name:     realUser.name }),
-        ...(realUser?.handle   && { handle:   realUser.handle }),
-        ...(realUser?.joined   && { joined:   realUser.joined }),
+        name:        realUser?.name   ?? null,
+        handle:      realUser?.handle ?? null,
+        joined:      realUser?.joined ?? null,
+        badges:      realBadges ?? [],
+        level:       gamifProfile?.level       ?? null,
+        points:      gamifProfile?.totalPoints ?? 0,
+        rank:        gamifProfile?.rank        ?? null,
+        badgesCount: (gamifProfile?.badges ?? []).length,
         ...(role === 'artist'
             ? {
-                bio:      artistMe?.bio      ?? null,
-                location: artistMe?.location ?? null,
-                about:    artistAbout,
-                social:   (artistMe?.links ?? []).map(l => ({ kind: l.kind, handle: l.handle })),
-                ...(realStats.followers        != null && { followers:        realStats.followers }),
-                ...(realStats.tracksPublished  != null && { tracksPublished:  realStats.tracksPublished }),
-                ...(realStats.monthlyListeners != null && { monthlyListeners: realStats.monthlyListeners }),
+                bio:              artistMe?.bio      ?? null,
+                location:         artistMe?.location ?? null,
+                about:            artistAbout,
+                social:           (artistMe?.links ?? []).map(l => ({ kind: l.kind, handle: l.handle })),
+                followers:        realStats.followers        ?? 0,
+                tracksPublished:  realStats.tracksPublished  ?? 0,
+                monthlyListeners: realStats.monthlyListeners ?? 0,
             }
             : {
-                ...(realUser?.bio      && { bio:      realUser.bio }),
-                ...(realUser?.location && { country: realUser.location, location: realUser.location }),
-                ...(realStats.followers != null && { followers: realStats.followers }),
-                ...(realStats.following != null && { following: realStats.following }),
+                bio:      realUser?.bio      ?? null,
+                country:  realUser?.location ?? null,
+                location: null,
+                followers: realStats.followers ?? 0,
+                following: realStats.following ?? 0,
             }
         ),
-        ...(realBadges   && { badges:      realBadges }),
-        ...(gamifProfile && {
-            points:      gamifProfile.totalPoints,
-            rank:        gamifProfile.rank,
-            badgesCount: (gamifProfile.badges ?? []).length,
-        }),
-        spotifyArtistId:  realUser?.spotifyArtistId  ?? null,
-        artistProfileId:  realUser?.artistProfileId  ?? null,
+        spotifyArtistId: realUser?.spotifyArtistId ?? null,
+        artistProfileId: realUser?.artistProfileId ?? null,
         ...userOverrides,
     };
 

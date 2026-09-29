@@ -4,30 +4,18 @@
 
 import { FaDiscord }      from 'react-icons/fa'
 import AppShell           from '../../../../components/HomeComponents/AppShell.jsx'
-import { communityData }  from '../../../../data/community.js'
-import CommunityHero      from './CommunityHero.jsx'
-import CommunityEvents    from './CommunityEvents.jsx'
-import CommunityFeed      from './CommunityFeed.jsx'
-import CommunitySidebar   from './CommunitySidebar.jsx'
 import './Community.css'
-
-const d = communityData;
 
 export default function Community() {
     return (
         <AppShell>
-
-            {/* ─── Header ───────────────────────────────────────── */}
             <div className="com__header">
                 <div>
                     <h1 className="com__title">Comunidade</h1>
-                    <p className="com__subtitle">
-                        {d.discord.members.toLocaleString('pt-PT')} membros ·{' '}
-                        <span style={{ color: '#57F287' }}>{d.discord.online} online agora</span>
-                    </p>
+                    <p className="com__subtitle">Em breve</p>
                 </div>
                 <a
-                    href={d.discord.inviteUrl}
+                    href="https://discord.gg/batuku"
                     target="_blank"
                     rel="noreferrer noopener"
                     className="com__discord-btn"
@@ -37,25 +25,10 @@ export default function Community() {
                 </a>
             </div>
 
-            {/* ─── Hero Discord ─────────────────────────────────── */}
-            <CommunityHero discord={d.discord} channels={d.channels} />
-
-            {/* ─── Eventos ──────────────────────────────────────── */}
-            <CommunityEvents events={d.events} />
-
-            {/* ─── Feed + Sidebar ───────────────────────────────── */}
-            <div className="com__split">
-                <CommunityFeed posts={d.feed} />
-
-                <aside className="com__sidebar">
-                    <CommunitySidebar
-                        onlineNow={d.onlineNow}
-                        trendingTags={d.trendingTags}
-                        totalOnline={d.discord.online}
-                    />
-                </aside>
+            <div style={{ padding: '48px 0', color: 'var(--color-ink-mute)', textAlign: 'center' }}>
+                <p style={{ fontSize: 16, marginBottom: 8 }}>A comunidade está a ser preparada.</p>
+                <p style={{ fontSize: 13 }}>Em breve poderás interagir com outros fãs e artistas.</p>
             </div>
-
         </AppShell>
     );
 }

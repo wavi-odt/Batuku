@@ -27,7 +27,7 @@
 
 .notif-panel__mark-all {
     font-size: 11px;
-    color: var(--color-primary);
+    color: var(--color-coral);
     background: none;
     border: none;
     cursor: pointer;

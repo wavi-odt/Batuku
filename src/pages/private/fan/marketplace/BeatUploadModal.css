@@ -78,12 +78,12 @@
 }
 
 .bum__drop:hover {
-    border-color: var(--color-primary);
-    background: rgba(var(--color-primary-rgb, 99,102,241), 0.04);
+    border-color: var(--color-coral);
+    background: rgba(232, 93, 60, 0.04);
 }
 
 .bum__drop--ready {
-    border-color: var(--color-primary);
+    border-color: var(--color-coral);
     border-style: solid;
 }
 
@@ -105,7 +105,7 @@
 .bum__drop-name {
     font-size: 12px;
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--color-coral);
     word-break: break-all;
 }
 
@@ -168,7 +168,7 @@
 
 .bum__input:focus {
     outline: none;
-    border-color: var(--color-primary);
+    border-color: var(--color-coral);
 }
 
 .bum__input--range {
@@ -176,7 +176,7 @@
     background: none;
     border: none;
     cursor: pointer;
-    accent-color: var(--color-primary);
+    accent-color: var(--color-coral);
 }
 
 .bum__input--range:focus { border: none; outline: none; }
@@ -217,14 +217,14 @@ select.bum__input option {
 }
 
 .bum__excl-btn--on {
-    background: var(--color-primary);
+    background: var(--color-coral);
     color: #fff;
-    border-color: var(--color-primary);
+    border-color: var(--color-coral);
 }
 
 .bum__excl-btn:not(.bum__excl-btn--on):hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    border-color: var(--color-coral);
+    color: var(--color-coral);
 }
 
 .bum__excl-note {
@@ -278,7 +278,7 @@ select.bum__input option {
 .bum__btn--cancel:hover:not(:disabled) { color: var(--color-ink); }
 
 .bum__btn--submit {
-    background: var(--color-primary);
+    background: var(--color-coral);
     color: #fff;
 }
 

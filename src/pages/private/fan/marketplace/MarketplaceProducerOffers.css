@@ -121,7 +121,7 @@
     box-sizing: border-box;
     transition: border-color 0.15s;
 }
-.mkt-prod-offer__reply-input:focus { border-color: var(--color-primary); }
+.mkt-prod-offer__reply-input:focus { border-color: var(--color-coral); }
 
 .mkt-prod-offer__btns {
     display: flex;
