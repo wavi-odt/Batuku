@@ -5,8 +5,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.55);
-    backdrop-filter: blur(6px);
+    background: rgba(8, 8, 12, 0.82);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .offer-modal__backdrop {
+        background: rgba(8, 8, 12, 0.55);
+        backdrop-filter: blur(14px) saturate(120%);
+        -webkit-backdrop-filter: blur(14px) saturate(120%);
+    }
 }
 
 .offer-modal {

@@ -204,7 +204,7 @@ export default function Marketplace() {
 
             {/* Modal de escolha de papel */}
             {roleKnown && marketplaceRole === null && (
-                <MarketplaceRoleModal onChoose={handleChooseRole} />
+                <MarketplaceRoleModal onChoose={handleChooseRole} onBack={() => navigate(-1)} />
             )}
 
             {/* Modal de proposta exclusiva */}

@@ -1,14 +1,14 @@
 import './MarketplaceRoleModal.css'
 
-export default function MarketplaceRoleModal({ onChoose }) {
+export default function MarketplaceRoleModal({ onChoose, onBack }) {
     return (
         <div className="mkt-modal__backdrop">
             <div className="mkt-modal__content">
                 <p className="mkt-modal__question">
-                    És beatmaker ou produtor de beats?
+                    O que procuras no marketplace?
                 </p>
                 <p className="mkt-modal__sub">
-                    A tua resposta define a tua experiência no marketplace.<br />
+                    Escolhe o que descreve melhor o teu papel.<br />
                     Não pode ser alterada depois.
                 </p>
                 <div className="mkt-modal__actions">
@@ -17,14 +17,21 @@ export default function MarketplaceRoleModal({ onChoose }) {
                         className="mkt-modal__btn mkt-modal__btn--yes"
                         onClick={() => onChoose('PRODUCER')}
                     >
-                        Sim, sou produtor
+                        Sou produtor — quero vender beats
                     </button>
                     <button
                         type="button"
                         className="mkt-modal__btn mkt-modal__btn--no"
                         onClick={() => onChoose('FAN')}
                     >
-                        Não, só quero comprar
+                        Sou artista — quero comprar beats
+                    </button>
+                    <button
+                        type="button"
+                        style={{ background: 'none', border: 'none', color: 'var(--color-ink-mute)', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline', marginTop: '8px' }}
+                        onClick={onBack}
+                    >
+                        Agora não
                     </button>
                 </div>
             </div>
