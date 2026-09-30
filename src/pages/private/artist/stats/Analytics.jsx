@@ -9,6 +9,7 @@ import AnalyticsStepChart  from './AnalyticsStepChart.jsx'
 import AnalyticsDonut      from './AnalyticsDonut.jsx'
 import AnalyticsTopTracks  from './AnalyticsTopTracks.jsx'
 import AnalyticsBreakdown  from './AnalyticsBreakdown.jsx'
+import AnalyticsForecast   from './AnalyticsForecast.jsx'
 import './Analytics.css'
 
 const PERIODS = ['7d', '30d', '90d']
@@ -152,6 +153,9 @@ export default function Analytics() {
                             topTracks={topTracks}
                         />
                     )}
+
+                    {/* ─── Previsão IA ───────────────────────────────── */}
+                    <AnalyticsForecast />
                 </>
             )}
 

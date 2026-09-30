@@ -262,6 +262,71 @@
 .strack:hover .strack__spotify { opacity: 1; }
 .strack__spotify:hover { color: #1DB954; }
 
+/* ─── Artistas parecidos ─────────────────────────────────────────── */
+.sim__section {
+    margin-top: var(--space-8);
+}
+
+.sim__title {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-ink);
+    margin: 0 0 var(--space-4);
+}
+
+.sim__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+@media (max-width: 900px) { .sim__grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 500px) { .sim__grid { grid-template-columns: repeat(2, 1fr); } }
+
+.sim__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-4) var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    transition: border-color var(--duration-fast) var(--ease-out),
+                background    var(--duration-fast) var(--ease-out);
+}
+
+.sim__card:hover {
+    border-color: var(--color-border-strong);
+    background: var(--color-surface-2);
+}
+
+.sim__avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.sim__name {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.sim__genre {
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+}
+
 /* ─── Spotify embed player ───────────────────────────────────────── */
 .strack-embed {
     margin-top: 12px;

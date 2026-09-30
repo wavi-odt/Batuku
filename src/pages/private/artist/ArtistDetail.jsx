@@ -3,6 +3,7 @@ import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { FaUserPlus, FaUserCheck, FaPlay, FaCompactDisc, FaRegComment } from 'react-icons/fa'
 import { SiSpotify } from 'react-icons/si'
 import AppShell from '../../../components/HomeComponents/AppShell'
+import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork.jsx'
 import { API, getToken, getRole } from '../../../utils/auth.js'
 import { useToast } from '../../../context/ToastContext'
 import { CardTitle, ArtistAbout, ArtistLinks } from '../profile/ProfileBlocks'
@@ -14,7 +15,8 @@ import '../profile/Profile.css'
 import '../DetailPage.css'
 import '../release/ReleaseDetail.css'
 
-const TABS = ['Visão geral', 'Faixas', 'Lançamentos', 'Sobre'];
+const TABS   = ['Visão geral', 'Faixas', 'Lançamentos', 'Sobre'];
+const SHAPES = ['circles', 'orbit', 'arch', 'sun', 'triangles', 'wave', 'stripes', 'split'];
 const TYPE_LABEL = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape', SINGLE: 'Single' };
 
 function fmtMs(ms) {
@@ -41,6 +43,7 @@ export default function ArtistDetail() {
     const [localTracks,      setLocalTracks]      = useState([]);
     const [releases,         setReleases]         = useState([]);
     const [openCommentTrack, setOpenCommentTrack] = useState(null);
+    const [similarArtists,   setSimilarArtists]   = useState([]);
     const { track: currentTrack, setTrack } = usePlayer();
 
     useEffect(() => {
@@ -67,6 +70,13 @@ export default function ArtistDetail() {
             })
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
+    }, [id]);
+
+    useEffect(() => {
+        fetch(`${API}/api/artists/${id}/similar?limit=5`)
+            .then(r => r.ok ? r.json() : Promise.resolve([]))
+            .then(d => setSimilarArtists(Array.isArray(d) ? d : []))
+            .catch(() => setSimilarArtists([]))
     }, [id]);
 
     useEffect(() => {
@@ -346,45 +356,73 @@ export default function ArtistDetail() {
 
                     {/* Visão geral */}
                     {activeTab === 'Visão geral' && (
-                        <div className="prof__grid">
-                            <div>
-                                <div className="prof-card prof__section-gap">
-                                    {localTracks.length > 0 && (
-                                        <>
-                                            <CardTitle>Faixas · {localTracks.length}</CardTitle>
-                                            <TracksList />
-                                        </>
-                                    )}
-                                    {topTracksLoading && (
-                                        <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
-                                            <CardTitle><SiSpotify size={12} style={{ color: '#1DB954', marginRight: 6 }} />A carregar top Spotify…</CardTitle>
+                        <>
+                            <div className="prof__grid">
+                                <div>
+                                    <div className="prof-card prof__section-gap">
+                                        {localTracks.length > 0 && (
+                                            <>
+                                                <CardTitle>Faixas · {localTracks.length}</CardTitle>
+                                                <TracksList />
+                                            </>
+                                        )}
+                                        {topTracksLoading && (
+                                            <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
+                                                <CardTitle><SiSpotify size={12} style={{ color: '#1DB954', marginRight: 6 }} />A carregar top Spotify…</CardTitle>
+                                            </div>
+                                        )}
+                                        {!topTracksLoading && topTracks.length > 0 && (
+                                            <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
+                                                <CardTitle>
+                                                    <span>Top via Spotify · {topTracks.length}</span>
+                                                    <span className="strack-source"><SiSpotify size={12} style={{ color: '#1DB954' }} /> via Spotify</span>
+                                                </CardTitle>
+                                                <SpotifyList />
+                                            </div>
+                                        )}
+                                        {localTracks.length === 0 && !topTracksLoading && topTracks.length === 0 && (
+                                            <p className="prof__bio user-detail__empty">Sem faixas disponíveis.</p>
+                                        )}
+                                    </div>
+                                    {releases.length > 0 && (
+                                        <div className="prof-card prof__section-gap">
+                                            <CardTitle>Lançamentos · {releases.length}</CardTitle>
+                                            <ReleasesGrid />
                                         </div>
-                                    )}
-                                    {!topTracksLoading && topTracks.length > 0 && (
-                                        <div style={localTracks.length > 0 ? { marginTop: 24 } : undefined}>
-                                            <CardTitle>
-                                                <span>Top via Spotify · {topTracks.length}</span>
-                                                <span className="strack-source"><SiSpotify size={12} style={{ color: '#1DB954' }} /> via Spotify</span>
-                                            </CardTitle>
-                                            <SpotifyList />
-                                        </div>
-                                    )}
-                                    {localTracks.length === 0 && !topTracksLoading && topTracks.length === 0 && (
-                                        <p className="prof__bio user-detail__empty">Sem faixas disponíveis.</p>
                                     )}
                                 </div>
-                                {releases.length > 0 && (
-                                    <div className="prof-card prof__section-gap">
-                                        <CardTitle>Lançamentos · {releases.length}</CardTitle>
-                                        <ReleasesGrid />
+                                <div className="prof__col-side">
+                                    <ArtistAbout artist={{ bio: artist.bio, about }} />
+                                    <ArtistLinks social={social} />
+                                </div>
+                            </div>
+
+                            {similarArtists.length > 0 && (
+                                <section className="sim__section">
+                                    <h2 className="sim__title">Artistas parecidos</h2>
+                                    <div className="sim__grid">
+                                        {similarArtists.map(a => (
+                                            <Link
+                                                key={a.id}
+                                                to={`/artists/${a.id}`}
+                                                className="sim__card"
+                                            >
+                                                <div className="sim__avatar">
+                                                    <ArtistArtwork
+                                                        shape={SHAPES[Number(a.id) % SHAPES.length]}
+                                                        hue={(Number(a.id) * 137) % 360}
+                                                        image={a.imageUrl ?? null}
+                                                        rounded={0}
+                                                    />
+                                                </div>
+                                                <span className="sim__name">{a.name}</span>
+                                                {a.genre && <span className="sim__genre">{a.genre}</span>}
+                                            </Link>
+                                        ))}
                                     </div>
-                                )}
-                            </div>
-                            <div className="prof__col-side">
-                                <ArtistAbout artist={{ bio: artist.bio, about }} />
-                                <ArtistLinks social={social} />
-                            </div>
-                        </div>
+                                </section>
+                            )}
+                        </>
                     )}
 
                     {/* Faixas */}
