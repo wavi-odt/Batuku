@@ -32,6 +32,7 @@ window.fetch = async (input, init = {}) => {
 
     if (!refreshed?.token) {
         await logout()
+        window.location.href = '/login?error=session_expired'
         return res
     }
 

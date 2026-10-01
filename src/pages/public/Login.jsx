@@ -16,7 +16,9 @@ export default function Login() {
     const [showPass, setShowPass] = useState(false);
     const [loading, setLoading]   = useState(false);
     const [error, setError]       = useState(
-        searchParams.get('error') === 'oauth' ? 'Não foi possível autenticar com esse método. Tenta novamente.' : ''
+        searchParams.get('error') === 'oauth' ? 'Não foi possível autenticar com esse método. Tenta novamente.'
+        : searchParams.get('error') === 'session_expired' ? 'A tua sessão expirou. Inicia sessão outra vez.'
+        : ''
     );
     // campo chama-se "identifier" internamente, pode ser email ou username
     const [form, setForm] = useState({ identifier: '', password: '', remember: true });
