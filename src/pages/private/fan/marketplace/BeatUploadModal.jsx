@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal }     from 'react-dom'
 import { FaMusic, FaImage, FaTimes } from 'react-icons/fa'
 import { API, getToken }    from '../../../../utils/auth.js'
@@ -9,14 +9,33 @@ const KEYS = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#',
 
 function DropZone({ label, hint, accept, file, onPick, icon: Icon }) {
     const ref = useRef(null)
+    const [preview, setPreview] = useState(null)
+
+    useEffect(() => {
+        if (!file || !file.type?.startsWith('image/')) { setPreview(null); return }
+        const url = URL.createObjectURL(file)
+        setPreview(url)
+        return () => URL.revokeObjectURL(url)
+    }, [file])
+
     return (
-        <div className={`bum__drop${file ? ' bum__drop--ready' : ''}`} onClick={() => ref.current?.click()}>
+        <div className={`bum__drop${file ? ' bum__drop--ready' : ''}${preview ? ' bum__drop--has-preview' : ''}`}
+             onClick={() => ref.current?.click()}>
             <input ref={ref} type="file" accept={accept} className="bum__drop-input"
                    onChange={e => onPick(e.target.files?.[0] ?? null)} />
-            <Icon size={20} className="bum__drop-icon" />
-            {file
-                ? <span className="bum__drop-name">{file.name}</span>
-                : <><span className="bum__drop-label">{label}</span><span className="bum__drop-hint">{hint}</span></>}
+            {preview ? (
+                <>
+                    <img src={preview} alt="" className="bum__drop__img" />
+                    <div className="bum__drop__img-overlay">Trocar capa</div>
+                </>
+            ) : (
+                <>
+                    <Icon size={20} className="bum__drop-icon" />
+                    {file
+                        ? <span className="bum__drop-name">{file.name}</span>
+                        : <><span className="bum__drop-label">{label}</span><span className="bum__drop-hint">{hint}</span></>}
+                </>
+            )}
         </div>
     )
 }
