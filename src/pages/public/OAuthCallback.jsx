@@ -12,7 +12,7 @@ export default function OAuthCallback() {
         processed.current = true
 
         const run = async () => {
-            const token = searchParams.get('token')
+            const token     = searchParams.get('token')
             const isNewUser = searchParams.get('new') === 'true'
 
             const error = searchParams.get('error')
@@ -38,7 +38,7 @@ export default function OAuthCallback() {
                     })
                     if (!res.ok) throw new Error()
                     const { claimToken } = await res.json()
-                    logout()
+                    await logout()
                     navigate(`/artist-claim?claimToken=${claimToken}`, { replace: true })
                 } catch (_) {
                     navigate('/login?error=oauth', { replace: true })

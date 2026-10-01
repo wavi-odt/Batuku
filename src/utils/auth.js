@@ -59,7 +59,6 @@ export function getUser() {
     };
 }
 
-// Guarda apenas o token, o role é sempre derivado do JWT
 export function saveAuth(token) {
     localStorage.setItem('token', token);
     localStorage.removeItem('awaitingValidation');
@@ -70,7 +69,17 @@ export function getToken() {
     return localStorage.getItem('token');
 }
 
-export function logout() {
+export async function logout() {
+    const token = getToken();
+    if (token) {
+        try {
+            await fetch(`${API}/api/auth/logout`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: { Authorization: `Bearer ${token}` },
+            });
+        } catch (_) {}
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('pendingClaim');
 }
