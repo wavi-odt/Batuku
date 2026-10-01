@@ -10,32 +10,38 @@ function formatJoined(dateStr) {
 
 export function useCurrentUser() {
     const [user, setUser] = useState(getUser)
+    const [isLoading, setIsLoading] = useState(true)
 
     const refresh = useCallback(() => {
         const token = localStorage.getItem('token')
-        if (!token) return
+        if (!token) {
+            setIsLoading(false)
+            return
+        }
         fetch(`${API}/api/auth/me`, {
             headers: { Authorization: `Bearer ${token}` },
         })
             .then(r => r.ok ? r.json() : null)
             .then(data => {
-                if (!data) return
-                setUser(prev => ({
-                    ...prev,
-                    id:               data.id       ?? data.userId ?? data.user_id     ?? prev?.id,
-                    name:             data.name     || data.displayName              || prev?.name,
-                    email:            data.email                                      || prev?.email,
-                    handle:           data.username ? `@${data.username}` : (data.handle || prev?.handle),
-                    picture:          data.avatarUrl || data.picture || data.avatar   || prev?.picture,
-                    location:         data.location || data.country                   || prev?.location,
-                    joined:           formatJoined(data.createdAt || data.joinedAt || data.memberSince) || prev?.joined,
-                    bio:              data.bio || data.description                    || prev?.bio,
-                    spotifyArtistId:  data.spotifyArtistId || data.spotifyId          || prev?.spotifyArtistId || null,
-                    artistProfileId:  data.artistProfileId                            ?? prev?.artistProfileId ?? null,
-                    marketplaceRole:  data.marketplaceRole                            ?? prev?.marketplaceRole ?? null,
-                }))
+                if (data) {
+                    setUser(prev => ({
+                        ...prev,
+                        id:               data.id       ?? data.userId ?? data.user_id     ?? prev?.id,
+                        name:             data.name     || data.displayName              || prev?.name,
+                        email:            data.email                                      || prev?.email,
+                        handle:           data.username ? `@${data.username}` : (data.handle || prev?.handle),
+                        picture:          data.avatarUrl || data.picture || data.avatar   || prev?.picture,
+                        location:         data.location || data.country                   || prev?.location,
+                        joined:           formatJoined(data.createdAt || data.joinedAt || data.memberSince) || prev?.joined,
+                        bio:              data.bio || data.description                    || prev?.bio,
+                        spotifyArtistId:  data.spotifyArtistId || data.spotifyId          || prev?.spotifyArtistId || null,
+                        artistProfileId:  data.artistProfileId                            ?? prev?.artistProfileId ?? null,
+                        marketplaceRole:  data.marketplaceRole                            ?? prev?.marketplaceRole ?? null,
+                    }))
+                }
+                setIsLoading(false)
             })
-            .catch(() => {})
+            .catch(() => { setIsLoading(false) })
     }, [])
 
     useEffect(() => {
@@ -44,5 +50,5 @@ export function useCurrentUser() {
         return () => window.removeEventListener('batuku:user-updated', refresh)
     }, [refresh])
 
-    return user
+    return { user, isLoading }
 }

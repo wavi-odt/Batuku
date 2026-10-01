@@ -150,7 +150,7 @@ function ProfileStats({ role, data }) {
 /* ─── Page ────────────────────────────────────────────────────────── */
 export default function Profile({ role = 'fan' }) {
     const tabs    = role === 'artist' ? ARTIST_TABS : FAN_TABS;
-    const realUser = useCurrentUser();
+    const { user: realUser } = useCurrentUser();
 
     const [searchParams, setSearchParams]   = useSearchParams()
     const active    = parseInt(searchParams.get('tab') ?? '0', 10) || 0

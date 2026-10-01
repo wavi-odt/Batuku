@@ -18,10 +18,10 @@ function greeting() {
 }
 
 export default function Home() {
-    const realUser  = useCurrentUser()
+    const { user: realUser, isLoading: userLoading } = useCurrentUser()
     const { showToast } = useToast()
     const location  = useLocation()
-    const firstName = (realUser?.name || 'Utilizador').split(' ')[0]
+    const firstName = userLoading ? null : (realUser?.name || 'Utilizador').split(' ')[0]
 
     useEffect(() => {
         if (location.state?.notice) {
@@ -55,7 +55,13 @@ export default function Home() {
             {/* ─── Greeting ──────────────────────────────────────── */}
             <div className="home__greet">
                 <div className="home__hello">
-                    <h1 className="home__hello-title">{greeting()}, {firstName}.</h1>
+                    <h1 className="home__hello-title">
+                        {greeting()},{' '}
+                        {userLoading
+                            ? <span style={{ display: 'inline-block', width: 80, height: '0.8em', borderRadius: 3, background: 'currentColor', opacity: 0.15, verticalAlign: 'text-bottom' }} aria-hidden="true" />
+                            : firstName
+                        }.
+                    </h1>
                     {followedArtists.length > 0 && (
                         <p className="home__hello-sub">
                             Segues <strong>{followedArtists.length} artistas</strong>.

@@ -48,7 +48,7 @@ function ResultGroup({ label, items, renderItem }) {
 }
 
 export default function TopBar({ role = 'fan' }) {
-    const realUser = useCurrentUser();
+    const { user: realUser } = useCurrentUser();
     const { openPublish } = usePublish();
 
     const [query,   setQuery]   = useState('');

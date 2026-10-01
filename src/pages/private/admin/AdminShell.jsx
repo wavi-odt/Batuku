@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { HiHome, HiChevronUp, HiLogout } from 'react-icons/hi'
 import { FaSpotify, FaFlag, FaUser } from 'react-icons/fa'
-import { getUser, logout } from '../../../utils/auth.js'
+import { logout } from '../../../utils/auth.js'
+import { useCurrentUser } from '../../../hooks/useCurrentUser.js'
 import logo from '../../../assets/batuku.png'
 import '../../../components/HomeComponents/Sidebar.css'
 import './AdminHome.css'
@@ -15,7 +16,7 @@ const ADMIN_NAV = [
 
 export default function AdminShell({ children }) {
     const navigate = useNavigate();
-    const user     = getUser();
+    const { user, isLoading: userLoading } = useCurrentUser();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null);
 
@@ -64,7 +65,11 @@ export default function AdminShell({ children }) {
                                     <FaUser size={16} />
                                 </div>
                                 <div>
-                                    <div className="sidebar__menu-name">{user?.name || 'Admin'}</div>
+                                    <div className="sidebar__menu-name">
+                                        {userLoading
+                                            ? <span style={{ display: 'inline-block', width: 60, height: '0.8em', borderRadius: 3, background: 'currentColor', opacity: 0.15, verticalAlign: 'text-bottom' }} aria-hidden="true" />
+                                            : (user?.name || 'Admin')}
+                                    </div>
                                     <div className="sidebar__menu-handle">{user?.handle || ''}</div>
                                 </div>
                             </div>
@@ -86,7 +91,11 @@ export default function AdminShell({ children }) {
                             <FaUser size={16} />
                         </div>
                         <div className="sidebar__profile-info">
-                            <div className="sidebar__profile-name">{user?.name || 'Admin'}</div>
+                            <div className="sidebar__profile-name">
+                                {userLoading
+                                    ? <span style={{ display: 'inline-block', width: 60, height: '0.8em', borderRadius: 3, background: 'currentColor', opacity: 0.15, verticalAlign: 'text-bottom' }} aria-hidden="true" />
+                                    : (user?.name || 'Admin')}
+                            </div>
                             <div className="sidebar__profile-sub">Administrador</div>
                         </div>
                         <HiChevronUp

@@ -25,7 +25,7 @@ const menuItems = (role) => [
 
 export default function Sidebar({ role = 'fan' }) {
     const nav      = role === 'artist' ? homeData.artistNav : homeData.fanNav;
-    const realUser = useCurrentUser();
+    const { user: realUser } = useCurrentUser();
     const { count: pendingComments } = usePendingComments();
     const { badgesPerRoute } = useNotifications();
 
