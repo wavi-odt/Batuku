@@ -65,11 +65,7 @@ export default function AdminShell({ children }) {
                                     <FaUser size={16} />
                                 </div>
                                 <div>
-                                    <div className="sidebar__menu-name">
-                                        {userLoading
-                                            ? <span style={{ display: 'inline-block', width: 60, height: '0.8em', borderRadius: 3, background: 'currentColor', opacity: 0.15, verticalAlign: 'text-bottom' }} aria-hidden="true" />
-                                            : (user?.name || 'Admin')}
-                                    </div>
+                                    <div className="sidebar__menu-name">{user?.name || 'Admin'}</div>
                                     <div className="sidebar__menu-handle">{user?.handle || ''}</div>
                                 </div>
                             </div>
@@ -91,11 +87,7 @@ export default function AdminShell({ children }) {
                             <FaUser size={16} />
                         </div>
                         <div className="sidebar__profile-info">
-                            <div className="sidebar__profile-name">
-                                {userLoading
-                                    ? <span style={{ display: 'inline-block', width: 60, height: '0.8em', borderRadius: 3, background: 'currentColor', opacity: 0.15, verticalAlign: 'text-bottom' }} aria-hidden="true" />
-                                    : (user?.name || 'Admin')}
-                            </div>
+                            <div className="sidebar__profile-name">{user?.name || 'Admin'}</div>
                             <div className="sidebar__profile-sub">Administrador</div>
                         </div>
                         <HiChevronUp

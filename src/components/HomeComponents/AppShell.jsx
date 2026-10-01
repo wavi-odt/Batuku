@@ -8,6 +8,7 @@
 
 import Sidebar    from './Sidebar'
 import TopBar     from './TopBar'
+import BottomNav  from './BottomNav'
 import { getRole } from '../../utils/auth.js'
 import './AppShell.css'
 
@@ -20,6 +21,7 @@ function AppShell({ role, children }) {
             <main className="shell__main">
                 {children}
             </main>
+            <BottomNav role={resolvedRole} />
         </div>
     );
 }

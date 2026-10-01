@@ -24,5 +24,10 @@
             'topbar'
             'main';
     }
-    .shell__main { padding: var(--space-5) var(--space-5) 120px; }
+    .shell__main {
+        padding: var(--space-5) var(--space-5) calc(60px + env(safe-area-inset-bottom));
+    }
+    body.has-player .shell__main {
+        padding-bottom: calc(138px + env(safe-area-inset-bottom));
+    }
 }

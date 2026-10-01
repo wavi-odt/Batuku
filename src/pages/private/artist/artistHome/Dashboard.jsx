@@ -71,12 +71,7 @@ export default function Dashboard() {
 
             {/* ─── Greeting ──────────────────────────────────────── */}
             <div className="dash__greet">
-                <h1 className="dash__greet-title">
-                    {userLoading
-                        ? <>Olá, <span style={{ display: 'inline-block', width: 80, height: '0.8em', borderRadius: 3, background: 'currentColor', opacity: 0.15, verticalAlign: 'text-bottom' }} aria-hidden="true" />.</>
-                        : `Olá${realUser?.name ? `, ${realUser.name}` : ''}.`
-                    }
-                </h1>
+                <h1 className="dash__greet-title">Olá{realUser?.name ? `, ${realUser.name}` : ''}.</h1>
                 {followers != null && (
                     <p className="dash__greet-sub">
                         {followers.toLocaleString('pt-PT')} seguidores
