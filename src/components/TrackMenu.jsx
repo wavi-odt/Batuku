@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { FaEllipsisH, FaCheck, FaMusic, FaPlus, FaTrash } from 'react-icons/fa'
+import { Link } from 'react-router-dom'
+import { FaEllipsisH, FaCheck, FaMusic, FaPlus, FaTrash, FaUser } from 'react-icons/fa'
 import { API, getToken } from '../utils/auth'
 import { useToast } from '../context/ToastContext'
 import PlaylistCreateModal from '../pages/private/playlist/PlaylistCreateModal'
 import './TrackMenu.css'
 
-export default function TrackMenu({ trackId, playlistId, onRemove, popoverAlign = 'right' }) {
+export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemove, popoverAlign = 'right' }) {
     const { showToast } = useToast()
     const [open,        setOpen]        = useState(false)
     const [playlists,   setPlaylists]   = useState(null)
@@ -108,6 +109,17 @@ export default function TrackMenu({ trackId, playlistId, onRemove, popoverAlign 
 
             {open && (
                 <div className={'trk-menu__popover' + (popoverAlign === 'left' ? ' trk-menu__popover--left' : '')} onClick={e => e.stopPropagation()}>
+                    <Link to={`/tracks/${trackId}`} className="trk-menu__item trk-menu__item--nav" onClick={() => setOpen(false)}>
+                        <div className="trk-menu__pl-cover trk-menu__nav-icon"><FaMusic size={11} /></div>
+                        <span className="trk-menu__pl-name">Página da faixa</span>
+                    </Link>
+                    {artistProfileId && (
+                        <Link to={`/artists/${artistProfileId}`} className="trk-menu__item trk-menu__item--nav" onClick={() => setOpen(false)}>
+                            <div className="trk-menu__pl-cover trk-menu__nav-icon"><FaUser size={11} /></div>
+                            <span className="trk-menu__pl-name">Página do artista</span>
+                        </Link>
+                    )}
+                    <div className="trk-menu__divider" />
                     <div className="trk-menu__header">Adicionar a playlist</div>
 
                     {loading && <div className="trk-menu__loading">A carregar…</div>}

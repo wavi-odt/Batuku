@@ -404,7 +404,7 @@ export default function ReleaseDetail() {
                                                 >
                                                     <FaRegComment size={13} />
                                                 </button>
-                                                <TrackMenu trackId={t.id} />
+                                                <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId ?? release.artistProfileId} />
                                                 <span className="strack__dur">{fmtMs(t.durationMs)}</span>
                                             </li>
 

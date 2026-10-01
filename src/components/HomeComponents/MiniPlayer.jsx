@@ -484,7 +484,7 @@ export default function MiniPlayer() {
                     </div>
                 </div>
                 {track?.id && <LikeButton trackId={track.id} variant="icon" />}
-                {track?.id && <TrackMenu trackId={track.id} popoverAlign="left" />}
+                {track?.id && <TrackMenu trackId={track.id} artistProfileId={track.artistProfileId} popoverAlign="left" />}
             </div>
 
             {/* Playback controls */}

@@ -3,6 +3,7 @@ import { Link }            from 'react-router-dom'
 import { usePlayer }       from '../../../../context/PlayerContext'
 import { API, getToken }   from '../../../../utils/auth'
 import ClickableName       from '../../../../components/ClickableName'
+import TrackMenu           from '../../../../components/TrackMenu.jsx'
 import './ContinueListening.css'
 
 export default function ContinueListening({ tracks }) {
@@ -42,26 +43,30 @@ export default function ContinueListening({ tracks }) {
 
             <div className="continue">
                 {tracks.map(t => (
-                    <button
-                        key={t.trackId}
-                        type="button"
-                        className="track-card"
-                        onClick={() => handlePlay(t)}
-                    >
-                        <div className="track-card__cover">
-                            {t.coverUrl
-                                ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} />
-                                : <div style={{ width: '100%', height: '100%', borderRadius: 10, background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <FaMusic size={20} style={{ color: 'var(--color-ink-mute)' }} />
-                                  </div>
-                            }
-                            <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
+                    <div key={t.trackId} style={{ position: 'relative' }}>
+                        <button
+                            type="button"
+                            className="track-card"
+                            onClick={() => handlePlay(t)}
+                        >
+                            <div className="track-card__cover">
+                                {t.coverUrl
+                                    ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} />
+                                    : <div style={{ width: '100%', height: '100%', borderRadius: 10, background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                        <FaMusic size={20} style={{ color: 'var(--color-ink-mute)' }} />
+                                      </div>
+                                }
+                                <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
+                            </div>
+                            <div className="track-card__title">{t.title}</div>
+                            <div className="track-card__artist">
+                                <ClickableName artistProfileId={t.artistId} name={t.artistName} />
+                            </div>
+                        </button>
+                        <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 6, right: 6, zIndex: 10 }}>
+                            <TrackMenu trackId={t.trackId} artistProfileId={t.artistId} />
                         </div>
-                        <div className="track-card__title">{t.title}</div>
-                        <div className="track-card__artist">
-                            <ClickableName artistProfileId={t.artistId} name={t.artistName} />
-                        </div>
-                    </button>
+                    </div>
                 ))}
             </div>
         </section>

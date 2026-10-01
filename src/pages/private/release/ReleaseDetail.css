@@ -686,6 +686,29 @@
 }
 
 /* ─── Responsive ─────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+    .strack {
+        grid-template-columns: 44px 1fr auto auto auto;
+        gap: 10px;
+        padding: 6px 8px;
+    }
+    .strack__num-wrap,
+    .strack__dur,
+    .rel-detail__list-head { display: none; }
+    .rel-comment-btn { opacity: 1; }
+    .strack .like-btn,
+    .rel-comment-btn {
+        min-height: 40px;
+        padding: 6px 10px;
+        justify-content: center;
+    }
+    .strack .trk-menu__btn {
+        width: 36px;
+        height: 36px;
+    }
+    .rel-inline-comments { padding-left: 58px; }
+}
+
 @media (max-width: 600px) {
     .rel-detail__hero-content {
         flex-direction: column;

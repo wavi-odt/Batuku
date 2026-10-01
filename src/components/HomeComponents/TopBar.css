@@ -123,6 +123,21 @@
 
 .topbar__notif-wrap { position: relative; }
 
+.topbar__avatar--desktop {
+    display: block;
+}
+
+.topbar__avatar-wrap {
+    display: none;
+    position: relative;
+    flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+    .topbar__avatar--desktop { display: none; }
+    .topbar__avatar-wrap     { display: block; }
+}
+
 .topbar__avatar {
     width: 36px;
     height: 36px;
@@ -130,7 +145,22 @@
     overflow: hidden;
     cursor: pointer;
     border: 1px solid var(--color-border-strong);
-    flex-shrink: 0;
+    padding: 0;
+    background: none;
+    display: block;
+}
+
+.topbar__avatar-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 220px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-lg);
+    padding: 6px;
+    box-shadow: var(--shadow-lg);
+    z-index: 250;
 }
 
 /* ─── Search clear button ─────────────────────────────────────── */

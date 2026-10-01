@@ -130,6 +130,18 @@
     background-color: color-mix(in srgb, var(--color-coral) 10%, transparent);
 }
 
+.trk-menu__nav-icon {
+    background: rgba(255, 255, 255, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-ink-soft);
+}
+
+.trk-menu__item--nav {
+    text-decoration: none;
+}
+
 .trk-menu__create-icon {
     background: color-mix(in srgb, var(--color-coral) 15%, transparent);
     display: flex;

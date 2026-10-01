@@ -5,6 +5,7 @@
 import { FaPlay } from 'react-icons/fa'
 import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
 import { usePlayer }  from '../../../../context/PlayerContext.jsx'
+import TrackMenu from '../../../../components/TrackMenu.jsx'
 
 const SHAPES = ['circles', 'orbit', 'arch', 'sun', 'triangles', 'wave', 'stripes', 'split']
 const shapeFromId = id => SHAPES[Number(id) % SHAPES.length]
@@ -51,6 +52,9 @@ function ChartRow({ track, rank, queue }) {
                 <div className="disc__chart-artist">{track.artistName}</div>
             </div>
             <div className="disc__chart-plays">{fmt(track.likeCount)} ♥</div>
+            <div onClick={e => e.stopPropagation()}>
+                <TrackMenu trackId={track.id} artistProfileId={track.artistProfileId} />
+            </div>
         </div>
     )
 }

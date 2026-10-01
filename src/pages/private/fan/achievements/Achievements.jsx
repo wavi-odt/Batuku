@@ -39,7 +39,7 @@ function formatEarned(iso) {
 }
 
 export default function Achievements() {
-    const currentUser = useCurrentUser()
+    const { user: currentUser } = useCurrentUser()
     const { clearRouteNotifications, refresh: refreshNotifications } = useNotifications()
 
     useEffect(() => { clearRouteNotifications('/achievements') }, []) // eslint-disable-line react-hooks/exhaustive-deps

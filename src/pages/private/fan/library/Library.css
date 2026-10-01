@@ -334,10 +334,22 @@
 
 @media (max-width: 700px) {
     .lib__track-row {
-        grid-template-columns: 40px 1fr 36px 28px;
+        grid-template-columns: 44px 1fr 44px 36px;
+        gap: 8px;
     }
     .lib__track-num,
     .lib__track-duration { display: none; }
+    .lib__track-row .like-btn {
+        width: 44px;
+        min-height: 40px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 50%;
+    }
+    .lib__track-row .trk-menu__btn {
+        width: 36px;
+        height: 36px;
+    }
 }
 
 .lib__tracks-empty {

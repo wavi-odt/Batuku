@@ -6,6 +6,7 @@ import ArtistArtwork           from '../../../../components/PublicComponets/Arti
 import { API, getToken }       from '../../../../utils/auth.js'
 import { usePlayer }           from '../../../../context/PlayerContext.jsx'
 import { useGenres }           from '../../../../context/GenresContext.jsx'
+import TrackMenu               from '../../../../components/TrackMenu.jsx'
 import './GenrePage.css'
 
 const SHAPES     = ['circles', 'orbit', 'arch', 'sun', 'triangles', 'wave', 'stripes', 'split']
@@ -77,27 +78,31 @@ export default function GenrePage() {
                     </div>
                     <div className="genre__grid">
                         {tracks.map(t => (
-                            <button
-                                key={t.id}
-                                type="button"
-                                className="track-card"
-                                onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, tracks.map(q => ({ ...q, name: q.title })))}
-                            >
-                                <div className="track-card__cover">
-                                    <ArtistArtwork
-                                        shape={shapeFromId(t.id)}
-                                        hue={hueFromId(t.id)}
-                                        image={t.coverUrl ?? null}
-                                        rounded={10}
-                                    />
-                                    <span className="track-card__play" aria-hidden="true">
-                                        <FaPlay size={12} />
-                                    </span>
+                            <div key={t.id} style={{ position: 'relative' }}>
+                                <button
+                                    type="button"
+                                    className="track-card"
+                                    onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, tracks.map(q => ({ ...q, name: q.title })))}
+                                >
+                                    <div className="track-card__cover">
+                                        <ArtistArtwork
+                                            shape={shapeFromId(t.id)}
+                                            hue={hueFromId(t.id)}
+                                            image={t.coverUrl ?? null}
+                                            rounded={10}
+                                        />
+                                        <span className="track-card__play" aria-hidden="true">
+                                            <FaPlay size={12} />
+                                        </span>
+                                    </div>
+                                    <div className="track-card__title">{t.title}</div>
+                                    <div className="track-card__artist">{t.artistName}</div>
+                                    <div className="track-card__date">{daysLabel(t.createdAt)}</div>
+                                </button>
+                                <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 6, right: 6, zIndex: 10 }}>
+                                    <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId} />
                                 </div>
-                                <div className="track-card__title">{t.title}</div>
-                                <div className="track-card__artist">{t.artistName}</div>
-                                <div className="track-card__date">{daysLabel(t.createdAt)}</div>
-                            </button>
+                            </div>
                         ))}
                     </div>
                 </section>

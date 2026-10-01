@@ -4,8 +4,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { HiUser, HiShieldCheck, HiLockClosed, HiLogout, HiChevronUp } from 'react-icons/hi'
-import { FaCog, FaUser } from 'react-icons/fa'
+import { HiUser, HiLogout, HiChevronUp } from 'react-icons/hi'
+import { FaUser } from 'react-icons/fa'
 import { homeData } from '../../data/home'
 import { logout } from '../../utils/auth'
 import { usePendingComments } from '../../context/PendingCommentsContext'
@@ -16,11 +16,8 @@ import { ICONS } from './icons'
 import logo from '../../assets/batuku.png'
 import './Sidebar.css'
 
-const menuItems = (role) => [
-    { icon: HiUser,        label: 'O meu perfil',  to: '/profile' },
-    { icon: FaCog,         label: 'Definições',    to: '/settings' },
-    { icon: HiShieldCheck, label: 'Privacidade',   to: '/privacy-settings' },
-    { icon: HiLockClosed,  label: 'Segurança',     to: '/security' },
+const menuItems = [
+    { icon: HiUser, label: 'O meu perfil', to: '/profile' },
 ];
 
 export default function Sidebar({ role = 'fan' }) {
@@ -107,7 +104,7 @@ export default function Sidebar({ role = 'fan' }) {
 
                         <div className="sidebar__menu-divider" />
 
-                        {menuItems(role).map(({ icon: Icon, label, to }) => (
+                        {menuItems.map(({ icon: Icon, label, to }) => (
                             <NavLink
                                 key={to}
                                 to={to}

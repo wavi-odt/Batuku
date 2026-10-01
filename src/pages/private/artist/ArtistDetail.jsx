@@ -178,7 +178,7 @@ export default function ArtistDetail() {
                                 >
                                     <FaRegComment size={13} />
                                 </button>
-                                <TrackMenu trackId={t.id} />
+                                <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId ?? id} />
                                 <span className="strack__dur">{fmtMs(t.durationMs)}</span>
                             </li>
                             {commentsOpen && (

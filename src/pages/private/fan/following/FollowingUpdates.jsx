@@ -3,6 +3,7 @@ import { Link }             from 'react-router-dom'
 import { usePlayer }        from '../../../../context/PlayerContext'
 import { toPlayerTrack }    from '../../../../utils/toPlayerTrack'
 import TimeAgo              from '../../../../components/TimeAgo.jsx'
+import TrackMenu            from '../../../../components/TrackMenu.jsx'
 
 export default function FollowingUpdates({ tracks }) {
     const { setTrack } = usePlayer()
@@ -19,7 +20,10 @@ export default function FollowingUpdates({ tracks }) {
 
             <div className="continue">
                 {tracks.map((t, i) => (
-                    <div key={t.id} className="track-card">
+                    <div key={t.id} className="track-card" style={{ position: 'relative' }}>
+                        <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 6, right: 6, zIndex: 10 }}>
+                            <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId} />
+                        </div>
                         <div
                             className="track-card__cover"
                             onClick={() => setTrack(queue[i], queue)}

@@ -437,6 +437,7 @@ export default function PlaylistDetail() {
                                                 </button>
                                                 <TrackMenu
                                                     trackId={t.id}
+                                                    artistProfileId={t.artistProfileId}
                                                     playlistId={playlist.owner ? playlist.id : undefined}
                                                     onRemove={playlist.owner ? () => handleRemoveTrack(t.id) : undefined}
                                                 />

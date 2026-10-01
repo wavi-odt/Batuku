@@ -77,7 +77,7 @@ export default function LibraryTracks({ tracks, loading }) {
                                 <div className="lib__track-duration">{fmtMs(t.durationMs)}</div>
 
                                 <div onClick={e => e.stopPropagation()}>
-                                    <TrackMenu trackId={t.id} />
+                                    <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId} />
                                 </div>
                             </div>
                         )

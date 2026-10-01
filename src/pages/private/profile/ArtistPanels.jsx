@@ -91,7 +91,7 @@ function LocalTrackList({ tracks, artistName, artistProfileId }) {
                             >
                                 <FaRegComment size={13} />
                             </button>
-                            <TrackMenu trackId={t.id} />
+                            <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId ?? artistProfileId} />
                             <span className="strack__dur">{fmtMs(t.durationMs)}</span>
                         </li>
                         {commentsOpen && (

@@ -3,6 +3,7 @@ import { Link }             from 'react-router-dom'
 import { usePlayer }        from '../../../../context/PlayerContext'
 import { toPlayerTrack }    from '../../../../utils/toPlayerTrack'
 import TimeAgo              from '../../../../components/TimeAgo.jsx'
+import TrackMenu            from '../../../../components/TrackMenu.jsx'
 
 function ArtistAvatar({ name }) {
     return (
@@ -43,21 +44,27 @@ export default function FollowingFeed({ tracks }) {
                                 <TimeAgo isoStr={t.createdAt} className="flw__feed-time" />
                             </div>
 
-                            <button
-                                type="button"
-                                className="flw__feed-content"
-                                onClick={() => setTrack(queue[i], queue)}
-                            >
-                                <div className="flw__feed-content-thumb">
-                                    {t.coverUrl
-                                        ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }} />
-                                        : <div style={{ width: '100%', height: '100%', borderRadius: 6, background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                            <FaMusic size={14} style={{ color: 'var(--color-ink-mute)' }} />
-                                          </div>
-                                    }
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                <button
+                                    type="button"
+                                    className="flw__feed-content"
+                                    style={{ flex: 1, minWidth: 0 }}
+                                    onClick={() => setTrack(queue[i], queue)}
+                                >
+                                    <div className="flw__feed-content-thumb">
+                                        {t.coverUrl
+                                            ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }} />
+                                            : <div style={{ width: '100%', height: '100%', borderRadius: 6, background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                                <FaMusic size={14} style={{ color: 'var(--color-ink-mute)' }} />
+                                              </div>
+                                        }
+                                    </div>
+                                    <span className="flw__feed-content-title">{t.title}</span>
+                                </button>
+                                <div onClick={e => e.stopPropagation()}>
+                                    <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId} />
                                 </div>
-                                <span className="flw__feed-content-title">{t.title}</span>
-                            </button>
+                            </div>
                         </div>
                     </div>
                 ))}

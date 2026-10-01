@@ -1,11 +1,12 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { HiSearch, HiBell, HiPlus, HiX } from 'react-icons/hi'
+import { Link, useNavigate } from 'react-router-dom'
+import { HiSearch, HiBell, HiPlus, HiX, HiLogout, HiUser } from 'react-icons/hi'
 import { FaUser, FaMusic } from 'react-icons/fa'
 import { usePublish } from '../../context/PublishContext.jsx'
 import { useNotifications } from '../../context/NotificationsContext.jsx'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
-import { getToken } from '../../utils/auth.js'
+import { getToken, logout } from '../../utils/auth.js'
+import { usePlayer } from '../../context/PlayerContext.jsx'
 import NotificationsPanel from './NotificationsPanel.jsx'
 import './TopBar.css'
 
@@ -50,17 +51,27 @@ function ResultGroup({ label, items, renderItem }) {
 export default function TopBar({ role = 'fan' }) {
     const { user: realUser } = useCurrentUser();
     const { openPublish } = usePublish();
+    const navigate = useNavigate();
+    const { setTrack } = usePlayer();
 
     const [query,   setQuery]   = useState('');
     const [results, setResults] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    const [notifOpen, setNotifOpen] = useState(false);
-    const notifRef = useRef(null);
+    const [notifOpen,      setNotifOpen]      = useState(false);
+    const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
+    const notifRef  = useRef(null);
+    const avatarRef = useRef(null);
     const { totalUnread: unread, refresh: refreshNotifs } = useNotifications()
 
     const timerRef   = useRef(null);
     const wrapperRef = useRef(null);
+
+    function handleLogout() {
+        setTrack(null);
+        logout();
+        navigate('/');
+    }
 
     const placeholder = role === 'artist'
         ? 'Procurar nas tuas faixas, fãs, comentários…'
@@ -120,6 +131,9 @@ export default function TopBar({ role = 'fan' }) {
             }
             if (notifRef.current && !notifRef.current.contains(e.target)) {
                 setNotifOpen(false);
+            }
+            if (avatarRef.current && !avatarRef.current.contains(e.target)) {
+                setAvatarMenuOpen(false);
             }
         }
         document.addEventListener('mousedown', onMouseDown);
@@ -280,11 +294,49 @@ export default function TopBar({ role = 'fan' }) {
                 )}
             </div>
 
-            <Link to="/profile" className="topbar__avatar" aria-label="O meu perfil">
+            {/* Desktop: link directo para o perfil */}
+            <Link to="/profile" className="topbar__avatar topbar__avatar--desktop" aria-label="O meu perfil">
                 {realUser?.picture
                     ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
                     : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
             </Link>
+
+            {/* Mobile: botão com dropdown de menu */}
+            <div className="topbar__avatar-wrap" ref={avatarRef}>
+                {avatarMenuOpen && (
+                    <div className="topbar__avatar-menu">
+                        <div className="sidebar__menu-header">
+                            <div className="sidebar__menu-avatar">
+                                {realUser?.picture
+                                    ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                    : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
+                            </div>
+                            <div>
+                                <div className="sidebar__menu-name">{realUser?.name || ''}</div>
+                                <div className="sidebar__menu-handle">{realUser?.handle || ''}</div>
+                            </div>
+                        </div>
+                        <div className="sidebar__menu-divider" />
+                        <Link to="/profile" className="sidebar__menu-item" onClick={() => setAvatarMenuOpen(false)}>
+                            <HiUser size={15} /> O meu perfil
+                        </Link>
+                        <div className="sidebar__menu-divider" />
+                        <button className="sidebar__menu-item sidebar__menu-item--danger" onClick={handleLogout}>
+                            <HiLogout size={15} /> Terminar sessão
+                        </button>
+                    </div>
+                )}
+                <button
+                    className="topbar__avatar"
+                    onClick={() => setAvatarMenuOpen(v => !v)}
+                    aria-label="Menu do perfil"
+                    aria-expanded={avatarMenuOpen}
+                >
+                    {realUser?.picture
+                        ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
+                </button>
+            </div>
         </header>
     );
 }
