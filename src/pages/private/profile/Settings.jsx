@@ -78,6 +78,62 @@ function ProfileForm({ user }) {
     );
 }
 
+function SetPasswordForm({ onSet }) {
+    const [next, setNext]       = useState('');
+    const [confirm, setConfirm] = useState('');
+    const [saving, setSaving]   = useState(false);
+    const [error, setError]     = useState('');
+    const [done, setDone]       = useState(false);
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+        setError('');
+        setDone(false);
+        if (next !== confirm) { setError('As palavras-passe não coincidem.'); return; }
+        if (next.length < 8)  { setError('A palavra-passe deve ter pelo menos 8 caracteres.'); return; }
+        setSaving(true);
+        try {
+            const res = await fetch(`${API}/users/me/password`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
+                body: JSON.stringify({ newPassword: next }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || `Erro ${res.status}`);
+            setDone(true);
+            setNext(''); setConfirm('');
+            onSet?.();
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setSaving(false);
+        }
+    }
+
+    return (
+        <form className="card settings-card" onSubmit={handleSubmit}>
+            <h2 className="settings-card__title">Definir palavra-passe</h2>
+            <p className="settings-card__desc">
+                A tua conta foi criada via Google ou outro serviço externo. Define uma palavra-passe para poderes iniciar sessão diretamente com o teu email.
+            </p>
+
+            <div className="settings-grid">
+                <Field label="Nova palavra-passe" type="password" value={next} onChange={e => setNext(e.target.value)} required />
+                <Field label="Confirmar palavra-passe" type="password" value={confirm} onChange={e => setConfirm(e.target.value)} required />
+            </div>
+
+            {error && <p className="settings-msg settings-msg--error"><FaExclamationTriangle size={12} /> {error}</p>}
+            {done && !error && <p className="settings-msg settings-msg--ok"><FaCheck size={12} /> Palavra-passe definida. Já podes iniciar sessão com email e palavra-passe.</p>}
+
+            <div className="settings-card__footer">
+                <button type="submit" className="btn-primary" disabled={saving}>
+                    {saving ? 'A guardar…' : 'Definir palavra-passe'}
+                </button>
+            </div>
+        </form>
+    );
+}
+
 function PasswordForm() {
     const [current, setCurrent] = useState('');
     const [next, setNext]       = useState('');
@@ -97,13 +153,11 @@ function PasswordForm() {
         try {
             const res = await fetch(`${API}/users/me/password`, {
                 method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${getToken()}`,
-                },
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
                 body: JSON.stringify({ currentPassword: current, newPassword: next }),
             });
-            if (!res.ok) throw new Error(`Erro ${res.status}`);
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || `Erro ${res.status}`);
             setDone(true);
             setCurrent(''); setNext(''); setConfirm('');
         } catch (err) {
@@ -140,17 +194,18 @@ function PasswordForm() {
 export default function Settings() {
     const role = getRole() === 'artist' ? 'artist' : 'fan';
 
-    const [user, setUser]       = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError]     = useState('');
+    const [user,        setUser]        = useState(null);
+    const [hasPassword, setHasPassword] = useState(true);
+    const [loading,     setLoading]     = useState(true);
+    const [error,       setError]       = useState('');
 
     useEffect(() => {
         fetch(`${API}/auth/me`, { headers: { Authorization: `Bearer ${getToken()}` } })
             .then(res => { if (!res.ok) throw new Error(`Erro ${res.status}`); return res.json(); })
-            .then(data => setUser({
-                name: data.name || data.displayName || '',
-                username: data.username || '',
-            }))
+            .then(data => {
+                setUser({ name: data.name || data.displayName || '', username: data.username || '' });
+                setHasPassword(data.hasPassword ?? true);
+            })
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
     }, []);
@@ -167,7 +222,10 @@ export default function Settings() {
                 {user && (
                     <div className="settings-list">
                         <ProfileForm user={user} />
-                        <PasswordForm />
+                        {hasPassword
+                            ? <PasswordForm />
+                            : <SetPasswordForm onSet={() => setHasPassword(true)} />
+                        }
                     </div>
                 )}
             </div>

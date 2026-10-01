@@ -121,6 +121,66 @@
 }
 .artist-import__spotify:hover { text-decoration: underline; }
 
+.artist-import__unmapped {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--color-mustard);
+}
+
+.artist-import__tag--warn {
+    color: var(--color-mustard);
+    border-color: var(--color-mustard);
+    background: transparent;
+}
+
+.artist-import__unmapped-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.artist-import__unmapped-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-4);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-4);
+}
+
+.artist-import__unmapped-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-width: 0;
+}
+
+.artist-import__unmapped-name {
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-ink);
+}
+
+.artist-import__unmapped-count {
+    font-size: 11px;
+    color: var(--color-ink-mute);
+    background: var(--color-bg-2);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 1px 7px;
+}
+
+.artist-import__unmapped-actions {
+    display: flex;
+    gap: var(--space-2);
+    flex-shrink: 0;
+}
+
 .admin-back {
     display: inline-flex;
     align-items: center;

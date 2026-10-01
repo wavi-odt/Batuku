@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { saveAuth, getRole, setPendingClaim, API } from '../../utils/auth.js'
+import { saveAuth, logout, getRole, API } from '../../utils/auth.js'
 
 export default function OAuthCallback() {
     const navigate = useNavigate()
@@ -30,41 +30,37 @@ export default function OAuthCallback() {
             const pendingRole = sessionStorage.getItem('oauthPendingRole')
             sessionStorage.removeItem('oauthPendingRole')
 
-            if (pendingRole) {
-                const role = getRole()
-                const dest = role === 'artist' ? '/dashboard' : '/home'
-
-                if (!isNewUser) {
-                    const roleLabel = role === 'artist' ? 'artista' : 'fã'
-                    navigate(dest, {
-                        replace: true,
-                        state: { notice: `Já tens uma conta registada como ${roleLabel}. Entraste com essa conta.` },
+            if (pendingRole === 'artist' && isNewUser) {
+                try {
+                    const res = await fetch(`${API}/api/auth/oauth2/init-artist-claim`, {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${token}` },
                     })
-                    return
+                    if (!res.ok) throw new Error()
+                    const { claimToken } = await res.json()
+                    logout()
+                    navigate(`/artist-claim?claimToken=${claimToken}`, { replace: true })
+                } catch (_) {
+                    navigate('/login?error=oauth', { replace: true })
                 }
+                return
+            }
 
-                if (pendingRole === 'artist') {
-                    try {
-                        const res = await fetch(`${API}/api/auth/oauth2/upgrade-to-artist`, {
-                            method: 'POST',
-                            headers: { 'Authorization': `Bearer ${token}` }
-                        })
-                        if (res.ok) {
-                            const data = await res.json()
-                            saveAuth(data.token)
-                        }
-                    } catch (_) {}
-                    setPendingClaim()
-                    navigate('/claim-profile', { state: { fromRegistration: true }, replace: true })
-                    return
-                }
+            if (pendingRole && !isNewUser) {
+                const role = getRole()
+                const roleLabel = role === 'artist' ? 'artista' : 'fã'
+                navigate(role === 'artist' ? '/dashboard' : '/home', {
+                    replace: true,
+                    state: { notice: `Já tens uma conta registada como ${roleLabel}. Entraste com essa conta.` },
+                })
+                return
             }
 
             if (isNewUser) {
                 try {
                     await fetch(`${API}/api/auth/welcome`, {
                         method: 'POST',
-                        headers: { 'Authorization': `Bearer ${token}` }
+                        headers: { Authorization: `Bearer ${token}` },
                     })
                 } catch (_) {}
             }

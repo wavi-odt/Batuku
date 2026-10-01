@@ -74,7 +74,7 @@ export default function AchievementsChallenges({ challenges, onAdvance }) {
             {allDone && (
                 <div className="ach__advance-wrap">
                     <p className="ach__advance-msg">
-                        Completaste todos os desafios deste conjunto!
+                        Conjunto completo! Os pontos já foram atribuídos. Avança para o próximo conjunto de desafios.
                     </p>
                     <button
                         type="button"
@@ -82,7 +82,7 @@ export default function AchievementsChallenges({ challenges, onAdvance }) {
                         onClick={handleAdvance}
                         disabled={advancing}
                     >
-                        {advancing ? 'A carregar…' : '🎯 Desbloquear próximos desafios'}
+                        {advancing ? 'A carregar…' : '🎯 Próximo conjunto'}
                     </button>
                 </div>
             )}

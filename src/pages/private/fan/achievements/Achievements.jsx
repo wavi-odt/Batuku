@@ -53,20 +53,24 @@ export default function Achievements() {
 
     useEffect(() => {
         const headers = { Authorization: `Bearer ${getToken()}` }
+        // Challenges são buscados primeiro porque o backend auto-recompensa desafios
+        // recém-completados durante esse request. O perfil é buscado depois para
+        // garantir que os pontos atualizados já estão refletidos.
         Promise.all([
-            fetch(`${API}/api/gamification/me`,                   { headers }).then(r => r.ok ? r.json() : null),
             fetch(`${API}/api/gamification/badges`,               { headers }).then(r => r.ok ? r.json() : []),
             fetch(`${API}/api/gamification/leaderboard?limit=10`, { headers }).then(r => r.ok ? r.json() : null),
             fetch(`${API}/api/gamification/challenges`,           { headers }).then(r => r.ok ? r.json() : []),
             fetch(`${API}/api/gamification/milestones`,           { headers }).then(r => r.ok ? r.json() : []),
         ])
-        .then(([prof, badges, lb, ch, ms]) => {
-            setProfile(prof)
+        .then(([badges, lb, ch, ms]) => {
             setAllBadges(Array.isArray(badges) ? badges : [])
             setLeaderboard(lb?.entries ?? [])
             setChallenges(Array.isArray(ch) ? ch : [])
             setMilestones(Array.isArray(ms) ? ms : [])
+            // Buscar perfil depois dos challenges para apanhar pontos auto-atribuídos
+            return fetch(`${API}/api/gamification/me`, { headers }).then(r => r.ok ? r.json() : null)
         })
+        .then(prof => setProfile(prof))
         .catch(console.error)
         .finally(() => setLoading(false))
     }, [])

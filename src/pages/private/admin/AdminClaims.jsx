@@ -5,6 +5,7 @@ import './AdminHome.css'
 import './AdminClaims.css'
 
 const API          = `${import.meta.env.VITE_API_BASE_URL}/api/admin/artist-claims`
+const PENDING_API  = `${import.meta.env.VITE_API_BASE_URL}/api/admin/pending-artist-claims`
 const PROFILES_API = `${import.meta.env.VITE_API_BASE_URL}/api/admin/artist-profiles`
 
 function ConfirmModal({ action, onConfirm, onCancel, busy, error }) {
@@ -41,52 +42,67 @@ export default function AdminClaims() {
     const [loading, setLoading]           = useState(true);
     const [error, setError]               = useState('');
     const [selectedId, setSelectedId]     = useState(null);
+    const [selectedSource, setSelectedSource] = useState(null); // 'existing' | 'pending_registration'
     const [detail, setDetail]             = useState(null);
     const [detailLoading, setDetailLoad]  = useState(false);
     const [detailError, setDetailError]   = useState('');
     const [success, setSuccess]           = useState('');
     const [actionBusy, setActionBusy]     = useState(false);
-    const [confirm, setConfirm]           = useState(null); // { id, action } | null
+    const [confirm, setConfirm]           = useState(null); // { id, source, action } | null
     const [actionErr, setActionErr]       = useState('');
 
     useEffect(() => {
-        fetch(API, { headers: { Authorization: `Bearer ${getToken()}` } })
-            .then(res => res.ok ? res.json() : Promise.reject(new Error(`Erro ${res.status}`)))
-            .then(data => setClaims(data))
+        const headers = { Authorization: `Bearer ${getToken()}` };
+        Promise.all([
+            fetch(API,         { headers }).then(r => r.ok ? r.json() : []),
+            fetch(PENDING_API, { headers }).then(r => r.ok ? r.json() : []),
+        ])
+            .then(([existing, pending]) => {
+                const all = [
+                    ...pending.map(c => ({ ...c, source: 'pending_registration' })),
+                    ...existing.map(c => ({ ...c, source: 'existing' })),
+                ].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+                setClaims(all);
+            })
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
     }, []);
 
-    function openDetail(id) {
+    function openDetail(id, source) {
         if (selectedId === id) {
             setSelectedId(null);
+            setSelectedSource(null);
             setDetail(null);
             return;
         }
         setSelectedId(id);
+        setSelectedSource(source);
         setDetail(null);
         setDetailError('');
         setDetailLoad(true);
-        fetch(`${API}/${id}`, { headers: { Authorization: `Bearer ${getToken()}` } })
+        const base = source === 'pending_registration' ? PENDING_API : API;
+        fetch(`${base}/${id}`, { headers: { Authorization: `Bearer ${getToken()}` } })
             .then(res => res.ok ? res.json() : Promise.reject(new Error(`Erro ${res.status}`)))
-            .then(data => setDetail(data))
+            .then(data => setDetail({ ...data, source }))
             .catch(err => setDetailError(err.message))
             .finally(() => setDetailLoad(false));
     }
 
     function closeDetail() {
         setSelectedId(null);
+        setSelectedSource(null);
         setDetail(null);
     }
 
     async function handleAction() {
         if (!confirm) return;
-        const { id, action } = confirm;
+        const { id, source, action } = confirm;
         const label = action === 'verify' ? 'verificado' : 'duvidoso';
         setActionBusy(true);
         setActionErr('');
         try {
-            const res = await fetch(`${API}/${id}/${action}`, {
+            const base = source === 'pending_registration' ? PENDING_API : API;
+            const res = await fetch(`${base}/${id}/${action}`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${getToken()}` },
             });
@@ -104,7 +120,7 @@ export default function AdminClaims() {
                 }).catch(() => { /* ignora, perfil pode já existir */ });
             }
 
-            setClaims(prev => prev.filter(c => c.id !== id));
+            setClaims(prev => prev.filter(c => !(c.id === id && c.source === source)));
             closeDetail();
             setConfirm(null);
             setSuccess(`Pedido marcado como ${label}.`);
@@ -146,15 +162,20 @@ export default function AdminClaims() {
                         <ul className="claims-list">
                             {claims.map(claim => (
                                 <li
-                                    key={claim.id}
-                                    className={`claims-row${selectedId === claim.id ? ' claims-row--active' : ''}`}
+                                    key={`${claim.source}-${claim.id}`}
+                                    className={`claims-row${selectedId === claim.id && selectedSource === claim.source ? ' claims-row--active' : ''}`}
                                     role="button"
                                     tabIndex={0}
-                                    onClick={() => openDetail(claim.id)}
-                                    onKeyDown={e => e.key === 'Enter' && openDetail(claim.id)}
+                                    onClick={() => openDetail(claim.id, claim.source)}
+                                    onKeyDown={e => e.key === 'Enter' && openDetail(claim.id, claim.source)}
                                 >
                                     <div className="claims-row__artist">{claim.artistName}</div>
-                                    <div className="claims-row__user">{claim.userName ?? claim.email}</div>
+                                    <div className="claims-row__user">
+                                        {claim.userName ?? claim.userEmail ?? claim.email}
+                                        {claim.source === 'pending_registration' && (
+                                            <span style={{ marginLeft: 6, fontSize: 10, color: 'var(--color-coral)', fontWeight: 600 }}>NOVO REGISTO</span>
+                                        )}
+                                    </div>
                                     <div className="claims-row__date">
                                         {new Date(claim.createdAt).toLocaleString('pt-PT')}
                                     </div>
@@ -230,14 +251,14 @@ export default function AdminClaims() {
                                             <button
                                                 type="button"
                                                 className="btn btn--primary"
-                                                onClick={() => { setActionErr(''); setConfirm({ id: detail.id, action: 'verify' }); }}
+                                                onClick={() => { setActionErr(''); setConfirm({ id: detail.id, source: detail.source, action: 'verify' }); }}
                                             >
                                                 Marcar como verificado
                                             </button>
                                             <button
                                                 type="button"
                                                 className="btn-danger"
-                                                onClick={() => { setActionErr(''); setConfirm({ id: detail.id, action: 'doubtful' }); }}
+                                                onClick={() => { setActionErr(''); setConfirm({ id: detail.id, source: detail.source, action: 'doubtful' }); }}
                                             >
                                                 Marcar como duvidoso
                                             </button>

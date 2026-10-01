@@ -200,6 +200,19 @@ export default function MiniPlayer() {
         return audio
     }
 
+    // Parar o MiniPlayer quando outro player (ex: marketplace) tomar o controlo
+    useEffect(() => {
+        function onExternalAudioStart(e) {
+            if (e.detail?.source === 'main') return
+            ctrlRef.current?.pause?.()
+            audioRef.current?.pause()
+            userPausedRef.current = true
+            setPlaying(false)
+        }
+        window.addEventListener('batuku:audio-start', onExternalAudioStart)
+        return () => window.removeEventListener('batuku:audio-start', onExternalAudioStart)
+    }, [])
+
     // Load track when it changes
     useEffect(() => {
         // Completar registo da faixa anterior
@@ -229,6 +242,7 @@ export default function MiniPlayer() {
             ctrlRef.current?.pause?.()
             setPosition(0)
             setDuration(0)
+            window.dispatchEvent(new CustomEvent('batuku:audio-start', { detail: { source: 'main' } }))
             const audio = getAudio()
             audio.src = track.audioUrl
             audio.play().catch(() => {})
@@ -246,6 +260,7 @@ export default function MiniPlayer() {
             // ── Spotify iFrame mode ──
             isSpotifyRef.current = true
             audioRef.current?.pause()
+            window.dispatchEvent(new CustomEvent('batuku:audio-start', { detail: { source: 'main' } }))
             const uri = `spotify:track:${track.spotifyId}`
             if (!apiRef.current) { pendingRef.current = uri; return }
             if (!ctrlRef.current) {

@@ -44,14 +44,13 @@ export default function VerifyEmail() {
             .then(({ ok, data }) => {
                 if (!ok) throw new Error(data.error || 'Link inválido ou expirado.')
 
-                saveAuth(data.token)
                 sessionStorage.removeItem('pendingEmail')
 
-                if (data.pendingValidation) {
-                    setPendingClaim()
+                if (data.pendingClaim) {
                     setConfirmStatus('success')
-                    setTimeout(() => navigate('/claim-profile', { state: { fromRegistration: true } }), 2000)
+                    setTimeout(() => navigate(`/artist-claim?claimToken=${data.claimToken}`), 2000)
                 } else {
+                    saveAuth(data.token)
                     setConfirmStatus('success')
                     setTimeout(() => navigate('/home'), 2000)
                 }

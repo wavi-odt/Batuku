@@ -10,6 +10,7 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { FaSpotify, FaFlag, FaExclamationTriangle, FaDatabase, FaCheckCircle, FaTimesCircle, FaPlay, FaStar, FaUsers, FaMusic } from 'react-icons/fa'
 import { getToken } from '../../../utils/auth.js'
 import AdminShell from './AdminShell.jsx'
@@ -62,8 +63,8 @@ const MIGRATIONS = [
 ];
 
 
-function MetricCard({ label, value, alert, icon: Icon, accent }) {
-    return (
+function MetricCard({ label, value, alert, icon: Icon, accent, to }) {
+    const card = (
         <div
             className={'admin-metric' + (alert && value > 0 ? ' admin-metric--alert' : '')}
             style={{ '--admin-metric-accent': ACCENT_COLORS[accent] }}
@@ -80,6 +81,9 @@ function MetricCard({ label, value, alert, icon: Icon, accent }) {
             <div className="admin-metric__label">{label}</div>
         </div>
     );
+    return to
+        ? <Link to={to} style={{ textDecoration: 'none' }}>{card}</Link>
+        : card;
 }
 
 
@@ -452,10 +456,11 @@ function BeatsFeaturedSection() {
 
 export default function AdminHome() {
     const [metrics, setMetrics] = useState([
-        { label: 'Perfis de artista importados',    value: null, icon: FaSpotify, accent: 'green'   },
-        { label: 'Pedidos de reclamação pendentes', value: null, alert: true, icon: FaFlag, accent: 'mustard' },
-        { label: 'Utilizadores registados',         value: null, icon: FaUsers,  accent: 'blue'    },
-        { label: 'Contas ARTIST ativas',            value: null, icon: FaMusic,  accent: 'blue'    },
+        { label: 'Perfis de artista importados',    value: null, icon: FaSpotify,            accent: 'green'   },
+        { label: 'Pedidos de reclamação pendentes', value: null, alert: true, icon: FaFlag,              accent: 'mustard' },
+        { label: 'Géneros não mapeados',            value: null, alert: true, icon: FaExclamationTriangle, accent: 'mustard', to: '/admin/artist-import' },
+        { label: 'Utilizadores registados',         value: null, icon: FaUsers,              accent: 'blue'    },
+        { label: 'Contas ARTIST ativas',            value: null, icon: FaMusic,              accent: 'blue'    },
     ]);
 
     useEffect(() => {
@@ -465,7 +470,8 @@ export default function AdminHome() {
             .then(res => res.ok ? res.json() : Promise.reject())
             .then(data => setMetrics([
                 { label: 'Perfis de artista importados',    value: data.importedArtists,       icon: FaSpotify, accent: 'green'   },
-                { label: 'Pedidos de reclamação pendentes', value: data.pendingClaimRequests,   alert: true, icon: FaFlag, accent: 'mustard' },
+                { label: 'Pedidos de reclamação pendentes', value: data.pendingClaimRequests,   alert: true, icon: FaFlag,              accent: 'mustard' },
+                { label: 'Géneros não mapeados',            value: data.unmappedGenres,         alert: true, icon: FaExclamationTriangle, accent: 'mustard', to: '/admin/artist-import' },
                 { label: 'Utilizadores registados',         value: data.totalUsers,             icon: FaUsers,  accent: 'blue'    },
                 { label: 'Contas ARTIST ativas',            value: data.activeArtistAccounts,   icon: FaMusic,  accent: 'blue'    },
             ]))

@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { SiSpotify } from 'react-icons/si'
 import { FaCamera, FaRedo, FaCheck, FaFileImage } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
@@ -29,9 +29,11 @@ function StepSpotify({ selected, onSelect, onNext }) {
         setLoading(true);
         timerRef.current = setTimeout(async () => {
             try {
+                const token = getToken();
+                const headers = token ? { Authorization: `Bearer ${token}` } : {};
                 const res = await fetch(
                     `${import.meta.env.VITE_API_BASE_URL}/api/spotify/search/artists?q=${encodeURIComponent(q)}`,
-                    { headers: { Authorization: `Bearer ${getToken()}` } }
+                    { headers }
                 );
                 setResults(res.ok ? await res.json() : []);
             } catch {
@@ -519,8 +521,12 @@ export default function ClaimProfile() {
     const role = getRole();
     const backTo = role === 'fan' ? '/home' : '/dashboard';
     const { showToast } = useToast();
-    const { state } = useLocation();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    // claimToken presente → artista em registo (sem JWT); ausente → utilizador já existente (JWT)
+    const claimToken = searchParams.get('claimToken');
+    const isNewRegistration = !!claimToken;
 
     const [step,          setStep]          = useState(0);
     const [spotifyArtist, setSpotifyArtist] = useState(null);
@@ -528,9 +534,11 @@ export default function ClaimProfile() {
     const [docBlob,       setDocBlob]       = useState(null);
     const [submitting,    setSubmitting]    = useState(false);
     const [submitErr,     setSubmitErr]     = useState('');
-    const [checking,      setChecking]      = useState(true);
+    const [checking,      setChecking]      = useState(!isNewRegistration);
 
+    // Para utilizadores já existentes: verifica se já tem um claim pendente
     useEffect(() => {
+        if (isNewRegistration) return;
         fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-claims/me`, {
             headers: { Authorization: `Bearer ${getToken()}` },
         })
@@ -544,7 +552,7 @@ export default function ClaimProfile() {
             })
             .catch(() => {})
             .finally(() => setChecking(false));
-    }, [navigate]);
+    }, [navigate, isNewRegistration]);
 
     async function handleSubmit() {
         setSubmitting(true);
@@ -552,14 +560,28 @@ export default function ClaimProfile() {
         try {
             const body = new FormData();
             body.append('spotifyArtistId', spotifyArtist.id);
-            body.append('selfie',      selfieBlob, 'selfie.jpg');
-            body.append('idDocument',  docBlob, docBlob instanceof File ? docBlob.name : 'document.jpg');
-            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-claims`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${getToken()}` },
-                body,
-            });
-            if (!res.ok) throw new Error(`Erro ${res.status}`);
+            body.append('selfie',     selfieBlob, 'selfie.jpg');
+            body.append('idDocument', docBlob, docBlob instanceof File ? docBlob.name : 'document.jpg');
+
+            let res;
+            if (isNewRegistration) {
+                body.append('claimToken', claimToken);
+                res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/artist-claim-submit`, {
+                    method: 'POST',
+                    body,
+                });
+            } else {
+                res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-claims`, {
+                    method: 'POST',
+                    headers: { Authorization: `Bearer ${getToken()}` },
+                    body,
+                });
+            }
+
+            if (!res.ok) {
+                const data = await res.json().catch(() => ({}));
+                throw new Error(data.error || `Erro ${res.status}`);
+            }
             setAwaitingValidation();
             navigate('/aguardar-validacao', { replace: true });
         } catch (e) {
@@ -574,7 +596,9 @@ export default function ClaimProfile() {
 
     const content = (
         <div className="claim-page">
-            {!locked && <Link to={backTo} className="claim-back">← {role === 'fan' ? 'Início' : 'Dashboard'}</Link>}
+            {!locked && !isNewRegistration && (
+                <Link to={backTo} className="claim-back">← {role === 'fan' ? 'Início' : 'Dashboard'}</Link>
+            )}
             <h1 className="claim-page__title">Reclamar perfil Spotify</h1>
 
             {!checking && <Stepper current={step} />}
@@ -617,7 +641,7 @@ export default function ClaimProfile() {
         </div>
     );
 
-    if (locked) {
+    if (locked || isNewRegistration) {
         return <main className="claim-standalone">{content}</main>;
     }
 

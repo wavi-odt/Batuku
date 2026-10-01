@@ -92,3 +92,4 @@ export function setAwaitingValidation() {
 export function isAwaitingValidation() {
     return !!localStorage.getItem('awaitingValidation');
 }
+

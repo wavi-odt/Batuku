@@ -1,10 +1,88 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { getToken } from '../../../utils/auth.js'
 import AdminShell from './AdminShell.jsx'
 import './AdminHome.css'
 import './ArtistImport.css'
 
 const API = `${import.meta.env.VITE_API_BASE_URL}/api/admin/artist-profiles`
+
+function UnmappedGenresSection() {
+    const [genres,  setGenres]  = useState([])
+    const [loading, setLoading] = useState(true)
+    const [busy,    setBusy]    = useState(null)
+
+    useEffect(() => {
+        fetch(`${API}/unmapped-genres`, { headers: { Authorization: `Bearer ${getToken()}` } })
+            .then(r => r.ok ? r.json() : [])
+            .then(data => setGenres(Array.isArray(data) ? data : []))
+            .catch(() => {})
+            .finally(() => setLoading(false))
+    }, [])
+
+    async function promote(id) {
+        setBusy(id)
+        try {
+            const res = await fetch(`${API}/unmapped-genres/${id}/promote`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${getToken()}` },
+            })
+            if (!res.ok) throw new Error()
+            setGenres(prev => prev.filter(g => g.id !== id))
+        } catch { /* silently */ } finally { setBusy(null) }
+    }
+
+    async function dismiss(id) {
+        setBusy(id)
+        try {
+            const res = await fetch(`${API}/unmapped-genres/${id}`, {
+                method: 'DELETE',
+                headers: { Authorization: `Bearer ${getToken()}` },
+            })
+            if (!res.ok) throw new Error()
+            setGenres(prev => prev.filter(g => g.id !== id))
+        } catch { /* silently */ } finally { setBusy(null) }
+    }
+
+    if (loading || genres.length === 0) return null
+
+    return (
+        <section className="admin-section" style={{ marginTop: 'var(--space-8)' }}>
+            <h2 className="admin-section__title">Géneros não mapeados</h2>
+            <p className="admin-section__sub">
+                Géneros vindos do Spotify sem correspondência na lista canónica do Batuku.
+                Promove para adicionar à lista ou ignora para descartar.
+            </p>
+            <div className="artist-import__unmapped-list">
+                {genres.map(g => (
+                    <div key={g.id} className="artist-import__unmapped-row">
+                        <div className="artist-import__unmapped-info">
+                            <span className="artist-import__unmapped-name">{g.name}</span>
+                            <span className="artist-import__unmapped-count">{g.occurrences}×</span>
+                        </div>
+                        <div className="artist-import__unmapped-actions">
+                            <button
+                                type="button"
+                                className="btn btn--primary"
+                                disabled={busy === g.id}
+                                onClick={() => promote(g.id)}
+                            >
+                                Promover
+                            </button>
+                            <button
+                                type="button"
+                                className="btn-ghost"
+                                disabled={busy === g.id}
+                                onClick={() => dismiss(g.id)}
+                            >
+                                Ignorar
+                            </button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </section>
+    )
+}
 
 function formatFollowers(n) {
     if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace('.', ',')}M`
@@ -47,7 +125,12 @@ export default function ArtistImport() {
                 body: JSON.stringify({ spotifyArtistId }),
             });
             if (!res.ok) throw new Error(`Erro ${res.status}`);
-            setResults(prev => prev.map(a => a.id === spotifyArtistId ? { ...a, imported: true } : a));
+            const data = await res.json();
+            setResults(prev => prev.map(a =>
+                a.id === spotifyArtistId
+                    ? { ...a, imported: true, unmappedGenres: data.unmappedGenres ?? [] }
+                    : a
+            ));
         } catch (err) {
             alert(err.message);
         }
@@ -78,6 +161,8 @@ export default function ArtistImport() {
                 </p>
 
                 {error && <p className="artist-import__error">{error}</p>}
+
+                <UnmappedGenresSection />
 
                 <ul className="artist-import__list">
                     {results.map(artist => (
@@ -128,13 +213,23 @@ export default function ArtistImport() {
                                 </div>
                             </div>
 
-                            <button
-                                className={`btn ${artist.imported ? 'btn--ghost' : 'btn--primary'}`}
-                                onClick={() => handleImport(artist.id)}
-                                disabled={artist.imported}
-                            >
-                                {artist.imported ? 'Importado' : 'Importar'}
-                            </button>
+                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+                                <button
+                                    className={`btn ${artist.imported ? 'btn--ghost' : 'btn--primary'}`}
+                                    onClick={() => handleImport(artist.id)}
+                                    disabled={artist.imported}
+                                >
+                                    {artist.imported ? 'Importado' : 'Importar'}
+                                </button>
+                                {artist.imported && artist.unmappedGenres?.length > 0 && (
+                                    <div className="artist-import__unmapped">
+                                        <span>⚠️ Géneros não mapeados:</span>
+                                        {artist.unmappedGenres.map(g => (
+                                            <span key={g} className="artist-import__tag artist-import__tag--warn">{g}</span>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
                         </li>
                     ))}
                 </ul>

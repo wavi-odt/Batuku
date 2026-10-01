@@ -173,6 +173,17 @@ export default function Marketplace() {
         }
     }, [])
 
+    // Parar o marketplace quando o MiniPlayer principal começar a tocar
+    useEffect(() => {
+        function onMainAudioStart(e) {
+            if (e.detail?.source === 'market') return
+            audioRef.current.pause()
+            setPlaying(null)
+        }
+        window.addEventListener('batuku:audio-start', onMainAudioStart)
+        return () => window.removeEventListener('batuku:audio-start', onMainAudioStart)
+    }, [])
+
     const handlePlay = useCallback((beatId) => {
         const audio = audioRef.current
         if (!beatId || playing === beatId) {
@@ -182,6 +193,7 @@ export default function Marketplace() {
         }
         const beat = beats.find(b => b.id === beatId)
         if (!beat?.audioUrl) return
+        window.dispatchEvent(new CustomEvent('batuku:audio-start', { detail: { source: 'market' } }))
         audio.pause()
         audio.src = beat.audioUrl
         audio.play().catch(() => {})
