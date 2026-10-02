@@ -24,20 +24,26 @@ export default function DiscoverFeatured({ track: t, allTracks }) {
         <div className="disc__hero" style={{ '--hero-hue': hue }}>
             <div className="disc__hero-body">
                 <span className="disc__hero-badge">Em destaque</span>
-                <h1 className="disc__hero-title">{t.title}</h1>
-                <p className="disc__hero-artist">{t.artistName}</p>
-                {t.genreName && <p className="disc__hero-desc">{t.genreName}</p>}
-                <div className="disc__hero-stats">
-                    <span>{fmt(t.likeCount)} gostos</span>
+                <div className="disc__hero-main">
+                    <div className="disc__hero-text">
+                        <h1 className="disc__hero-title">{t.title}</h1>
+                        <p className="disc__hero-artist">{t.artistName}</p>
+                        {t.genreName && <p className="disc__hero-desc">{t.genreName}</p>}
+                    </div>
+                    <div className="disc__hero-actions">
+                        <div className="disc__hero-stats">
+                            <span>{fmt(t.likeCount)} gostos</span>
+                        </div>
+                        <button
+                            type="button"
+                            className="btn btn--primary btn--sm disc__hero-cta"
+                            onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, allTracks.map(q => ({ ...q, name: q.title })))}
+                            disabled={!t.audioUrl}
+                        >
+                            <FaPlay size={11} /> Ouvir agora
+                        </button>
+                    </div>
                 </div>
-                <button
-                    type="button"
-                    className="btn btn--primary btn--sm disc__hero-cta"
-                    onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, allTracks.map(q => ({ ...q, name: q.title })))}
-                    disabled={!t.audioUrl}
-                >
-                    <FaPlay size={11} /> Ouvir agora
-                </button>
             </div>
 
             <div className="disc__hero-art">

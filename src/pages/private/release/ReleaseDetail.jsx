@@ -6,7 +6,6 @@ import { API, getToken, getRole } from '../../../utils/auth.js'
 import { usePlayer } from '../../../context/PlayerContext'
 import { useCurrentUser } from '../../../hooks/useCurrentUser.js'
 import { useToast } from '../../../context/ToastContext.jsx'
-import LikeButton from '../../../components/LikeButton'
 import TrackMenu from '../../../components/TrackMenu'
 import TrackComments from '../../../components/TrackComments'
 import '../DetailPage.css'
@@ -395,7 +394,6 @@ export default function ReleaseDetail() {
                                                     <div className="strack__title">{t.title}</div>
                                                     <div className="strack__sub">{isActive ? 'A reproduzir…' : t.artistName}</div>
                                                 </div>
-                                                <LikeButton trackId={t.id} />
                                                 <button
                                                     type="button"
                                                     className={'rel-comment-btn' + (commentsOpen ? ' rel-comment-btn--active' : '')}

@@ -294,14 +294,6 @@ export default function TopBar({ role = 'fan' }) {
                 )}
             </div>
 
-            {/* Desktop: link directo para o perfil */}
-            <Link to="/profile" className="topbar__avatar topbar__avatar--desktop" aria-label="O meu perfil">
-                {realUser?.picture
-                    ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                    : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
-            </Link>
-
-            {/* Mobile: botão com dropdown de menu */}
             <div className="topbar__avatar-wrap" ref={avatarRef}>
                 {avatarMenuOpen && (
                     <div className="topbar__avatar-menu">

@@ -35,30 +35,30 @@ export default function DiscoverReleases({ tracks, queue }) {
 
             <div className="disc__releases">
                 {tracks.map(t => (
-                    <div key={t.id} style={{ position: 'relative' }}>
-                        <button
-                            type="button"
-                            className="track-card"
-                            onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, queue.map(q => ({ ...q, name: q.title })))}
-                        >
-                            <div className="track-card__cover">
-                                <ArtistArtwork
-                                    shape={shapeFromId(t.id)}
-                                    hue={hueFromId(t.id)}
-                                    image={t.coverUrl ?? null}
-                                    rounded={10}
-                                />
-                                <span className="track-card__play" aria-hidden="true">
-                                    <FaPlay size={12} />
-                                </span>
-                            </div>
-                            <div className="track-card__title">{t.title}</div>
-                            <div className="track-card__artist">{t.artistName}</div>
-                            <div className="disc__release-date">{daysLabel(t.createdAt)}</div>
-                        </button>
-                        <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 6, right: 6, zIndex: 10 }}>
-                            <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId} />
+                    <div key={t.id} className="track-card">
+                        <div className="track-card__cover" onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, queue.map(q => ({ ...q, name: q.title })))}>
+                            <ArtistArtwork
+                                shape={shapeFromId(t.id)}
+                                hue={hueFromId(t.id)}
+                                image={t.coverUrl ?? null}
+                                rounded={10}
+                            />
+                            <span className="track-card__play" aria-hidden="true">
+                                <FaPlay size={12} />
+                            </span>
                         </div>
+                        <div className="track-card__bottom" onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, queue.map(q => ({ ...q, name: q.title })))}>
+                            <div className="track-card__title-row">
+                                <div className="track-card__title">{t.title}</div>
+                                <div onClick={e => e.stopPropagation()}>
+                                    <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId} />
+                                </div>
+                            </div>
+                            <div className="track-card__artist">{t.artistName}</div>
+                        </div>
+                        {t.createdAt && (
+                            <div className="disc__release-date">{daysLabel(t.createdAt)}</div>
+                        )}
                     </div>
                 ))}
             </div>

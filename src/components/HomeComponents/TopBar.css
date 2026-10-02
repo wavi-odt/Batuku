@@ -17,7 +17,13 @@
 }
 
 @media (max-width: 900px) {
-    .topbar { padding: 0 16px; }
+    .topbar { padding: 0 12px; gap: 10px; }
+    .topbar__search { max-width: none; }
+    .topbar__search-input {
+        padding: 10px 14px 10px 40px;
+        font-size: 14px;
+    }
+    .topbar__search-icon { left: 13px; }
 }
 
 /* ─── Search ──────────────────────────────────────────────────────── */
@@ -123,19 +129,9 @@
 
 .topbar__notif-wrap { position: relative; }
 
-.topbar__avatar--desktop {
-    display: block;
-}
-
 .topbar__avatar-wrap {
-    display: none;
     position: relative;
     flex-shrink: 0;
-}
-
-@media (max-width: 900px) {
-    .topbar__avatar--desktop { display: none; }
-    .topbar__avatar-wrap     { display: block; }
 }
 
 .topbar__avatar {

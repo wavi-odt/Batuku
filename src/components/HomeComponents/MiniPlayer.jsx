@@ -484,7 +484,6 @@ export default function MiniPlayer() {
                     </div>
                 </div>
                 {track?.id && <LikeButton trackId={track.id} variant="icon" />}
-                {track?.id && <TrackMenu trackId={track.id} artistProfileId={track.artistProfileId} popoverAlign="left" />}
             </div>
 
             {/* Playback controls */}
@@ -529,7 +528,7 @@ export default function MiniPlayer() {
                     </button>
                     <button
                         type="button"
-                        className={'player__btn' + (repeat ? ' is-active' : '')}
+                        className={'player__btn player__btn--repeat' + (repeat ? ' is-active' : '')}
                         aria-label="Repetir"
                         onClick={() => setRepeat(r => !r)}
                     >
@@ -548,7 +547,7 @@ export default function MiniPlayer() {
                 </div>
             </div>
 
-            {/* Volume + expandir */}
+            {/* Volume + menu + expandir */}
             <div className="player__extras">
                 <div className="player__volume">
                     <HiVolumeUp size={16} />
@@ -563,6 +562,7 @@ export default function MiniPlayer() {
                         <div className="player__volume-fill" style={{ width: `${volume}%` }} />
                     </div>
                 </div>
+                {track?.id && <TrackMenu trackId={track.id} artistProfileId={track.artistProfileId} />}
                 <button
                     type="button"
                     className="player__expand-btn"

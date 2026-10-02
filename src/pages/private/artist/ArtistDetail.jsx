@@ -8,7 +8,6 @@ import { API, getToken, getRole } from '../../../utils/auth.js'
 import { useToast } from '../../../context/ToastContext'
 import { CardTitle, ArtistAbout, ArtistLinks } from '../profile/ProfileBlocks'
 import { usePlayer } from '../../../context/PlayerContext'
-import LikeButton from '../../../components/LikeButton'
 import TrackMenu from '../../../components/TrackMenu'
 import TrackComments from '../../../components/TrackComments'
 import '../profile/Profile.css'
@@ -169,7 +168,6 @@ export default function ArtistDetail() {
                                     <div className="strack__title">{t[nameKey]}</div>
                                     <div className="strack__sub">{isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}</div>
                                 </div>
-                                <LikeButton trackId={t.id} />
                                 <button
                                     type="button"
                                     className={'rel-comment-btn' + (commentsOpen ? ' rel-comment-btn--active' : '')}

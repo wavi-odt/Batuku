@@ -6,7 +6,6 @@ import AppShell from '../../../components/HomeComponents/AppShell'
 import { getToken, getRole } from '../../../utils/auth.js'
 import { usePlayer } from '../../../context/PlayerContext'
 import { useToast } from '../../../context/ToastContext'
-import LikeButton from '../../../components/LikeButton'
 import TrackMenu from '../../../components/TrackMenu'
 import TrackComments from '../../../components/TrackComments'
 import PlaylistCreateModal from './PlaylistCreateModal'
@@ -426,7 +425,6 @@ export default function PlaylistDetail() {
                                                     )}
                                                 </div>
                                                 </div>
-                                                <LikeButton trackId={t.id} />
                                                 <button
                                                     type="button"
                                                     className={'rel-comment-btn' + (commentsOpen ? ' rel-comment-btn--active' : '')}

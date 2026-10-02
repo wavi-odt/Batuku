@@ -688,16 +688,15 @@
 /* ─── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 700px) {
     .strack {
-        grid-template-columns: 44px 1fr auto auto auto;
+        grid-template-columns: 44px 1fr auto auto;
         gap: 10px;
         padding: 6px 8px;
     }
     .strack__num-wrap,
     .strack__dur,
     .rel-detail__list-head { display: none; }
-    .rel-comment-btn { opacity: 1; }
-    .strack .like-btn,
     .rel-comment-btn {
+        opacity: 1;
         min-height: 40px;
         padding: 6px 10px;
         justify-content: center;

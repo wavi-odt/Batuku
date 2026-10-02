@@ -2,10 +2,13 @@
    DiscoverCharts.jsx, Top 10 por gostos em dois painéis.
    ───────────────────────────────────────────────────────────────── */
 
-import { FaPlay } from 'react-icons/fa'
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import { useState } from 'react'
+import { FaPlay, FaRegComment } from 'react-icons/fa'
+import ArtistArtwork  from '../../../../components/PublicComponets/ArtistArtwork.jsx'
 import { usePlayer }  from '../../../../context/PlayerContext.jsx'
-import TrackMenu from '../../../../components/TrackMenu.jsx'
+import TrackMenu      from '../../../../components/TrackMenu.jsx'
+import LikeButton     from '../../../../components/LikeButton.jsx'
+import TrackComments  from '../../../../components/TrackComments.jsx'
 
 const SHAPES = ['circles', 'orbit', 'arch', 'sun', 'triangles', 'wave', 'stripes', 'split']
 const shapeFromId = id => SHAPES[Number(id) % SHAPES.length]
@@ -26,36 +29,52 @@ function delta(track, rank) {
 
 function ChartRow({ track, rank, queue }) {
     const { track: currentTrack, setTrack } = usePlayer()
+    const [commentsOpen, setCommentsOpen] = useState(false)
     const active = currentTrack?.id === track.id
     return (
-        <div className={`disc__chart-row${active ? ' disc__chart-row--active' : ''}`}>
-            <span className="disc__chart-rank">{rank}</span>
-            {delta(track, rank)}
-            <div className="disc__chart-thumb">
-                <ArtistArtwork
-                    shape={shapeFromId(track.id)}
-                    hue={hueFromId(track.id)}
-                    image={track.coverUrl ?? null}
-                    rounded={6}
-                />
+        <>
+            <div className={`disc__chart-row${active ? ' disc__chart-row--active' : ''}`}>
+                <span className="disc__chart-rank">{rank}</span>
+                {delta(track, rank)}
+                <div className="disc__chart-thumb">
+                    <ArtistArtwork
+                        shape={shapeFromId(track.id)}
+                        hue={hueFromId(track.id)}
+                        image={track.coverUrl ?? null}
+                        rounded={6}
+                    />
+                    <button
+                        type="button"
+                        className="lib__track-play"
+                        aria-label="Reproduzir"
+                        onClick={() => track.audioUrl && setTrack({ ...track, name: track.title }, queue.map(q => ({ ...q, name: q.title })))}
+                    >
+                        <FaPlay size={9} />
+                    </button>
+                </div>
+                <div className="disc__chart-info">
+                    <div className="disc__chart-title">{track.title}</div>
+                    <div className="disc__chart-artist">{track.artistName}</div>
+                </div>
+                <LikeButton trackId={track.id} />
                 <button
                     type="button"
-                    className="lib__track-play"
-                    aria-label="Reproduzir"
-                    onClick={() => track.audioUrl && setTrack({ ...track, name: track.title }, queue.map(q => ({ ...q, name: q.title })))}
+                    className={'rel-comment-btn' + (commentsOpen ? ' rel-comment-btn--active' : '')}
+                    onClick={e => { e.stopPropagation(); setCommentsOpen(v => !v) }}
+                    aria-label="Comentários"
                 >
-                    <FaPlay size={9} />
+                    <FaRegComment size={13} />
                 </button>
+                <div onClick={e => e.stopPropagation()}>
+                    <TrackMenu trackId={track.id} artistProfileId={track.artistProfileId} />
+                </div>
             </div>
-            <div className="disc__chart-info">
-                <div className="disc__chart-title">{track.title}</div>
-                <div className="disc__chart-artist">{track.artistName}</div>
-            </div>
-            <div className="disc__chart-plays">{fmt(track.likeCount)} ♥</div>
-            <div onClick={e => e.stopPropagation()}>
-                <TrackMenu trackId={track.id} artistProfileId={track.artistProfileId} />
-            </div>
-        </div>
+            {commentsOpen && (
+                <div className="disc__chart-comments">
+                    <TrackComments trackId={track.id} trackTitle={track.title} />
+                </div>
+            )}
+        </>
     )
 }
 

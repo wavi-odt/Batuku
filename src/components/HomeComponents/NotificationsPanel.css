@@ -11,6 +11,20 @@
     overflow: hidden;
 }
 
+@media (max-width: 900px) {
+    .notif-panel {
+        position: fixed;
+        top: 64px;
+        left: 12px;
+        right: 12px;
+        width: auto;
+        border-radius: var(--radius-lg);
+    }
+    .notif-panel__list {
+        max-height: 60vh;
+    }
+}
+
 .notif-panel__header {
     display: flex;
     align-items: center;

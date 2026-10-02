@@ -11,7 +11,6 @@ import {
     CardTitle, BadgesGrid,
     ArtistAbout, ArtistLinks,
 } from './ProfileBlocks'
-import LikeButton from '../../../components/LikeButton'
 import TrackMenu from '../../../components/TrackMenu'
 import TrackComments from '../../../components/TrackComments'
 import '../DetailPage.css'
@@ -82,7 +81,6 @@ function LocalTrackList({ tracks, artistName, artistProfileId }) {
                                 <div className="strack__title">{t.title}</div>
                                 <div className="strack__sub">{isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}</div>
                             </div>
-                            <LikeButton trackId={t.id} />
                             <button
                                 type="button"
                                 className={'rel-comment-btn' + (commentsOpen ? ' rel-comment-btn--active' : '')}

@@ -413,14 +413,79 @@ body.has-player .player {
     border-radius: 2px;
 }
 
+
 /* ─── Mobile ──────────────────────────────────────────────────────── */
-@media (max-width: 700px) {
+@media (max-width: 900px) {
     body.has-player .player {
-        grid-template-columns: 1fr auto;
-        padding: 0 14px;
-        gap: 12px;
+        bottom: calc(60px + env(safe-area-inset-bottom));
+        /* flex row: track | controls | expand */
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding: 0 12px 22px; /* bottom padding reserva espaço para a barra */
+        gap: 8px;
+        height: 74px;
     }
-    .player__controls { flex-direction: row; }
-    .player__progress,
-    .player__extras { display: none; }
+
+    /* track e extras com flex:1 para centrar os controles */
+    .player__track {
+        flex: 1;
+        min-width: 0;
+    }
+    .player__extras {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 4px;
+    }
+
+    .player__cover {
+        width: 40px;
+        height: 40px;
+    }
+
+    .player__track .like-btn { display: none; }
+
+    /* controles: só prev + play + next, centrados */
+    .player__controls {
+        flex-direction: row;
+        gap: 0;
+        align-items: center;
+        flex-shrink: 0;
+    }
+    .player__btns { gap: 2px; }
+    .player__btn--soon,
+    .player__btn--repeat { display: none; }
+
+    /* progress + timestamps: barra fina fixa no fundo do player */
+    .player__progress {
+        display: flex;
+        position: absolute;
+        bottom: 5px;
+        left: 0;
+        right: 0;
+        padding: 0 10px;
+        max-width: none;
+        gap: 6px;
+        align-items: center;
+        pointer-events: auto;
+    }
+    .player__time {
+        display: block;
+        font-size: 10px;
+        min-width: 26px;
+        flex-shrink: 0;
+    }
+    .player__bar {
+        flex: 1;
+        min-width: 0;
+        height: 3px;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+    .player__bar:hover { height: 3px; }
+
+    .player__volume { display: none; }
+    .player__expand-btn { margin-left: 0; }
 }

@@ -1,26 +1,39 @@
 import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
-import { FaEllipsisH, FaCheck, FaMusic, FaPlus, FaTrash, FaUser } from 'react-icons/fa'
+import { FaEllipsisH, FaCheck, FaMusic, FaPlus, FaTrash, FaUser, FaHeart, FaRegHeart } from 'react-icons/fa'
 import { API, getToken } from '../utils/auth'
 import { useToast } from '../context/ToastContext'
+import { useLikes } from '../context/LikeContext'
 import PlaylistCreateModal from '../pages/private/playlist/PlaylistCreateModal'
 import './TrackMenu.css'
 
-export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemove, popoverAlign = 'right' }) {
+export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemove }) {
     const { showToast } = useToast()
-    const [open,        setOpen]        = useState(false)
-    const [playlists,   setPlaylists]   = useState(null)
-    const [loading,     setLoading]     = useState(false)
-    const [added,       setAdded]       = useState(null)
-    const [showCreate,  setShowCreate]  = useState(false)
-    const [removing,    setRemoving]    = useState(false)
-    const ref = useRef(null)
+    const { likes, fetchLikeStatus, toggleLike } = useLikes()
+    const [open,         setOpen]         = useState(false)
+    const [playlists,    setPlaylists]    = useState(null)
+    const [loading,      setLoading]      = useState(false)
+    const [added,        setAdded]        = useState(null)
+    const [showCreate,   setShowCreate]   = useState(false)
+    const [removing,     setRemoving]     = useState(false)
+    const [popoverStyle, setPopoverStyle] = useState({})
+    const ref       = useRef(null)
+    const popoverRef = useRef(null)
+
+    const { liked = false } = likes[String(trackId)] ?? {}
+
+    useEffect(() => {
+        if (open) fetchLikeStatus(trackId)
+    }, [open, trackId, fetchLikeStatus])
 
     useEffect(() => {
         if (!open) return
         function handle(e) {
-            if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+            if (
+                ref.current     && !ref.current.contains(e.target) &&
+                popoverRef.current && !popoverRef.current.contains(e.target)
+            ) setOpen(false)
         }
         document.addEventListener('mousedown', handle)
         return () => document.removeEventListener('mousedown', handle)
@@ -28,6 +41,23 @@ export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemo
 
     function handleOpen(e) {
         e.stopPropagation()
+        if (!open) {
+            const rect = ref.current.getBoundingClientRect()
+            const minWidth = 200
+            const gap = 6
+            const style = {
+                position: 'fixed',
+                zIndex: 9999,
+                bottom: window.innerHeight - rect.top + gap,
+            }
+            // alinhar à direita do botão; se sair fora do ecrã, alinhar à esquerda
+            if (rect.right - minWidth >= 8) {
+                style.right = window.innerWidth - rect.right
+            } else {
+                style.left = Math.max(8, rect.left)
+            }
+            setPopoverStyle(style)
+        }
         setOpen(v => !v)
         if (playlists === null && !loading) {
             setLoading(true)
@@ -107,18 +137,24 @@ export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemo
                 <FaEllipsisH size={13} />
             </button>
 
-            {open && (
-                <div className={'trk-menu__popover' + (popoverAlign === 'left' ? ' trk-menu__popover--left' : '')} onClick={e => e.stopPropagation()}>
-                    <Link to={`/tracks/${trackId}`} className="trk-menu__item trk-menu__item--nav" onClick={() => setOpen(false)}>
-                        <div className="trk-menu__pl-cover trk-menu__nav-icon"><FaMusic size={11} /></div>
-                        <span className="trk-menu__pl-name">Página da faixa</span>
-                    </Link>
+            {open && createPortal(
+                <div ref={popoverRef} className="trk-menu__popover" style={popoverStyle} onClick={e => e.stopPropagation()}>
                     {artistProfileId && (
                         <Link to={`/artists/${artistProfileId}`} className="trk-menu__item trk-menu__item--nav" onClick={() => setOpen(false)}>
                             <div className="trk-menu__pl-cover trk-menu__nav-icon"><FaUser size={11} /></div>
                             <span className="trk-menu__pl-name">Página do artista</span>
                         </Link>
                     )}
+                    <button
+                        type="button"
+                        className={'trk-menu__item trk-menu__item--nav' + (liked ? ' trk-menu__item--liked' : '')}
+                        onClick={e => { e.stopPropagation(); toggleLike(trackId) }}
+                    >
+                        <div className="trk-menu__pl-cover trk-menu__nav-icon">
+                            {liked ? <FaHeart size={11} style={{ color: 'var(--color-coral)' }} /> : <FaRegHeart size={11} />}
+                        </div>
+                        <span className="trk-menu__pl-name">{liked ? 'Remover dos favoritos' : 'Favoritar a música'}</span>
+                    </button>
                     <div className="trk-menu__divider" />
                     <div className="trk-menu__header">Adicionar a playlist</div>
 
@@ -179,7 +215,8 @@ export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemo
                             </button>
                         </>
                     )}
-                </div>
+                </div>,
+                document.body
             )}
 
             {showCreate && createPortal(

@@ -14,12 +14,6 @@
         padding-bottom: env(safe-area-inset-bottom);
     }
 
-    body.has-player .bottom-nav {
-        bottom: 78px;
-        height: 60px;
-        padding-bottom: 0;
-    }
-
     .bottom-nav__item {
         flex: 1;
         display: flex;

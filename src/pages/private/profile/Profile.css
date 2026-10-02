@@ -196,7 +196,10 @@
     padding: 16px 24px 0;
     border-bottom: 1px solid var(--color-border);
     overflow-x: auto;
+    scrollbar-width: none;
 }
+.prof__tabs::-webkit-scrollbar { display: none; }
+
 .prof__tab {
     padding: 10px 16px;
     font-size: 14px;
@@ -212,6 +215,19 @@
 }
 .prof__tab:hover { color: var(--color-ink-soft); }
 .prof__tab.is-active { color: var(--color-ink); border-bottom-color: var(--color-coral); }
+
+@media (max-width: 700px) {
+    .prof__tabs {
+        padding: 0 12px;
+        gap: 0;
+    }
+    .prof__tab {
+        flex: 1;
+        padding: 12px 8px;
+        font-size: 12px;
+        text-align: center;
+    }
+}
 
 /* ─── Content layout ──────────────────────────────────────────────── */
 .prof__body { padding: 28px 24px; }

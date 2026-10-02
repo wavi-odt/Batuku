@@ -1,5 +1,5 @@
 import { useState, useEffect }  from 'react'
-import { useLocation }    from 'react-router-dom'
+import { useLocation, Link } from 'react-router-dom'
 import AppShell           from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }  from '../../../../utils/auth.js'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
@@ -59,7 +59,7 @@ export default function Home() {
                     {followedArtists.length > 0 && (
                         <p className="home__hello-sub">
                             Segues <strong>{followedArtists.length} artistas</strong>.
-                            Vai à página <a href="/following" style={{ color: 'var(--color-coral)', textDecoration: 'none' }}>A seguir</a> para ver novidades.
+                            Vai à página <Link to="/following" style={{ color: 'var(--color-coral)', textDecoration: 'none' }}>A seguir</Link> para ver novidades.
                         </p>
                     )}
                 </div>

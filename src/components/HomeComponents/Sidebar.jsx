@@ -2,23 +2,15 @@
    Sidebar.jsx, Navegação lateral. Adapta-se ao role (fan/artist).
    ───────────────────────────────────────────────────────────────── */
 
-import { useState, useRef, useEffect } from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
-import { HiUser, HiLogout, HiChevronUp } from 'react-icons/hi'
+import { NavLink } from 'react-router-dom'
 import { FaUser } from 'react-icons/fa'
 import { homeData } from '../../data/home'
-import { logout } from '../../utils/auth'
 import { usePendingComments } from '../../context/PendingCommentsContext'
 import { useNotifications } from '../../context/NotificationsContext'
-import { usePlayer } from '../../context/PlayerContext'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { ICONS } from './icons'
 import logo from '../../assets/batuku.png'
 import './Sidebar.css'
-
-const menuItems = [
-    { icon: HiUser, label: 'O meu perfil', to: '/profile' },
-];
 
 export default function Sidebar({ role = 'fan' }) {
     const nav      = role === 'artist' ? homeData.artistNav : homeData.fanNav;
@@ -30,28 +22,6 @@ export default function Sidebar({ role = 'fan' }) {
         name:   realUser?.name   ?? null,
         handle: realUser?.handle ?? null,
     };
-
-    const { setTrack } = usePlayer()
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuRef = useRef(null);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!menuOpen) return;
-        function handleClick(e) {
-            if (menuRef.current && !menuRef.current.contains(e.target)) {
-                setMenuOpen(false);
-            }
-        }
-        document.addEventListener('mousedown', handleClick);
-        return () => document.removeEventListener('mousedown', handleClick);
-    }, [menuOpen]);
-
-    function handleLogout() {
-        setTrack(null)
-        logout();
-        navigate('/');
-    }
 
     return (
         <aside className="sidebar">
@@ -85,71 +55,22 @@ export default function Sidebar({ role = 'fan' }) {
                 })}
             </nav>
 
-            {/* ─── Profile card + popup menu ─────────────────────── */}
-            <div className="sidebar__profile-wrap" ref={menuRef}>
-
-                {menuOpen && (
-                    <div className="sidebar__menu">
-                        <div className="sidebar__menu-header">
-                            <div className="sidebar__menu-avatar">
-                                {realUser?.picture
-                                    ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                                    : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
-                            </div>
-                            <div>
-                                <div className="sidebar__menu-name">{user.name}</div>
-                                <div className="sidebar__menu-handle">{user.handle}</div>
-                            </div>
-                        </div>
-
-                        <div className="sidebar__menu-divider" />
-
-                        {menuItems.map(({ icon: Icon, label, to }) => (
-                            <NavLink
-                                key={to}
-                                to={to}
-                                className="sidebar__menu-item"
-                                onClick={() => setMenuOpen(false)}
-                            >
-                                <Icon size={15} />
-                                {label}
-                            </NavLink>
-                        ))}
-
-                        <div className="sidebar__menu-divider" />
-
-                        <button className="sidebar__menu-item sidebar__menu-item--danger" onClick={handleLogout}>
-                            <HiLogout size={15} />
-                            Terminar sessão
-                        </button>
+            {/* ─── Profile card (link direto) ────────────────────── */}
+            <NavLink to="/profile" className="sidebar__profile" aria-label="O meu perfil">
+                <div className="sidebar__profile-avatar">
+                    {realUser?.picture
+                        ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                        : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
+                </div>
+                <div className="sidebar__profile-info">
+                    <div className="sidebar__profile-name">{user.name}</div>
+                    <div className="sidebar__profile-sub">
+                        {role === 'artist'
+                            ? <><span className="sidebar__verified-dot" /> Verificado</>
+                            : user.handle ?? ''}
                     </div>
-                )}
-
-                <button
-                    className={'sidebar__profile' + (menuOpen ? ' is-open' : '')}
-                    onClick={() => setMenuOpen(v => !v)}
-                    aria-expanded={menuOpen}
-                    aria-label="Menu do perfil"
-                >
-                    <div className="sidebar__profile-avatar">
-                        {realUser?.picture
-                            ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                            : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
-                    </div>
-                    <div className="sidebar__profile-info">
-                        <div className="sidebar__profile-name">{user.name}</div>
-                        <div className="sidebar__profile-sub">
-                            {role === 'artist'
-                                ? <><span className="sidebar__verified-dot" /> Verificado</>
-                                : user.handle ?? ''}
-                        </div>
-                    </div>
-                    <HiChevronUp
-                        size={14}
-                        className={'sidebar__profile-chevron' + (menuOpen ? ' is-open' : '')}
-                    />
-                </button>
-            </div>
+                </div>
+            </NavLink>
         </aside>
     );
 }

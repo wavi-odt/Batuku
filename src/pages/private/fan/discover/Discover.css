@@ -22,7 +22,31 @@
         grid-template-columns: 1fr;
         padding: var(--space-7) var(--space-6);
     }
-    .disc__hero-art { display: none; }
+    .disc__hero-art {
+        order: -1;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto var(--space-5);
+    }
+    .disc__hero-main {
+        display: flex;
+        align-items: center;
+        gap: var(--space-4);
+    }
+    .disc__hero-text {
+        flex: 1;
+        min-width: 0;
+    }
+    .disc__hero-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: var(--space-3);
+        flex-shrink: 0;
+    }
+    .disc__hero-stats { margin-bottom: 0; }
+    .disc__hero-title { font-size: 18px; }
+    .disc__hero-desc { margin-bottom: 0; }
 }
 
 .disc__hero-badge {
@@ -263,7 +287,8 @@
 .disc__release-date {
     font-size: 11px;
     color: var(--color-ink-mute);
-    margin: 2px 4px 0;
+    margin: 2px 0 0;
+    padding: 0 4px 8px;
 }
 
 /* ─── Charts ────────────────────────────────────────────────────────── */
@@ -285,7 +310,7 @@
 
 .disc__chart-row {
     display: grid;
-    grid-template-columns: 28px 40px 36px 1fr 56px 28px;
+    grid-template-columns: 28px 40px 36px 1fr auto auto 28px;
     align-items: center;
     gap: 10px;
     padding: 8px 10px;
@@ -295,13 +320,16 @@
 
 @media (max-width: 700px) {
     .disc__chart-row {
-        grid-template-columns: 36px 1fr 28px;
+        grid-template-columns: 36px 1fr auto auto 28px;
         gap: 8px;
         padding: 6px 8px;
     }
     .disc__chart-rank,
-    .disc__chart-delta,
-    .disc__chart-plays { display: none; }
+    .disc__chart-delta { display: none; }
+}
+
+.disc__chart-comments {
+    padding: 0 10px 8px;
 }
 
 .disc__chart-row:hover {
