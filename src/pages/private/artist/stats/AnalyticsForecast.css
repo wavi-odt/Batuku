@@ -94,12 +94,6 @@
     border-radius: var(--radius-md);
 }
 
-.fcst__insight-icon {
-    color: var(--color-mustard);
-    flex-shrink: 0;
-    margin-top: 2px;
-}
-
 .fcst__insight-text {
     font-size: var(--fs-sm);
     color: var(--color-ink-soft);

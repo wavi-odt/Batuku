@@ -42,14 +42,26 @@ export default function MiniPlayer() {
     // ── Shared ────────────────────────────────────────────────────────
     const volBarRef      = useRef(null)
     const volBarExpRef   = useRef(null)
+    const seekBarRef     = useRef(null)
+    const seekBarExpRef  = useRef(null)
+    const expRef         = useRef(null)
+    const expBodyRef     = useRef(null)
+    const swipeStartYRef = useRef(null)
+    const swipeActiveRef = useRef(false)
+    const swipeDeltaRef  = useRef(0)
     const draggingRef    = useRef(false)
     const draggingBarRef = useRef(null)
+    const draggingSeekRef = useRef(false)
+    const dragSeekBarRef  = useRef(null)
+    const dragSeekPosRef  = useRef(0)
     const repeatRef      = useRef(false)
     const nextTrackRef   = useRef(nextTrack)
     const volumeRef      = useRef(70)
     const userPausedRef  = useRef(false)
     const isSpotifyRef   = useRef(false)
 
+    const [swipeDelta,    setSwipeDelta]    = useState(0)
+    const [swipeSnapping, setSwipeSnapping] = useState(false)
     const [playing,    setPlaying]    = useState(false)
     const [position,   setPosition]   = useState(0)   // always ms
     const [duration,   setDuration]   = useState(0)   // always ms
@@ -75,7 +87,9 @@ export default function MiniPlayer() {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
             body: JSON.stringify({ durationPlayed: Math.floor(durationMs), isFullPlay }),
-        }).catch(() => {})
+        })
+            .then(r => { if (r.ok) window.dispatchEvent(new Event('batuku:gamification-updated')) })
+            .catch(() => {})
     }
 
     // Volume: native for direct audio, best-effort postMessage for Spotify
@@ -136,9 +150,9 @@ export default function MiniPlayer() {
                 applyVolume(volumeRef.current / 100)
                 ctrl.addListener('playback_update', ({ data }) => {
                     setPlaying(!data.isPaused)
-                    // Spotify sometimes returns seconds, sometimes ms; >3600 means ms
                     const inMs = data.duration > 3600
-                    setPosition(inMs ? data.position : data.position * 1000)
+                    if (!draggingSeekRef.current)
+                        setPosition(inMs ? data.position : data.position * 1000)
                     if (data.duration > 0) setDuration(inMs ? data.duration : data.duration * 1000)
 
                     if (!data.isPaused && data.position > 0) {
@@ -171,6 +185,7 @@ export default function MiniPlayer() {
         audio.addEventListener('play',            () => setPlaying(true))
         audio.addEventListener('pause',           () => setPlaying(false))
         audio.addEventListener('timeupdate', () => {
+            if (draggingSeekRef.current) return
             const ms = Math.floor(audio.currentTime * 1000)
             positionMsRef.current = ms
             setPosition(ms)
@@ -277,20 +292,50 @@ export default function MiniPlayer() {
         applyVolume(volume / 100)
     }, [volume])
 
-    // Global drag for volume bar
+    // Global drag — volume e seek, mouse e touch
     useEffect(() => {
+        function clientX(e) { return e.touches ? e.touches[0].clientX : e.clientX }
+
         function onMove(e) {
-            if (!draggingRef.current || !draggingBarRef.current) return
-            const r   = draggingBarRef.current.getBoundingClientRect()
-            const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width))
-            setVolume(Math.round(pct * 100))
+            if (draggingRef.current && draggingBarRef.current) {
+                if (e.cancelable) e.preventDefault()
+                const r   = draggingBarRef.current.getBoundingClientRect()
+                const pct = Math.max(0, Math.min(1, (clientX(e) - r.left) / r.width))
+                setVolume(Math.round(pct * 100))
+            }
+            if (draggingSeekRef.current && dragSeekBarRef.current) {
+                if (e.cancelable) e.preventDefault()
+                const r     = dragSeekBarRef.current.getBoundingClientRect()
+                const ratio = Math.max(0, Math.min(1, (clientX(e) - r.left) / r.width))
+                dragSeekPosRef.current = ratio * durationMsRef.current
+                setPosition(Math.round(dragSeekPosRef.current))
+            }
         }
-        function onUp() { draggingRef.current = false; draggingBarRef.current = null }
+
+        function onUp() {
+            draggingRef.current    = false
+            draggingBarRef.current = null
+            if (draggingSeekRef.current) {
+                draggingSeekRef.current = false
+                const ms = dragSeekPosRef.current
+                if (!isSpotifyRef.current && audioRef.current) {
+                    audioRef.current.currentTime = ms / 1000
+                } else if (isSpotifyRef.current && ctrlRef.current) {
+                    ctrlRef.current.seek(ms / 1000)
+                }
+                dragSeekBarRef.current = null
+            }
+        }
+
         window.addEventListener('mousemove', onMove)
         window.addEventListener('mouseup',   onUp)
+        window.addEventListener('touchmove', onMove, { passive: false })
+        window.addEventListener('touchend',  onUp)
         return () => {
             window.removeEventListener('mousemove', onMove)
             window.removeEventListener('mouseup',   onUp)
+            window.removeEventListener('touchmove', onMove)
+            window.removeEventListener('touchend',  onUp)
         }
     }, [])
 
@@ -326,15 +371,14 @@ export default function MiniPlayer() {
         }
     }
 
-    function handleSeek(e) {
-        if (!duration) return
-        const r     = e.currentTarget.getBoundingClientRect()
-        const ratio = (e.clientX - r.left) / r.width
-        if (track?.audioUrl && audioRef.current) {
-            audioRef.current.currentTime = (ratio * duration) / 1000
-        } else if (ctrlRef.current) {
-            ctrlRef.current.seek((ratio * duration) / 1000)
-        }
+    function startSeek(bar, cx) {
+        if (!durationMsRef.current || !bar) return
+        const r     = bar.getBoundingClientRect()
+        const ratio = Math.max(0, Math.min(1, (cx - r.left) / r.width))
+        dragSeekPosRef.current  = ratio * durationMsRef.current
+        draggingSeekRef.current = true
+        dragSeekBarRef.current  = bar
+        setPosition(Math.round(dragSeekPosRef.current))
     }
 
     function handlePrev() {
@@ -351,19 +395,68 @@ export default function MiniPlayer() {
     }
 
     function handleVolDown(e) {
+        const cx = e.touches ? e.touches[0].clientX : e.clientX
         draggingRef.current    = true
         draggingBarRef.current = volBarRef.current
         const r   = volBarRef.current.getBoundingClientRect()
-        const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width))
+        const pct = Math.max(0, Math.min(1, (cx - r.left) / r.width))
         setVolume(Math.round(pct * 100))
+    }
+
+    // Swipe para baixo para fechar o player expandido
+    useEffect(() => {
+        if (!expanded) return
+        const el = expRef.current
+        if (!el) return
+        function onTouchMove(e) {
+            if (swipeStartYRef.current === null) return
+            const delta = e.touches[0].clientY - swipeStartYRef.current
+            if (!swipeActiveRef.current) {
+                if (delta > 8)  { swipeActiveRef.current = true }
+                else if (delta < -5) { swipeStartYRef.current = null; return }
+                else return
+            }
+            if (delta > 0) {
+                if (e.cancelable) e.preventDefault()
+                swipeDeltaRef.current = delta
+                setSwipeDelta(delta)
+            }
+        }
+        el.addEventListener('touchmove', onTouchMove, { passive: false })
+        return () => el.removeEventListener('touchmove', onTouchMove)
+    }, [expanded])
+
+    function onExpTouchStart(e) {
+        const scrollTop = expBodyRef.current?.scrollTop ?? 0
+        if (scrollTop > 0) return
+        swipeStartYRef.current = e.touches[0].clientY
+        swipeActiveRef.current = false
+        swipeDeltaRef.current  = 0
+        setSwipeSnapping(false)
+    }
+
+    function onExpTouchEnd() {
+        if (!swipeActiveRef.current) { swipeStartYRef.current = null; return }
+        const delta = swipeDeltaRef.current
+        swipeStartYRef.current = null
+        swipeActiveRef.current = false
+        if (delta > 120) {
+            setExpanded(false)
+            setSwipeDelta(0)
+        } else {
+            setSwipeSnapping(true)
+            setSwipeDelta(0)
+            setTimeout(() => setSwipeSnapping(false), 280)
+        }
     }
 
     function handleVolExpDown(e) {
         if (!volBarExpRef.current) return
+        const cx = e.touches ? e.touches[0].clientX : e.clientX
         draggingRef.current    = true
         draggingBarRef.current = volBarExpRef.current
         const r   = volBarExpRef.current.getBoundingClientRect()
-        const pct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width))
+        const pct = Math.max(0, Math.min(1, (cx - r.left) / r.width))
         setVolume(Math.round(pct * 100))
     }
 
@@ -387,7 +480,19 @@ export default function MiniPlayer() {
     return (
         <>
         {expanded && track && (
-            <div className="player__exp">
+            <div
+                ref={expRef}
+                className="player__exp"
+                onTouchStart={onExpTouchStart}
+                onTouchEnd={onExpTouchEnd}
+                style={
+                    swipeDelta > 0
+                        ? { transform: `translateY(${swipeDelta}px)`, opacity: Math.max(0.2, 1 - swipeDelta / 350), transition: 'none' }
+                        : swipeSnapping
+                            ? { transform: 'translateY(0)', opacity: 1, transition: 'transform 260ms ease, opacity 260ms ease' }
+                            : undefined
+                }
+            >
                 <div
                     className="player__exp-bg"
                     style={track.coverUrl ? { backgroundImage: `url(${track.coverUrl})` } : undefined}
@@ -400,7 +505,7 @@ export default function MiniPlayer() {
                 >
                     <MdCloseFullscreen size={16} />
                 </button>
-                <div className="player__exp-body">
+                <div ref={expBodyRef} className="player__exp-body">
                     <div className="player__exp-cover">
                         {track.coverUrl
                             ? <img src={track.coverUrl} alt={track.name} />
@@ -417,25 +522,36 @@ export default function MiniPlayer() {
                         </div>
                     </div>
                     <div className="player__exp-btns">
-                        <button type="button" className="player__btn player__btn--soon" disabled aria-label="Aleatório">
-                            <FaRandom size={14} />
-                        </button>
-                        <button type="button" className="player__btn" onClick={handlePrev} disabled={!track} aria-label="Anterior">
-                            <FaStepBackward size={16} />
-                        </button>
+                        <div className="player__exp-btns-side">
+                            <button type="button" className="player__btn player__btn--soon" disabled aria-label="Aleatório">
+                                <FaRandom size={14} />
+                            </button>
+                            <button type="button" className="player__btn" onClick={handlePrev} disabled={!track} aria-label="Anterior">
+                                <FaStepBackward size={16} />
+                            </button>
+                        </div>
                         <button type="button" className="player__btn player__btn--play player__btn--play-lg" onClick={togglePlay} aria-label={playing ? 'Pausar' : 'Reproduzir'}>
                             {playing ? <FaPause size={16} /> : <FaPlay size={16} />}
                         </button>
-                        <button type="button" className="player__btn" onClick={nextTrack} disabled={!hasNext} aria-label="Próxima">
-                            <FaStepForward size={16} />
-                        </button>
-                        <button type="button" className={'player__btn' + (repeat ? ' is-active' : '')} onClick={() => setRepeat(r => !r)} aria-label="Repetir">
-                            <FaSyncAlt size={14} />
-                        </button>
+                        <div className="player__exp-btns-side player__exp-btns-side--right">
+                            <button type="button" className="player__btn" onClick={nextTrack} disabled={!hasNext} aria-label="Próxima">
+                                <FaStepForward size={16} />
+                            </button>
+                            <button type="button" className={'player__btn' + (repeat ? ' is-active' : '')} onClick={() => setRepeat(r => !r)} aria-label="Repetir">
+                                <FaSyncAlt size={14} />
+                            </button>
+                        </div>
                     </div>
                     <div className="player__exp-progress">
                         <span className="player__time">{fmtTime(position)}</span>
-                        <div className="player__exp-bar" role="slider" aria-label="Posição da faixa" onClick={handleSeek}>
+                        <div
+                            ref={seekBarExpRef}
+                            className="player__exp-bar"
+                            role="slider"
+                            aria-label="Posição da faixa"
+                            onMouseDown={e => startSeek(seekBarExpRef.current, e.clientX)}
+                            onTouchStart={e => { e.preventDefault(); startSeek(seekBarExpRef.current, e.touches[0].clientX) }}
+                        >
                             <div className="player__exp-bar-fill" style={{ width: `${pct}%` }} />
                         </div>
                         <span className="player__time">{fmtTime(duration)}</span>
@@ -449,6 +565,7 @@ export default function MiniPlayer() {
                             aria-label="Volume"
                             aria-valuenow={volume}
                             onMouseDown={handleVolExpDown}
+                            onTouchStart={handleVolExpDown}
                         >
                             <div className="player__exp-vol-fill" style={{ width: `${volume}%` }} />
                         </div>
@@ -540,7 +657,14 @@ export default function MiniPlayer() {
                 )}
                 <div className="player__progress">
                     <span className="player__time">{fmtTime(position)}</span>
-                    <div className="player__bar" role="slider" aria-label="Posição da faixa" onClick={handleSeek}>
+                    <div
+                        ref={seekBarRef}
+                        className="player__bar"
+                        role="slider"
+                        aria-label="Posição da faixa"
+                        onMouseDown={e => startSeek(seekBarRef.current, e.clientX)}
+                        onTouchStart={e => { e.preventDefault(); startSeek(seekBarRef.current, e.touches[0].clientX) }}
+                    >
                         <div className="player__bar-fill" style={{ width: `${pct}%` }} />
                     </div>
                     <span className="player__time">{fmtTime(duration)}</span>
@@ -558,6 +682,7 @@ export default function MiniPlayer() {
                         aria-label="Volume"
                         aria-valuenow={volume}
                         onMouseDown={handleVolDown}
+                        onTouchStart={handleVolDown}
                     >
                         <div className="player__volume-fill" style={{ width: `${volume}%` }} />
                     </div>

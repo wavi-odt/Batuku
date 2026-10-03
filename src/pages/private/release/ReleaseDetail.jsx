@@ -45,6 +45,7 @@ function toPlayerTrack(t, fallbackCover, artistName, artistProfileId) {
         durationMs:       t.durationMs,
         audioUrl:         t.audioUrl,
         source:           'upload',
+        playContext:      'release',
     }
 }
 
@@ -165,7 +166,7 @@ export default function ReleaseDetail() {
     const role     = getRole() === 'artist' ? 'artist' : 'fan'
     const navigate = useNavigate()
     const { track: currentTrack, setTrack } = usePlayer()
-    const realUser  = useCurrentUser()
+    const { user: realUser } = useCurrentUser()
     const { showToast } = useToast()
     const coverInputRef = useRef(null)
 

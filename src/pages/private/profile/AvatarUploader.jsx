@@ -63,6 +63,7 @@ export default function AvatarUploader({ currentAvatarUrl, isArtist, onSuccess, 
             }
 
             onSuccess(data.avatarUrl)
+            window.dispatchEvent(new Event('batuku:user-updated'))
             onClose()
         } catch {
             setError('Falha na ligação ao servidor. Verifica a tua rede e tenta novamente.')

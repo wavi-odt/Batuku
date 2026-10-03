@@ -104,3 +104,45 @@
     border-color: var(--color-coral);
     background: var(--color-coral-dim);
 }
+
+@media (max-width: 600px) {
+    .mkt-lib__item {
+        grid-template-columns: 44px 1fr auto;
+        grid-template-rows: auto auto;
+        gap: 4px 10px;
+        padding: 10px 8px;
+    }
+    /* Capa ocupa as duas linhas */
+    .mkt-lib__cover {
+        grid-column: 1;
+        grid-row: 1 / 3;
+        align-self: center;
+    }
+    /* Título + artista na linha 1 */
+    .mkt-lib__info {
+        grid-column: 2;
+        grid-row: 1;
+        align-self: end;
+    }
+    /* Licença na linha 2 */
+    .mkt-lib__lic {
+        grid-column: 2;
+        grid-row: 2;
+        align-self: start;
+        justify-self: start;
+    }
+    /* Preço/data ocultos */
+    .mkt-lib__meta { display: none; }
+    /* Botão download: só ícone, centrado verticalmente */
+    .mkt-lib__download {
+        grid-column: 3;
+        grid-row: 1 / 3;
+        align-self: center;
+        padding: 0;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
+        border-radius: var(--radius-sm);
+    }
+    .mkt-lib__download span { display: none; }
+}

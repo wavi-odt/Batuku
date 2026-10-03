@@ -122,8 +122,7 @@
 .trk__status-tabs {
     display: flex;
     gap: 4px;
-    flex: 1;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 
 .trk__status-tab {

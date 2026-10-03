@@ -132,22 +132,33 @@
     transform: translateY(0);
 }
 
+.lib__pl-title-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 0 0 4px;
+}
+
 .lib__pl-title {
     font-size: 13px;
     font-weight: var(--fw-semibold);
-    margin: 0 4px 4px;
+    flex: 1;
+    min-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: inherit;
+    text-decoration: none;
 }
 
 .lib__pl-meta {
     font-size: 11px;
     color: var(--color-ink-mute);
-    margin: 0 4px;
+    margin: 0;
     display: flex;
     align-items: center;
     gap: 4px;
+    text-decoration: none;
 }
 
 /* ─── Cover wrapper (posiciona o menu de 3 pontinhos) ──────────── */
@@ -168,31 +179,24 @@
     background: var(--color-surface-2);
 }
 
-/* ─── Menu 3 pontinhos na capa ──────────────────────────────────── */
+/* ─── Menu 3 pontinhos ao lado do título ───────────────────────── */
 .lib__pl-menu {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    z-index: 10;
-    opacity: 0;
-    transition: opacity var(--duration-fast) var(--ease-out);
+    position: relative;
+    flex-shrink: 0;
 }
 
-.lib__pl-card:hover .lib__pl-menu,
-.lib__pl-menu--open {
-    opacity: 1;
+
+.lib__pl-menu .trk-menu__btn {
+    color: var(--color-ink-soft);
+}
+.lib__pl-menu .trk-menu__btn:hover,
+.lib__pl-menu .trk-menu__btn--open {
+    color: var(--color-ink);
 }
 
-.lib__pl-menu__popover {
-    bottom: auto;
-    top: calc(100% + 6px);
-}
-
-/* ─── Card body link (título + meta clicáveis) ──────────────────── */
+/* ─── Card body ─────────────────────────────────────────────────── */
 .lib__pl-card-body {
     display: block;
-    text-decoration: none;
-    color: inherit;
 }
 
 .lib__pl-cover-img {

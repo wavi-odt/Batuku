@@ -41,8 +41,13 @@ function TrackMenu({ onDelete }) {
     useEffect(() => {
         if (!open) return
         const handle = e => { if (!ref.current?.contains(e.target)) setOpen(false) }
+        const onScroll = () => setOpen(false)
         document.addEventListener('mousedown', handle)
-        return () => document.removeEventListener('mousedown', handle)
+        window.addEventListener('scroll', onScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', handle)
+            window.removeEventListener('scroll', onScroll, true)
+        }
     }, [open])
 
     return (
@@ -137,8 +142,13 @@ export default function ProjectDetail() {
     useEffect(() => {
         if (!toolMenu) return
         const handle = e => { if (!toolMenuRef.current?.contains(e.target)) setToolMenu(false) }
+        const onScroll = () => setToolMenu(false)
         document.addEventListener('mousedown', handle)
-        return () => document.removeEventListener('mousedown', handle)
+        window.addEventListener('scroll', onScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', handle)
+            window.removeEventListener('scroll', onScroll, true)
+        }
     }, [toolMenu])
 
     useEffect(() => {

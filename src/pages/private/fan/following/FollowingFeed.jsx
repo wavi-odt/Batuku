@@ -15,7 +15,7 @@ function ArtistAvatar({ name }) {
 
 export default function FollowingFeed({ tracks }) {
     const { setTrack } = usePlayer()
-    const queue = tracks.map(toPlayerTrack)
+    const queue = tracks.map(t => toPlayerTrack(t, 'following'))
 
     return (
         <div>

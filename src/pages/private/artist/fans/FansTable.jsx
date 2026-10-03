@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react'
-import { FaSearch } from 'react-icons/fa'
+import { useState, useMemo, useEffect, useRef } from 'react'
+import { FaSearch, FaChevronDown, FaCheck } from 'react-icons/fa'
 import { Link, useSearchParams } from 'react-router-dom'
 
 const TIER_TABS = [
@@ -17,6 +17,52 @@ const SORT_OPTIONS = [
     { key: 'comments', label: 'Mais comentários'  },
     { key: 'recent',   label: 'Mais recentes'     },
 ]
+
+function SortDropdown({ value, onChange, options }) {
+    const [open, setOpen] = useState(false)
+    const ref = useRef(null)
+    const current = options.find(o => o.key === value)
+    useEffect(() => {
+        if (!open) return
+        function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false) }
+        function onScroll() { setOpen(false) }
+        document.addEventListener('mousedown', onDown)
+        window.addEventListener('scroll', onScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', onDown)
+            window.removeEventListener('scroll', onScroll, true)
+        }
+    }, [open])
+    return (
+        <div className="fns__sort-wrap" ref={ref}>
+            <button
+                type="button"
+                className={'fns__sort-btn' + (open ? ' fns__sort-btn--open' : '')}
+                onClick={() => setOpen(o => !o)}
+            >
+                {current?.label}
+                <FaChevronDown size={8} className={'fns__sort-chevron' + (open ? ' fns__sort-chevron--open' : '')} />
+            </button>
+            {open && (
+                <div className="fns__sort-menu">
+                    {options.map(o => (
+                        <button
+                            key={o.key}
+                            type="button"
+                            className={'fns__sort-option' + (o.key === value ? ' fns__sort-option--active' : '')}
+                            onClick={() => { onChange(o.key); setOpen(false) }}
+                        >
+                            <span className="fns__sort-option-check">
+                                {o.key === value && <FaCheck size={8} />}
+                            </span>
+                            {o.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
 
 function hueFromId(id) {
     return (id * 83) % 360
@@ -112,11 +158,7 @@ export default function FansTable({ fans, loading }) {
                     ))}
                 </div>
 
-                <select className="fns__sort" value={sort} onChange={e => setSort(e.target.value)}>
-                    {SORT_OPTIONS.map(o => (
-                        <option key={o.key} value={o.key}>{o.label}</option>
-                    ))}
-                </select>
+                <SortDropdown value={sort} onChange={setSort} options={SORT_OPTIONS} />
             </div>
 
             <div className="fns__table">

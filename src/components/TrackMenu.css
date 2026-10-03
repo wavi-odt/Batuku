@@ -27,6 +27,8 @@
 }
 
 .trk-menu__popover {
+    position: absolute;
+    z-index: 200;
     min-width: 200px;
     max-width: 260px;
     max-height: 280px;

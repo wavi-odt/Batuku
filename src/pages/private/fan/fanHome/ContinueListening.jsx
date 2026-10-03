@@ -1,7 +1,6 @@
 import { FaPlay, FaMusic } from 'react-icons/fa'
 import { Link }            from 'react-router-dom'
 import { usePlayer }       from '../../../../context/PlayerContext'
-import { API, getToken }   from '../../../../utils/auth'
 import ClickableName       from '../../../../components/ClickableName'
 import TrackMenu           from '../../../../components/TrackMenu.jsx'
 import './ContinueListening.css'
@@ -9,26 +8,19 @@ import './ContinueListening.css'
 export default function ContinueListening({ tracks }) {
     const { setTrack } = usePlayer()
 
-    async function handlePlay(t) {
-        // recently-played não inclui audioUrl, buscar as tracks do artista (que já incluem)
-        const res = await fetch(`${API}/api/tracks/artist/${t.artistId}`, {
-            headers: { Authorization: `Bearer ${getToken()}` },
+    function handlePlay(t, list) {
+        if (!t.audioUrl && !t.spotifyId) return
+        const toTrack = x => ({
+            id:              x.trackId,
+            name:            x.title,
+            artistName:      x.artistName,
+            artistProfileId: x.artistId ?? null,
+            coverUrl:        x.coverUrl ?? null,
+            audioUrl:        x.audioUrl ?? null,
+            spotifyId:       x.spotifyId ?? null,
+            playContext:     'home',
         })
-        if (!res.ok) return
-        const artistTracks = await res.json()
-        const full = artistTracks.find(tr => tr.id === t.trackId)
-        if (!full?.audioUrl) return
-
-        setTrack({
-            id:              full.id,
-            name:            full.title,
-            artistName:      full.artistName,
-            artistProfileId: full.artistProfileId ?? null,
-            coverUrl:        full.coverUrl ?? t.coverUrl ?? null,
-            audioUrl:        full.audioUrl,
-            durationMs:      full.durationMs ?? null,
-            source:          'upload',
-        })
+        setTrack(toTrack(t), list.filter(x => x.audioUrl || x.spotifyId).map(toTrack))
     }
 
     return (
@@ -44,7 +36,7 @@ export default function ContinueListening({ tracks }) {
             <div className="continue">
                 {tracks.map(t => (
                     <div key={t.trackId} className="track-card">
-                        <div className="track-card__cover" onClick={() => handlePlay(t)}>
+                        <div className="track-card__cover" onClick={() => handlePlay(t, tracks)}>
                             {t.coverUrl
                                 ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} />
                                 : <div style={{ width: '100%', height: '100%', borderRadius: 10, background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -53,7 +45,7 @@ export default function ContinueListening({ tracks }) {
                             }
                             <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
                         </div>
-                        <div className="track-card__bottom" onClick={() => handlePlay(t)}>
+                        <div className="track-card__bottom" onClick={() => handlePlay(t, tracks)}>
                             <div className="track-card__title-row">
                                 <div className="track-card__title">{t.title}</div>
                                 <div onClick={e => e.stopPropagation()}>

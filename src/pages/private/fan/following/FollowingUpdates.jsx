@@ -7,7 +7,7 @@ import TrackMenu            from '../../../../components/TrackMenu.jsx'
 
 export default function FollowingUpdates({ tracks }) {
     const { setTrack } = usePlayer()
-    const queue = tracks.map(toPlayerTrack)
+    const queue = tracks.map(t => toPlayerTrack(t, 'following'))
 
     return (
         <section className="home__section">
@@ -20,10 +20,7 @@ export default function FollowingUpdates({ tracks }) {
 
             <div className="continue">
                 {tracks.map((t, i) => (
-                    <div key={t.id} className="track-card" style={{ position: 'relative' }}>
-                        <div onClick={e => e.stopPropagation()} style={{ position: 'absolute', top: 6, right: 6, zIndex: 10 }}>
-                            <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId} />
-                        </div>
+                    <div key={t.id} className="track-card">
                         <div
                             className="track-card__cover"
                             onClick={() => setTrack(queue[i], queue)}
@@ -39,20 +36,25 @@ export default function FollowingUpdates({ tracks }) {
                             <span className="flw__update-type">Faixa</span>
                         </div>
                         <div
-                            className="track-card__title"
+                            className="track-card__bottom"
                             onClick={() => setTrack(queue[i], queue)}
                             style={{ cursor: 'pointer' }}
                         >
-                            {t.title}
+                            <div className="track-card__title-row">
+                                <div className="track-card__title">{t.title}</div>
+                                <div onClick={e => e.stopPropagation()}>
+                                    <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId} />
+                                </div>
+                            </div>
+                            <Link
+                                to={`/artists/${t.artistProfileId}`}
+                                className="track-card__artist"
+                                onClick={e => e.stopPropagation()}
+                            >
+                                {t.artistName}
+                            </Link>
+                            <TimeAgo isoStr={t.createdAt} className="flw__update-time" />
                         </div>
-                        <Link
-                            to={`/artists/${t.artistProfileId}`}
-                            className="track-card__artist"
-                            style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}
-                        >
-                            {t.artistName}
-                        </Link>
-                        <TimeAgo isoStr={t.createdAt} className="flw__update-time" />
                     </div>
                 ))}
             </div>

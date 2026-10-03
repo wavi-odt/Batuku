@@ -158,6 +158,7 @@ body.has-player .player {
 .player__bar {
     flex: 1;
     height: 4px;
+    touch-action: none;
     background-color: rgba(255, 255, 255, 0.08);
     border-radius: 2px;
     overflow: hidden;
@@ -191,6 +192,7 @@ body.has-player .player {
 .player__volume-bar {
     width: 0;
     opacity: 0;
+    touch-action: none;
     pointer-events: none;
     height: 4px;
     background-color: rgba(255, 255, 255, 0.08);
@@ -278,6 +280,7 @@ body.has-player .player {
     position: absolute;
     top: 20px;
     right: 20px;
+    z-index: 3;
     width: 36px;
     height: 36px;
     border-radius: 50%;
@@ -289,7 +292,6 @@ body.has-player .player {
     align-items: center;
     justify-content: center;
     transition: color var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
-    z-index: 2;
 }
 .player__exp-close:hover {
     color: var(--color-ink);
@@ -309,8 +311,8 @@ body.has-player .player {
     gap: 24px;
     width: 100%;
     max-width: min(560px, 90vw);
-    padding: 0 32px;
-    padding-bottom: 80px;
+    padding: 72px 32px 80px;
+    overflow-y: auto;
 }
 
 .player__exp-cover {
@@ -355,8 +357,21 @@ body.has-player .player {
 
 .player__exp-btns {
     display: flex;
-    gap: 16px;
     align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+
+.player__exp-btns-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.player__exp-btns-side--right {
+    justify-content: flex-start;
 }
 
 .player__btn--play-lg {
@@ -374,6 +389,7 @@ body.has-player .player {
 .player__exp-bar {
     flex: 1;
     height: 4px;
+    touch-action: none;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 2px;
     overflow: hidden;
@@ -399,6 +415,7 @@ body.has-player .player {
 .player__exp-vol-bar {
     flex: 1;
     height: 4px;
+    touch-action: none;
     background-color: rgba(255, 255, 255, 0.1);
     border-radius: 2px;
     overflow: hidden;
@@ -413,6 +430,22 @@ body.has-player .player {
     border-radius: 2px;
 }
 
+
+/* ─── Player expandido em ecrãs pequenos ─────────────────────────── */
+@media (max-width: 520px) {
+    .player__exp {
+        overflow-y: auto;
+        justify-content: flex-start;
+    }
+    .player__exp-body {
+        padding: 72px 20px 60px;
+        gap: 16px;
+    }
+    .player__exp-cover {
+        width: min(72vw, 280px);
+        height: min(72vw, 280px);
+    }
+}
 
 /* ─── Mobile ──────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -455,8 +488,8 @@ body.has-player .player {
         flex-shrink: 0;
     }
     .player__btns { gap: 2px; }
-    .player__btn--soon,
-    .player__btn--repeat { display: none; }
+    .player .player__btn--soon,
+    .player .player__btn--repeat { display: none; }
 
     /* progress + timestamps: barra fina fixa no fundo do player */
     .player__progress {

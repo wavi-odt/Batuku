@@ -7,7 +7,7 @@
    por um fetch que devolva o mesmo shape (ver data/profile.js).
    ───────────────────────────────────────────────────────────────── */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FaTrophy, FaCheckCircle, FaCamera, FaCog, FaUser } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
@@ -90,9 +90,8 @@ function ProfileHeader({ role, data, avatarUrl, onAvatarEdit, onEditProfile }) {
                 <div className="prof__identity">
                     <div className="prof__name-row">
                         <h1 className="prof__name">{data.name}</h1>
-                        {isArtist
-                            ? <span className="prof__verified"><FaCheckCircle size={12} /> Verificado</span>
-                            : <span className="prof__level-chip"><FaTrophy size={11} /> Nível {data.level}</span>}
+                        {data.verified && <span className="prof__verified"><FaCheckCircle size={12} /> Verificado</span>}
+                        {!isArtist && data.level != null && <span className="prof__level-chip"><FaTrophy size={11} /> Nível {data.level}</span>}
                     </div>
                     <div className="prof__meta">
                         <span className="prof__meta-handle">{data.handle}</span>
@@ -168,7 +167,7 @@ export default function Profile({ role = 'fan' }) {
         if (realUser?.picture) setAvatarUrl(realUser.picture);
     }, [realUser?.picture]);
 
-    useEffect(() => {
+    const fetchGamification = useCallback(() => {
         const token = getToken();
         if (!token) return;
         const headers = { Authorization: `Bearer ${token}` };
@@ -180,6 +179,12 @@ export default function Profile({ role = 'fan' }) {
             setAllBadges(Array.isArray(badges) ? badges : []);
         }).catch(() => {});
     }, []);
+
+    useEffect(() => {
+        fetchGamification();
+        window.addEventListener('batuku:gamification-updated', fetchGamification);
+        return () => window.removeEventListener('batuku:gamification-updated', fetchGamification);
+    }, [fetchGamification]);
 
     function refreshArtistMe() {
         const token = localStorage.getItem('token');
@@ -243,7 +248,7 @@ export default function Profile({ role = 'fan' }) {
                 got,
                 meta: got
                     ? formatEarned(earned?.earnedAt)
-                    : `${(gamifProfile?.totalPoints ?? 0).toLocaleString('pt-PT')} / ${b.pointsRequired.toLocaleString('pt-PT')} pts`,
+                    : (gamifProfile?.badgeProgressLabels?.[b.id] ?? `${(gamifProfile?.totalPoints ?? 0).toLocaleString('pt-PT')} pts`),
             };
         })
         : null;
@@ -256,9 +261,10 @@ export default function Profile({ role = 'fan' }) {
     } : {};
 
     const data = {
-        name:        realUser?.name   ?? null,
-        handle:      realUser?.handle ?? null,
-        joined:      realUser?.joined ?? null,
+        name:        realUser?.name     ?? null,
+        handle:      realUser?.handle   ?? null,
+        joined:      realUser?.joined   ?? null,
+        verified:    realUser?.verified ?? false,
         badges:      realBadges ?? [],
         level:       gamifProfile?.level       ?? null,
         points:      gamifProfile?.totalPoints ?? 0,

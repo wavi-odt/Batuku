@@ -167,3 +167,17 @@
     border-left: 2px solid var(--color-border);
     margin-top: 12px;
 }
+
+@media (max-width: 500px) {
+    /* Botões aceitar/recusar em largura total */
+    .mkt-prod-offer__btns {
+        flex-direction: column-reverse;
+    }
+    .mkt-prod-offer__btn {
+        width: 100%;
+        text-align: center;
+    }
+    /* Lado direito (valor + status): mais compacto */
+    .mkt-prod-offer__amount { font-size: 16px; }
+    .mkt-prod-offer__side   { gap: 4px; }
+}

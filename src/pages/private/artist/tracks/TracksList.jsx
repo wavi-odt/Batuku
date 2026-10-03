@@ -191,7 +191,7 @@ export default function TracksList({ tracks, loading, onDelete, onUpdate, artist
         id: t.id, name: t.title, coverUrl: t.coverUrl,
         artistName: t.artistName ?? null,
         artistProfileId: t.artistProfileId ?? artistProfileId ?? null,
-        durationMs: t.durationMs, audioUrl: t.audioUrl, source: 'upload',
+        durationMs: t.durationMs, audioUrl: t.audioUrl, source: 'upload', playContext: 'direct',
     }))
 
     return (

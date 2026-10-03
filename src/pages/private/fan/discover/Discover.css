@@ -59,6 +59,22 @@
     margin-bottom: var(--space-4);
 }
 
+.disc__hero-main {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-8);
+}
+
+.disc__hero-text { min-width: 0; }
+
+.disc__hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-3);
+    flex-shrink: 0;
+}
+
 .disc__hero-title {
     font-size: clamp(28px, 4vw, 48px);
     font-weight: var(--fw-semibold);
@@ -68,11 +84,13 @@
 }
 
 .disc__hero-artist {
-    font-size: var(--fs-md);
-    color: var(--color-ink-soft);
-    margin: 0 0 var(--space-5);
-    font-weight: var(--fw-medium);
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    margin: 0;
+    font-weight: 400;
+    transition: color var(--duration-fast) var(--ease-out);
 }
+.disc__hero-artist:hover { color: var(--color-ink-soft); }
 
 .disc__hero-desc {
     font-size: var(--fs-sm);

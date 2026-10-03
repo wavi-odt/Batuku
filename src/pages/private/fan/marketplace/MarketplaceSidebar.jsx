@@ -2,7 +2,8 @@
    MarketplaceSidebar.jsx, Carrinho + Top Produtores.
    ───────────────────────────────────────────────────────────────── */
 
-import { useState }   from 'react'
+import { useState }          from 'react'
+import { FaShoppingCart }   from 'react-icons/fa'
 import ArtistArtwork  from '../../../../components/PublicComponets/ArtistArtwork.jsx'
 import ClickableName  from '../../../../components/ClickableName.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
@@ -97,7 +98,9 @@ export default function MarketplaceSidebar({ cart, onRemove, onClearCart, produc
                 {/* Estado: carrinho vazio */}
                 {!done && cart.length === 0 && (
                     <div className="mkt__cart-empty">
-                        <div className="mkt__cart-empty-icon">🛒</div>
+                        <div className="mkt__cart-empty-icon">
+                            <FaShoppingCart size={18} />
+                        </div>
                         <div>O teu carrinho está vazio</div>
                     </div>
                 )}

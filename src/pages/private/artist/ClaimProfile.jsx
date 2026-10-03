@@ -1,9 +1,8 @@
-import { useState, useRef, useEffect } from 'react'
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useState, useRef } from 'react'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { SiSpotify } from 'react-icons/si'
 import { FaCamera, FaRedo, FaCheck, FaFileImage } from 'react-icons/fa'
-import AppShell from '../../../components/HomeComponents/AppShell'
-import { getToken, getRole, isPendingClaim, setAwaitingValidation } from '../../../utils/auth.js'
+import { getToken, isPendingClaim, setAwaitingValidation } from '../../../utils/auth.js'
 import { useToast } from '../../../context/ToastContext.jsx'
 import './ClaimProfile.css'
 
@@ -518,13 +517,10 @@ function Stepper({ current }) {
 
 /* ── Página principal ────────────────────────────────────────────────── */
 export default function ClaimProfile() {
-    const role = getRole();
-    const backTo = role === 'fan' ? '/home' : '/dashboard';
     const { showToast } = useToast();
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
-    // claimToken presente → artista em registo (sem JWT); ausente → utilizador já existente (JWT)
     const claimToken = searchParams.get('claimToken');
     const isNewRegistration = !!claimToken;
 
@@ -534,25 +530,6 @@ export default function ClaimProfile() {
     const [docBlob,       setDocBlob]       = useState(null);
     const [submitting,    setSubmitting]    = useState(false);
     const [submitErr,     setSubmitErr]     = useState('');
-    const [checking,      setChecking]      = useState(!isNewRegistration);
-
-    // Para utilizadores já existentes: verifica se já tem um claim pendente
-    useEffect(() => {
-        if (isNewRegistration) return;
-        fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-claims/me`, {
-            headers: { Authorization: `Bearer ${getToken()}` },
-        })
-            .then(res => res.ok ? res.json() : [])
-            .then(list => {
-                const pending = list.find(c => c.status === 'PENDING');
-                if (pending) {
-                    setAwaitingValidation();
-                    navigate('/aguardar-validacao', { replace: true });
-                }
-            })
-            .catch(() => {})
-            .finally(() => setChecking(false));
-    }, [navigate, isNewRegistration]);
 
     async function handleSubmit() {
         setSubmitting(true);
@@ -563,20 +540,11 @@ export default function ClaimProfile() {
             body.append('selfie',     selfieBlob, 'selfie.jpg');
             body.append('idDocument', docBlob, docBlob instanceof File ? docBlob.name : 'document.jpg');
 
-            let res;
-            if (isNewRegistration) {
-                body.append('claimToken', claimToken);
-                res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/artist-claim-submit`, {
-                    method: 'POST',
-                    body,
-                });
-            } else {
-                res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/artist-claims`, {
-                    method: 'POST',
-                    headers: { Authorization: `Bearer ${getToken()}` },
-                    body,
-                });
-            }
+            body.append('claimToken', claimToken);
+            const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/artist-claim-submit`, {
+                method: 'POST',
+                body,
+            });
 
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}));
@@ -596,17 +564,12 @@ export default function ClaimProfile() {
 
     const content = (
         <div className="claim-page">
-            {!locked && !isNewRegistration && (
-                <Link to={backTo} className="claim-back">← {role === 'fan' ? 'Início' : 'Dashboard'}</Link>
-            )}
             <h1 className="claim-page__title">Reclamar perfil Spotify</h1>
 
-            {!checking && <Stepper current={step} />}
+            <Stepper current={step} />
 
             <div className="claim-card">
-                {checking ? (
-                    <p className="claim-checking">A verificar…</p>
-                ) : step === 0 ? (
+                {step === 0 ? (
                     <StepSpotify
                         selected={spotifyArtist}
                         onSelect={setSpotifyArtist}
@@ -641,9 +604,5 @@ export default function ClaimProfile() {
         </div>
     );
 
-    if (locked || isNewRegistration) {
-        return <main className="claim-standalone">{content}</main>;
-    }
-
-    return <AppShell role={role}>{content}</AppShell>;
+    return <main className="claim-standalone">{content}</main>;
 }

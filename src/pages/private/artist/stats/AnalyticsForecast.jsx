@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { BsStars } from 'react-icons/bs'
 import { API, getToken } from '../../../../utils/auth.js'
 import './Analytics.css'
 import './AnalyticsForecast.css'
@@ -269,7 +268,6 @@ export default function AnalyticsForecast() {
 
             {insight && (
                 <div className="fcst__insight">
-                    <BsStars className="fcst__insight-icon" size={14} />
                     <p className="fcst__insight-text">{insight}</p>
                 </div>
             )}

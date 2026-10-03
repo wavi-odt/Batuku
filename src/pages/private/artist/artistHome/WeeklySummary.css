@@ -1,0 +1,52 @@
+.weekly-summary {
+    padding: 18px 20px;
+    background: linear-gradient(135deg,
+        rgba(230, 165, 50, 0.06) 0%,
+        rgba(59, 110, 255, 0.06) 100%);
+    border: 1px solid rgba(230, 165, 50, 0.2);
+    border-radius: var(--radius-lg);
+    margin-bottom: 32px;
+}
+
+.weekly-summary__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-mustard);
+    margin-bottom: 10px;
+}
+
+.weekly-summary__text {
+    font-size: var(--fs-sm);
+    color: var(--color-ink-soft);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.weekly-summary__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.weekly-summary__skel-line {
+    height: 14px;
+    border-radius: 6px;
+    background: linear-gradient(90deg,
+        rgba(255,255,255,0.04) 0%,
+        rgba(255,255,255,0.08) 50%,
+        rgba(255,255,255,0.04) 100%);
+    background-size: 200% 100%;
+    animation: skel-shimmer 1.4s ease infinite;
+}
+
+.weekly-summary__skel-line--short { width: 65%; }
+
+@keyframes skel-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { FaPlay, FaLock, FaGlobe, FaHeart, FaMusic, FaEllipsisH, FaPen, FaTrash, FaBookmark } from 'react-icons/fa'
 
@@ -30,17 +31,45 @@ function FavoritosCard({ playlist }) {
 }
 
 function PlaylistCard({ pl, onEdit, onDelete, onToggleVisibility, onUnsave }) {
-    const [menuOpen, setMenuOpen] = useState(false);
-    const menuRef = useRef(null);
+    const [menuOpen,     setMenuOpen]     = useState(false);
+    const [popoverStyle, setPopoverStyle] = useState({});
+    const btnRef     = useRef(null);
+    const popoverRef = useRef(null);
 
     useEffect(() => {
         if (!menuOpen) return;
-        function handle(e) {
-            if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
+        function handleClick(e) {
+            if (
+                btnRef.current     && !btnRef.current.contains(e.target) &&
+                popoverRef.current && !popoverRef.current.contains(e.target)
+            ) setMenuOpen(false);
         }
-        document.addEventListener('mousedown', handle);
-        return () => document.removeEventListener('mousedown', handle);
+        function handleScroll() { setMenuOpen(false); }
+        document.addEventListener('mousedown', handleClick);
+        window.addEventListener('scroll', handleScroll, true);
+        return () => {
+            document.removeEventListener('mousedown', handleClick);
+            window.removeEventListener('scroll', handleScroll, true);
+        };
     }, [menuOpen]);
+
+    function handleOpen(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!menuOpen) {
+            const rect    = btnRef.current.getBoundingClientRect();
+            const minWidth = 200;
+            const gap      = 6;
+            const style    = { position: 'fixed', zIndex: 9999, top: rect.bottom + gap };
+            if (rect.right - minWidth >= 8) {
+                style.right = window.innerWidth - rect.right;
+            } else {
+                style.left = Math.max(8, rect.left);
+            }
+            setPopoverStyle(style);
+        }
+        setMenuOpen(v => !v);
+    }
 
     return (
         <div className="lib__pl-card">
@@ -54,82 +83,82 @@ function PlaylistCard({ pl, onEdit, onDelete, onToggleVisibility, onUnsave }) {
                         <FaPlay size={11} />
                     </span>
                 </Link>
+            </div>
 
-                <div
-                    className={'lib__pl-menu trk-menu' + (menuOpen ? ' lib__pl-menu--open' : '')}
-                    ref={menuRef}
-                >
-                    <button
-                        type="button"
-                        className={'trk-menu__btn' + (menuOpen ? ' trk-menu__btn--open' : '')}
-                        onClick={e => { e.preventDefault(); e.stopPropagation(); setMenuOpen(v => !v); }}
-                        aria-label="Mais opções"
-                    >
-                        <FaEllipsisH size={13} />
-                    </button>
+            <div className="lib__pl-card-body">
+                <div className="lib__pl-title-row">
+                    <Link to={`/playlists/${pl.id}`} className="lib__pl-title">{pl.name}</Link>
+                    <div className={'lib__pl-menu trk-menu' + (menuOpen ? ' lib__pl-menu--open' : '')}>
+                        <button
+                            type="button"
+                            ref={btnRef}
+                            className={'trk-menu__btn' + (menuOpen ? ' trk-menu__btn--open' : '')}
+                            onClick={handleOpen}
+                            aria-label="Mais opções"
+                        >
+                            <FaEllipsisH size={13} />
+                        </button>
 
-                    {menuOpen && (
-                        <div className="trk-menu__popover lib__pl-menu__popover" onClick={e => e.stopPropagation()}>
-                            {pl.owner ? (
-                                <>
-                                    <button
-                                        type="button"
-                                        className="trk-menu__item"
-                                        onClick={() => { setMenuOpen(false); onEdit(pl); }}
-                                    >
-                                        <div className="trk-menu__pl-cover trk-menu__create-icon">
-                                            <FaPen size={10} />
-                                        </div>
-                                        <span className="trk-menu__pl-name">Editar playlist</span>
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="trk-menu__item"
-                                        onClick={() => { setMenuOpen(false); onToggleVisibility(pl); }}
-                                    >
-                                        <div className="trk-menu__pl-cover trk-menu__create-icon">
-                                            {pl.isPublic ? <FaLock size={10} /> : <FaGlobe size={10} />}
-                                        </div>
-                                        <span className="trk-menu__pl-name">
-                                            {pl.isPublic ? 'Tornar privada' : 'Tornar pública'}
-                                        </span>
-                                    </button>
-                                    <div className="trk-menu__divider" />
+                        {menuOpen && createPortal(
+                            <div ref={popoverRef} className="trk-menu__popover" style={popoverStyle} onClick={e => e.stopPropagation()}>
+                                {pl.owner ? (
+                                    <>
+                                        <button
+                                            type="button"
+                                            className="trk-menu__item"
+                                            onClick={() => { setMenuOpen(false); onEdit(pl); }}
+                                        >
+                                            <div className="trk-menu__pl-cover trk-menu__create-icon">
+                                                <FaPen size={10} />
+                                            </div>
+                                            <span className="trk-menu__pl-name">Editar playlist</span>
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className="trk-menu__item"
+                                            onClick={() => { setMenuOpen(false); onToggleVisibility(pl); }}
+                                        >
+                                            <div className="trk-menu__pl-cover trk-menu__create-icon">
+                                                {pl.isPublic ? <FaLock size={10} /> : <FaGlobe size={10} />}
+                                            </div>
+                                            <span className="trk-menu__pl-name">
+                                                {pl.isPublic ? 'Tornar privada' : 'Tornar pública'}
+                                            </span>
+                                        </button>
+                                        <div className="trk-menu__divider" />
+                                        <button
+                                            type="button"
+                                            className="trk-menu__item trk-menu__item--remove"
+                                            onClick={() => { setMenuOpen(false); onDelete(pl); }}
+                                        >
+                                            <div className="trk-menu__pl-cover trk-menu__remove-icon">
+                                                <FaTrash size={10} />
+                                            </div>
+                                            <span className="trk-menu__pl-name">Remover playlist</span>
+                                        </button>
+                                    </>
+                                ) : (
                                     <button
                                         type="button"
                                         className="trk-menu__item trk-menu__item--remove"
-                                        onClick={() => { setMenuOpen(false); onDelete(pl); }}
+                                        onClick={() => { setMenuOpen(false); onUnsave(pl); }}
                                     >
                                         <div className="trk-menu__pl-cover trk-menu__remove-icon">
-                                            <FaTrash size={10} />
+                                            <FaBookmark size={10} />
                                         </div>
-                                        <span className="trk-menu__pl-name">Remover playlist</span>
+                                        <span className="trk-menu__pl-name">Remover da biblioteca</span>
                                     </button>
-                                </>
-                            ) : (
-                                <button
-                                    type="button"
-                                    className="trk-menu__item trk-menu__item--remove"
-                                    onClick={() => { setMenuOpen(false); onUnsave(pl); }}
-                                >
-                                    <div className="trk-menu__pl-cover trk-menu__remove-icon">
-                                        <FaBookmark size={10} />
-                                    </div>
-                                    <span className="trk-menu__pl-name">Remover da biblioteca</span>
-                                </button>
-                            )}
-                        </div>
-                    )}
+                                )}
+                            </div>,
+                            document.body
+                        )}
+                    </div>
                 </div>
-            </div>
-
-            <Link to={`/playlists/${pl.id}`} className="lib__pl-card-body">
-                <div className="lib__pl-title">{pl.name}</div>
-                <div className="lib__pl-meta">
+                <Link to={`/playlists/${pl.id}`} className="lib__pl-meta">
                     {pl.isPublic ? <FaGlobe size={9} /> : <FaLock size={9} />}
                     {pl.isPublic ? 'Pública' : 'Privada'} · {pl.trackCount ?? 0} {pl.trackCount === 1 ? 'faixa' : 'faixas'}
-                </div>
-            </Link>
+                </Link>
+            </div>
         </div>
     );
 }

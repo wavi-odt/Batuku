@@ -411,7 +411,7 @@ function TabLinks({ onSaved }) {
 }
 
 /* ── Tab: Segurança ──────────────────────────────────────────────────── */
-function TabSeguranca() {
+function TabSeguranca({ hasPassword, onPasswordSet }) {
     const { showToast } = useToast()
     const [current, setCurrent] = useState('')
     const [next, setNext]       = useState('')
@@ -419,26 +419,29 @@ function TabSeguranca() {
     const [saving, setSaving]   = useState(false)
     const [error, setError]     = useState('')
 
-    const isDirty = current.length > 0 || next.length > 0 || confirm.length > 0
+    const isDirty = (!hasPassword ? true : current.length > 0) && next.length > 0 && confirm.length > 0
 
     async function handleSubmit(e) {
         e.preventDefault()
-        setError(''); setDone(false)
-        if (next !== confirm) { setError('As novas palavras-passe não coincidem.'); return }
-        if (next.length < 8)  { setError('A nova palavra-passe deve ter pelo menos 8 caracteres.'); return }
+        setError('')
+        if (next !== confirm) { setError('As palavras-passe não coincidem.'); return }
+        if (next.length < 8)  { setError('A palavra-passe deve ter pelo menos 8 caracteres.'); return }
         setSaving(true)
         try {
             const res = await fetch(`${API}/users/me/password`, {
-                method: 'PUT',
+                method:  hasPassword ? 'PUT' : 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-                body: JSON.stringify({ currentPassword: current, newPassword: next }),
+                body:    JSON.stringify(hasPassword
+                    ? { currentPassword: current, newPassword: next }
+                    : { newPassword: next }),
             })
             if (!res.ok) {
                 const data = await res.json().catch(() => ({}))
                 throw new Error(data.error || `Erro ${res.status}`)
             }
-            showToast('Palavra-passe alterada!')
+            showToast(hasPassword ? 'Palavra-passe alterada!' : 'Palavra-passe definida!')
             setCurrent(''); setNext(''); setConfirm('')
+            if (!hasPassword) onPasswordSet?.()
         } catch (err) {
             showToast(err.message, 'error')
         } finally {
@@ -448,30 +451,37 @@ function TabSeguranca() {
 
     return (
         <form className="ep-form" onSubmit={handleSubmit}>
-            <Field
-                label="Palavra-passe atual"
-                type="password"
-                value={current}
-                onChange={e => setCurrent(e.target.value)}
-            />
+            {!hasPassword && (
+                <p className="ep-hint">
+                    A tua conta usa autenticação via Google. Podes definir uma palavra-passe para também poderes entrar com email.
+                </p>
+            )}
+            {hasPassword && (
+                <Field
+                    label="Palavra-passe atual"
+                    type="password"
+                    value={current}
+                    onChange={e => setCurrent(e.target.value)}
+                />
+            )}
             <div className="ep-grid">
                 <Field
-                    label="Nova palavra-passe"
+                    label={hasPassword ? 'Nova palavra-passe' : 'Palavra-passe'}
                     type="password"
                     value={next}
                     onChange={e => setNext(e.target.value)}
                 />
                 <Field
-                    label="Confirmar nova palavra-passe"
+                    label="Confirmar palavra-passe"
                     type="password"
                     value={confirm}
                     onChange={e => setConfirm(e.target.value)}
                 />
             </div>
-            <Msg error={error} />
+            {error && <p className="ep-msg ep-msg--error"><FaExclamationTriangle size={12} /> {error}</p>}
             <div className="ep-form__footer">
                 <button type="submit" className="btn-primary ep-save-btn" disabled={!isDirty || saving}>
-                    {saving ? 'A alterar…' : 'Alterar palavra-passe'}
+                    {saving ? 'A guardar…' : hasPassword ? 'Alterar palavra-passe' : 'Definir palavra-passe'}
                 </button>
             </div>
         </form>
@@ -493,13 +503,14 @@ export default function EditProfileModal({ role, onClose, onProfileUpdated, onAr
         fetch(`${API}/auth/me`, { headers: { Authorization: `Bearer ${getToken()}` } })
             .then(r => r.ok ? r.json() : Promise.reject(new Error()))
             .then(data => setUser({
-                name:      data.name || data.displayName || '',
-                username:  data.username || '',
-                bio:       data.bio || '',
-                location:  data.location || '',
-                genre:     data.genre || '',
-                languages: data.languages || '',
-                social:    data.social || [],
+                name:        data.name || data.displayName || '',
+                username:    data.username || '',
+                bio:         data.bio || '',
+                location:    data.location || '',
+                genre:       data.genre || '',
+                languages:   data.languages || '',
+                social:      data.social || [],
+                hasPassword: data.hasPassword ?? true,
             }))
             .catch(() => setUser({ name: '', username: '', bio: '', location: '', genre: '', languages: '', social: [] }))
             .finally(() => setLoading(false))
@@ -511,7 +522,7 @@ export default function EditProfileModal({ role, onClose, onProfileUpdated, onAr
             case 'Perfil':    return <TabPerfil user={user} role={role} onProfileUpdated={onProfileUpdated} />
             case 'Artista':   return <TabArtista onSaved={onArtistSaved} />
             case 'Links':     return <TabLinks onSaved={onArtistSaved} />
-            case 'Segurança': return <TabSeguranca />
+            case 'Segurança': return <TabSeguranca hasPassword={user.hasPassword} onPasswordSet={() => setUser(u => ({ ...u, hasPassword: true }))} />
             default:          return null
         }
     }

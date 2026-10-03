@@ -1,5 +1,5 @@
 /** Converte um TrackResponse do backend no objecto esperado pelo PlayerContext. */
-export function toPlayerTrack(t) {
+export function toPlayerTrack(t, playContext) {
     const spotifyId = t.source === 'SPOTIFY_PREVIEW'
         ? t.spotifyUrl?.split('/track/')?.[1]?.split('?')[0] ?? null
         : null
@@ -12,5 +12,6 @@ export function toPlayerTrack(t) {
         audioUrl:        t.source !== 'SPOTIFY_PREVIEW' ? (t.audioUrl ?? null) : null,
         spotifyId,
         source:          t.source === 'SPOTIFY_PREVIEW' ? 'spotify' : 'upload',
+        playContext:     playContext ?? null,
     }
 }

@@ -5,6 +5,7 @@ import { usePlayer } from './context/PlayerContext'
 import { PublishProvider } from './context/PublishContext'
 import { ToastProvider } from './context/ToastContext'
 import { LikeProvider } from './context/LikeContext'
+import { PlaylistLikeProvider } from './context/PlaylistLikeContext'
 import { PendingCommentsProvider } from './context/PendingCommentsContext'
 import { NotificationsProvider } from './context/NotificationsContext'
 import { GenresProvider } from './context/GenresContext'
@@ -80,6 +81,7 @@ function App() {
             <GenresProvider>
             <NotificationsProvider>
             <LikeProvider>
+            <PlaylistLikeProvider>
             <PendingCommentsProvider>
             <PublishProvider>
                 <BrowserRouter>
@@ -139,6 +141,7 @@ function App() {
                 </BrowserRouter>
             </PublishProvider>
             </PendingCommentsProvider>
+            </PlaylistLikeProvider>
             </LikeProvider>
             </NotificationsProvider>
             </GenresProvider>

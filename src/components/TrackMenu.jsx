@@ -29,14 +29,19 @@ export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemo
 
     useEffect(() => {
         if (!open) return
-        function handle(e) {
+        function handleClick(e) {
             if (
-                ref.current     && !ref.current.contains(e.target) &&
+                ref.current        && !ref.current.contains(e.target) &&
                 popoverRef.current && !popoverRef.current.contains(e.target)
             ) setOpen(false)
         }
-        document.addEventListener('mousedown', handle)
-        return () => document.removeEventListener('mousedown', handle)
+        function handleScroll() { setOpen(false) }
+        document.addEventListener('mousedown', handleClick)
+        window.addEventListener('scroll', handleScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', handleClick)
+            window.removeEventListener('scroll', handleScroll, true)
+        }
     }, [open])
 
     function handleOpen(e) {

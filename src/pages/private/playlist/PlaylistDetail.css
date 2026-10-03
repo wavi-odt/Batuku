@@ -1,6 +1,18 @@
 /* ── Renomear título ───────────────────────────────────────────── */
-.pl-rename { display: flex; gap: 8px; align-items: center; margin: 6px 0 4px; }
-.pl-rename__input { max-width: 320px; font-size: 22px; font-weight: 700; }
+.pl-rename { display: flex; gap: 8px; align-items: center; margin: 0 0 10px; }
+.pl-rename__input {
+    max-width: 320px;
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 700;
+    line-height: 1.15;
+    padding: 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    color: inherit;
+    outline: none;
+    width: 100%;
+}
 .pl-rename__edit {
     display: inline-flex; align-items: center; justify-content: center;
     width: 30px; height: 30px; margin-left: 10px; border-radius: var(--radius-sm);

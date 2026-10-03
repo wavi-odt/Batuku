@@ -35,7 +35,25 @@
     height: 44px;
     border-radius: var(--radius-sm);
     overflow: hidden;
+    position: relative;
 }
+
+.tracks-row__play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.12s;
+    border-radius: var(--radius-sm);
+}
+.tracks-row__cover:hover .tracks-row__play-overlay { opacity: 1; }
+.tracks-row--playing .tracks-row__play-overlay { opacity: 1; }
+
+.tracks-row--playing { background-color: rgba(255, 255, 255, 0.03); }
 
 .tracks-row__title {
     font-size: 14px;

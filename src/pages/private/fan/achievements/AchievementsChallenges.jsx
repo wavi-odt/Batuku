@@ -3,6 +3,17 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useState } from 'react'
+import { FaClock, FaRegComment, FaCompass, FaHeart, FaFire, FaStar } from 'react-icons/fa'
+
+function challengeIcon(id) {
+    if (id.startsWith('ch-marathon') || id.startsWith('ch-vip') || id.startsWith('ch-ultra')) return FaClock
+    if (id.startsWith('ch-comment')  || id.startsWith('ch-critic') || id.startsWith('ch-daily-com')) return FaRegComment
+    if (id.startsWith('ch-discover') || id.startsWith('ch-explorer') || id.startsWith('ch-daily-art')) return FaCompass
+    if (id.startsWith('ch-follow')   || id.startsWith('ch-ambassador') || id.startsWith('ch-connector')) return FaHeart
+    if (id.startsWith('ch-streak'))  return FaFire
+    if (id.startsWith('ch-collector') || id.startsWith('ch-superfan') || id.startsWith('ch-likefest')) return FaStar
+    return FaStar
+}
 
 export default function AchievementsChallenges({ challenges, onAdvance }) {
     const [advancing, setAdvancing] = useState(false)
@@ -38,7 +49,9 @@ export default function AchievementsChallenges({ challenges, onAdvance }) {
                             className={`ach__challenge${ch.completed ? ' ach__challenge--done' : ''}`}
                         >
                             <div className="ach__challenge-row">
-                                <span className="ach__challenge-icon" aria-hidden="true">{ch.icon}</span>
+                                <span className="ach__challenge-icon" aria-hidden="true">
+                                    {(() => { const Icon = challengeIcon(ch.id); return <Icon size={16} /> })()}
+                                </span>
                                 <div className="ach__challenge-info">
                                     <div className="ach__challenge-title">{ch.title}</div>
                                     <div className="ach__challenge-desc">{ch.desc}</div>
@@ -82,7 +95,7 @@ export default function AchievementsChallenges({ challenges, onAdvance }) {
                         onClick={handleAdvance}
                         disabled={advancing}
                     >
-                        {advancing ? 'A carregar…' : '🎯 Próximo conjunto'}
+                        {advancing ? 'A carregar…' : 'Próximo conjunto'}
                     </button>
                 </div>
             )}

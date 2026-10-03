@@ -82,7 +82,7 @@ export default function GenrePage() {
                                 <button
                                     type="button"
                                     className="track-card"
-                                    onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, tracks.map(q => ({ ...q, name: q.title })))}
+                                    onClick={() => t.audioUrl && setTrack({ ...t, name: t.title, playContext: 'discover' }, tracks.map(q => ({ ...q, name: q.title, playContext: 'discover' })))}
                                 >
                                     <div className="track-card__cover">
                                         <ArtistArtwork

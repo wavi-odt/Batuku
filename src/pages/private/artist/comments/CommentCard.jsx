@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { FaThumbtack, FaReply, FaTrash, FaMusic } from 'react-icons/fa'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import { useToast } from '../../../../context/ToastContext.jsx'
@@ -80,7 +81,9 @@ export default function CommentCard({ comment, onDelete, onReply, onPin }) {
             <div className="cmt__card-body">
                 {/* ── Top row ──────────────────────────────────── */}
                 <div className="cmt__card-top">
-                    <Av name={comment.authorName} url={comment.authorAvatarUrl} className="cmt__avatar" />
+                    <Link to={`/users/${comment.authorId}`} className="cmt__avatar-link">
+                        <Av name={comment.authorName} url={comment.authorAvatarUrl} className="cmt__avatar" />
+                    </Link>
 
                     <div className="cmt__meta">
                         <div className="cmt__user-row">

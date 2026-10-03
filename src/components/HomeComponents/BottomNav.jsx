@@ -6,7 +6,9 @@ import { useNotifications } from '../../context/NotificationsContext'
 import './BottomNav.css'
 
 export default function BottomNav({ role = 'fan' }) {
-    const nav = role === 'artist' ? homeData.artistNav : homeData.fanNav
+    const nav = role === 'admin' ? homeData.adminNav
+              : role === 'artist' ? homeData.artistNav
+              : homeData.fanNav
     const { count: pendingComments } = usePendingComments()
     const { badgesPerRoute } = useNotifications()
 
@@ -21,7 +23,7 @@ export default function BottomNav({ role = 'fan' }) {
                     <NavLink
                         key={item.to}
                         to={item.to}
-                        end
+                        end={item.end !== false}
                         className={({ isActive }) => 'bottom-nav__item' + (isActive ? ' is-active' : '')}
                     >
                         <span className="bottom-nav__icon">

@@ -1,6 +1,6 @@
 import { useEffect, useState, Fragment } from 'react'
 import { useParams, Link, useSearchParams } from 'react-router-dom'
-import { FaUserPlus, FaUserCheck, FaPlay, FaCompactDisc, FaRegComment } from 'react-icons/fa'
+import { FaUserPlus, FaUserCheck, FaPlay, FaCompactDisc, FaRegComment, FaCheckCircle } from 'react-icons/fa'
 import { SiSpotify } from 'react-icons/si'
 import AppShell from '../../../components/HomeComponents/AppShell'
 import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork.jsx'
@@ -286,12 +286,15 @@ export default function ArtistDetail() {
                     <div className="prof__identity">
                         <div className="prof__name-row">
                             <h1 className="prof__name">{artist.name}</h1>
-                            {artist.genre && (
-                                <span className="prof__level-chip">{artist.genre}</span>
+                            {artist.verified && (
+                                <span className="prof__verified"><FaCheckCircle size={12} /> Verificado</span>
                             )}
                         </div>
                         <div className="prof__meta">
-                            {artist.city && <span>{artist.city}</span>}
+                            {artist.username && <span className="prof__meta-handle">@{artist.username}</span>}
+                            {artist.city && (
+                                <><span className="prof__meta-dot" /><span>{artist.city}</span></>
+                            )}
                         </div>
                     </div>
 

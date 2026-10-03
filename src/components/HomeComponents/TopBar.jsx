@@ -136,8 +136,17 @@ export default function TopBar({ role = 'fan' }) {
                 setAvatarMenuOpen(false);
             }
         }
+        function onScroll() {
+            handleClose();
+            setNotifOpen(false);
+            setAvatarMenuOpen(false);
+        }
         document.addEventListener('mousedown', onMouseDown);
-        return () => document.removeEventListener('mousedown', onMouseDown);
+        window.addEventListener('scroll', onScroll, true);
+        return () => {
+            document.removeEventListener('mousedown', onMouseDown);
+            window.removeEventListener('scroll', onScroll, true);
+        };
     }, []);
 
     return (
@@ -305,7 +314,11 @@ export default function TopBar({ role = 'fan' }) {
                             </div>
                             <div>
                                 <div className="sidebar__menu-name">{realUser?.name || ''}</div>
-                                <div className="sidebar__menu-handle">{realUser?.handle || ''}</div>
+                                <div className="sidebar__menu-handle">
+                                    {realUser?.verified
+                                        ? <><span className="sidebar__verified-dot" /> Verificado</>
+                                        : realUser?.handle || ''}
+                                </div>
                             </div>
                         </div>
                         <div className="sidebar__menu-divider" />

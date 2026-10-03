@@ -37,6 +37,7 @@ export function useCurrentUser() {
                         spotifyArtistId:  data.spotifyArtistId || data.spotifyId          || prev?.spotifyArtistId || null,
                         artistProfileId:  data.artistProfileId                            ?? prev?.artistProfileId ?? null,
                         marketplaceRole:  data.marketplaceRole                            ?? prev?.marketplaceRole ?? null,
+                        verified:         data.verified                                    ?? prev?.verified ?? false,
                     }))
                 }
                 setIsLoading(false)

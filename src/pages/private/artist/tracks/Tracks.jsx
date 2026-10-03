@@ -44,8 +44,13 @@ function SortDropdown({ value, onChange, options }) {
     useEffect(() => {
         if (!open) return
         function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false) }
+        function onScroll() { setOpen(false) }
         document.addEventListener('mousedown', onDown)
-        return () => document.removeEventListener('mousedown', onDown)
+        window.addEventListener('scroll', onScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', onDown)
+            window.removeEventListener('scroll', onScroll, true)
+        }
     }, [open])
 
     return (
@@ -82,7 +87,7 @@ function SortDropdown({ value, onChange, options }) {
 export default function Tracks() {
     const { openPublish, publishVersion, notifyPublished } = usePublish();
     const { showToast } = useToast();
-    const realUser = useCurrentUser();
+    const { user: realUser } = useCurrentUser();
     const aid = realUser?.artistProfileId ?? null;
 
     /* ─── Faixas ─────────────────────────────────────────────── */

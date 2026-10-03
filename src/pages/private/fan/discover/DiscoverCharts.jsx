@@ -33,7 +33,11 @@ function ChartRow({ track, rank, queue }) {
     const active = currentTrack?.id === track.id
     return (
         <>
-            <div className={`disc__chart-row${active ? ' disc__chart-row--active' : ''}`}>
+            <div
+                className={`disc__chart-row${active ? ' disc__chart-row--active' : ''}`}
+                style={{ cursor: track.audioUrl ? 'pointer' : 'default' }}
+                onClick={() => track.audioUrl && setTrack({ ...track, name: track.title, playContext: 'discover' }, queue.map(q => ({ ...q, name: q.title, playContext: 'discover' })))}
+            >
                 <span className="disc__chart-rank">{rank}</span>
                 {delta(track, rank)}
                 <div className="disc__chart-thumb">
@@ -43,20 +47,15 @@ function ChartRow({ track, rank, queue }) {
                         image={track.coverUrl ?? null}
                         rounded={6}
                     />
-                    <button
-                        type="button"
-                        className="lib__track-play"
-                        aria-label="Reproduzir"
-                        onClick={() => track.audioUrl && setTrack({ ...track, name: track.title }, queue.map(q => ({ ...q, name: q.title })))}
-                    >
-                        <FaPlay size={9} />
-                    </button>
+                    <span className="lib__track-play" aria-hidden="true"><FaPlay size={9} /></span>
                 </div>
                 <div className="disc__chart-info">
                     <div className="disc__chart-title">{track.title}</div>
                     <div className="disc__chart-artist">{track.artistName}</div>
                 </div>
-                <LikeButton trackId={track.id} />
+                <div onClick={e => e.stopPropagation()}>
+                    <LikeButton trackId={track.id} />
+                </div>
                 <button
                     type="button"
                     className={'rel-comment-btn' + (commentsOpen ? ' rel-comment-btn--active' : '')}

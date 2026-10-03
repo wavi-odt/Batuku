@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { useSearchParams, useParams, useNavigate, Navigate } from 'react-router-dom'
-import { FaSearch }                     from 'react-icons/fa'
+import { FaSearch, FaChevronDown, FaCheck } from 'react-icons/fa'
 import AppShell                         from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }                from '../../../../utils/auth.js'
 import { useCurrentUser }               from '../../../../hooks/useCurrentUser.js'
@@ -24,6 +24,54 @@ const SORT_OPTIONS = [
     { key: 'price_desc', label: 'Preço ↓'        },
     { key: 'bpm_asc',    label: 'BPM ↑'          },
 ]
+
+function SortDropdown({ value, onChange, options }) {
+    const [open, setOpen] = useState(false)
+    const ref = useRef(null)
+    const current = options.find(o => o.key === value)
+
+    useEffect(() => {
+        if (!open) return
+        function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false) }
+        function onScroll() { setOpen(false) }
+        document.addEventListener('mousedown', onDown)
+        window.addEventListener('scroll', onScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', onDown)
+            window.removeEventListener('scroll', onScroll, true)
+        }
+    }, [open])
+
+    return (
+        <div className="mkt__sort-wrap" ref={ref}>
+            <button
+                type="button"
+                className={'mkt__sort-btn' + (open ? ' mkt__sort-btn--open' : '')}
+                onClick={() => setOpen(o => !o)}
+            >
+                {current?.label}
+                <FaChevronDown size={8} className={'mkt__sort-chevron' + (open ? ' mkt__sort-chevron--open' : '')} />
+            </button>
+            {open && (
+                <div className="mkt__sort-menu">
+                    {options.map(o => (
+                        <button
+                            key={o.key}
+                            type="button"
+                            className={'mkt__sort-option' + (o.key === value ? ' mkt__sort-option--active' : '')}
+                            onClick={() => { onChange(o.key); setOpen(false) }}
+                        >
+                            <span className="mkt__sort-option-check">
+                                {o.key === value && <FaCheck size={8} />}
+                            </span>
+                            {o.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
 
 export default function Marketplace() {
     const currentUser = useCurrentUser()
@@ -353,15 +401,11 @@ export default function Marketplace() {
                                 </button>
                             ))}
                         </div>
-                        <select
-                            className="mkt__sort"
+                        <SortDropdown
                             value={sort}
-                            onChange={e => sp('sort', e.target.value)}
-                        >
-                            {SORT_OPTIONS.map(o => (
-                                <option key={o.key} value={o.key}>{o.label}</option>
-                            ))}
-                        </select>
+                            onChange={v => sp('sort', v)}
+                            options={SORT_OPTIONS}
+                        />
                     </div>
 
                     {/* Grid de beats (sem compra) */}
@@ -373,8 +417,9 @@ export default function Marketplace() {
                     />
 
                     {!loading && beats.length === 0 && (
-                        <div style={{ padding: '40px 0', color: 'var(--color-ink-mute)', textAlign: 'center' }}>
-                            <p style={{ fontSize: 16 }}>Ainda não há beats disponíveis.</p>
+                        <div className="mkt__empty">
+                            <p className="mkt__empty-title">Nenhum beat encontrado</p>
+                            <p className="mkt__empty-sub">Ainda não há beats disponíveis no marketplace.</p>
                         </div>
                     )}
                 </>
@@ -433,15 +478,11 @@ export default function Marketplace() {
                                 </button>
                             ))}
                         </div>
-                        <select
-                            className="mkt__sort"
+                        <SortDropdown
                             value={sort}
-                            onChange={e => sp('sort', e.target.value)}
-                        >
-                            {SORT_OPTIONS.map(o => (
-                                <option key={o.key} value={o.key}>{o.label}</option>
-                            ))}
-                        </select>
+                            onChange={v => sp('sort', v)}
+                            options={SORT_OPTIONS}
+                        />
                     </div>
 
                     {/* Grid + Sidebar */}
@@ -467,8 +508,9 @@ export default function Marketplace() {
                     </div>
 
                     {!loading && beats.length === 0 && (
-                        <div style={{ padding: '40px 0', color: 'var(--color-ink-mute)', textAlign: 'center' }}>
-                            <p style={{ fontSize: 16 }}>Ainda não há beats disponíveis.</p>
+                        <div className="mkt__empty">
+                            <p className="mkt__empty-title">Nenhum beat encontrado</p>
+                            <p className="mkt__empty-sub">Ainda não há beats disponíveis no marketplace.</p>
                         </div>
                     )}
                 </>

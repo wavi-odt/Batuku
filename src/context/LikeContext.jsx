@@ -54,6 +54,7 @@ export function LikeProvider({ children }) {
                 headers: { Authorization: `Bearer ${getToken()}` },
             })
             if (!res.ok) throw new Error()
+            if (next) window.dispatchEvent(new Event('batuku:gamification-updated'))
         } catch {
             set(key, current.liked, current.count)  // reverter
         }

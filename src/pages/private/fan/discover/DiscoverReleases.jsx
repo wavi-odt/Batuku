@@ -3,6 +3,7 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { FaPlay } from 'react-icons/fa'
+import { Link }   from 'react-router-dom'
 import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
 import { usePlayer }  from '../../../../context/PlayerContext.jsx'
 import TrackMenu      from '../../../../components/TrackMenu.jsx'
@@ -36,7 +37,7 @@ export default function DiscoverReleases({ tracks, queue }) {
             <div className="disc__releases">
                 {tracks.map(t => (
                     <div key={t.id} className="track-card">
-                        <div className="track-card__cover" onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, queue.map(q => ({ ...q, name: q.title })))}>
+                        <div className="track-card__cover" onClick={() => t.audioUrl && setTrack({ ...t, name: t.title, playContext: 'discover' }, queue.map(q => ({ ...q, name: q.title, playContext: 'discover' })))}>
                             <ArtistArtwork
                                 shape={shapeFromId(t.id)}
                                 hue={hueFromId(t.id)}
@@ -47,14 +48,18 @@ export default function DiscoverReleases({ tracks, queue }) {
                                 <FaPlay size={12} />
                             </span>
                         </div>
-                        <div className="track-card__bottom" onClick={() => t.audioUrl && setTrack({ ...t, name: t.title }, queue.map(q => ({ ...q, name: q.title })))}>
+                        <div className="track-card__bottom" onClick={() => t.audioUrl && setTrack({ ...t, name: t.title, playContext: 'discover' }, queue.map(q => ({ ...q, name: q.title, playContext: 'discover' })))}>
                             <div className="track-card__title-row">
                                 <div className="track-card__title">{t.title}</div>
                                 <div onClick={e => e.stopPropagation()}>
                                     <TrackMenu trackId={t.id} artistProfileId={t.artistProfileId} />
                                 </div>
                             </div>
-                            <div className="track-card__artist">{t.artistName}</div>
+                            <Link
+                                to={`/artists/${t.artistProfileId}`}
+                                className="track-card__artist"
+                                onClick={e => e.stopPropagation()}
+                            >{t.artistName}</Link>
                         </div>
                         {t.createdAt && (
                             <div className="disc__release-date">{daysLabel(t.createdAt)}</div>

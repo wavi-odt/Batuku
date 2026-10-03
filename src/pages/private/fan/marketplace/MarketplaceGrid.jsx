@@ -29,9 +29,9 @@ export default function MarketplaceGrid({
             <div className={headerCls}>
                 <div />
                 <div className="mkt__beat-col-label">Título</div>
-                <div className="mkt__beat-col-label">Género</div>
-                <div className="mkt__beat-col-label">BPM · Tom</div>
-                {!readOnly && <div className="mkt__beat-col-label">Licença</div>}
+                <div className="mkt__beat-col-label mkt__beat-col--genre">Género</div>
+                <div className="mkt__beat-col-label mkt__beat-col--bpm">BPM · Tom</div>
+                {!readOnly && <div className="mkt__beat-col-label mkt__beat-col--lic">Licença</div>}
                 <div className="mkt__beat-col-label" style={{ textAlign: 'right' }}>Preço</div>
                 {!readOnly && <div />}
             </div>

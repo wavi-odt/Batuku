@@ -4,7 +4,6 @@ import AdminShell from './AdminShell.jsx'
 import './AdminHome.css'
 import './AdminClaims.css'
 
-const API          = `${import.meta.env.VITE_API_BASE_URL}/api/admin/artist-claims`
 const PENDING_API  = `${import.meta.env.VITE_API_BASE_URL}/api/admin/pending-artist-claims`
 const PROFILES_API = `${import.meta.env.VITE_API_BASE_URL}/api/admin/artist-profiles`
 
@@ -53,15 +52,12 @@ export default function AdminClaims() {
 
     useEffect(() => {
         const headers = { Authorization: `Bearer ${getToken()}` };
-        Promise.all([
-            fetch(API,         { headers }).then(r => r.ok ? r.json() : []),
-            fetch(PENDING_API, { headers }).then(r => r.ok ? r.json() : []),
-        ])
-            .then(([existing, pending]) => {
-                const all = [
-                    ...pending.map(c => ({ ...c, source: 'pending_registration' })),
-                    ...existing.map(c => ({ ...c, source: 'existing' })),
-                ].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        fetch(PENDING_API, { headers })
+            .then(r => r.ok ? r.json() : [])
+            .then(pending => {
+                const all = pending
+                    .map(c => ({ ...c, source: 'pending_registration' }))
+                    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
                 setClaims(all);
             })
             .catch(err => setError(err.message))
@@ -80,8 +76,7 @@ export default function AdminClaims() {
         setDetail(null);
         setDetailError('');
         setDetailLoad(true);
-        const base = source === 'pending_registration' ? PENDING_API : API;
-        fetch(`${base}/${id}`, { headers: { Authorization: `Bearer ${getToken()}` } })
+        fetch(`${PENDING_API}/${id}`, { headers: { Authorization: `Bearer ${getToken()}` } })
             .then(res => res.ok ? res.json() : Promise.reject(new Error(`Erro ${res.status}`)))
             .then(data => setDetail({ ...data, source }))
             .catch(err => setDetailError(err.message))
@@ -101,8 +96,7 @@ export default function AdminClaims() {
         setActionBusy(true);
         setActionErr('');
         try {
-            const base = source === 'pending_registration' ? PENDING_API : API;
-            const res = await fetch(`${base}/${id}/${action}`, {
+                const res = await fetch(`${PENDING_API}/${id}/${action}`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${getToken()}` },
             });

@@ -72,5 +72,7 @@
     font-size: var(--fs-sm);
     color: var(--color-ink-soft);
     font-weight: var(--fw-medium);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 .dash__head-link:hover { color: var(--color-coral); }

@@ -5,13 +5,13 @@ import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import { API, getToken } from '../../../../utils/auth.js'
 import { usePendingComments } from '../../../../context/PendingCommentsContext.jsx'
 import { useToast }     from '../../../../context/ToastContext.jsx'
-import VerifyBanner     from './VerifyBanner.jsx'
 import StatCards        from './StatCards.jsx'
 import GrowthChart      from './GrowthChart.jsx'
 import PublishCard      from './PublishCard.jsx'
 import TracksTable      from './TracksTable.jsx'
 import TopFans          from './TopFans.jsx'
 import PendingComments  from './PendingComments.jsx'
+import WeeklySummary    from './WeeklySummary.jsx'
 import './Dashboard.css'
 
 export default function Dashboard() {
@@ -80,8 +80,8 @@ export default function Dashboard() {
                 )}
             </div>
 
-            {/* ─── Verify banner ─────────────────────────────────── */}
-            <VerifyBanner provider={realUser?.spotifyArtistId ? 'spotify' : undefined} />
+            {/* ─── Weekly AI Summary ─────────────────────────────── */}
+            <WeeklySummary />
 
             {/* ─── Stats ─────────────────────────────────────────── */}
             {stats && <StatCards stats={stats.kpis} />}

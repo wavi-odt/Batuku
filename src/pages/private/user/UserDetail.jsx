@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom'
-import { FaTrophy, FaUserPlus, FaUserCheck, FaPlay, FaMusic, FaGlobe, FaUser } from 'react-icons/fa'
+import { FaTrophy, FaUserPlus, FaUserCheck, FaPlay, FaMusic, FaGlobe, FaUser, FaCheckCircle } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
 import { getToken, getRole } from '../../../utils/auth.js'
 import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import { useToast } from '../../../context/ToastContext'
+import { usePlayer } from '../../../context/PlayerContext'
 import { CardTitle, BadgesGrid, GenreBars } from '../profile/ProfileBlocks'
 import '../profile/Profile.css'
 import '../DetailPage.css'
@@ -34,6 +35,7 @@ export default function UserDetail() {
     const shellRole = getRole() === 'artist' ? 'artist' : 'fan';
     const { showToast } = useToast();
     const currentUser = useCurrentUser();
+    const { setTrack } = usePlayer();
 
     const [user,             setUser]             = useState(null);
     const [loading,          setLoading]          = useState(true);
@@ -102,6 +104,29 @@ export default function UserDetail() {
         }
     }
 
+    function handlePlayRecent(t, list) {
+        if (!t.audioUrl && !t.spotifyId) return
+        setTrack({
+            id:              t.trackId,
+            name:            t.title,
+            artistName:      t.artistName,
+            artistProfileId: t.artistId ?? null,
+            coverUrl:        t.coverUrl ?? null,
+            audioUrl:        t.audioUrl ?? null,
+            spotifyId:       t.spotifyId ?? null,
+            playContext:     'fan',
+        }, list.filter(x => x.audioUrl || x.spotifyId).map(x => ({
+            id:              x.trackId,
+            name:            x.title,
+            artistName:      x.artistName,
+            artistProfileId: x.artistId ?? null,
+            coverUrl:        x.coverUrl ?? null,
+            audioUrl:        x.audioUrl ?? null,
+            spotifyId:       x.spotifyId ?? null,
+            playContext:     'fan',
+        })))
+    }
+
     if (loading) return (
         <AppShell role={shellRole}>
             <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>
@@ -163,6 +188,9 @@ export default function UserDetail() {
                     <div className="prof__identity">
                         <div className="prof__name-row">
                             <h1 className="prof__name">{user.name}</h1>
+                            {user.verified && (
+                                <span className="prof__verified"><FaCheckCircle size={12} /> Verificado</span>
+                            )}
                             {user.level != null && (
                                 <span className="prof__level-chip">
                                     <FaTrophy size={11} /> Nível {user.level}
@@ -287,12 +315,19 @@ export default function UserDetail() {
                                     <div className="prof-card">
                                         <CardTitle>Ouvido recentemente</CardTitle>
                                         {userRecentTracks.slice(0, 5).map(t => (
-                                            <div key={t.trackId} className="playlist-item prof-recent">
+                                            <div
+                                                key={t.trackId}
+                                                className={'playlist-item prof-recent' + ((t.audioUrl || t.spotifyId) ? ' prof-recent--playable' : '')}
+                                                onClick={() => handlePlayRecent(t, userRecentTracks)}
+                                            >
                                                 <div className="playlist-item__cover prof-recent__cover">
                                                     {t.coverUrl
                                                         ? <img src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" />
                                                         : <div className="playlist-item__cover-empty"><FaMusic size={12} /></div>
                                                     }
+                                                    {(t.audioUrl || t.spotifyId) && (
+                                                        <span className="prof-recent__play"><FaPlay size={9} /></span>
+                                                    )}
                                                 </div>
                                                 <div>
                                                     <div className="playlist-item__name prof-recent__name">{t.title}</div>
@@ -355,12 +390,19 @@ export default function UserDetail() {
                                     <div className="prof-card">
                                         <CardTitle>Ouvido recentemente</CardTitle>
                                         {userRecentTracks.slice(0, 5).map(t => (
-                                            <div key={t.trackId} className="playlist-item prof-recent">
+                                            <div
+                                                key={t.trackId}
+                                                className={'playlist-item prof-recent' + ((t.audioUrl || t.spotifyId) ? ' prof-recent--playable' : '')}
+                                                onClick={() => handlePlayRecent(t, userRecentTracks)}
+                                            >
                                                 <div className="playlist-item__cover prof-recent__cover">
                                                     {t.coverUrl
                                                         ? <img src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" />
                                                         : <div className="playlist-item__cover-empty"><FaMusic size={12} /></div>
                                                     }
+                                                    {(t.audioUrl || t.spotifyId) && (
+                                                        <span className="prof-recent__play"><FaPlay size={9} /></span>
+                                                    )}
                                                 </div>
                                                 <div>
                                                     <div className="playlist-item__name prof-recent__name">{t.title}</div>

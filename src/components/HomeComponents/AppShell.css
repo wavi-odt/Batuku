@@ -25,11 +25,11 @@
             'main';
     }
     .shell__main {
-        /* 60px BottomNav + safe-area */
-        padding: var(--space-5) var(--space-5) calc(60px + env(safe-area-inset-bottom));
+        /* 60px BottomNav + 20px breathing room + safe-area */
+        padding: var(--space-5) var(--space-5) calc(80px + env(safe-area-inset-bottom));
     }
     body.has-player .shell__main {
-        /* 60px BottomNav + 74px MiniPlayer + safe-area */
-        padding-bottom: calc(134px + env(safe-area-inset-bottom));
+        /* 60px BottomNav + 74px MiniPlayer + 20px breathing room + safe-area */
+        padding-bottom: calc(154px + env(safe-area-inset-bottom));
     }
 }

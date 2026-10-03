@@ -22,7 +22,10 @@
 
 @media (max-width: 1000px) {
     .flw__page { grid-template-columns: 1fr; }
-    .flw__sidebar { position: static; }
+    .flw__sidebar {
+        position: static;
+        padding-bottom: var(--space-8);
+    }
 }
 
 /* ─── A ouvir agora ────────────────────────────────────────────────── */

@@ -333,3 +333,41 @@
     color: var(--color-ink-mute);
     margin: 0 0 4px;
 }
+
+/* ─── Mobile ──────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+    /* Stats: grelha 2×2 em vez de 4 em linha */
+    .mkt-prod__stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .mkt-prod__stat { padding: 14px 16px; }
+    .mkt-prod__stat-val { font-size: 22px; }
+
+    /* Barra de upload: coluna */
+    .mkt-prod__upload-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 16px;
+    }
+    .mkt-prod__upload-btn { width: 100%; text-align: center; }
+
+    /* Tabela de beats: 4 colunas (cover | info | preço | ações) */
+    .mkt-prod__beat-header,
+    .mkt-prod__beat-row {
+        grid-template-columns: 44px 1fr 60px 60px;
+        gap: 8px;
+        padding: 10px 12px;
+    }
+    /* Ocultar: género, bpm, reproduções, vendas */
+    .mkt-prod__beat-genre,
+    .mkt-prod__beat-bpm,
+    .mkt-prod__beat-num { display: none; }
+    /* Ocultar colunas do cabeçalho correspondentes (Género, BPM, Reprod., Vendas) */
+    .mkt-prod__beat-header > :nth-child(3),
+    .mkt-prod__beat-header > :nth-child(4),
+    .mkt-prod__beat-header > :nth-child(5),
+    .mkt-prod__beat-header > :nth-child(6) { display: none; }
+}

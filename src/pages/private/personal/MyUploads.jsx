@@ -19,8 +19,13 @@ function ProjectCard({ proj, onOpen, onEdit, onCopyLink, onRegenLink, onDelete }
         function handle(e) {
             if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false)
         }
+        function onScroll() { setMenuOpen(false) }
         document.addEventListener('mousedown', handle)
-        return () => document.removeEventListener('mousedown', handle)
+        window.addEventListener('scroll', onScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', handle)
+            window.removeEventListener('scroll', onScroll, true)
+        }
     }, [menuOpen])
 
     return (

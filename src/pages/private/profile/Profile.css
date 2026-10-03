@@ -293,7 +293,6 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
 }
 .badge-item__icon--gold    { background: var(--color-mustard-dim); color: var(--color-mustard); }
 .badge-item__icon--coral   { background: var(--color-coral-dim);   color: var(--color-coral); }
@@ -559,7 +558,32 @@
     border: 0;
     padding: 6px 0;
 }
-.prof-recent__cover { width: 40px; height: 40px; }
+.prof-recent--playable {
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: background 0.12s;
+}
+.prof-recent--playable:hover { background: rgba(255,255,255,0.05); }
+
+.prof-recent__cover {
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+.prof-recent__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.45);
+    border-radius: var(--radius-sm);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+.prof-recent--playable:hover .prof-recent__play { opacity: 1; }
+
 .prof-recent__name { font-size: 13px; }
 
 /* ─── Follow card (usado no perfil de fã) ────────────────────────── */

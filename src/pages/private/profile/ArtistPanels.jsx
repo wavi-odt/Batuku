@@ -56,6 +56,7 @@ function LocalTrackList({ tracks, artistName, artistProfileId }) {
         id: tr.id, name: tr.title, artistName,
         artistProfileId: tr.artistProfileId ?? artistProfileId ?? null,
         coverUrl: tr.coverUrl, durationMs: tr.durationMs, audioUrl: tr.audioUrl, source: 'upload',
+        playContext: 'artist',
     }));
 
     return (
@@ -138,6 +139,7 @@ function SpotifyTrackList({ artistProfileId, artistName }) {
                                 durationMs: tr.durationMs,
                                 spotifyUrl: tr.spotifyUrl,
                                 source:     'spotify',
+                                playContext: 'artist',
                             }))
                         )}
                     >

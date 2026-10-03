@@ -1,12 +1,14 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
+import { createPortal } from 'react-dom'
 import { useParams, useNavigate } from 'react-router-dom'
 import ClickableName from '../../../components/ClickableName'
-import { FaPlay, FaArrowLeft, FaHeart, FaMusic, FaPen, FaCheck, FaPlus, FaRegComment, FaEllipsisH, FaGlobe, FaLock, FaTrash, FaBookmark, FaRegBookmark } from 'react-icons/fa'
+import { FaPlay, FaArrowLeft, FaHeart, FaMusic, FaPen, FaCheck, FaRegComment, FaEllipsisH, FaGlobe, FaLock, FaTrash, FaBookmark, FaRegBookmark } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
 import { getToken, getRole } from '../../../utils/auth.js'
 import { usePlayer } from '../../../context/PlayerContext'
 import { useToast } from '../../../context/ToastContext'
 import TrackMenu from '../../../components/TrackMenu'
+import PlaylistLikeButton from '../../../components/PlaylistLikeButton'
 import TrackComments from '../../../components/TrackComments'
 import PlaylistCreateModal from './PlaylistCreateModal'
 import ConfirmModal from '../../../components/ConfirmModal'
@@ -15,7 +17,6 @@ import '../release/ReleaseDetail.css'
 import './PlaylistDetail.css'
 
 const API = `${import.meta.env.VITE_API_BASE_URL}/api`
-const DEBOUNCE_MS = 350
 
 function fmtMs(ms) {
     if (!ms) return ''
@@ -31,62 +32,6 @@ function fmtTotalMs(ms) {
     return m > 0 ? `${h} h ${m} min` : `${h} h`
 }
 
-/* ── Pesquisa de faixas para adicionar ─────────────────────────── */
-function AddTrackBox({ playlistId, onAdded, showToast }) {
-    const [query,   setQuery]   = useState('')
-    const [results, setResults] = useState([])
-    const [loading, setLoading] = useState(false)
-    const timerRef = useRef(null)
-
-    function handleChange(e) {
-        const q = e.target.value
-        setQuery(q)
-        clearTimeout(timerRef.current)
-        if (q.length < 2) { setResults([]); return }
-        setLoading(true)
-        timerRef.current = setTimeout(async () => {
-            try {
-                const res = await fetch(`${API}/tracks/search?q=${encodeURIComponent(q)}`, {
-                    headers: { Authorization: `Bearer ${getToken()}` },
-                })
-                setResults(res.ok ? await res.json() : [])
-            } catch { setResults([]) } finally { setLoading(false) }
-        }, DEBOUNCE_MS)
-    }
-
-    async function handleAdd(track) {
-        try {
-            const res = await fetch(`${API}/playlists/${playlistId}/tracks`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${getToken()}` },
-                body: JSON.stringify({ trackId: track.id }),
-            })
-            if (!res.ok) throw new Error(`Erro ${res.status}`)
-            onAdded(track)
-            setResults(prev => prev.filter(r => r.id !== track.id))
-            showToast(`"${track.title}" adicionado`)
-        } catch (err) { showToast(err.message, 'error') }
-    }
-
-    return (
-        <div className="pl-add">
-            <input className="input" placeholder="Procurar faixas para adicionar…" value={query} onChange={handleChange} />
-            {loading && <div className="pl-add__hint">A procurar…</div>}
-            {results.length > 0 && (
-                <ul className="pl-add__list">
-                    {results.map(t => (
-                        <li key={t.id} className="pl-add__item">
-                            <span>{t.title}{t.artistName ? ` · ${t.artistName}` : ''}</span>
-                            <button type="button" className="pl-add__btn" onClick={() => handleAdd(t)}>
-                                <FaPlus size={10} /> Adicionar
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
-    )
-}
 
 /* ── Página ─────────────────────────────────────────────────────── */
 export default function PlaylistDetail() {
@@ -101,13 +46,14 @@ export default function PlaylistDetail() {
     const [error,            setError]            = useState('')
     const [editingName,      setEditingName]      = useState(false)
     const [nameDraft,        setNameDraft]        = useState('')
-    const [showAdd,          setShowAdd]          = useState(false)
     const [openCommentTrack, setOpenCommentTrack] = useState(null)
     const [menuOpen,         setMenuOpen]         = useState(false)
+    const [menuStyle,        setMenuStyle]        = useState({})
     const [showEdit,         setShowEdit]         = useState(false)
     const [showConfirmDel,   setShowConfirmDel]   = useState(false)
     const [deleting,         setDeleting]         = useState(false)
-    const menuRef = useRef(null)
+    const menuBtnRef  = useRef(null)
+    const menuRef     = useRef(null)
 
     useEffect(() => {
         fetch(`${API}/playlists/${id}`, {
@@ -151,22 +97,40 @@ export default function PlaylistDetail() {
         } catch (err) { showToast(err.message, 'error') }
     }
 
-    function handleTrackAdded(track) {
-        setPlaylist(prev => ({
-            ...prev,
-            tracks: [...(prev.tracks ?? []), track],
-            trackCount: (prev.trackCount ?? 0) + 1,
-        }))
-    }
 
     useEffect(() => {
         if (!menuOpen) return
-        function handle(e) {
-            if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false)
+        function handleClick(e) {
+            if (
+                menuBtnRef.current && !menuBtnRef.current.contains(e.target) &&
+                menuRef.current    && !menuRef.current.contains(e.target)
+            ) setMenuOpen(false)
         }
-        document.addEventListener('mousedown', handle)
-        return () => document.removeEventListener('mousedown', handle)
+        function handleScroll() { setMenuOpen(false) }
+        document.addEventListener('mousedown', handleClick)
+        window.addEventListener('scroll', handleScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', handleClick)
+            window.removeEventListener('scroll', handleScroll, true)
+        }
     }, [menuOpen])
+
+    function handleMenuOpen(e) {
+        e.stopPropagation()
+        if (!menuOpen) {
+            const rect     = menuBtnRef.current.getBoundingClientRect()
+            const minWidth = 200
+            const gap      = 6
+            const style    = { position: 'fixed', zIndex: 9999, top: rect.bottom + gap }
+            if (rect.right - minWidth >= 8) {
+                style.right = window.innerWidth - rect.right
+            } else {
+                style.left = Math.max(8, rect.left)
+            }
+            setMenuStyle(style)
+        }
+        setMenuOpen(v => !v)
+    }
 
     async function handleToggleVisibility() {
         try {
@@ -281,13 +245,13 @@ export default function PlaylistDetail() {
                             {editingName ? (
                                 <div className="pl-rename">
                                     <input
-                                        className="input pl-rename__input"
+                                        className="pl-rename__input"
                                         value={nameDraft}
                                         onChange={e => setNameDraft(e.target.value)}
                                         autoFocus
                                         onKeyDown={e => { if (e.key === 'Enter') handleRename() }}
                                     />
-                                    <button type="button" className="btn-primary" style={{ padding: '8px 12px' }} onClick={handleRename}>
+                                    <button type="button" className="pl-rename__edit" onClick={handleRename} aria-label="Confirmar">
                                         <FaCheck size={12} />
                                     </button>
                                 </div>
@@ -319,65 +283,65 @@ export default function PlaylistDetail() {
                                         <FaPlay size={16} /> Reproduzir
                                     </button>
                                 )}
-                                {canEdit && (
-                                    <button type="button" className="btn-ghost" onClick={() => setShowAdd(v => !v)}>
-                                        <FaPlus size={12} /> {showAdd ? 'Fechar' : 'Adicionar faixas'}
-                                    </button>
-                                )}
-                                {(canEdit || playlist.isPublic) && (
-                                    <div className="trk-menu" ref={menuRef} style={{ position: 'relative' }}>
-                                        <button
-                                            type="button"
-                                            className={'trk-menu__btn' + (menuOpen ? ' trk-menu__btn--open' : '')}
-                                            onClick={() => setMenuOpen(v => !v)}
-                                            aria-label="Mais opções"
-                                        >
-                                            <FaEllipsisH size={13} />
-                                        </button>
-                                        {menuOpen && (
-                                            <div className="trk-menu__popover" style={{ left: 0, right: 'auto' }}>
-                                                {canEdit ? (
-                                                    <>
-                                                        <button type="button" className="trk-menu__item"
-                                                            onClick={() => { setMenuOpen(false); setShowEdit(true) }}>
-                                                            <div className="trk-menu__pl-cover trk-menu__create-icon"><FaPen size={10} /></div>
-                                                            <span className="trk-menu__pl-name">Editar playlist</span>
-                                                        </button>
-                                                        <button type="button" className="trk-menu__item"
-                                                            onClick={() => { setMenuOpen(false); handleToggleVisibility() }}>
-                                                            <div className="trk-menu__pl-cover trk-menu__create-icon">
-                                                                {playlist.isPublic ? <FaLock size={10} /> : <FaGlobe size={10} />}
-                                                            </div>
-                                                            <span className="trk-menu__pl-name">
-                                                                {playlist.isPublic ? 'Tornar privada' : 'Tornar pública'}
-                                                            </span>
-                                                        </button>
-                                                        <div className="trk-menu__divider" />
-                                                        <button type="button" className="trk-menu__item trk-menu__item--remove"
-                                                            onClick={() => { setMenuOpen(false); setShowConfirmDel(true) }}>
-                                                            <div className="trk-menu__pl-cover trk-menu__remove-icon"><FaTrash size={10} /></div>
-                                                            <span className="trk-menu__pl-name">Remover playlist</span>
-                                                        </button>
-                                                    </>
-                                                ) : (
-                                                    <button type="button" className="trk-menu__item"
-                                                        onClick={() => { setMenuOpen(false); handleSaveToggle() }}>
-                                                        <div className="trk-menu__pl-cover trk-menu__create-icon">
-                                                            {playlist.saved ? <FaBookmark size={10} /> : <FaRegBookmark size={10} />}
-                                                        </div>
-                                                        <span className="trk-menu__pl-name">
-                                                            {playlist.saved ? 'Remover da biblioteca' : 'Guardar na biblioteca'}
-                                                        </span>
-                                                    </button>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
+                                {!playlist.owner && !playlist.systemGenerated && (
+                                    <PlaylistLikeButton playlistId={playlist.id} size={15} />
                                 )}
                             </div>
-                            {showAdd && <AddTrackBox playlistId={id} onAdded={handleTrackAdded} showToast={showToast} />}
                         </div>
                     </div>
+
+                    {(canEdit || playlist.isPublic) && (
+                        <div className="trk-menu" style={{ position: 'absolute', top: 12, right: 12, zIndex: 20 }}>
+                            <button
+                                type="button"
+                                ref={menuBtnRef}
+                                className={'trk-menu__btn' + (menuOpen ? ' trk-menu__btn--open' : '')}
+                                onClick={handleMenuOpen}
+                                aria-label="Mais opções"
+                            >
+                                <FaEllipsisH size={13} />
+                            </button>
+                            {menuOpen && createPortal(
+                                <div ref={menuRef} className="trk-menu__popover" style={menuStyle} onClick={e => e.stopPropagation()}>
+                                    {canEdit ? (
+                                        <>
+                                            <button type="button" className="trk-menu__item"
+                                                onClick={() => { setMenuOpen(false); setShowEdit(true) }}>
+                                                <div className="trk-menu__pl-cover trk-menu__create-icon"><FaPen size={10} /></div>
+                                                <span className="trk-menu__pl-name">Editar playlist</span>
+                                            </button>
+                                            <button type="button" className="trk-menu__item"
+                                                onClick={() => { setMenuOpen(false); handleToggleVisibility() }}>
+                                                <div className="trk-menu__pl-cover trk-menu__create-icon">
+                                                    {playlist.isPublic ? <FaLock size={10} /> : <FaGlobe size={10} />}
+                                                </div>
+                                                <span className="trk-menu__pl-name">
+                                                    {playlist.isPublic ? 'Tornar privada' : 'Tornar pública'}
+                                                </span>
+                                            </button>
+                                            <div className="trk-menu__divider" />
+                                            <button type="button" className="trk-menu__item trk-menu__item--remove"
+                                                onClick={() => { setMenuOpen(false); setShowConfirmDel(true) }}>
+                                                <div className="trk-menu__pl-cover trk-menu__remove-icon"><FaTrash size={10} /></div>
+                                                <span className="trk-menu__pl-name">Remover playlist</span>
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <button type="button" className="trk-menu__item"
+                                            onClick={() => { setMenuOpen(false); handleSaveToggle() }}>
+                                            <div className="trk-menu__pl-cover trk-menu__create-icon">
+                                                {playlist.saved ? <FaBookmark size={10} /> : <FaRegBookmark size={10} />}
+                                            </div>
+                                            <span className="trk-menu__pl-name">
+                                                {playlist.saved ? 'Remover da biblioteca' : 'Guardar na biblioteca'}
+                                            </span>
+                                        </button>
+                                    )}
+                                </div>,
+                                document.body
+                            )}
+                        </div>
+                    )}
                 </div>
 
                 {/* ── Lista de faixas ────────────────────────────────── */}

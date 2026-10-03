@@ -92,7 +92,7 @@ export default function Achievements() {
             got,
             meta: got
                 ? formatEarned(earned?.earnedAt)
-                : `${(profile?.totalPoints ?? 0).toLocaleString('pt-PT')} / ${b.pointsRequired.toLocaleString('pt-PT')} pts`,
+                : (profile?.badgeProgressLabels?.[b.id] ?? `${(profile?.totalPoints ?? 0).toLocaleString('pt-PT')} pts`),
         }
     })
 

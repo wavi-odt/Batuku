@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { FaCommentAlt, FaClock, FaThumbtack, FaSearch } from 'react-icons/fa'
+import { FaCommentAlt, FaClock, FaThumbtack, FaSearch, FaChevronDown, FaCheck } from 'react-icons/fa'
 import AppShell   from '../../../../components/HomeComponents/AppShell.jsx'
 import CommentCard from './CommentCard.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
@@ -18,6 +18,52 @@ const SORT_OPTIONS = [
     { key: 'recent',  label: 'Mais recentes'       },
     { key: 'pending', label: 'Pendentes primeiro'   },
 ]
+
+function SortDropdown({ value, onChange, options }) {
+    const [open, setOpen] = useState(false)
+    const ref = useRef(null)
+    const current = options.find(o => o.key === value)
+    useEffect(() => {
+        if (!open) return
+        function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false) }
+        function onScroll() { setOpen(false) }
+        document.addEventListener('mousedown', onDown)
+        window.addEventListener('scroll', onScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', onDown)
+            window.removeEventListener('scroll', onScroll, true)
+        }
+    }, [open])
+    return (
+        <div className="cmt__sort-wrap" ref={ref}>
+            <button
+                type="button"
+                className={'cmt__sort-btn' + (open ? ' cmt__sort-btn--open' : '')}
+                onClick={() => setOpen(o => !o)}
+            >
+                {current?.label}
+                <FaChevronDown size={8} className={'cmt__sort-chevron' + (open ? ' cmt__sort-chevron--open' : '')} />
+            </button>
+            {open && (
+                <div className="cmt__sort-menu">
+                    {options.map(o => (
+                        <button
+                            key={o.key}
+                            type="button"
+                            className={'cmt__sort-option' + (o.key === value ? ' cmt__sort-option--active' : '')}
+                            onClick={() => { onChange(o.key); setOpen(false) }}
+                        >
+                            <span className="cmt__sort-option-check">
+                                {o.key === value && <FaCheck size={8} />}
+                            </span>
+                            {o.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
 
 function isToday(iso) {
     if (!iso) return false
@@ -198,13 +244,7 @@ export default function Comments() {
                     ))}
                 </div>
 
-                <select
-                    className="cmt__track-select"
-                    value={sort}
-                    onChange={e => setSort(e.target.value)}
-                >
-                    {SORT_OPTIONS.map(o => <option key={o.key} value={o.key}>{o.label}</option>)}
-                </select>
+                <SortDropdown value={sort} onChange={setSort} options={SORT_OPTIONS} />
             </div>
 
             {/* ── Lista ──────────────────────────────────────────── */}

@@ -15,7 +15,7 @@ import {
     FaCompass, FaTrophy, FaStore, FaDiscord,
     FaChartLine, FaMusic, FaPlay, FaPause,
     FaStepForward, FaStepBackward, FaRandom, FaSyncAlt,
-    FaCog, FaAward,
+    FaCog, FaAward, FaSpotify, FaFlag,
 } from 'react-icons/fa'
 
 /* Ícones por nome lógico, usa este mapa em vez de imports espalhados. */
@@ -48,6 +48,8 @@ export const ICONS = {
     settings: FaCog,
     sparkles: HiSparkles,
     trendUp:  HiTrendingUp,
+    spotify:  FaSpotify,
+    flag:     FaFlag,
 };
 
 export default ICONS;

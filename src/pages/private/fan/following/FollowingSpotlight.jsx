@@ -1,5 +1,4 @@
 import { FaMusic, FaPlay, FaHeadphones } from 'react-icons/fa'
-import { Link }                          from 'react-router-dom'
 import { usePlayer }                     from '../../../../context/PlayerContext'
 import { toPlayerTrack }                 from '../../../../utils/toPlayerTrack'
 
@@ -7,7 +6,7 @@ export default function FollowingSpotlight({ track, roster }) {
     const { setTrack } = usePlayer()
 
     if (track) {
-        const pt = toPlayerTrack(track)
+        const pt = toPlayerTrack(track, 'following')
         return (
             <div className="flw__spotlight-card">
                 <div className="flw__spotlight-head">
@@ -27,14 +26,7 @@ export default function FollowingSpotlight({ track, roster }) {
                     </div>
                     <div className="flw__spotlight-info">
                         <span className="flw__spotlight-title">{track.title}</span>
-                        <Link
-                            to={`/artists/${track.artistProfileId}`}
-                            className="flw__spotlight-artist"
-                            style={{ textDecoration: 'none', color: 'inherit' }}
-                            onClick={e => e.stopPropagation()}
-                        >
-                            {track.artistName}
-                        </Link>
+                        <span className="flw__spotlight-artist">{track.artistName}</span>
                         <span className="flw__spotlight-plays">
                             <FaHeadphones size={9} style={{ marginRight: 4 }} />
                             {(track.playCount ?? 0).toLocaleString('pt-PT')} reproduções

@@ -24,6 +24,7 @@
         font-size: 14px;
     }
     .topbar__search-icon { left: 13px; }
+    .topbar__spacer { display: none; }
 }
 
 /* ─── Search ──────────────────────────────────────────────────────── */

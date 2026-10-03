@@ -11,7 +11,7 @@
 
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaSpotify, FaFlag, FaExclamationTriangle, FaDatabase, FaCheckCircle, FaTimesCircle, FaPlay, FaStar, FaUsers, FaMusic } from 'react-icons/fa'
+import { FaSpotify, FaFlag, FaExclamationTriangle, FaStar, FaUsers, FaMusic, FaCheckCircle, FaSearch } from 'react-icons/fa'
 import { getToken } from '../../../utils/auth.js'
 import AdminShell from './AdminShell.jsx'
 import './AdminHome.css'
@@ -27,40 +27,6 @@ const ACCENT_COLORS = {
 
 const TODAY = new Date().toLocaleDateString('pt-PT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 
-const MIGRATIONS = [
-    {
-        key: 'artist-follows',
-        title: 'Migrar follows de artistas',
-        desc: 'Move registos antigos da tabela follows para artist_follows quando o followee tem perfil de artista. Seguro de correr múltiplas vezes.',
-        endpoint: `${import.meta.env.VITE_API_BASE_URL}/api/admin/migrate/artist-follows`,
-        resultKeys: [
-            { key: 'migrated', label: 'migrados'               },
-            { key: 'deleted',  label: 'removidos de follows'    },
-            { key: 'skipped',  label: 'ignorados (não artistas)'},
-        ],
-    },
-    {
-        key: 'track-durations',
-        title: 'Preencher durações de faixas',
-        desc: 'Calcula e preenche durationMs em todas as faixas UPLOAD sem duração registada.',
-        endpoint: `${import.meta.env.VITE_API_BASE_URL}/api/admin/migrate/track-durations`,
-        resultKeys: [
-            { key: 'total',   label: 'total'       },
-            { key: 'updated', label: 'atualizadas' },
-            { key: 'skipped', label: 'ignoradas'   },
-        ],
-    },
-    {
-        key: 'sync-claimed-artists',
-        title: 'Sincronizar artistas reclamados',
-        desc: 'Cria perfis em artist_profiles para artistas verificados via claim que ainda não aparecem como importados. Seguro de correr múltiplas vezes.',
-        endpoint: `${import.meta.env.VITE_API_BASE_URL}/api/admin/migrate/sync-claimed-artists`,
-        resultKeys: [
-            { key: 'synced',  label: 'sincronizados' },
-            { key: 'skipped', label: 'já existiam'   },
-        ],
-    },
-];
 
 
 function MetricCard({ label, value, alert, icon: Icon, accent, to }) {
@@ -86,77 +52,6 @@ function MetricCard({ label, value, alert, icon: Icon, accent, to }) {
         : card;
 }
 
-
-function MigrationCard({ migration }) {
-    const [status,  setStatus]  = useState('idle')   // idle | running | done | error
-    const [result,  setResult]  = useState(null)
-    const [errMsg,  setErrMsg]  = useState('')
-
-    async function run() {
-        setStatus('running')
-        setResult(null)
-        setErrMsg('')
-        try {
-            const res = await fetch(migration.endpoint, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${getToken()}` },
-            })
-            if (!res.ok) throw new Error(`Erro ${res.status}`)
-            setResult(await res.json())
-            setStatus('done')
-        } catch (err) {
-            setErrMsg(err.message)
-            setStatus('error')
-        }
-    }
-
-    return (
-        <div className={'admin-migration' + (status === 'done' ? ' admin-migration--done' : status === 'error' ? ' admin-migration--error' : '')}>
-            <div className="admin-migration__head">
-                <span className="admin-tool__icon admin-tool__icon--blue">
-                    <FaDatabase size={17} />
-                </span>
-                <div className="admin-migration__info">
-                    <div className="admin-migration__title">{migration.title}</div>
-                    <div className="admin-migration__desc">{migration.desc}</div>
-                </div>
-            </div>
-
-            <div className="admin-migration__foot">
-                {status === 'idle' && (
-                    <button type="button" className="btn-ghost admin-migration__btn" onClick={run}>
-                        <FaPlay size={10} /> Correr
-                    </button>
-                )}
-                {status === 'running' && (
-                    <span className="admin-migration__state admin-migration__state--running">A correr…</span>
-                )}
-                {status === 'done' && result && (
-                    <div className="admin-migration__result">
-                        <FaCheckCircle size={13} className="admin-migration__result-icon" />
-                        {migration.resultKeys.map(({ key, label }) => (
-                            <span key={key} className="admin-migration__pill">
-                                <strong>{result[key] ?? 0}</strong> {label}
-                            </span>
-                        ))}
-                        <button type="button" className="admin-migration__reset" onClick={() => setStatus('idle')}>
-                            Correr novamente
-                        </button>
-                    </div>
-                )}
-                {status === 'error' && (
-                    <div className="admin-migration__result admin-migration__result--error">
-                        <FaTimesCircle size={13} className="admin-migration__result-icon" />
-                        <span>{errMsg}</span>
-                        <button type="button" className="admin-migration__reset" onClick={() => setStatus('idle')}>
-                            Tentar novamente
-                        </button>
-                    </div>
-                )}
-            </div>
-        </div>
-    )
-}
 
 
 function QuoteForm({ page, label, artists }) {
@@ -454,6 +349,90 @@ function BeatsFeaturedSection() {
     )
 }
 
+function UsersSection() {
+    const [users,    setUsers]    = useState([])
+    const [loading,  setLoading]  = useState(true)
+    const [query,    setQuery]    = useState('')
+    const [toggling, setToggling] = useState(null)
+
+    useEffect(() => {
+        setLoading(true)
+        const q = query.trim() ? `?q=${encodeURIComponent(query.trim())}` : ''
+        fetch(`${API}/users${q}`, { headers: { Authorization: `Bearer ${getToken()}` } })
+            .then(r => r.ok ? r.json() : [])
+            .then(data => setUsers(Array.isArray(data) ? data : []))
+            .catch(() => {})
+            .finally(() => setLoading(false))
+    }, [query])
+
+    async function toggleVerify(user) {
+        setToggling(user.id)
+        try {
+            const res = await fetch(`${API}/users/${user.id}/verify`, {
+                method: 'PATCH',
+                headers: { Authorization: `Bearer ${getToken()}` },
+            })
+            if (!res.ok) throw new Error()
+            const updated = await res.json()
+            setUsers(prev => prev.map(u => u.id === user.id ? { ...u, verified: updated.verified } : u))
+        } catch { /* ignora */ } finally { setToggling(null) }
+    }
+
+    return (
+        <section className="admin-section">
+            <h2 className="admin-section__title">Utilizadores</h2>
+            <p className="admin-section__sub">Pesquisa e gere a verificação dos utilizadores.</p>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', marginBottom: 'var(--space-4)' }}>
+                <div style={{ position: 'relative', flex: 1, maxWidth: 360 }}>
+                    <FaSearch size={12} style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--color-ink-mute)', pointerEvents: 'none' }} />
+                    <input
+                        className="input"
+                        style={{ paddingLeft: 30 }}
+                        placeholder="Nome, username ou email…"
+                        value={query}
+                        onChange={e => setQuery(e.target.value)}
+                    />
+                </div>
+            </div>
+
+            {loading && <p className="admin-beats__empty">A carregar utilizadores…</p>}
+            {!loading && users.length === 0 && <p className="admin-beats__empty">Nenhum utilizador encontrado.</p>}
+            {!loading && users.length > 0 && (
+                <div className="admin-beats">
+                    {users.map(u => (
+                        <div key={u.id} className={`admin-beat-row${u.verified ? ' admin-beat-row--featured' : ''}`}>
+                            <div className="admin-beat-row__info" style={{ flexDirection: 'row', alignItems: 'center', gap: 'var(--space-3)' }}>
+                                {u.avatarUrl
+                                    ? <img src={u.avatarUrl} alt={u.name} style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+                                    : <div style={{ width: 34, height: 34, borderRadius: '50%', background: 'var(--color-surface-2)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-ink-mute)', fontSize: 14 }}>{u.name?.[0]?.toUpperCase() ?? '?'}</div>
+                                }
+                                <div style={{ minWidth: 0 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                        <span className="admin-beat-row__title">{u.name}</span>
+                                        {u.verified && <FaCheckCircle size={11} style={{ color: 'var(--color-green)', flexShrink: 0 }} />}
+                                    </div>
+                                    <span className="admin-beat-row__meta">@{u.username} · {u.userRole?.toLowerCase()}</span>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                className={`admin-beat-row__star${u.verified ? ' admin-beat-row__star--on' : ''}`}
+                                style={u.verified ? { color: 'var(--color-green)', borderColor: 'rgba(52,211,153,0.5)', background: 'rgba(52,211,153,0.1)' } : {}}
+                                onClick={() => toggleVerify(u)}
+                                disabled={toggling === u.id}
+                                title={u.verified ? 'Remover verificação' : 'Verificar utilizador'}
+                            >
+                                <FaCheckCircle size={14} />
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </section>
+    )
+}
+
 export default function AdminHome() {
     const [metrics, setMetrics] = useState([
         { label: 'Perfis de artista importados',    value: null, icon: FaSpotify,            accent: 'green'   },
@@ -491,17 +470,10 @@ export default function AdminHome() {
                     {metrics.map((m) => <MetricCard key={m.label} {...m} />)}
                 </section>
 
-                <section className="admin-section">
-                    <h2 className="admin-section__title">Migrações</h2>
-                    <p className="admin-section__sub">Operações de manutenção de dados. Todas são idempotentes, seguras de correr mais do que uma vez.</p>
-                    <div className="admin-migrations">
-                        {MIGRATIONS.map(m => <MigrationCard key={m.key} migration={m} />)}
-                    </div>
-                </section>
-
-                <AuthQuoteSection />
+<AuthQuoteSection />
                 <HeroArtistsSection />
                 <BeatsFeaturedSection />
+                <UsersSection />
             </div>
         </AdminShell>
     );

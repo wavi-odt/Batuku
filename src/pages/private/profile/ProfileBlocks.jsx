@@ -3,13 +3,23 @@
    Recebem dados via props (alimentados por data/profile.js → fetch).
    ───────────────────────────────────────────────────────────────── */
 
-import { FaPlay, FaAward, FaUsers, FaRegComment, FaRegHeart } from 'react-icons/fa'
+import { FaPlay, FaAward, FaUsers, FaRegComment, FaRegHeart,
+         FaSun, FaFire, FaCompass, FaHeart, FaList,
+         FaCrown, FaHeadphones, FaBolt, FaGem } from 'react-icons/fa'
 import { HiOutlineLibrary, HiArrowUp } from 'react-icons/hi'
 import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
 
-const BADGE_EMOJI = {
-    sunrise: '🌅', fire: '🔥', compass: '🧭', heart: '❤️', star: '⭐',
-    crown: '👑', ticket: '🎟️', gem: '💎', verified: '✓', users: '👥',
+const BADGE_ICONS = {
+    'Madrugador':    FaSun,
+    'Streak 12':     FaFire,
+    'Explorador':    FaCompass,
+    'Apoiante':      FaHeart,
+    'Curador':       FaList,
+    'Top 100':       FaCrown,
+    'Fã Dedicado':   FaHeadphones,
+    'Streak 30':     FaFire,
+    'Influenciador': FaBolt,
+    'Lenda':         FaGem,
 };
 
 const ACTIVITY_ICON = {
@@ -37,7 +47,7 @@ export function BadgesGrid({ badges }) {
             {badges.map((b, i) => (
                 <div key={i} className={'badge-item' + (b.got ? '' : ' is-locked')}>
                     <div className={'badge-item__icon badge-item__icon--' + b.tier}>
-                        {BADGE_EMOJI[b.icon] || '🏅'}
+                        {(() => { const Icon = BADGE_ICONS[b.name] ?? FaGem; return <Icon size={20} color={b.got ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.25)'} /> })()}
                     </div>
                     <div className="badge-item__name">{b.name}</div>
                     <div className="badge-item__desc">{b.desc}</div>

@@ -19,8 +19,9 @@ export default function Sidebar({ role = 'fan' }) {
     const { badgesPerRoute } = useNotifications();
 
     const user = {
-        name:   realUser?.name   ?? null,
-        handle: realUser?.handle ?? null,
+        name:     realUser?.name     ?? null,
+        handle:   realUser?.handle   ?? null,
+        verified: realUser?.verified ?? false,
     };
 
     return (
@@ -65,7 +66,7 @@ export default function Sidebar({ role = 'fan' }) {
                 <div className="sidebar__profile-info">
                     <div className="sidebar__profile-name">{user.name}</div>
                     <div className="sidebar__profile-sub">
-                        {role === 'artist'
+                        {user.verified
                             ? <><span className="sidebar__verified-dot" /> Verificado</>
                             : user.handle ?? ''}
                     </div>
