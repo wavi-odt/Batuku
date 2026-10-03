@@ -11,7 +11,7 @@
 
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaSpotify, FaFlag, FaExclamationTriangle, FaStar, FaUsers, FaMusic, FaCheckCircle, FaSearch } from 'react-icons/fa'
+import { FaSpotify, FaFlag, FaExclamationTriangle, FaStar, FaUsers, FaMusic, FaCheckCircle, FaSearch, FaPlay } from 'react-icons/fa'
 import { getToken } from '../../../utils/auth.js'
 import AdminShell from './AdminShell.jsx'
 import './AdminHome.css'
