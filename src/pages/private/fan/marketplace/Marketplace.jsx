@@ -366,22 +366,6 @@ export default function Marketplace() {
             {/* ─── Vista do produtor: Descobrir ─────────────────── */}
             {marketplaceRole === 'PRODUCER' && producerTab === 'discover' && (
                 <>
-                    {/* Stats */}
-                    <div className="mkt__stats-bar">
-                        <div className="mkt__stat">
-                            <span className="mkt__stat-val">{stats.beats}</span>
-                            <span className="mkt__stat-label">Beats disponíveis</span>
-                        </div>
-                        <div className="mkt__stat">
-                            <span className="mkt__stat-val">{stats.producers}</span>
-                            <span className="mkt__stat-label">Produtores</span>
-                        </div>
-                        <div className="mkt__stat">
-                            <span className="mkt__stat-val">{Number(stats.sold).toLocaleString('pt-PT')}</span>
-                            <span className="mkt__stat-label">Vendas totais</span>
-                        </div>
-                    </div>
-
                     {/* Beat em destaque (apenas visualização) */}
                     {featured && (
                         <MarketplaceFeatured beat={featured} readOnly />

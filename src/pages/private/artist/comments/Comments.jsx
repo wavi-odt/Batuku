@@ -81,11 +81,9 @@ export default function Comments() {
     const [query,    setQuery]    = useState('')
     const [searchParams, setSearchParams] = useSearchParams()
     const status    = searchParams.get('status') ?? 'all'
-    const track     = searchParams.get('track')  ?? 'Todas'
     const sort      = searchParams.get('sort')   ?? 'recent'
     const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p })
     const setStatus = (val) => sp('status', val)
-    const setTrack  = (val) => sp('track',  val)
     const setSort   = (val) => sp('sort',   val)
 
     useEffect(() => {
@@ -113,18 +111,9 @@ export default function Comments() {
         { label: 'Fixados',   value: kpis.pinned,  icon: FaThumbtack,  accent: 'green',   sub: 'em destaque'           },
     ]
 
-    /* ── Filtro de faixas derivado dos dados ────────────────────── */
-    const trackFilter = useMemo(() => {
-        const titles = [...new Set(comments.map(c => c.trackTitle).filter(Boolean))].sort()
-        return ['Todas', ...titles]
-    }, [comments])
-
     /* ── Lista filtrada ─────────────────────────────────────────── */
     const filtered = useMemo(() => {
         let list = [...comments]
-
-        if (track !== 'Todas')
-            list = list.filter(c => c.trackTitle === track)
 
         if (status === 'pending')
             list = list.filter(c => !c.reply)
@@ -222,14 +211,6 @@ export default function Comments() {
                         onChange={e => setQuery(e.target.value)}
                     />
                 </div>
-
-                <select
-                    className="cmt__track-select"
-                    value={track}
-                    onChange={e => setTrack(e.target.value)}
-                >
-                    {trackFilter.map(t => <option key={t} value={t}>{t}</option>)}
-                </select>
 
                 <div className="cmt__status-tabs">
                     {STATUS_TABS.map(tab => (
