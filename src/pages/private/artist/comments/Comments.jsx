@@ -135,7 +135,7 @@ export default function Comments() {
             return [...list].sort((a, b) => (!a.reply ? 0 : 1) - (!b.reply ? 0 : 1))
 
         return list
-    }, [comments, query, status, track, sort])
+    }, [comments, query, status, sort])
 
     /* ── Mutações ───────────────────────────────────────────────── */
     async function handleDelete(id) {

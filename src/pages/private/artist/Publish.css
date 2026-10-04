@@ -666,3 +666,13 @@
     align-items: center;
     color: var(--color-coral);
 }
+
+.pub-dd__group-label {
+    display: block;
+    padding: 6px 10px 2px;
+    font-size: 11px;
+    font-weight: var(--fw-semibold);
+    color: var(--color-ink-mute);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}

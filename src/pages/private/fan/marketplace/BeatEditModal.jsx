@@ -3,6 +3,7 @@ import { createPortal }  from 'react-dom'
 import { FaTimes }       from 'react-icons/fa'
 import { API, getToken } from '../../../../utils/auth.js'
 import { useGenres }     from '../../../../context/GenresContext.jsx'
+import { BeatDropdown }  from './BeatUploadModal.jsx'
 import './BeatUploadModal.css'
 
 const KEYS = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B',
@@ -10,6 +11,11 @@ const KEYS = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#',
 
 export default function BeatEditModal({ beat, onClose, onSaved }) {
     const { cvNames: CV_GENRES, mundialNames: INTL_GENRES } = useGenres()
+    const genreOptions = [
+        { label: 'Cabo Verde',    items: CV_GENRES    },
+        { label: 'Internacional', items: INTL_GENRES  },
+        'Outro',
+    ]
     const [title,         setTitle]         = useState(beat.title ?? '')
     const [genre,         setGenre]         = useState(beat.genre ?? '')
     const [bpm,           setBpm]           = useState(beat.bpm ?? '')
@@ -72,16 +78,7 @@ export default function BeatEditModal({ beat, onClose, onSaved }) {
                         </div>
                         <div className="bum__field">
                             <label className="bum__label">Género</label>
-                            <select className="bum__input" value={genre} onChange={e => setGenre(e.target.value)}>
-                                <option value="">Selecionar</option>
-                                <optgroup label="Cabo Verde">
-                                    {CV_GENRES.map(g => <option key={g} value={g}>{g}</option>)}
-                                </optgroup>
-                                <optgroup label="Internacional">
-                                    {INTL_GENRES.map(g => <option key={g} value={g}>{g}</option>)}
-                                </optgroup>
-                                <option value="Outro">Outro</option>
-                            </select>
+                            <BeatDropdown value={genre} onChange={setGenre} options={genreOptions} placeholder="Selecionar" />
                         </div>
                     </div>
 
@@ -93,10 +90,7 @@ export default function BeatEditModal({ beat, onClose, onSaved }) {
                         </div>
                         <div className="bum__field">
                             <label className="bum__label">Tom</label>
-                            <select className="bum__input" value={key} onChange={e => setKey(e.target.value)}>
-                                <option value="">Selecionar</option>
-                                {KEYS.map(k => <option key={k} value={k}>{k}</option>)}
-                            </select>
+                            <BeatDropdown value={key} onChange={setKey} options={KEYS} placeholder="Selecionar" />
                         </div>
                         <div className="bum__field">
                             <label className="bum__label">

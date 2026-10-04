@@ -1,9 +1,96 @@
 import { useState, useRef, useEffect } from 'react'
 import { createPortal }     from 'react-dom'
-import { FaMusic, FaImage, FaTimes } from 'react-icons/fa'
+import { FaMusic, FaImage, FaTimes, FaChevronDown, FaCheck } from 'react-icons/fa'
 import { API, getToken }    from '../../../../utils/auth.js'
 import { useGenres }        from '../../../../context/GenresContext.jsx'
 import './BeatUploadModal.css'
+
+export function BeatDropdown({ value, onChange, options, placeholder }) {
+    const [open,    setOpen]    = useState(false)
+    const [menuPos, setMenuPos] = useState({ top: 0, left: 0, width: 0 })
+    const btnRef  = useRef(null)
+    const menuRef = useRef(null)
+
+    useEffect(() => {
+        if (!open) return
+        function onDown(e) {
+            if (!btnRef.current?.contains(e.target) && !menuRef.current?.contains(e.target))
+                setOpen(false)
+        }
+        function onScroll(e) {
+            if (menuRef.current?.contains(e.target)) return
+            setOpen(false)
+        }
+        document.addEventListener('mousedown', onDown, true)
+        window.addEventListener('scroll', onScroll, true)
+        return () => {
+            document.removeEventListener('mousedown', onDown, true)
+            window.removeEventListener('scroll', onScroll, true)
+        }
+    }, [open])
+
+    function handleOpen() {
+        if (btnRef.current) {
+            const r = btnRef.current.getBoundingClientRect()
+            setMenuPos({ top: r.bottom + 5, left: r.left, width: r.width })
+        }
+        setOpen(o => !o)
+    }
+
+    function renderOpt(o) {
+        if (typeof o === 'string') {
+            return (
+                <button key={o} type="button"
+                    className={'pub-dd__option' + (o === value ? ' pub-dd__option--active' : '')}
+                    onClick={() => { onChange(o); setOpen(false) }}>
+                    <span className="pub-dd__check">{o === value && <FaCheck size={8} />}</span>
+                    {o}
+                </button>
+            )
+        }
+        return (
+            <div key={o.label}>
+                <span className="pub-dd__group-label">{o.label}</span>
+                {o.items.map(item => (
+                    <button key={item} type="button"
+                        className={'pub-dd__option' + (item === value ? ' pub-dd__option--active' : '')}
+                        onClick={() => { onChange(item); setOpen(false) }}>
+                        <span className="pub-dd__check">{item === value && <FaCheck size={8} />}</span>
+                        {item}
+                    </button>
+                ))}
+            </div>
+        )
+    }
+
+    return (
+        <div className="pub-dd">
+            <button ref={btnRef} type="button"
+                className={'pub-dd__btn' + (open ? ' pub-dd__btn--open' : '')}
+                onClick={handleOpen}>
+                <span className={value ? '' : 'pub-dd__placeholder'}>
+                    {value || placeholder || '—'}
+                </span>
+                <FaChevronDown size={9} className={'pub-dd__chevron' + (open ? ' pub-dd__chevron--open' : '')} />
+            </button>
+            {open && createPortal(
+                <div ref={menuRef} className="pub-dd__menu"
+                    style={{ position: 'fixed', top: menuPos.top, left: menuPos.left, width: menuPos.width }}>
+                    {placeholder && (
+                        <button type="button"
+                            className={'pub-dd__option' + (!value ? ' pub-dd__option--active' : '')}
+                            onClick={() => { onChange(''); setOpen(false) }}>
+                            <span className="pub-dd__check">{!value && <FaCheck size={8} />}</span>
+                            {placeholder}
+                        </button>
+                    )}
+                    {options.map(renderOpt)}
+                </div>,
+                document.body
+            )}
+        </div>
+    )
+}
 const KEYS = ['C', 'C#', 'Db', 'D', 'D#', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'G#', 'Ab', 'A', 'A#', 'Bb', 'B',
                'Am', 'Bm', 'Cm', 'C#m', 'Dm', 'D#m', 'Em', 'Fm', 'F#m', 'Gm', 'G#m']
 
@@ -42,6 +129,11 @@ function DropZone({ label, hint, accept, file, onPick, icon: Icon }) {
 
 export default function BeatUploadModal({ onClose, onUploaded }) {
     const { cvNames: CV_GENRES, mundialNames: INTL_GENRES } = useGenres()
+    const genreOptions = [
+        { label: 'Cabo Verde',    items: CV_GENRES    },
+        { label: 'Internacional', items: INTL_GENRES  },
+        'Outro',
+    ]
     const [title,         setTitle]         = useState('')
     const [genre,         setGenre]         = useState('')
     const [bpm,           setBpm]           = useState('')
@@ -137,16 +229,7 @@ export default function BeatUploadModal({ onClose, onUploaded }) {
                         </div>
                         <div className="bum__field">
                             <label className="bum__label">Género</label>
-                            <select className="bum__input" value={genre} onChange={e => setGenre(e.target.value)}>
-                                <option value="">Selecionar</option>
-                                <optgroup label="Cabo Verde">
-                                    {CV_GENRES.map(g => <option key={g} value={g}>{g}</option>)}
-                                </optgroup>
-                                <optgroup label="Internacional">
-                                    {INTL_GENRES.map(g => <option key={g} value={g}>{g}</option>)}
-                                </optgroup>
-                                <option value="Outro">Outro</option>
-                            </select>
+                            <BeatDropdown value={genre} onChange={setGenre} options={genreOptions} placeholder="Selecionar" />
                         </div>
                     </div>
 
@@ -159,10 +242,7 @@ export default function BeatUploadModal({ onClose, onUploaded }) {
                         </div>
                         <div className="bum__field">
                             <label className="bum__label">Tom</label>
-                            <select className="bum__input" value={key} onChange={e => setKey(e.target.value)}>
-                                <option value="">Selecionar</option>
-                                {KEYS.map(k => <option key={k} value={k}>{k}</option>)}
-                            </select>
+                            <BeatDropdown value={key} onChange={setKey} options={KEYS} placeholder="Selecionar" />
                         </div>
                         <div className="bum__field">
                             <label className="bum__label">
