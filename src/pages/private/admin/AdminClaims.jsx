@@ -50,10 +50,12 @@ export default function AdminClaims() {
     const [confirm, setConfirm]           = useState(null); // { id, source, action } | null
     const [actionErr, setActionErr]       = useState('');
 
-    useEffect(() => {
+    function loadClaims() {
+        setLoading(true);
+        setError('');
         const headers = { Authorization: `Bearer ${getToken()}` };
         fetch(PENDING_API, { headers })
-            .then(r => r.ok ? r.json() : [])
+            .then(r => r.ok ? r.json() : r.json().then(d => Promise.reject(new Error(d.error || `Erro ${r.status}`))))
             .then(pending => {
                 const all = pending
                     .map(c => ({ ...c, source: 'pending_registration' }))
@@ -62,7 +64,9 @@ export default function AdminClaims() {
             })
             .catch(err => setError(err.message))
             .finally(() => setLoading(false));
-    }, []);
+    }
+
+    useEffect(() => { loadClaims(); }, []);
 
     function openDetail(id, source) {
         if (selectedId === id) {
@@ -133,8 +137,19 @@ export default function AdminClaims() {
         <AdminShell>
             <div className={`admin-page__inner${hasSplit ? ' admin-page__inner--wide' : ''}`}>
                 <header className="admin-head">
-                    <h1 className="admin-head__title">Reclamações de perfil</h1>
-                    <p className="admin-head__sub">Revê e aprova pedidos de artistas a reclamar o seu perfil importado.</p>
+                    <div>
+                        <h1 className="admin-head__title">Reclamações de perfil</h1>
+                        <p className="admin-head__sub">Revê e aprova pedidos de artistas a reclamar o seu perfil importado.</p>
+                    </div>
+                    <button
+                        type="button"
+                        className="btn btn--ghost"
+                        onClick={loadClaims}
+                        disabled={loading}
+                        style={{ flexShrink: 0 }}
+                    >
+                        {loading ? 'A carregar…' : 'Actualizar'}
+                    </button>
                 </header>
 
                 {success && (

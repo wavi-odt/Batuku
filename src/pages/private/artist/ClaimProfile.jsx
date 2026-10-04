@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { SiSpotify } from 'react-icons/si'
 import { FaCamera, FaRedo, FaCheck, FaFileImage } from 'react-icons/fa'
