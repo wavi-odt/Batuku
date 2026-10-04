@@ -35,7 +35,10 @@ export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemo
                 popoverRef.current && !popoverRef.current.contains(e.target)
             ) setOpen(false)
         }
-        function handleScroll() { setOpen(false) }
+        function handleScroll(e) {
+            if (popoverRef.current?.contains(e.target)) return
+            setOpen(false)
+        }
         document.addEventListener('mousedown', handleClick)
         window.addEventListener('scroll', handleScroll, true)
         return () => {

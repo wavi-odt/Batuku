@@ -60,7 +60,10 @@ function DateTimePicker({ value, onChange, min }) {
             if (!btnRef.current?.contains(e.target) && !panelRef.current?.contains(e.target))
                 setOpen(false)
         }
-        function onScroll() { setOpen(false) }
+        function onScroll(e) {
+            if (panelRef.current?.contains(e.target)) return
+            setOpen(false)
+        }
         document.addEventListener('mousedown', onDown, true)
         window.addEventListener('scroll', onScroll, true)
         return () => {
@@ -252,7 +255,10 @@ function PubDropdown({ value, onChange, options, placeholder }) {
             if (!btnRef.current?.contains(e.target) && !menuRef.current?.contains(e.target))
                 setOpen(false)
         }
-        function onScroll() { setOpen(false) }
+        function onScroll(e) {
+            if (menuRef.current?.contains(e.target)) return
+            setOpen(false)
+        }
         document.addEventListener('mousedown', onDown, true)
         window.addEventListener('scroll', onScroll, true)
         return () => {
