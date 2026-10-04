@@ -74,7 +74,7 @@ function SortDropdown({ value, onChange, options }) {
 }
 
 export default function Marketplace() {
-    const currentUser = useCurrentUser()
+    const { user: currentUser, isLoading: userLoading } = useCurrentUser()
     const { clearRouteNotifications } = useNotifications()
 
     useEffect(() => { clearRouteNotifications('/marketplace') }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -251,7 +251,7 @@ export default function Marketplace() {
     const featInCart = featured ? cartIds.has(featured.id) : false
 
     /* ─── Aguardar que o currentUser carregue antes de mostrar modal */
-    const roleKnown = currentUser !== null && marketplaceRole !== undefined
+    const roleKnown = !userLoading && currentUser !== null && marketplaceRole !== undefined
 
     /* Redirect síncrono, sem flash */
     if (!tabParam) {
