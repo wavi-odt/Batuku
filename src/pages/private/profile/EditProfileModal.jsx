@@ -169,17 +169,19 @@ function sortedStr(arr) { return JSON.stringify([...(arr || [])].sort()) }
 /* ── Tab: Artista ────────────────────────────────────────────────────── */
 function TabArtista({ onSaved }) {
     const { showToast } = useToast()
+    const [artistName, setArtistName] = useState('')
     const [bio, setBio]           = useState('')
     const [location, setLocation] = useState('')
     const [genres, setGenres]     = useState([])
     const [languages, setLangs]   = useState([])
-    const [saved, setSaved]       = useState({ bio: '', location: '', genres: [], languages: [] })
+    const [saved, setSaved]       = useState({ artistName: '', bio: '', location: '', genres: [], languages: [] })
 
     const [options, setOptions]   = useState({ genres: [], languages: [], locations: [] })
     const [loading, setLoading]   = useState(true)
     const [saving, setSaving]     = useState(false)
 
-    const isDirty = bio !== saved.bio ||
+    const isDirty = artistName !== saved.artistName ||
+                    bio !== saved.bio ||
                     location !== saved.location ||
                     sortedStr(genres) !== sortedStr(saved.genres) ||
                     sortedStr(languages) !== sortedStr(saved.languages)
@@ -193,11 +195,13 @@ function TabArtista({ onSaved }) {
             setOptions(opts)
             if (me) {
                 const snap = {
-                    bio:       me.bio      || '',
-                    location:  me.location || '',
-                    genres:    me.genres   || [],
-                    languages: me.languages || [],
+                    artistName: me.name      || '',
+                    bio:        me.bio       || '',
+                    location:   me.location  || '',
+                    genres:     me.genres    || [],
+                    languages:  me.languages || [],
                 }
+                setArtistName(snap.artistName)
                 setBio(snap.bio)
                 setLocation(snap.location)
                 setGenres(snap.genres)
@@ -224,12 +228,13 @@ function TabArtista({ onSaved }) {
         setSaving(true)
         try {
             await Promise.all([
+                callPut('/artists/me/name',      { name: artistName }),
                 callPut('/artists/me/bio',       { bio }),
                 callPut('/artists/me/location',  { location }),
                 callPut('/artists/me/genres',    { genres }),
                 callPut('/artists/me/languages', { languages }),
             ])
-            setSaved({ bio, location, genres, languages })
+            setSaved({ artistName, bio, location, genres, languages })
             showToast('Perfil de artista guardado!')
             onSaved?.()
         } catch (err) {
@@ -250,6 +255,12 @@ function TabArtista({ onSaved }) {
 
     return (
         <form className="ep-form" onSubmit={handleSubmit}>
+            <Field
+                label="Nome artístico"
+                value={artistName}
+                onChange={e => setArtistName(e.target.value)}
+                required
+            />
             <Field
                 label="Sobre"
                 multiline

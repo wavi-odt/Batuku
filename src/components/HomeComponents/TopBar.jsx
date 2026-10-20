@@ -284,7 +284,7 @@ export default function TopBar({ role = 'fan' }) {
             <div className="topbar__spacer" />
 
             {role === 'artist' && (
-                <button type="button" className="topbar__publish" onClick={openPublish}>
+                <button type="button" className="topbar__publish" onClick={() => openPublish('track')}>
                     <HiPlus size={16} /> Publicar
                 </button>
             )}

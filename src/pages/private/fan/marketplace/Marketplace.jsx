@@ -140,7 +140,6 @@ export default function Marketplace() {
     const [beats,     setBeats]     = useState([])
     const [featured,  setFeatured]  = useState(null)
     const [genres,    setGenres]    = useState(['Todos'])
-    const [stats,     setStats]     = useState({ beats: 0, producers: 0, sold: 0 })
     const [producers, setProducers] = useState([])
     const [loading,   setLoading]   = useState(true)
 
@@ -164,14 +163,12 @@ export default function Marketplace() {
             fetch(`${API}/api/marketplace/beats`,             { headers }).then(r => r.ok ? r.json() : []),
             fetch(`${API}/api/marketplace/beats/featured`,    { headers }).then(r => r.ok && r.status !== 204 ? r.json() : null),
             fetch(`${API}/api/marketplace/genres`,            { headers }).then(r => r.ok ? r.json() : ['Todos']),
-            fetch(`${API}/api/marketplace/stats`,             { headers }).then(r => r.ok ? r.json() : {}),
             fetch(`${API}/api/marketplace/producers?limit=6`, { headers }).then(r => r.ok ? r.json() : []),
         ])
-        .then(([b, feat, g, s, p]) => {
+        .then(([b, feat, g, p]) => {
             setBeats(Array.isArray(b) ? b : [])
             setFeatured(feat)
             setGenres(Array.isArray(g) && g.length > 0 ? g : ['Todos'])
-            setStats({ beats: s?.beats ?? 0, producers: s?.producers ?? 0, sold: s?.sold ?? 0 })
             setProducers(Array.isArray(p) ? p : [])
         })
         .catch(console.error)
@@ -232,18 +229,18 @@ export default function Marketplace() {
         return () => window.removeEventListener('batuku:audio-start', onMainAudioStart)
     }, [])
 
-    const handlePlay = useCallback((beatId) => {
+    const handlePlay = useCallback((beatId, audioUrl) => {
         const audio = audioRef.current
         if (!beatId || playing === beatId) {
             audio.pause()
             setPlaying(null)
             return
         }
-        const beat = beats.find(b => b.id === beatId)
-        if (!beat?.audioUrl) return
+        const url = audioUrl ?? beats.find(b => b.id === beatId)?.audioUrl
+        if (!url) return
         window.dispatchEvent(new CustomEvent('batuku:audio-start', { detail: { source: 'market' } }))
         audio.pause()
-        audio.src = beat.audioUrl
+        audio.src = url
         audio.play().catch(() => {})
         setPlaying(beatId)
     }, [beats, playing])
@@ -411,7 +408,7 @@ export default function Marketplace() {
 
             {/* ─── Vista do fan: Minhas Compras ─────────────────── */}
             {marketplaceRole !== 'PRODUCER' && activeTab === 'purchases' && (
-                <MarketplacePurchases />
+                <MarketplacePurchases playing={playing} onPlay={handlePlay} />
             )}
 
             {/* ─── Vista do fan: Propostas ──────────────────────── */}
@@ -422,22 +419,6 @@ export default function Marketplace() {
             {/* ─── Vista do fan / comprador ─────────────────────── */}
             {marketplaceRole !== 'PRODUCER' && activeTab === 'beats' && (
                 <>
-                    {/* Stats */}
-                    <div className="mkt__stats-bar">
-                        <div className="mkt__stat">
-                            <span className="mkt__stat-val">{stats.beats}</span>
-                            <span className="mkt__stat-label">Beats disponíveis</span>
-                        </div>
-                        <div className="mkt__stat">
-                            <span className="mkt__stat-val">{stats.producers}</span>
-                            <span className="mkt__stat-label">Produtores</span>
-                        </div>
-                        <div className="mkt__stat">
-                            <span className="mkt__stat-val">{Number(stats.sold).toLocaleString('pt-PT')}</span>
-                            <span className="mkt__stat-label">Vendas totais</span>
-                        </div>
-                    </div>
-
                     {/* Beat em destaque */}
                     {featured && (
                         <MarketplaceFeatured

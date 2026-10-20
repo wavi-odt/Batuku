@@ -24,6 +24,31 @@
     border-radius: 6px;
     overflow: hidden;
     flex-shrink: 0;
+    position: relative;
+}
+
+.mkt-lib__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.mkt-lib__item:hover .mkt-lib__play,
+.mkt-lib__item--playing .mkt-lib__play {
+    opacity: 1;
+}
+
+.mkt-lib__item--playing {
+    background: var(--color-surface);
 }
 
 .mkt-lib__info {

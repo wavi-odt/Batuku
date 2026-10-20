@@ -166,9 +166,21 @@ export function ArtistAbout({ artist }) {
     );
 }
 
+function extractHandle(handle) {
+    if (!handle) return handle;
+    try {
+        const url = new URL(handle);
+        const parts = url.pathname.split('/').filter(Boolean);
+        const last = parts[parts.length - 1] ?? '';
+        return last.replace(/^@/, '') || handle;
+    } catch {
+        return handle.replace(/^@/, '');
+    }
+}
+
 function buildSocialUrl(kind, handle) {
     if (!handle) return null;
-    const h = handle.replace(/^@/, '');
+    const h = extractHandle(handle);
     if (handle.startsWith('http')) return handle;
     switch (kind) {
         case 'instagram':  return `https://www.instagram.com/${h}`;
@@ -197,7 +209,7 @@ export function ArtistLinks({ social }) {
                         target={url ? '_blank' : undefined}
                         rel={url ? 'noopener noreferrer' : undefined}
                     >
-                        <span className="social-link__handle">{s.handle}</span>
+                        <span className="social-link__handle">@{extractHandle(s.handle)}</span>
                         <span className="social-link__kind">{s.kind}</span>
                     </a>
                 );

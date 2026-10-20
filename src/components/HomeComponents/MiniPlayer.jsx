@@ -362,12 +362,22 @@ export default function MiniPlayer() {
         if (!track) return
         userPausedRef.current = playing
         if (track.audioUrl && audioRef.current) {
-            playing ? audioRef.current.pause() : audioRef.current.play().catch(() => {})
+            if (playing) {
+                audioRef.current.pause()
+            } else {
+                window.dispatchEvent(new CustomEvent('batuku:audio-start', { detail: { source: 'main' } }))
+                audioRef.current.play().catch(() => {})
+            }
         } else if (ctrlRef.current) {
             const ctrl = ctrlRef.current
-            if (typeof ctrl.togglePlay === 'function') ctrl.togglePlay()
-            else if (playing) ctrl.pause()
-            else ctrl.play()
+            if (playing) {
+                if (typeof ctrl.togglePlay === 'function') ctrl.togglePlay()
+                else ctrl.pause()
+            } else {
+                window.dispatchEvent(new CustomEvent('batuku:audio-start', { detail: { source: 'main' } }))
+                if (typeof ctrl.togglePlay === 'function') ctrl.togglePlay()
+                else ctrl.play()
+            }
         }
     }
 

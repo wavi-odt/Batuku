@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { FaDownload }          from 'react-icons/fa'
+import { FaDownload, FaPlay, FaPause } from 'react-icons/fa'
 import ArtistArtwork           from '../../../../components/PublicComponets/ArtistArtwork.jsx'
 import { API, getToken }       from '../../../../utils/auth.js'
 
@@ -26,7 +26,7 @@ async function downloadBeat(audioUrl, title) {
     }
 }
 
-export default function MarketplacePurchases() {
+export default function MarketplacePurchases({ playing, onPlay }) {
     const [purchases, setPurchases] = useState([])
     const [loading,   setLoading]   = useState(true)
 
@@ -54,8 +54,10 @@ export default function MarketplacePurchases() {
     return (
         <div className="mkt-lib">
             <div className="mkt-lib__list">
-                {purchases.map(p => (
-                    <div key={p.id} className="mkt-lib__item">
+                {purchases.map(p => {
+                    const isPlaying = playing === p.id
+                    return (
+                    <div key={p.id} className={`mkt-lib__item${isPlaying ? ' mkt-lib__item--playing' : ''}`}>
                         <div className="mkt-lib__cover">
                             <ArtistArtwork
                                 shape="circles"
@@ -64,6 +66,16 @@ export default function MarketplacePurchases() {
                                 rounded={0}
                                 showGloss={false}
                             />
+                            {p.audioUrl && (
+                                <button
+                                    type="button"
+                                    className="mkt-lib__play"
+                                    aria-label={isPlaying ? 'Pausar' : 'Pré-ouvir'}
+                                    onClick={() => onPlay?.(isPlaying ? null : p.id, p.audioUrl)}
+                                >
+                                    {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} />}
+                                </button>
+                            )}
                         </div>
 
                         <div className="mkt-lib__info">
@@ -96,7 +108,7 @@ export default function MarketplacePurchases() {
                             </button>
                         )}
                     </div>
-                ))}
+                )})}
             </div>
         </div>
     )
