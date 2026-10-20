@@ -21,7 +21,7 @@ export default function CTA() {
                     <p className="cta__lede">Grátis para sempre. Regista-te em segundos.</p>
                     <div className="cta__actions">
                         <Link to="/register" className="btn btn--primary">Criar conta grátis</Link>
-                        <a href="https://discord.gg/" className="btn btn--ghost">
+                        <a href="https://discord.gg/RCMcu9PAe" target="_blank" rel="noreferrer" className="btn btn--ghost">
                             <FaDiscord size={16} />
                             Entrar via Discord
                         </a>
