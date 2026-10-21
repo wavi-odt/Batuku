@@ -181,11 +181,11 @@ export default function MarketplaceSidebar({ cart, onRemove, onClearCart, produc
                                     <div className="mkt__prod-name">
                                         <ClickableName userId={p.id} name={p.name} />
                                     </div>
-                                    <div className="mkt__prod-genre">{p.genre} · {p.beats} beats</div>
-                                </div>
-                                <div className="mkt__prod-meta">
-                                    <div className="mkt__prod-sales">{p.sales} vendas</div>
-                                    <div className="mkt__prod-rating">★ {p.rating.toFixed(1)}</div>
+                                    <div className="mkt__prod-genre">
+                                        {p.beats > 0 ? `${p.beats} beats` : ''}
+                                        {p.beats > 0 && p.sales > 0 ? ' · ' : ''}
+                                        {p.sales > 0 ? `${p.sales} vendas` : ''}
+                                    </div>
                                 </div>
                             </div>
                         ))}

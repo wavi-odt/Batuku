@@ -20,7 +20,7 @@ function fmtTime(ms) {
 }
 
 export default function MiniPlayer() {
-    const { track, nextTrack, prevTrack, hasNext, hasPrev } = usePlayer()
+    const { track, nextTrack, prevTrack, hasNext, hasPrev, setIsPlaying, togglePlayRef } = usePlayer()
 
     // ── Spotify iFrame ────────────────────────────────────────────────
     const embedRef       = useRef(null)
@@ -63,12 +63,21 @@ export default function MiniPlayer() {
     const [swipeDelta,    setSwipeDelta]    = useState(0)
     const [swipeSnapping, setSwipeSnapping] = useState(false)
     const [playing,    setPlaying]    = useState(false)
+    const syncPlaying = (val) => { setPlaying(val); setIsPlaying(val) }
     const [position,   setPosition]   = useState(0)   // always ms
     const [duration,   setDuration]   = useState(0)   // always ms
     const [volume,     setVolume]     = useState(70)
     const [repeat,     setRepeat]     = useState(false)
     const [audioError, setAudioError] = useState(null)
     const [expanded,   setExpanded]   = useState(false)
+    const [closing,    setClosing]    = useState(false)
+
+    function handleClose() {
+        setClosing(true)
+    }
+    function handleAnimationEnd() {
+        if (closing) { setClosing(false); setExpanded(false) }
+    }
 
     useEffect(() => { repeatRef.current    = repeat    }, [repeat])
     useEffect(() => { nextTrackRef.current = nextTrack }, [nextTrack])
@@ -149,7 +158,7 @@ export default function MiniPlayer() {
                 ctrlRef.current = ctrl
                 applyVolume(volumeRef.current / 100)
                 ctrl.addListener('playback_update', ({ data }) => {
-                    setPlaying(!data.isPaused)
+                    syncPlaying(!data.isPaused)
                     const inMs = data.duration > 3600
                     if (!draggingSeekRef.current)
                         setPosition(inMs ? data.position : data.position * 1000)
@@ -182,8 +191,8 @@ export default function MiniPlayer() {
         if (audioRef.current) return audioRef.current
         const audio = new Audio()
         audio.volume = volumeRef.current / 100
-        audio.addEventListener('play',            () => setPlaying(true))
-        audio.addEventListener('pause',           () => setPlaying(false))
+        audio.addEventListener('play',            () => syncPlaying(true))
+        audio.addEventListener('pause',           () => syncPlaying(false))
         audio.addEventListener('timeupdate', () => {
             if (draggingSeekRef.current) return
             const ms = Math.floor(audio.currentTime * 1000)
@@ -198,7 +207,7 @@ export default function MiniPlayer() {
         audio.addEventListener('ended', () => {
             sendCompletion(playIdRef.current, durationMsRef.current, true)
             playIdRef.current = null
-            setPlaying(false)
+            syncPlaying(false)
             if (repeatRef.current) {
                 audio.currentTime = 0
                 audio.play().catch(() => {})
@@ -222,7 +231,7 @@ export default function MiniPlayer() {
             ctrlRef.current?.pause?.()
             audioRef.current?.pause()
             userPausedRef.current = true
-            setPlaying(false)
+            syncPlaying(false)
         }
         window.addEventListener('batuku:audio-start', onExternalAudioStart)
         return () => window.removeEventListener('batuku:audio-start', onExternalAudioStart)
@@ -245,7 +254,7 @@ export default function MiniPlayer() {
         if (!track) {
             ctrlRef.current?.pause?.()
             audioRef.current?.pause()
-            setPlaying(false)
+            syncPlaying(false)
             setPosition(0)
             setDuration(0)
             return
@@ -347,7 +356,7 @@ export default function MiniPlayer() {
             if (lastPlayPosRef.current <= 0) return
             playingRef.current     = false
             lastPlayPosRef.current = 0
-            setPlaying(false)
+            syncPlaying(false)
             if (repeatRef.current) {
                 ctrlRef.current?.seek(0)
                 setTimeout(() => ctrlRef.current?.togglePlay?.() ?? ctrlRef.current?.play(), 100)
@@ -451,7 +460,7 @@ export default function MiniPlayer() {
         swipeStartYRef.current = null
         swipeActiveRef.current = false
         if (delta > 120) {
-            setExpanded(false)
+            handleClose()
             setSwipeDelta(0)
         } else {
             setSwipeSnapping(true)
@@ -470,7 +479,6 @@ export default function MiniPlayer() {
         setVolume(Math.round(pct * 100))
     }
 
-    const togglePlayRef = useRef(null)
     togglePlayRef.current = togglePlay
 
     useEffect(() => {
@@ -489,10 +497,11 @@ export default function MiniPlayer() {
 
     return (
         <>
-        {expanded && track && (
+        {(expanded || closing) && track && (
             <div
                 ref={expRef}
-                className="player__exp"
+                className={`player__exp${closing ? ' player__exp--closing' : ''}`}
+                onAnimationEnd={handleAnimationEnd}
                 onTouchStart={onExpTouchStart}
                 onTouchEnd={onExpTouchEnd}
                 style={
@@ -510,7 +519,7 @@ export default function MiniPlayer() {
                 <button
                     type="button"
                     className="player__exp-close"
-                    onClick={() => setExpanded(false)}
+                    onClick={handleClose}
                     aria-label="Minimizar player"
                 >
                     <MdCloseFullscreen size={16} />
@@ -701,7 +710,7 @@ export default function MiniPlayer() {
                 <button
                     type="button"
                     className="player__expand-btn"
-                    onClick={() => setExpanded(e => !e)}
+                    onClick={() => expanded ? handleClose() : setExpanded(true)}
                     aria-label={expanded ? 'Minimizar player' : 'Expandir player'}
                     title={expanded ? 'Minimizar' : 'Expandir'}
                 >

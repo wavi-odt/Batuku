@@ -9,6 +9,7 @@ import { usePlayer }  from '../../../../context/PlayerContext.jsx'
 import TrackMenu      from '../../../../components/TrackMenu.jsx'
 import LikeButton     from '../../../../components/LikeButton.jsx'
 import TrackComments  from '../../../../components/TrackComments.jsx'
+import NowPlayingEq   from '../../../../components/NowPlayingEq.jsx'
 
 const SHAPES = ['circles', 'orbit', 'arch', 'sun', 'triangles', 'wave', 'stripes', 'split']
 const shapeFromId = id => SHAPES[Number(id) % SHAPES.length]
@@ -38,7 +39,7 @@ function ChartRow({ track, rank, queue }) {
                 style={{ cursor: track.audioUrl ? 'pointer' : 'default' }}
                 onClick={() => track.audioUrl && setTrack({ ...track, name: track.title, playContext: 'discover' }, queue.map(q => ({ ...q, name: q.title, playContext: 'discover' })))}
             >
-                <span className="disc__chart-rank">{rank}</span>
+                <span className="disc__chart-rank">{active ? <NowPlayingEq /> : rank}</span>
                 {delta(track, rank)}
                 <div className="disc__chart-thumb">
                     <ArtistArtwork

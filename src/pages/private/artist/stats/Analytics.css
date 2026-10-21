@@ -74,19 +74,6 @@
     transition: border-color var(--duration-fast);
 }
 
-.anl__kpi::before {
-    content: '';
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 3px;
-    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
-}
-
-.anl__kpi:has(.anl__kpi-icon--coral)   { border-left-color: transparent; }
-.anl__kpi:has(.anl__kpi-icon--coral)::before   { background: var(--color-coral);   }
-.anl__kpi:has(.anl__kpi-icon--green)::before   { background: var(--color-green);   }
-.anl__kpi:has(.anl__kpi-icon--mustard)::before { background: var(--color-mustard); }
-.anl__kpi:has(.anl__kpi-icon--ocean)::before   { background: var(--color-ocean);   }
 
 .anl__kpi-label {
     font-size: 10px;
@@ -109,10 +96,10 @@
     flex-shrink: 0;
 }
 
-.anl__kpi-icon--coral   { background: rgba(232, 93,  60, 0.15); color: var(--color-coral);   }
-.anl__kpi-icon--ocean   { background: rgba( 59,110, 255, 0.15); color: var(--color-ocean);   }
-.anl__kpi-icon--mustard { background: rgba(230,165,  50, 0.15); color: var(--color-mustard); }
-.anl__kpi-icon--green   { background: rgba( 79,174, 124, 0.15); color: var(--color-green);   }
+.anl__kpi-icon--coral,
+.anl__kpi-icon--ocean,
+.anl__kpi-icon--mustard,
+.anl__kpi-icon--green   { background: rgba(255, 255, 255, 0.06); color: var(--color-ink-mute); }
 
 .anl__kpi-val {
     font-size: 30px;
@@ -420,12 +407,12 @@
     transition: width var(--duration-slow) var(--ease-out);
 }
 
-.anl__hbar-fill--coral   { background: linear-gradient(90deg, var(--color-coral),   var(--color-mustard)); }
-.anl__hbar-fill--ocean   { background: linear-gradient(90deg, var(--color-ocean),   oklch(55% .18 195)); }
-.anl__hbar-fill--mustard { background: var(--color-mustard); }
-.anl__hbar-fill--green   { background: var(--color-green); }
-.anl__hbar-fill--purple  { background: oklch(60% .18 290); }
+.anl__hbar-fill--coral,
 .anl__hbar-fill--default { background: linear-gradient(90deg, var(--color-coral), var(--color-mustard)); }
+.anl__hbar-fill--ocean,
+.anl__hbar-fill--mustard,
+.anl__hbar-fill--green,
+.anl__hbar-fill--purple  { background: rgba(255, 255, 255, 0.18); }
 .anl__hbar-fill--mute    { background: var(--color-ink-mute); }
 
 .anl__hbar-val {

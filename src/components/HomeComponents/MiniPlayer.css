@@ -23,7 +23,7 @@ iframe[src*="spotify"] {
     align-items: center;
     padding: 0 24px;
     gap: 24px;
-    z-index: 30;
+    z-index: 320;
     display: none;
 }
 
@@ -241,14 +241,18 @@ body.has-player .player {
 
 /* ─── Expanded Player ────────────────────────────────────────────── */
 @keyframes player-exp-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes player-exp-out {
+    from { opacity: 1; transform: translateY(0); }
+    to   { opacity: 0; transform: translateY(16px); }
 }
 
 .player__exp {
     position: fixed;
     inset: 0;
-    z-index: 40;
+    z-index: 340;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -256,6 +260,9 @@ body.has-player .player {
     animation: player-exp-in 280ms var(--ease-out) both;
     background: #0a0a0b;
     overflow: hidden;
+}
+.player__exp--closing {
+    animation: player-exp-out 240ms var(--ease-out) both;
 }
 
 .player__exp-bg {
@@ -320,7 +327,6 @@ body.has-player .player {
     height: clamp(320px, 52vmin, 480px);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.75);
     flex-shrink: 0;
     background: var(--color-surface);
 }

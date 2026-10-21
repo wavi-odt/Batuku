@@ -70,7 +70,7 @@ function ProfileHeader({ role, data, avatarUrl, onAvatarEdit, onEditProfile }) {
                 <div className="prof__cover-grad" />
             </div>
 
-            <div className="prof__header">
+            <div className="prof__header ambient" style={avatarUrl ? { '--cover': `url(${avatarUrl})` } : undefined}>
                 <div
                     className={'prof__avatar' + (isArtist ? ' prof__avatar--artist' : '')}
                     role="button"

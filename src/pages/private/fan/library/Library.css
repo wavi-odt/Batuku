@@ -216,11 +216,9 @@
 }
 
 /* ─── Favoritos card ───────────────────────────────────────────── */
-.lib__pl-card--fav {
-    border-color: rgba(232, 93, 60, 0.3);
-}
+.lib__pl-card--fav,
 .lib__pl-card--fav:hover {
-    border-color: rgba(232, 93, 60, 0.6);
+    border-color: transparent;
 }
 
 .lib__pl-cover--fav {

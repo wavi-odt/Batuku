@@ -7,11 +7,7 @@ export default function AnalyticsDonut({ completionRate }) {
     const circ   = 2 * Math.PI * r
 
     const pct   = Math.max(0, Math.min(100, completionRate ?? 0))
-    const color = pct >= 70
-        ? 'var(--color-green)'
-        : pct >= 40
-        ? 'var(--color-mustard)'
-        : 'var(--color-coral)'
+    const color = 'var(--color-coral)'
 
     const hint = pct >= 70
         ? 'Excelente retenção'

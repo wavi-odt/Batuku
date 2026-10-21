@@ -177,7 +177,7 @@ export default function UserDetail() {
                 </div>
 
                 {/* ── Header ────────────────────────────────────────────── */}
-                <div className="prof__header">
+                <div className="prof__header ambient" style={user.imageUrl ? { '--cover': `url(${user.imageUrl})` } : undefined}>
                     <div className="prof__avatar">
                         {user.imageUrl
                             ? <img src={user.imageUrl} alt={user.name} className="prof__avatar-img" />

@@ -75,11 +75,8 @@ export default function Hero() {
 }
 
 function HeroWall({ artists }) {
-    const cols = [
-        artists.slice(0, 4),
-        artists.slice(2, 6),
-        artists.slice(4, 8),
-    ];
+    const cols = [[], [], []];
+    artists.forEach((a, i) => cols[i % 3].push(a));
 
     return (
         <div className="hero__wall" aria-hidden="true">

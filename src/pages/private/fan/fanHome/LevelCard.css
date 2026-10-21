@@ -6,7 +6,7 @@
     padding: 22px;
     border-radius: var(--radius-xl);
     background: linear-gradient(135deg, rgba(232, 93, 60, 0.18), rgba(230, 165, 50, 0.10));
-    border: 1px solid rgba(232, 93, 60, 0.35);
+    border: none;
 }
 
 .level-card__head {

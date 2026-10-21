@@ -60,10 +60,10 @@
     border-radius: 6px;
 }
 
-.cmt__kpi-icon--coral   { background: oklch(55% .22 27 / .18);  color: oklch(65% .22 27);  }
-.cmt__kpi-icon--mustard { background: oklch(70% .18 80 / .18);  color: oklch(70% .18 80);  }
-.cmt__kpi-icon--ocean   { background: oklch(55% .18 230 / .18); color: oklch(60% .18 230); }
-.cmt__kpi-icon--green   { background: oklch(60% .18 145 / .18); color: oklch(60% .18 145); }
+.cmt__kpi-icon--coral,
+.cmt__kpi-icon--mustard,
+.cmt__kpi-icon--ocean,
+.cmt__kpi-icon--green   { background: rgba(255, 255, 255, 0.06); color: var(--color-ink-mute); }
 
 .cmt__kpi-val {
     font-size: 1.6rem;

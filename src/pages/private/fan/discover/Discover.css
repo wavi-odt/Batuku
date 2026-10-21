@@ -8,7 +8,7 @@
     align-items: center;
     padding: var(--space-10) var(--space-8);
     border-radius: var(--radius-2xl);
-    border: 1px solid rgba(255, 255, 255, 0.09);
+    border: none;
     margin-bottom: var(--space-10);
     overflow: hidden;
     background: linear-gradient(135deg,
@@ -279,7 +279,7 @@
 /* ─── Novos lançamentos ─────────────────────────────────────────────── */
 .disc__releases {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 12px;
 }
 

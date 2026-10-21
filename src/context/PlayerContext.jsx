@@ -1,11 +1,13 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import { createContext, useContext, useRef, useState, useCallback } from 'react'
 
 const PlayerContext = createContext(null)
 
 export function PlayerProvider({ children }) {
-    const [track,    setTrackState] = useState(null)
-    const [queue,    setQueue]      = useState([])
-    const [queueIdx, setQueueIdx]   = useState(-1)
+    const [track,     setTrackState] = useState(null)
+    const [queue,     setQueue]      = useState([])
+    const [queueIdx,  setQueueIdx]   = useState(-1)
+    const [isPlaying, setIsPlaying]  = useState(false)
+    const togglePlayRef = useRef(null)
 
     const setTrack = useCallback((t, list) => {
         setTrackState(t)
@@ -46,8 +48,11 @@ export function PlayerProvider({ children }) {
             setTrack,
             nextTrack,
             prevTrack,
-            hasNext: queueIdx >= 0 && queueIdx < queue.length - 1,
-            hasPrev: queueIdx > 0,
+            hasNext:    queueIdx >= 0 && queueIdx < queue.length - 1,
+            hasPrev:    queueIdx > 0,
+            isPlaying,
+            setIsPlaying,
+            togglePlayRef,
         }}>
             {children}
         </PlayerContext.Provider>

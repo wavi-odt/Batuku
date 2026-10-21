@@ -38,6 +38,25 @@ function ResultItem({ to, img, imgCircle, name, sub, onSelect }) {
     );
 }
 
+function TrackResultItem({ track, onPlay }) {
+    return (
+        <button
+            type="button"
+            className="topbar__result-item"
+            onClick={onPlay}
+        >
+            {track.imageUrl
+                ? <img src={track.imageUrl} alt={track.title} className="topbar__result-img" />
+                : <div className="topbar__result-img topbar__result-img--placeholder"><FaMusic size={12} /></div>
+            }
+            <div className="topbar__result-info">
+                <span className="topbar__result-name">{track.title}</span>
+                {track.artist && <span className="topbar__result-sub">{track.artist}</span>}
+            </div>
+        </button>
+    );
+}
+
 function ResultGroup({ label, items, renderItem }) {
     if (!items?.length) return null;
     return (
@@ -54,9 +73,10 @@ export default function TopBar({ role = 'fan' }) {
     const navigate = useNavigate();
     const { setTrack } = usePlayer();
 
-    const [query,   setQuery]   = useState('');
-    const [results, setResults] = useState(null);
-    const [loading, setLoading] = useState(false);
+    const [query,          setQuery]          = useState('');
+    const [results,        setResults]        = useState(null);
+    const [loading,        setLoading]        = useState(false);
+    const [searchExpanded, setSearchExpanded] = useState(false);
 
     const [notifOpen,      setNotifOpen]      = useState(false);
     const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
@@ -66,6 +86,7 @@ export default function TopBar({ role = 'fan' }) {
 
     const timerRef   = useRef(null);
     const wrapperRef = useRef(null);
+    const inputRef   = useRef(null);
 
     function handleLogout() {
         setTrack(null);
@@ -118,6 +139,12 @@ export default function TopBar({ role = 'fan' }) {
         setQuery('');
         setResults(null);
         setLoading(false);
+        setSearchExpanded(false);
+    }
+
+    function handleMobileSearchOpen() {
+        setSearchExpanded(true);
+        setTimeout(() => inputRef.current?.focus(), 50);
     }
 
     function handleKeyDown(e) {
@@ -126,7 +153,7 @@ export default function TopBar({ role = 'fan' }) {
 
     useEffect(() => {
         function onMouseDown(e) {
-            if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
+            if (!wrapperRef.current?.contains(e.target)) {
                 handleClose();
             }
             if (notifRef.current && !notifRef.current.contains(e.target)) {
@@ -150,10 +177,15 @@ export default function TopBar({ role = 'fan' }) {
     }, []);
 
     return (
-        <header className="topbar">
-            <div className="topbar__search" ref={wrapperRef}>
+        <header className={`topbar${searchExpanded ? ' topbar--search-open' : ''}`}>
+            <div
+                className="topbar__search"
+                ref={wrapperRef}
+                onClick={!searchExpanded ? handleMobileSearchOpen : undefined}
+            >
                 <HiSearch size={16} className="topbar__search-icon" />
                 <input
+                    ref={inputRef}
                     type="search"
                     className="topbar__search-input"
                     placeholder={placeholder}
@@ -235,13 +267,25 @@ export default function TopBar({ role = 'fan' }) {
                                     label="Faixas"
                                     items={results.tracks}
                                     renderItem={t => (
-                                        <ResultItem
+                                        <TrackResultItem
                                             key={t.id}
-                                            to={`/tracks/${t.id}`}
-                                            img={t.imageUrl}
-                                            name={t.title}
-                                            sub={t.duration ? `${t.artist} · ${t.duration}` : t.artist}
-                                            onSelect={handleClose}
+                                            track={t}
+                                            onPlay={() => {
+                                                if (t.audioUrl) {
+                                                    setTrack({
+                                                        id:              t.id,
+                                                        name:            t.title,
+                                                        artistName:      t.artist ?? '',
+                                                        artistProfileId: t.artistProfileId ?? null,
+                                                        coverUrl:        t.imageUrl ?? null,
+                                                        audioUrl:        t.audioUrl,
+                                                        durationMs:      t.durationMs ?? null,
+                                                        source:          'upload',
+                                                        playContext:     'search',
+                                                    }, null)
+                                                }
+                                                handleClose()
+                                            }}
                                         />
                                     )}
                                 />
@@ -281,67 +325,72 @@ export default function TopBar({ role = 'fan' }) {
                 )}
             </div>
 
+            <img src="/batuku-logo-H-escuro.svg" alt="Batuku" className="topbar__logo" />
+
             <div className="topbar__spacer" />
 
-            {role === 'artist' && (
-                <button type="button" className="topbar__publish" onClick={() => openPublish('track')}>
-                    <HiPlus size={16} /> Publicar
-                </button>
-            )}
-
-            <div className="topbar__notif-wrap" ref={notifRef}>
-                <button className="topbar__action" aria-label="Notificações" onClick={() => setNotifOpen(v => !v)}>
-                    <HiBell size={18} />
-                    {unread > 0 && (
-                        <span className="topbar__action-badge">
-                            {unread > 9 ? '9+' : unread}
-                        </span>
-                    )}
-                </button>
-                {notifOpen && (
-                    <NotificationsPanel onClose={() => setNotifOpen(false)} />
+            <div className="topbar__actions">
+                {role === 'artist' && (
+                    <button type="button" className="topbar__publish" onClick={() => openPublish('track')}>
+                        <HiPlus size={16} /> Publicar
+                    </button>
                 )}
-            </div>
 
-            <div className="topbar__avatar-wrap" ref={avatarRef}>
-                {avatarMenuOpen && (
-                    <div className="topbar__avatar-menu">
-                        <div className="sidebar__menu-header">
-                            <div className="sidebar__menu-avatar">
-                                {realUser?.picture
-                                    ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                                    : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
-                            </div>
-                            <div>
-                                <div className="sidebar__menu-name">{realUser?.name || ''}</div>
-                                <div className="sidebar__menu-handle">
-                                    {realUser?.verified
-                                        ? <><span className="sidebar__verified-dot" /> Verificado</>
-                                        : realUser?.handle || ''}
+                <div className="topbar__notif-wrap" ref={notifRef}>
+                    <button className="topbar__action" aria-label="Notificações" onClick={() => setNotifOpen(v => !v)}>
+                        <HiBell size={18} />
+                        {unread > 0 && (
+                            <span className="topbar__action-badge">
+                                {unread > 9 ? '9+' : unread}
+                            </span>
+                        )}
+                    </button>
+                    {notifOpen && (
+                        <NotificationsPanel onClose={() => setNotifOpen(false)} />
+                    )}
+                </div>
+
+                <div className="topbar__avatar-wrap" ref={avatarRef}>
+                    {avatarMenuOpen && (
+                        <div className="topbar__avatar-menu">
+                            <div className="sidebar__menu-header">
+                                <div className="sidebar__menu-avatar">
+                                    {realUser?.picture
+                                        ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                        : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
+                                </div>
+                                <div>
+                                    <div className="sidebar__menu-name">{realUser?.name || ''}</div>
+                                    <div className="sidebar__menu-handle">
+                                        {realUser?.verified
+                                            ? <><span className="sidebar__verified-dot" /> Verificado</>
+                                            : realUser?.handle || ''}
+                                    </div>
                                 </div>
                             </div>
+                            <div className="sidebar__menu-divider" />
+                            <Link to="/profile" className="sidebar__menu-item" onClick={() => setAvatarMenuOpen(false)}>
+                                <HiUser size={15} /> O meu perfil
+                            </Link>
+                            <div className="sidebar__menu-divider" />
+                            <button className="sidebar__menu-item sidebar__menu-item--danger" onClick={handleLogout}>
+                                <HiLogout size={15} /> Terminar sessão
+                            </button>
                         </div>
-                        <div className="sidebar__menu-divider" />
-                        <Link to="/profile" className="sidebar__menu-item" onClick={() => setAvatarMenuOpen(false)}>
-                            <HiUser size={15} /> O meu perfil
-                        </Link>
-                        <div className="sidebar__menu-divider" />
-                        <button className="sidebar__menu-item sidebar__menu-item--danger" onClick={handleLogout}>
-                            <HiLogout size={15} /> Terminar sessão
-                        </button>
-                    </div>
-                )}
-                <button
-                    className="topbar__avatar"
-                    onClick={() => setAvatarMenuOpen(v => !v)}
-                    aria-label="Menu do perfil"
-                    aria-expanded={avatarMenuOpen}
-                >
-                    {realUser?.picture
-                        ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-                        : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
-                </button>
+                    )}
+                    <button
+                        className="topbar__avatar"
+                        onClick={() => setAvatarMenuOpen(v => !v)}
+                        aria-label="Menu do perfil"
+                        aria-expanded={avatarMenuOpen}
+                    >
+                        {realUser?.picture
+                            ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                            : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
+                    </button>
+                </div>
             </div>
+
         </header>
     );
 }

@@ -68,12 +68,12 @@ export default function AnalyticsBarChart({ dailyLikes }) {
                     onMouseLeave={() => setHover(null)}>
                     <defs>
                         <linearGradient id="anl-bar-grad" x1="0" x2="0" y1="0" y2="1">
-                            <stop offset="0%"   stopColor="var(--color-green)" stopOpacity="0.9" />
-                            <stop offset="100%" stopColor="var(--color-ocean)" stopOpacity="0.55" />
+                            <stop offset="0%"   stopColor="var(--color-coral)"   stopOpacity="0.85" />
+                            <stop offset="100%" stopColor="var(--color-mustard)" stopOpacity="0.5" />
                         </linearGradient>
                         <linearGradient id="anl-bar-hover" x1="0" x2="0" y1="0" y2="1">
-                            <stop offset="0%"   stopColor="var(--color-green)" />
-                            <stop offset="100%" stopColor="var(--color-ocean)" />
+                            <stop offset="0%"   stopColor="var(--color-coral)" />
+                            <stop offset="100%" stopColor="var(--color-mustard)" />
                         </linearGradient>
                     </defs>
 

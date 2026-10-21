@@ -99,6 +99,17 @@ export default function PlaylistDetail() {
 
 
     useEffect(() => {
+        function handleUnlike(e) {
+            setPlaylist(prev => {
+                if (!prev?.systemGenerated) return prev
+                return { ...prev, tracks: prev.tracks.filter(t => String(t.id) !== String(e.detail.trackId)) }
+            })
+        }
+        window.addEventListener('batuku:track-unliked', handleUnlike)
+        return () => window.removeEventListener('batuku:track-unliked', handleUnlike)
+    }, [])
+
+    useEffect(() => {
         if (!menuOpen) return
         function handleClick(e) {
             if (

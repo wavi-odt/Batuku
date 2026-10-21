@@ -3,7 +3,7 @@
     background: linear-gradient(135deg,
         rgba(230, 165, 50, 0.06) 0%,
         rgba(59, 110, 255, 0.06) 100%);
-    border: 1px solid rgba(230, 165, 50, 0.2);
+    border: none;
     border-radius: var(--radius-lg);
     margin-bottom: 32px;
 }

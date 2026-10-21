@@ -4,7 +4,7 @@
     position: relative;
     overflow: hidden;
     background: linear-gradient(135deg, rgba(232, 93, 60, 0.2), rgba(230, 165, 50, 0.12));
-    border: 1px solid rgba(232, 93, 60, 0.4);
+    border: none;
     border-radius: var(--radius-lg);
     padding: 22px;
     display: flex;

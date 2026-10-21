@@ -2,7 +2,7 @@
 
 .continue {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: 12px;
 }
 
@@ -67,6 +67,28 @@
 .track-card:hover .track-card__play {
     opacity: 1;
     transform: translateY(0);
+}
+
+.track-card__cover--active > img,
+.track-card__cover--active > div:not(.track-card__eq-wrap) {
+    filter: blur(3px) brightness(0.45);
+    transition: filter var(--duration-base) var(--ease-out);
+}
+
+.track-card__eq-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    pointer-events: none;
+}
+.track-card__eq-wrap .eq {
+    height: 22px;
+    gap: 3px;
+}
+.track-card__eq-wrap .eq i {
+    width: 4px;
 }
 
 .track-card__title {

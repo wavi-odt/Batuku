@@ -36,10 +36,10 @@
     align-items: center;
     justify-content: center;
 }
-.stat-card__icon--coral   { background-color: rgba(232, 93, 60, 0.15);  color: var(--color-coral); }
-.stat-card__icon--ocean   { background-color: rgba(59, 110, 255, 0.15); color: var(--color-ocean); }
-.stat-card__icon--mustard { background-color: rgba(230, 165, 50, 0.15); color: var(--color-mustard); }
-.stat-card__icon--green   { background-color: rgba(79, 174, 124, 0.15); color: var(--color-green); }
+.stat-card__icon--coral,
+.stat-card__icon--ocean,
+.stat-card__icon--mustard,
+.stat-card__icon--green   { background-color: rgba(255, 255, 255, 0.06); color: var(--color-ink-mute); }
 
 .stat-card__value {
     font-size: 30px;

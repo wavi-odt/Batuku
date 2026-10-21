@@ -24,7 +24,7 @@ function FavoritosCard({ playlist }) {
             </div>
             <div className="lib__pl-title">Favoritos</div>
             <div className="lib__pl-meta">
-                <FaLock size={9} /> Privada · {count} {count === 1 ? 'faixa' : 'faixas'}
+                <FaLock size={9} /> Privada
             </div>
         </Link>
     );
@@ -156,7 +156,7 @@ function PlaylistCard({ pl, onEdit, onDelete, onToggleVisibility, onUnsave }) {
                 </div>
                 <Link to={`/playlists/${pl.id}`} className="lib__pl-meta">
                     {pl.isPublic ? <FaGlobe size={9} /> : <FaLock size={9} />}
-                    {pl.isPublic ? 'Pública' : 'Privada'} · {pl.trackCount ?? 0} {pl.trackCount === 1 ? 'faixa' : 'faixas'}
+                    {pl.isPublic ? 'Pública' : 'Privada'}
                 </Link>
             </div>
         </div>
@@ -182,7 +182,6 @@ export default function LibraryPlaylists({ playlists, loading, onNew, onEdit, on
                 <div className="home__section-head">
                     <div>
                         <h2 className="home__section-title">As minhas playlists</h2>
-                        <div className="home__section-sub">{mine.length + 1} playlists criadas</div>
                     </div>
                     <button type="button" className="home__section-link" onClick={onNew}>Nova +</button>
                 </div>
@@ -198,12 +197,6 @@ export default function LibraryPlaylists({ playlists, loading, onNew, onEdit, on
                 <div className="home__section-head">
                     <div>
                         <h2 className="home__section-title">Playlists guardadas</h2>
-                        <div className="home__section-sub">
-                            {saved.length > 0
-                                ? `${saved.length} ${saved.length === 1 ? 'playlist guardada' : 'playlists guardadas'}`
-                                : 'Playlists de outros utilizadores que guardas aqui'
-                            }
-                        </div>
                     </div>
                 </div>
                 {saved.length === 0 ? (

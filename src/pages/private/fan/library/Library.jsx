@@ -131,9 +131,6 @@ export default function Library() {
             <div className="lib__header">
                 <div>
                     <h1 className="lib__title">Biblioteca</h1>
-                    <p className="lib__subtitle">
-                        {loadingPl ? '…' : `${playlists.length} ${playlists.length === 1 ? 'playlist' : 'playlists'}`}
-                    </p>
                 </div>
                 <button type="button" className="btn btn--ghost btn--sm" onClick={() => setShowCreate(true)}>
                     + Nova playlist

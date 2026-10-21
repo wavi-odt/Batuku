@@ -87,8 +87,8 @@ export default function AnalyticsStepChart({ dailyFollowers }) {
                     onMouseLeave={() => setHover(null)}>
                     <defs>
                         <linearGradient id="anl-step-grad" x1="0" x2="0" y1="0" y2="1">
-                            <stop offset="0%"   stopColor="var(--color-ocean)" stopOpacity="0.25" />
-                            <stop offset="100%" stopColor="var(--color-ocean)" stopOpacity="0" />
+                            <stop offset="0%"   stopColor="var(--color-coral)" stopOpacity="0.25" />
+                            <stop offset="100%" stopColor="var(--color-coral)" stopOpacity="0" />
                         </linearGradient>
                     </defs>
 
@@ -111,7 +111,7 @@ export default function AnalyticsStepChart({ dailyFollowers }) {
 
                     {!allFlat && (
                         <path d={linePath} fill="none"
-                            stroke="var(--color-ocean)" strokeWidth="2.5"
+                            stroke="var(--color-coral)" strokeWidth="2.5"
                             strokeLinejoin="miter" strokeLinecap="square" />
                     )}
 
@@ -143,8 +143,8 @@ export default function AnalyticsStepChart({ dailyFollowers }) {
                             <g pointerEvents="none">
                                 <line x1={cx} y1={PAD.t} x2={cx} y2={botY}
                                     stroke="rgba(255,255,255,0.1)" strokeWidth="1" strokeDasharray="3 3" />
-                                <circle cx={cx} cy={cy} r="5" fill="var(--color-ocean)" />
-                                <circle cx={cx} cy={cy} r="9" fill="var(--color-ocean)" opacity="0.2" />
+                                <circle cx={cx} cy={cy} r="5" fill="var(--color-coral)" />
+                                <circle cx={cx} cy={cy} r="9" fill="var(--color-coral)" opacity="0.2" />
                             </g>
                         )
                     })()}

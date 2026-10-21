@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { FaTimes, FaMusic, FaCamera } from 'react-icons/fa'
 import { API, getToken } from '../../../utils/auth.js'
 import './PlaylistCreateModal.css'
@@ -61,7 +62,7 @@ export default function PlaylistCreateModal({ onClose, onCreated, onUpdated, pla
         }
     }
 
-    return (
+    return createPortal(
         <div className="pcm-overlay" onClick={onClose}>
             <div className="pcm-modal" onClick={e => e.stopPropagation()}>
 
@@ -142,6 +143,7 @@ export default function PlaylistCreateModal({ onClose, onCreated, onUpdated, pla
                 </form>
 
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }

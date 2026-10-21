@@ -1,8 +1,9 @@
-import { FaCompactDisc, FaPlay, FaHeart, FaPause } from 'react-icons/fa'
+import { FaCompactDisc, FaPlay, FaHeart } from 'react-icons/fa'
+import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import { usePlayer } from '../../../../context/PlayerContext.jsx'
 
 export default function AnalyticsTopTracks({ tracks }) {
-    const { track: currentTrack, setTrack } = usePlayer()
+    const { track: currentTrack, setTrack, togglePlayRef } = usePlayer()
     const maxPlays = Math.max(...(tracks.map(t => t.plays ?? 0)), 1)
 
     const queue = (tracks ?? [])
@@ -48,7 +49,11 @@ export default function AnalyticsTopTracks({ tracks }) {
 
                         <div
                             className="anl__top-cover"
-                            onClick={() => queueEntry && setTrack(queueEntry, queue)}
+                            onClick={() => {
+                                if (!queueEntry) return
+                                if (currentTrack?.id === t.id) { togglePlayRef.current?.(); return }
+                                setTrack(queueEntry, queue)
+                            }}
                             style={{ cursor: queueEntry ? 'pointer' : 'default' }}
                         >
                             {t.coverUrl
@@ -57,7 +62,7 @@ export default function AnalyticsTopTracks({ tracks }) {
                             }
                             {queueEntry && (
                                 <div className="anl__top-cover-overlay">
-                                    {isPlaying ? <FaPause size={10} /> : <FaPlay size={10} />}
+                                    {isPlaying ? <NowPlayingEq /> : <FaPlay size={10} />}
                                 </div>
                             )}
                         </div>

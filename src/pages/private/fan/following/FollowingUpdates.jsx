@@ -4,9 +4,10 @@ import { usePlayer }        from '../../../../context/PlayerContext'
 import { toPlayerTrack }    from '../../../../utils/toPlayerTrack'
 import TimeAgo              from '../../../../components/TimeAgo.jsx'
 import TrackMenu            from '../../../../components/TrackMenu.jsx'
+import NowPlayingEq         from '../../../../components/NowPlayingEq.jsx'
 
 export default function FollowingUpdates({ tracks }) {
-    const { setTrack } = usePlayer()
+    const { track: currentTrack, setTrack } = usePlayer()
     const queue = tracks.map(t => toPlayerTrack(t, 'following'))
 
     return (
@@ -19,10 +20,12 @@ export default function FollowingUpdates({ tracks }) {
             </div>
 
             <div className="continue">
-                {tracks.map((t, i) => (
+                {tracks.map((t, i) => {
+                    const active = currentTrack?.id === t.id
+                    return (
                     <div key={t.id} className="track-card">
                         <div
-                            className="track-card__cover"
+                            className={`track-card__cover${active ? ' track-card__cover--active' : ''}`}
                             onClick={() => setTrack(queue[i], queue)}
                             style={{ cursor: 'pointer' }}
                         >
@@ -32,7 +35,10 @@ export default function FollowingUpdates({ tracks }) {
                                     <FaMusic size={20} style={{ color: 'var(--color-ink-mute)' }} />
                                   </div>
                             }
-                            <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
+                            {active
+                                ? <span className="track-card__eq-wrap"><NowPlayingEq /></span>
+                                : <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
+                            }
                             <span className="flw__update-type">Faixa</span>
                         </div>
                         <div
@@ -56,7 +62,8 @@ export default function FollowingUpdates({ tracks }) {
                             <TimeAgo isoStr={t.createdAt} className="flw__update-time" />
                         </div>
                     </div>
-                ))}
+                    )
+                })}
             </div>
         </section>
     )

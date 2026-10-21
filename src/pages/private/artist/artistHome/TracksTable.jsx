@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { FaPlay, FaPause } from 'react-icons/fa'
+import { FaPlay } from 'react-icons/fa'
+import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import { usePlayer } from '../../../../context/PlayerContext.jsx'
 import './TracksTable.css'
 
@@ -21,7 +22,7 @@ function Cover({ coverUrl, title }) {
 }
 
 export default function TracksTable({ tracks }) {
-    const { track: currentTrack, setTrack } = usePlayer()
+    const { track: currentTrack, setTrack, togglePlayRef } = usePlayer()
 
     const queue = tracks
         .filter(t => t.audioUrl)
@@ -55,13 +56,17 @@ export default function TracksTable({ tracks }) {
                         <div key={t.id} className={'tracks-row' + (isPlaying ? ' tracks-row--playing' : '')}>
                             <div
                                 className="tracks-row__cover"
-                                onClick={() => queueEntry && setTrack(queueEntry, queue)}
+                                onClick={() => {
+                                    if (!queueEntry) return
+                                    if (currentTrack?.id === t.id) { togglePlayRef.current?.(); return }
+                                    setTrack(queueEntry, queue)
+                                }}
                                 style={{ cursor: queueEntry ? 'pointer' : 'default', position: 'relative' }}
                             >
                                 <Cover coverUrl={t.coverUrl} title={t.title} />
                                 {queueEntry && (
                                     <div className="tracks-row__play-overlay">
-                                        {isPlaying ? <FaPause size={11} /> : <FaPlay size={11} />}
+                                        {isPlaying ? <NowPlayingEq /> : <FaPlay size={11} />}
                                     </div>
                                 )}
                             </div>

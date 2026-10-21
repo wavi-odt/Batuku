@@ -312,9 +312,10 @@ export default function ReleaseDetail() {
                                         value={titleDraft}
                                         onChange={e => setTitleDraft(e.target.value)}
                                         onKeyDown={e => { if (e.key === 'Enter') handleTitleSave(); if (e.key === 'Escape') setEditingTitle(false); }}
+                                        required
                                         autoFocus
                                     />
-                                    <button type="button" className="btn-primary" style={{ padding: '8px 12px' }} onClick={handleTitleSave} disabled={savingTitle}>
+                                    <button type="button" className="btn-primary" style={{ padding: '8px 12px' }} onClick={handleTitleSave} disabled={savingTitle || !titleDraft.trim()}>
                                         <FaCheck size={12} />
                                     </button>
                                 </div>

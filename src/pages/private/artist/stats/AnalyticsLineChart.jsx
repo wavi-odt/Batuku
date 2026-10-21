@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './Analytics.css'
 
-const H   = 220
+const H   = 320
 const PAD = { t: 20, r: 20, b: 36, l: 52 }
 
 function fmtDate(iso) {

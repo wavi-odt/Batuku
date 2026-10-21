@@ -55,6 +55,7 @@ export function LikeProvider({ children }) {
             })
             if (!res.ok) throw new Error()
             if (next) window.dispatchEvent(new Event('batuku:gamification-updated'))
+            else window.dispatchEvent(new CustomEvent('batuku:track-unliked', { detail: { trackId: key } }))
         } catch {
             set(key, current.liked, current.count)  // reverter
         }

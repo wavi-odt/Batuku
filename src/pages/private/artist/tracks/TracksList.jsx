@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react'
 import { FaPlay, FaPause, FaTrash, FaHeart, FaHeadphones, FaRegComment, FaPen, FaCheck, FaTimes, FaCamera } from 'react-icons/fa'
+import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import { HiOutlineMusicNote } from 'react-icons/hi'
 import { usePlayer } from '../../../../context/PlayerContext.jsx'
 import { useToast } from '../../../../context/ToastContext.jsx'
@@ -49,6 +50,7 @@ function EditRow({ track, onSave, onUpdate, onCancel }) {
     const [saving,         setSaving]         = useState(false)
     const [uploadingCover, setUploadingCover] = useState(false)
     const { showToast } = useToast()
+    const { allNames: GENRES } = useGenres()
     const coverRef = useRef(null)
     const canEditCover = !track.belongsToRelease
 
@@ -122,6 +124,7 @@ function EditRow({ track, onSave, onUpdate, onCancel }) {
                     onChange={e => setTitle(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && save()}
                     placeholder="Título"
+                    required
                     autoFocus
                 />
                 <select
@@ -138,7 +141,7 @@ function EditRow({ track, onSave, onUpdate, onCancel }) {
                 <button type="button" className="trk__action-btn" onClick={onCancel} title="Cancelar">
                     <FaTimes size={13} />
                 </button>
-                <button type="button" className="trk__action-btn trk__action-btn--save" onClick={save} disabled={saving} title="Guardar">
+                <button type="button" className="trk__action-btn trk__action-btn--save" onClick={save} disabled={saving || !title.trim()} title="Guardar">
                     <FaCheck size={13} />
                 </button>
             </div>
@@ -147,7 +150,7 @@ function EditRow({ track, onSave, onUpdate, onCancel }) {
 }
 
 export default function TracksList({ tracks, loading, onDelete, onUpdate, artistProfileId }) {
-    const { track: currentTrack, setTrack } = usePlayer()
+    const { track: currentTrack, setTrack, togglePlayRef } = usePlayer()
     const { showToast } = useToast()
     const { allNames: GENRES } = useGenres()
     const [confirmTrack, setConfirmTrack] = useState(null)
@@ -226,14 +229,18 @@ export default function TracksList({ tracks, loading, onDelete, onUpdate, artist
                 return (
                     <div key={t.id} className={'trk__row' + (isPlaying ? ' trk__row--playing' : '')}>
 
-                        <div className="trk__cover cover-hover" onClick={() => t.audioUrl && setTrack(queue[i], queue)}>
+                        <div className={`trk__cover cover-hover${isPlaying ? ' trk__cover--active' : ''}`} onClick={() => {
+                            if (!t.audioUrl) return
+                            if (currentTrack?.id === t.id) { togglePlayRef.current?.(); return }
+                            setTrack(queue[i], queue)
+                        }}>
                             {t.coverUrl
                                 ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 : <CoverPlaceholder title={t.title} />
                             }
                             {t.audioUrl && (
                                 <button type="button" className="trk__play-overlay" aria-label={isPlaying ? 'A reproduzir' : 'Reproduzir'}>
-                                    {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} />}
+                                    {isPlaying ? <NowPlayingEq /> : <FaPlay size={12} />}
                                 </button>
                             )}
                         </div>

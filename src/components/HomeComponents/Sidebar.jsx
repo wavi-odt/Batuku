@@ -44,7 +44,7 @@ export default function Sidebar({ role = 'fan' }) {
                             key={item.label}
                             to={item.to}
                             className={({ isActive }) => 'sidebar__item' + (isActive ? ' is-active' : '')}
-                            end
+                            end={item.end !== false}
                         >
                             <span className="sidebar__item-icon"><Icon size={18} /></span>
                             <span className="sidebar__item-label">{item.label}</span>

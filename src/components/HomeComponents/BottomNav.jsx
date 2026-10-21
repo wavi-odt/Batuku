@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { homeData } from '../../data/home'
 import { ICONS } from './icons'
 import { usePendingComments } from '../../context/PendingCommentsContext'
@@ -11,9 +11,24 @@ export default function BottomNav({ role = 'fan' }) {
               : homeData.fanNav
     const { count: pendingComments } = usePendingComments()
     const { badgesPerRoute } = useNotifications()
+    const location = useLocation()
+
+    const activeIndex = nav.findIndex(item =>
+        item.end === false
+            ? location.pathname.startsWith(item.to)
+            : location.pathname === item.to
+    )
 
     return (
         <nav className="bottom-nav" aria-label="Navegação principal">
+            <span
+                className="bottom-nav__pill"
+                style={{
+                    width:   `${100 / nav.length}%`,
+                    left:    `${(activeIndex / nav.length) * 100}%`,
+                    opacity: activeIndex < 0 ? 0 : 1,
+                }}
+            />
             {nav.map((item) => {
                 const Icon = ICONS[item.icon]
                 const badge = item.to === '/comments'

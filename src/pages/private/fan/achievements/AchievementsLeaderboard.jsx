@@ -27,8 +27,7 @@ export default function AchievementsLeaderboard({ entries }) {
     return (
         <div className="ach__leaderboard">
             <div className="ach__lb-head">
-                <span className="ach__lb-title">Ranking semanal</span>
-                <a href="#" className="home__section-link" style={{ fontSize: 12 }}>Tudo →</a>
+                <span className="ach__lb-title">Ranking geral</span>
             </div>
 
             <ol className="ach__lb-list">
