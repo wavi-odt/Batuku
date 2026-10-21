@@ -11,12 +11,15 @@ export function PlayerProvider({ children }) {
 
     const setTrack = useCallback((t, list) => {
         setTrackState(t)
-        if (list) {
+        if (t && list) {
             const idx = list.findIndex(q =>
                 t.spotifyId ? q.spotifyId === t.spotifyId : q.audioUrl === t.audioUrl
             )
             setQueue(list)
             setQueueIdx(idx)
+        } else {
+            setQueue([])
+            setQueueIdx(-1)
         }
     }, [])
 
