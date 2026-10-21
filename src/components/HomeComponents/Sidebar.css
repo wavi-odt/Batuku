@@ -198,6 +198,16 @@ body.has-player .sidebar {
     padding: 10px 10px 12px;
 }
 
+.sidebar__menu-header--link {
+    text-decoration: none;
+    border-radius: var(--radius-md);
+    transition: background-color var(--duration-fast) var(--ease-out);
+    cursor: pointer;
+}
+.sidebar__menu-header--link:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
 .sidebar__menu-avatar {
     width: 38px;
     height: 38px;

@@ -68,11 +68,12 @@
 .ach__challenge:hover { border-color: var(--color-border-strong); }
 
 .ach__challenge--done {
-    border-color: rgba(79, 174, 124, 0.35);
+    border-color: rgba(255, 90, 31, 0.3);
     background: linear-gradient(180deg,
-        rgba(79, 174, 124, 0.06) 0%,
+        rgba(255, 90, 31, 0.07) 0%,
         var(--color-bg-2) 100%
     );
+    opacity: 0.6;
 }
 
 .ach__challenge-row {
@@ -144,7 +145,7 @@
 .ach__challenge-done-label {
     font-size: var(--fs-xs);
     font-weight: var(--fw-semibold);
-    color: var(--color-green);
+    color: var(--color-coral);
     letter-spacing: 0.04em;
 }
 
@@ -238,7 +239,6 @@
 
 .ach__lb-row--me {
     background-color: var(--color-coral-dim);
-    border: 1px solid rgba(232, 93, 60, 0.25);
     border-radius: var(--radius-sm);
 }
 .ach__lb-row--me:hover { background-color: rgba(232, 93, 60, 0.14); }
@@ -332,13 +332,13 @@
 }
 
 /* Tier colours */
-.ach__badge-icon--gold    { background: rgba(230, 165, 50, 0.18); box-shadow: 0 0 0 1px rgba(230, 165, 50, 0.35); }
-.ach__badge-icon--coral   { background: var(--color-coral-dim);   box-shadow: 0 0 0 1px rgba(232,  93, 60, 0.35); }
-.ach__badge-icon--ocean   { background: var(--color-ocean-dim);   box-shadow: 0 0 0 1px rgba( 59, 110,255, 0.35); }
-.ach__badge-icon--pink    { background: rgba(242, 196, 184, 0.18);box-shadow: 0 0 0 1px rgba(242, 196,184, 0.35); }
-.ach__badge-icon--mustard { background: var(--color-mustard-dim); box-shadow: 0 0 0 1px rgba(230, 165, 50, 0.35); }
-.ach__badge-icon--green   { background: var(--color-green-dim);   box-shadow: 0 0 0 1px rgba( 79, 174,124, 0.35); }
-.ach__badge-icon--locked  { background: rgba(255,255,255,0.05);   box-shadow: 0 0 0 1px rgba(255,255,255,0.10); }
+.ach__badge-icon--gold    { background: rgba(230, 165, 50, 0.18); }
+.ach__badge-icon--coral   { background: var(--color-coral-dim);   }
+.ach__badge-icon--ocean   { background: var(--color-ocean-dim);   }
+.ach__badge-icon--pink    { background: rgba(242, 196, 184, 0.18);}
+.ach__badge-icon--mustard { background: var(--color-mustard-dim); }
+.ach__badge-icon--green   { background: var(--color-green-dim);   }
+.ach__badge-icon--locked  { background: rgba(255,255,255,0.05);   }
 
 .ach__badge-name {
     font-size: 12px;

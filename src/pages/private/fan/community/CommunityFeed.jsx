@@ -1,8 +1,8 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    CommunityFeed.jsx, Feed de posts/threads da comunidade.
    ───────────────────────────────────────────────────────────────── */
 
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 
 const TYPE_LABELS = {
     collab:    'Collab',

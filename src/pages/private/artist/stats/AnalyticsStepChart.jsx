@@ -1,17 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import { fmtDateShort, fmtNum } from '../../../../utils/formatters'
 
 const H   = 200
 const PAD = { t: 20, r: 20, b: 36, l: 52 }
-
-function fmtDate(iso) {
-    if (!iso) return ''
-    return new Date(iso + 'T00:00:00').toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' })
-}
-
-function fmtNum(n) {
-    if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
-    return String(n)
-}
 
 function stepPath(pts) {
     if (pts.length < 2) return pts.length === 1 ? `M ${pts[0].x} ${pts[0].y}` : ''
@@ -69,7 +60,7 @@ export default function AnalyticsStepChart({ dailyFollowers }) {
                 <div>
                     <h3 className="anl__line-title">Crescimento de seguidores</h3>
                     <p className="anl__line-sub">
-                        {fmtDate(dailyFollowers[0]?.day)} a {fmtDate(dailyFollowers[dailyFollowers.length - 1]?.day)}
+                        {fmtDateShort(dailyFollowers[0]?.day)} a {fmtDateShort(dailyFollowers[dailyFollowers.length - 1]?.day)}
                     </p>
                 </div>
                 <div className="anl__line-total">
@@ -121,7 +112,7 @@ export default function AnalyticsStepChart({ dailyFollowers }) {
                             textAnchor="middle" fontSize="10"
                             fill="var(--color-ink-mute)"
                             fontFamily="var(--font-mono, ui-monospace, monospace)">
-                            {fmtDate(dailyFollowers[idx]?.day)}
+                            {fmtDateShort(dailyFollowers[idx]?.day)}
                         </text>
                     ))}
 
@@ -160,7 +151,7 @@ export default function AnalyticsStepChart({ dailyFollowers }) {
                             right: flip ? W - cx + 10 : 'auto',
                             top:   Math.max(PAD.t, cy - 52),
                         }}>
-                            <div className="anl__tooltip-date">{fmtDate(hover.d.day)}</div>
+                            <div className="anl__tooltip-date">{fmtDateShort(hover.d.day)}</div>
                             <div className="anl__tooltip-val">{hover.d.followers.toLocaleString('pt-PT')} seg.</div>
                         </div>
                     )

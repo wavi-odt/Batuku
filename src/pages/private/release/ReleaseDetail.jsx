@@ -1,40 +1,19 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { FaPlay, FaCompactDisc, FaArrowLeft, FaShareAlt, FaTrash, FaRegComment, FaCamera, FaPen, FaCheck } from 'react-icons/fa'
-import AppShell from '../../../components/HomeComponents/AppShell'
+import { FaPlay, FaArrowLeft, FaShareAlt, FaTrash, FaRegComment, FaCamera, FaPen, FaCheck } from 'react-icons/fa'
 import { API, getToken, getRole } from '../../../utils/auth.js'
 import { usePlayer } from '../../../context/PlayerContext'
 import { useCurrentUser } from '../../../hooks/useCurrentUser.js'
 import { useToast } from '../../../context/ToastContext.jsx'
 import TrackMenu from '../../../components/TrackMenu'
 import TrackComments from '../../../components/TrackComments'
+import CoverImg from '../../../components/CoverImg.jsx'
+import { fmtMs, fmtTotalMs, fmtDateFull, fmtDateLong } from '../../../utils/formatters'
 import '../DetailPage.css'
 import './ReleaseDetail.css'
 
 const TYPE_LABEL = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape', SINGLE: 'Single' }
-
-function fmtMs(ms) {
-    if (!ms) return ''
-    const s = Math.floor(ms / 1000)
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
-}
-
-function fmtTotalMs(ms) {
-    if (!ms) return null
-    const min = Math.floor(ms / 60000)
-    if (min < 60) return `${min} min`
-    const h = Math.floor(min / 60)
-    const m = min % 60
-    return m > 0 ? `${h} h ${m} min` : `${h} h`
-}
-
-function fmtDate(iso) {
-    if (!iso) return null
-    const [y, m, d] = iso.split('-')
-    const months = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez']
-    return d ? `${parseInt(d)} de ${months[parseInt(m) - 1]} de ${y}` : y
-}
 
 function toPlayerTrack(t, fallbackCover, artistName, artistProfileId) {
     return {
@@ -97,11 +76,6 @@ function AlbumComments({ albumId, albumTitle }) {
         } catch { /* silencioso */ }
     }
 
-    function fmtTime(iso) {
-        if (!iso) return ''
-        return new Date(iso).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' })
-    }
-
     return (
         <div className="rel-album-comments">
             <h2 className="rel-album-comments__title">
@@ -139,7 +113,7 @@ function AlbumComments({ albumId, albumTitle }) {
                             <div className="rel-inline-comment__body">
                                 <div className="rel-inline-comment__header">
                                     <span className="rel-inline-comment__author">{c.authorName}</span>
-                                    <span className="rel-inline-comment__time">{fmtTime(c.createdAt)}</span>
+                                    <span className="rel-inline-comment__time">{fmtDateLong(c.createdAt)}</span>
                                 </div>
                                 <p className="rel-inline-comment__text">{c.content}</p>
                             </div>
@@ -252,19 +226,18 @@ export default function ReleaseDetail() {
         setOpenCommentTrack(prev => prev === trackId ? null : trackId)
     }
 
-    if (loading) return <AppShell role={role}><div className="detail-loading">A carregar…</div></AppShell>
-    if (error || !release) return <AppShell role={role}><div className="detail-error">{error || 'Lançamento não encontrado.'}</div></AppShell>
+    if (loading) return <div className="detail-loading">A carregar…</div>
+    if (error || !release) return <div className="detail-error">{error || 'Lançamento não encontrado.'}</div>
 
     const tracks    = release.tracks ?? []
     const queue     = tracks.map(t => toPlayerTrack(t, release.coverUrl, release.artistName, release.artistProfileId))
     const totalMs   = tracks.reduce((acc, t) => acc + (t.durationMs || 0), 0)
     const typeLabel = TYPE_LABEL[release.albumType] ?? release.albumType
-    const dateStr   = fmtDate(release.releaseDate) ?? release.createdAt?.split('T')[0].split('-')[0]
+    const dateStr   = fmtDateFull(release.releaseDate) ?? release.createdAt?.split('T')[0].split('-')[0]
     const isOwner   = role === 'artist' && realUser?.artistProfileId === release.artistProfileId
 
     return (
-        <AppShell role={role}>
-            <div className="rel-detail">
+        <div className="rel-detail">
 
                 <button type="button" className="rel-detail__back" onClick={() => navigate(-1)}>
                     <FaArrowLeft size={14} /> Voltar
@@ -282,10 +255,7 @@ export default function ReleaseDetail() {
                             className={'rel-detail__cover' + (isOwner ? ' rel-detail__cover--editable' : '')}
                             onClick={isOwner ? () => coverInputRef.current?.click() : undefined}
                         >
-                            {release.coverUrl
-                                ? <img src={release.coverUrl} alt={release.title} />
-                                : <div className="rel-detail__cover-placeholder"><FaCompactDisc size={52} /></div>
-                            }
+                            <CoverImg src={release.coverUrl} alt={release.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} iconSize={52} />
                             {isOwner && (
                                 <div className={'rel-detail__cover-edit' + (uploadingCover ? ' rel-detail__cover-edit--loading' : '')}>
                                     {uploadingCover
@@ -391,10 +361,7 @@ export default function ReleaseDetail() {
                                                         : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
                                                     }
                                                 </div>
-                                                {pt.coverUrl
-                                                    ? <img src={pt.coverUrl} alt={t.title} className="strack__cover" />
-                                                    : <div className="strack__cover strack__cover--placeholder" />
-                                                }
+                                                <CoverImg src={pt.coverUrl} alt={t.title} className="strack__cover" />
                                                 <div className="strack__info">
                                                     <div className="strack__title">{t.title}</div>
                                                     <div className="strack__sub">{isActive ? 'A reproduzir…' : t.artistName}</div>
@@ -427,7 +394,6 @@ export default function ReleaseDetail() {
                 {/* ── Album-level comments ────────────────────────── */}
                 <AlbumComments albumId={release.id} albumTitle={release.title} />
 
-            </div>
-        </AppShell>
+        </div>
     )
 }

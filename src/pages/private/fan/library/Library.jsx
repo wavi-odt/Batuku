@@ -1,6 +1,5 @@
 import { useState, useEffect }              from 'react'
 import { Link, useSearchParams }           from 'react-router-dom'
-import AppShell                  from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }         from '../../../../utils/auth.js'
 import { useToast }              from '../../../../context/ToastContext.jsx'
 import ConfirmModal              from '../../../../components/ConfirmModal.jsx'
@@ -125,7 +124,7 @@ export default function Library() {
     const show = (key) => filter === 'all' || filter === key;
 
     return (
-        <AppShell role="fan">
+        <>
 
             {/* ─── Header ──────────────────────────────────────────── */}
             <div className="lib__header">
@@ -209,6 +208,6 @@ export default function Library() {
                 />
             )}
 
-        </AppShell>
+        </>
     );
 }

@@ -1,33 +1,27 @@
-import { useEffect, useState, Fragment } from 'react'
+﻿import { useEffect, useState, Fragment } from 'react'
 import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { useParams, Link, useSearchParams } from 'react-router-dom'
-import { FaUserPlus, FaUserCheck, FaPlay, FaCompactDisc, FaRegComment, FaCheckCircle } from 'react-icons/fa'
+import { FaUserPlus, FaUserCheck, FaPlay, FaRegComment, FaCheckCircle } from 'react-icons/fa'
 import { SiSpotify } from 'react-icons/si'
-import AppShell from '../../../components/HomeComponents/AppShell'
-import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork.jsx'
-import { API, getToken, getRole } from '../../../utils/auth.js'
+import ArtistArtwork from '../../../components/PublicComponents/ArtistArtwork.jsx'
+import { API, getToken } from '../../../utils/auth.js'
 import { useToast } from '../../../context/ToastContext'
 import { CardTitle, ArtistAbout, ArtistLinks } from '../profile/ProfileBlocks'
 import { usePlayer } from '../../../context/PlayerContext'
 import TrackMenu from '../../../components/TrackMenu'
 import TrackComments from '../../../components/TrackComments'
+import CoverImg from '../../../components/CoverImg.jsx'
 import '../profile/Profile.css'
 import '../DetailPage.css'
+import { fmtMs } from '../../../utils/formatters'
 import '../release/ReleaseDetail.css'
 
 const TABS   = ['Visão geral', 'Faixas', 'Lançamentos', 'Sobre'];
 const SHAPES = ['circles', 'orbit', 'arch', 'sun', 'triangles', 'wave', 'stripes', 'split'];
 const TYPE_LABEL = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape', SINGLE: 'Single' };
 
-function fmtMs(ms) {
-    if (!ms) return '';
-    const s = Math.floor(ms / 1000);
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-}
-
 export default function ArtistDetail() {
     const { id } = useParams();
-    const shellRole = getRole() === 'artist' ? 'artist' : 'fan';
 
     const { showToast } = useToast()
     const [artist,           setArtist]           = useState(null);
@@ -98,17 +92,13 @@ export default function ArtistDetail() {
     }
 
     if (loading) return (
-        <AppShell role={shellRole}>
-            <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>
-        </AppShell>
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>
     );
 
     if (error || !artist) return (
-        <AppShell role={shellRole}>
-            <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-danger)' }}>
-                {error || 'Artista não encontrado.'}
-            </div>
-        </AppShell>
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-danger)' }}>
+            {error || 'Artista não encontrado.'}
+        </div>
     );
 
     const activeTab      = TABS[active];
@@ -163,10 +153,7 @@ export default function ArtistDetail() {
                                         : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
                                     }
                                 </div>
-                                {t.coverUrl
-                                    ? <img src={t.coverUrl} alt={t[nameKey]} className="strack__cover" />
-                                    : <div className="strack__cover strack__cover--placeholder" />
-                                }
+                                <CoverImg src={t.coverUrl} alt={t[nameKey]} className="strack__cover" />
                                 <div className="strack__info">
                                     <div className="strack__title">{t[nameKey]}</div>
                                     <div className="strack__sub">{isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}</div>
@@ -214,10 +201,7 @@ export default function ArtistDetail() {
                                     : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
                                 }
                             </div>
-                            {t.coverUrl
-                                ? <img src={t.coverUrl} alt={t.name} className="strack__cover" />
-                                : <div className="strack__cover strack__cover--placeholder" />
-                            }
+                            <CoverImg src={t.coverUrl} alt={t.name} className="strack__cover" />
                             <div className="strack__info">
                                 <div className="strack__title">{t.name}</div>
                                 <div className="strack__sub">{isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}</div>
@@ -244,10 +228,7 @@ export default function ArtistDetail() {
                     return (
                         <Link key={r.id} to={`/releases/${r.id}`} className="rel-card rel-card--link">
                             <div className="rel-card__cover cover-hover">
-                                {r.coverUrl
-                                    ? <img src={r.coverUrl} alt={r.title} />
-                                    : <div className="rel-card__cover-placeholder"><FaCompactDisc size={28} /></div>
-                                }
+                                <CoverImg src={r.coverUrl} alt={r.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} iconSize={28} />
                                 <span className="rel-card__badge">{label}</span>
                             </div>
                             <div className="rel-card__info">
@@ -262,8 +243,7 @@ export default function ArtistDetail() {
     }
 
     return (
-        <AppShell role={shellRole}>
-            <div style={{ marginTop: -8 }}>
+        <div style={{ marginTop: -8 }}>
 
                 {/* ── Cover ─────────────────────────────────────────────── */}
                 <div className="prof__cover">
@@ -491,7 +471,6 @@ export default function ArtistDetail() {
                     )}
 
                 </div>
-            </div>
-        </AppShell>
+        </div>
     );
 }

@@ -3,34 +3,13 @@ import { Link } from 'react-router-dom'
 import { FaThumbtack, FaReply, FaTrash, FaMusic } from 'react-icons/fa'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import { useToast } from '../../../../context/ToastContext.jsx'
+import { timeAgo } from '../../../../utils/timeAgo.js'
+import UserAvatar from '../../../../components/UserAvatar.jsx'
 
 function hueFromStr(str) {
     let n = 0
     for (const c of str ?? '') n = (n * 31 + c.charCodeAt(0)) & 0xffff
     return n % 360
-}
-
-function timeAgo(iso) {
-    if (!iso) return ''
-    const m = Math.floor((Date.now() - new Date(iso)) / 60000)
-    if (m < 1)  return 'agora mesmo'
-    if (m < 60) return `há ${m} min`
-    const h = Math.floor(m / 60)
-    if (h < 24) return `há ${h}h`
-    const d = Math.floor(h / 24)
-    if (d < 30) return `há ${d} dia${d > 1 ? 's' : ''}`
-    return new Date(iso).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' })
-}
-
-function Av({ name, url, className }) {
-    return (
-        <div className={className}>
-            {url
-                ? <img src={url} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                : <span className="cmt__initials">{name?.[0]?.toUpperCase() ?? '?'}</span>
-            }
-        </div>
-    )
 }
 
 export default function CommentCard({ comment, onDelete, onReply, onPin }) {
@@ -82,7 +61,7 @@ export default function CommentCard({ comment, onDelete, onReply, onPin }) {
                 {/* ── Top row ──────────────────────────────────── */}
                 <div className="cmt__card-top">
                     <Link to={`/users/${comment.authorId}`} className="cmt__avatar-link">
-                        <Av name={comment.authorName} url={comment.authorAvatarUrl} className="cmt__avatar" />
+                        <UserAvatar name={comment.authorName} imageUrl={comment.authorAvatarUrl} className="cmt__avatar" size={32} />
                     </Link>
 
                     <div className="cmt__meta">
@@ -153,7 +132,7 @@ export default function CommentCard({ comment, onDelete, onReply, onPin }) {
             {/* ── Resposta existente ───────────────────────────── */}
             {savedReply && !replyOpen && (
                 <div className="cmt__reply">
-                    <Av name={currentUser?.name} url={currentUser?.picture} className="cmt__reply-avatar" />
+                    <UserAvatar name={currentUser?.name} imageUrl={currentUser?.picture} className="cmt__reply-avatar" size={32} />
                     <div className="cmt__reply-body">
                         <div className="cmt__reply-author">
                             {currentUser?.name ?? 'Tu'}
@@ -168,7 +147,7 @@ export default function CommentCard({ comment, onDelete, onReply, onPin }) {
             {/* ── Compositor de resposta ───────────────────────── */}
             {replyOpen && (
                 <div className="cmt__composer">
-                    <Av name={currentUser?.name} url={currentUser?.picture} className="cmt__composer-avatar" />
+                    <UserAvatar name={currentUser?.name} imageUrl={currentUser?.picture} className="cmt__composer-avatar" size={32} />
                     <div className="cmt__composer-inner">
                         <textarea
                             className="cmt__composer-textarea"

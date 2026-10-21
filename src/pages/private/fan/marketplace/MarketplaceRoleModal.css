@@ -8,11 +8,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: 32px 24px;
 }
 
 .mkt-modal__content {
     text-align: center;
     max-width: 480px;
+    width: 100%;
     padding: 0 24px;
 }
 
@@ -62,4 +64,11 @@
 .mkt-modal__btn--no {
     background: rgba(255, 255, 255, 0.12);
     color: rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 480px) {
+    .mkt-modal__question { font-size: 20px; }
+    .mkt-modal__sub { font-size: 13px; margin-bottom: 20px; }
+    .mkt-modal__actions { gap: 8px; }
+    .mkt-modal__btn { width: 100%; padding: 11px 0; font-size: 14px; }
 }

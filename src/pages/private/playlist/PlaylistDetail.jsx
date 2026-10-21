@@ -2,9 +2,8 @@ import { useEffect, useState, useRef, Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams, useNavigate } from 'react-router-dom'
 import ClickableName from '../../../components/ClickableName'
-import { FaPlay, FaArrowLeft, FaHeart, FaMusic, FaPen, FaCheck, FaRegComment, FaEllipsisH, FaGlobe, FaLock, FaTrash, FaBookmark, FaRegBookmark } from 'react-icons/fa'
-import AppShell from '../../../components/HomeComponents/AppShell'
-import { getToken, getRole } from '../../../utils/auth.js'
+import { FaPlay, FaArrowLeft, FaHeart, FaPen, FaCheck, FaRegComment, FaEllipsisH, FaGlobe, FaLock, FaTrash, FaBookmark, FaRegBookmark } from 'react-icons/fa'
+import { getToken } from '../../../utils/auth.js'
 import { usePlayer } from '../../../context/PlayerContext'
 import { useToast } from '../../../context/ToastContext'
 import TrackMenu from '../../../components/TrackMenu'
@@ -12,32 +11,20 @@ import PlaylistLikeButton from '../../../components/PlaylistLikeButton'
 import TrackComments from '../../../components/TrackComments'
 import PlaylistCreateModal from './PlaylistCreateModal'
 import ConfirmModal from '../../../components/ConfirmModal'
+import CoverImg from '../../../components/CoverImg.jsx'
 import '../DetailPage.css'
 import '../release/ReleaseDetail.css'
 import './PlaylistDetail.css'
 
+import { fmtMs, fmtTotalMs } from '../../../utils/formatters'
+
 const API = `${import.meta.env.VITE_API_BASE_URL}/api`
-
-function fmtMs(ms) {
-    if (!ms) return ''
-    const s = Math.floor(ms / 1000)
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
-}
-
-function fmtTotalMs(ms) {
-    if (!ms) return null
-    const min = Math.floor(ms / 60000)
-    if (min < 60) return `${min} min`
-    const h = Math.floor(min / 60); const m = min % 60
-    return m > 0 ? `${h} h ${m} min` : `${h} h`
-}
 
 
 /* ── Página ─────────────────────────────────────────────────────── */
 export default function PlaylistDetail() {
     const { id }   = useParams()
     const navigate = useNavigate()
-    const role     = getRole() === 'artist' ? 'artist' : 'fan'
     const { track: currentTrack, setTrack } = usePlayer()
 
     const { showToast } = useToast()
@@ -108,6 +95,17 @@ export default function PlaylistDetail() {
         window.addEventListener('batuku:track-unliked', handleUnlike)
         return () => window.removeEventListener('batuku:track-unliked', handleUnlike)
     }, [])
+
+    useEffect(() => {
+        function handleTrackAdded(e) {
+            if (String(e.detail.playlistId) !== String(id)) return
+            fetch(`${API}/playlists/${id}`, { headers: { Authorization: `Bearer ${getToken()}` } })
+                .then(res => res.ok ? res.json() : null)
+                .then(data => { if (data) setPlaylist(data) })
+        }
+        window.addEventListener('batuku:playlist-track-added', handleTrackAdded)
+        return () => window.removeEventListener('batuku:playlist-track-added', handleTrackAdded)
+    }, [id])
 
     useEffect(() => {
         if (!menuOpen) return
@@ -195,8 +193,8 @@ export default function PlaylistDetail() {
         setOpenCommentTrack(prev => prev === trackId ? null : trackId)
     }
 
-    if (loading) return <AppShell role={role}><div className="detail-loading">A carregar…</div></AppShell>
-    if (error)   return <AppShell role={role}><div className="detail-error">{error}</div></AppShell>
+    if (loading) return <div className="detail-loading">A carregar…</div>
+    if (error)   return <div className="detail-error">{error}</div>
     if (!playlist) return null
 
     const tracks   = playlist.tracks ?? []
@@ -219,7 +217,7 @@ export default function PlaylistDetail() {
         }))
 
     return (
-        <AppShell role={role}>
+        <>
             <div className="rel-detail">
 
                 <button type="button" className="rel-detail__back" onClick={() => navigate(-1)}>
@@ -242,9 +240,7 @@ export default function PlaylistDetail() {
                         <div className="rel-detail__cover">
                             {isFav
                                 ? <div className="pl-detail__cover-fav"><FaHeart size={52} /></div>
-                                : playlist.coverUrl
-                                    ? <img src={playlist.coverUrl} alt={playlist.name} />
-                                    : <div className="pl-detail__cover-empty"><FaMusic size={52} /></div>
+                                : <CoverImg src={playlist.coverUrl} alt={playlist.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} iconSize={52} />
                             }
                         </div>
 
@@ -388,10 +384,7 @@ export default function PlaylistDetail() {
                                                     <span className="strack__num">{i + 1}</span>
                                                     {t.audioUrl && <span className="strack__play-icon"><FaPlay size={11} /></span>}
                                                 </div>
-                                                {t.coverUrl
-                                                    ? <img src={t.coverUrl} alt={t.title} className="strack__cover" />
-                                                    : <div className="strack__cover strack__cover--placeholder" />
-                                                }
+                                                <CoverImg src={t.coverUrl} alt={t.title} className="strack__cover" />
                                                 <div className="strack__info">
                                                     <div className="strack__title">{t.title}</div>
                                                     <div className="strack__sub">
@@ -450,6 +443,6 @@ export default function PlaylistDetail() {
                 />
             )}
 
-        </AppShell>
+        </>
     )
 }

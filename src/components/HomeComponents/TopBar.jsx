@@ -77,6 +77,7 @@ export default function TopBar({ role = 'fan' }) {
     const [results,        setResults]        = useState(null);
     const [loading,        setLoading]        = useState(false);
     const [searchExpanded, setSearchExpanded] = useState(false);
+    const [picError,       setPicError]       = useState(false);
 
     const [notifOpen,      setNotifOpen]      = useState(false);
     const [avatarMenuOpen, setAvatarMenuOpen] = useState(false);
@@ -353,10 +354,10 @@ export default function TopBar({ role = 'fan' }) {
                 <div className="topbar__avatar-wrap" ref={avatarRef}>
                     {avatarMenuOpen && (
                         <div className="topbar__avatar-menu">
-                            <div className="sidebar__menu-header">
+                            <Link to="/profile" className="sidebar__menu-header sidebar__menu-header--link" onClick={() => setAvatarMenuOpen(false)}>
                                 <div className="sidebar__menu-avatar">
-                                    {realUser?.picture
-                                        ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
+                                    {realUser?.picture && !picError
+                                        ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} onError={() => setPicError(true)} />
                                         : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
                                 </div>
                                 <div>
@@ -367,7 +368,7 @@ export default function TopBar({ role = 'fan' }) {
                                             : realUser?.handle || ''}
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                             <div className="sidebar__menu-divider" />
                             <Link to="/profile" className="sidebar__menu-item" onClick={() => setAvatarMenuOpen(false)}>
                                 <HiUser size={15} /> O meu perfil

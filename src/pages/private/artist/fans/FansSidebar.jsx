@@ -1,42 +1,12 @@
 import { useMemo } from 'react'
+import { timeAgo } from '../../../../utils/timeAgo.js'
+import UserAvatar from '../../../../components/UserAvatar.jsx'
 
 const TIERS = [
     { key: 'superfan', label: 'Superfãs',   desc: 'Fãs muito activos e leais',      color: 'coral'   },
     { key: 'regular',  label: 'Regulares',  desc: 'Fãs com interação frequente',    color: 'ocean'   },
     { key: 'casual',   label: 'Ocasionais', desc: 'Fãs com baixa interação',        color: 'mustard' },
 ]
-
-function hueFromId(id) {
-    return (id * 83) % 360
-}
-
-function Avatar({ fan }) {
-    if (fan.avatarUrl) {
-        return <img src={fan.avatarUrl} alt={fan.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-    }
-    const hue = hueFromId(fan.id)
-    return (
-        <div style={{
-            width: '100%', height: '100%', borderRadius: '50%',
-            background: `hsl(${hue} 55% 42%)`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontSize: 11, fontWeight: 700,
-        }}>
-            {fan.name?.[0]?.toUpperCase() ?? '?'}
-        </div>
-    )
-}
-
-function timeAgo(isoStr) {
-    if (!isoStr) return ''
-    const m = Math.floor((Date.now() - new Date(isoStr)) / 60000)
-    if (m < 1)   return 'agora mesmo'
-    if (m < 60)  return `há ${m} min`
-    const h = Math.floor(m / 60)
-    if (h < 24)  return `há ${h}h`
-    const d = Math.floor(h / 24)
-    return `há ${d} dia${d > 1 ? 's' : ''}`
-}
 
 export default function FansSidebar({ fans, loading }) {
     const tierCounts = useMemo(() => {
@@ -117,7 +87,7 @@ export default function FansSidebar({ fans, loading }) {
                         {recentFollowers.map(fan => (
                             <div key={fan.id} className="fns__activity-item">
                                 <div className="fns__activity-avatar">
-                                    <Avatar fan={fan} />
+                                    <UserAvatar id={fan.id} name={fan.name} imageUrl={fan.avatarUrl} style={{ width: '100%', height: '100%' }} />
                                 </div>
                                 <div className="fns__activity-body">
                                     <div className="fns__activity-text">

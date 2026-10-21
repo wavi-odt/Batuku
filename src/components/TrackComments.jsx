@@ -1,18 +1,8 @@
 import { useEffect, useState } from 'react'
 import { FaTrash, FaRegComment, FaChevronDown, FaChevronUp } from 'react-icons/fa'
 import { API, getToken } from '../utils/auth.js'
-
-function timeAgo(iso) {
-    if (!iso) return ''
-    const m = Math.floor((Date.now() - new Date(iso)) / 60000)
-    if (m < 1)  return 'agora mesmo'
-    if (m < 60) return `há ${m} min`
-    const h = Math.floor(m / 60)
-    if (h < 24) return `há ${h}h`
-    const d = Math.floor(h / 24)
-    if (d < 30) return `há ${d} dia${d > 1 ? 's' : ''}`
-    return new Date(iso).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' })
-}
+import { timeAgo } from '../utils/timeAgo.js'
+import UserAvatar from './UserAvatar.jsx'
 
 function CommentItem({ c, onDelete }) {
     const [showReply, setShowReply] = useState(false)
@@ -21,10 +11,7 @@ function CommentItem({ c, onDelete }) {
     return (
         <li className="rel-inline-comment">
             <div className="rel-inline-comment__avatar">
-                {c.authorAvatarUrl
-                    ? <img src={c.authorAvatarUrl} alt={c.authorName} />
-                    : <span>{c.authorName?.[0]?.toUpperCase() ?? '?'}</span>
-                }
+                <UserAvatar imageUrl={c.authorAvatarUrl} name={c.authorName} size={32} style={{ width: '100%', height: '100%' }} />
             </div>
             <div className="rel-inline-comment__body">
                 <div className="rel-inline-comment__header">
@@ -47,10 +34,7 @@ function CommentItem({ c, onDelete }) {
                 {hasReply && showReply && (
                     <div className="rel-inline-comment__reply">
                         <div className="rel-inline-comment__reply-avatar">
-                            {c.reply.authorAvatarUrl
-                                ? <img src={c.reply.authorAvatarUrl} alt={c.reply.authorName} />
-                                : <span>{c.reply.authorName?.[0]?.toUpperCase() ?? '?'}</span>
-                            }
+                            <UserAvatar imageUrl={c.reply.authorAvatarUrl} name={c.reply.authorName ?? 'Artista'} size={28} style={{ width: '100%', height: '100%' }} />
                         </div>
                         <div className="rel-inline-comment__reply-body">
                             <div className="rel-inline-comment__reply-header">

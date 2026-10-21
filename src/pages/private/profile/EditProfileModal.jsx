@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import {
     FaTimes, FaCheck, FaExclamationTriangle, FaPlus, FaTrash,
     FaInstagram, FaYoutube, FaSoundcloud, FaTwitter, FaFacebook,
@@ -538,7 +539,7 @@ export default function EditProfileModal({ role, onClose, onProfileUpdated, onAr
         }
     }
 
-    return (
+    return createPortal(
         <div className="ep-overlay" onClick={onClose}>
             <div
                 className="ep-modal"
@@ -582,6 +583,7 @@ export default function EditProfileModal({ role, onClose, onProfileUpdated, onAr
                     }
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }

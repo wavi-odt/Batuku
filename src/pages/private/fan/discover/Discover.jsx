@@ -3,7 +3,6 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect }  from 'react'
-import AppShell                  from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }         from '../../../../utils/auth.js'
 import { useGenres }             from '../../../../context/GenresContext.jsx'
 import DiscoverFeatured          from './DiscoverFeatured.jsx'
@@ -41,7 +40,7 @@ export default function Discover() {
 
 
     return (
-        <AppShell role="fan">
+        <>
             <DiscoverFeatured track={featured} allTracks={byLikes} />
             <DiscoverGenres
                 genresMundiais={genresMundiais}
@@ -50,6 +49,6 @@ export default function Discover() {
             {releases.length > 0 && <DiscoverReleases tracks={releases} queue={byDate} />}
             {charts.length  > 0 && <DiscoverCharts   tracks={charts} />}
             {artists.length > 0 && <DiscoverSpotlight artists={artists} />}
-        </AppShell>
+        </>
     )
 }

@@ -2,7 +2,7 @@
    Recommended.jsx, Faixas recomendadas pela IA (com motivo).
    ───────────────────────────────────────────────────────────────── */
 
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import './Recommended.css'
 
 export default function Recommended({ tracks }) {

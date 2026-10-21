@@ -9,7 +9,8 @@ import { PlaylistLikeProvider } from './context/PlaylistLikeContext'
 import { PendingCommentsProvider } from './context/PendingCommentsContext'
 import { NotificationsProvider } from './context/NotificationsContext'
 import { GenresProvider } from './context/GenresContext'
-import MiniPlayer from './components/HomeComponents/MiniPlayer'
+import MiniPlayer  from './components/HomeComponents/MiniPlayer'
+import BottomNav   from './components/HomeComponents/BottomNav'
 import PublishModal from './pages/private/artist/Publish.jsx'
 import Landing from './pages/public/Landing'
 import NotFound from './pages/Denied/notFound'
@@ -51,6 +52,8 @@ import Analytics     from "./pages/private/artist/stats/Analytics.jsx";
 import Fans          from "./pages/private/artist/fans/Fans.jsx";
 import Comments      from "./pages/private/artist/comments/Comments.jsx";
 
+import AppShell from "./components/HomeComponents/AppShell.jsx";
+import ScrollManager from "./components/ScrollManager.jsx";
 import { getRole } from "./utils/auth.js";
 
 function ProfileRouter() {
@@ -60,6 +63,7 @@ function ProfileRouter() {
 // Layout route que mantém o MiniPlayer montado entre navegações privadas
 function PlayerLayer() {
     const { track } = usePlayer()
+    const role = getRole() ?? 'fan'
 
     useEffect(() => {
         document.body.classList.toggle('has-player', !!track)
@@ -70,6 +74,7 @@ function PlayerLayer() {
         <>
             <Outlet />
             <MiniPlayer />
+            <BottomNav role={role} />
         </>
     )
 }
@@ -85,6 +90,7 @@ function App() {
             <PendingCommentsProvider>
             <PublishProvider>
                 <BrowserRouter>
+                    <ScrollManager />
                     <Routes>
                         {/* Públicas */}
                         <Route path="/" element={<Landing />} />
@@ -109,28 +115,30 @@ function App() {
 
                         {/* Privadas, MiniPlayer persiste entre estas rotas */}
                         <Route element={<PlayerLayer />}>
-                            <Route path="/home"           element={<RoleRoute roles={['fan']}><FanHome /></RoleRoute>} />
-                            <Route path="/library"        element={<RoleRoute roles={['fan']}><Library /></RoleRoute>} />
-                            <Route path="/discover"       element={<RoleRoute roles={['fan']}><Discover /></RoleRoute>} />
-                            <Route path="/genres/:id"     element={<RoleRoute roles={['fan']}><GenrePage /></RoleRoute>} />
-                            <Route path="/following"      element={<RoleRoute roles={['fan']}><Following /></RoleRoute>} />
-                            <Route path="/achievements"   element={<RoleRoute roles={['fan']}><Achievements /></RoleRoute>} />
-                            <Route path="/marketplace"      element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
-                            <Route path="/marketplace/:tab" element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
-                            <Route path="/community"      element={<RoleRoute roles={['fan', 'artist']}><Community /></RoleRoute>} />
-                            <Route path="/tracks"         element={<RoleRoute roles={['artist']}><Tracks /></RoleRoute>} />
-                            <Route path="/analytics"      element={<RoleRoute roles={['artist']}><Analytics /></RoleRoute>} />
-                            <Route path="/fans"           element={<RoleRoute roles={['artist']}><Fans /></RoleRoute>} />
-                            <Route path="/comments"       element={<RoleRoute roles={['artist']}><Comments /></RoleRoute>} />
-                            <Route path="/dashboard"      element={<RoleRoute roles={['artist']}><Dashboard /></RoleRoute>} />
-                            <Route path="/profile"        element={<RoleRoute roles={['fan', 'artist']}><ProfileRouter /></RoleRoute>} />
-                            <Route path="/settings"       element={<Navigate to="/profile" replace />} />
-                            <Route path="/artists/:id"    element={<RoleRoute roles={['fan', 'artist']}><ArtistDetail /></RoleRoute>} />
-                            <Route path="/releases/:id"  element={<RoleRoute roles={['fan', 'artist']}><ReleaseDetail /></RoleRoute>} />
-                            <Route path="/claim-profile"  element={<RoleRoute roles={['fan', 'artist']}><ClaimProfile /></RoleRoute>} />
-                            <Route path="/playlists/new"  element={<RoleRoute roles={['fan', 'artist']}><PlaylistCreate /></RoleRoute>} />
-                            <Route path="/playlists/:id"  element={<RoleRoute roles={['fan', 'artist']}><PlaylistDetail /></RoleRoute>} />
-                            <Route path="/users/:id"      element={<RoleRoute roles={['fan', 'artist']}><UserDetail /></RoleRoute>} />
+                            <Route element={<AppShell />}>
+                                <Route path="/home"           element={<RoleRoute roles={['fan']}><FanHome /></RoleRoute>} />
+                                <Route path="/library"        element={<RoleRoute roles={['fan']}><Library /></RoleRoute>} />
+                                <Route path="/discover"       element={<RoleRoute roles={['fan']}><Discover /></RoleRoute>} />
+                                <Route path="/genres/:id"     element={<RoleRoute roles={['fan']}><GenrePage /></RoleRoute>} />
+                                <Route path="/following"      element={<RoleRoute roles={['fan']}><Following /></RoleRoute>} />
+                                <Route path="/achievements"   element={<RoleRoute roles={['fan']}><Achievements /></RoleRoute>} />
+                                <Route path="/marketplace"      element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
+                                <Route path="/marketplace/:tab" element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
+                                <Route path="/community"      element={<RoleRoute roles={['fan', 'artist']}><Community /></RoleRoute>} />
+                                <Route path="/tracks"         element={<RoleRoute roles={['artist']}><Tracks /></RoleRoute>} />
+                                <Route path="/analytics"      element={<RoleRoute roles={['artist']}><Analytics /></RoleRoute>} />
+                                <Route path="/fans"           element={<RoleRoute roles={['artist']}><Fans /></RoleRoute>} />
+                                <Route path="/comments"       element={<RoleRoute roles={['artist']}><Comments /></RoleRoute>} />
+                                <Route path="/dashboard"      element={<RoleRoute roles={['artist']}><Dashboard /></RoleRoute>} />
+                                <Route path="/profile"        element={<RoleRoute roles={['fan', 'artist']}><ProfileRouter /></RoleRoute>} />
+                                <Route path="/settings"       element={<Navigate to="/profile" replace />} />
+                                <Route path="/artists/:id"    element={<RoleRoute roles={['fan', 'artist']}><ArtistDetail /></RoleRoute>} />
+                                <Route path="/releases/:id"  element={<RoleRoute roles={['fan', 'artist']}><ReleaseDetail /></RoleRoute>} />
+                                <Route path="/claim-profile"  element={<RoleRoute roles={['fan', 'artist']}><ClaimProfile /></RoleRoute>} />
+                                <Route path="/playlists/new"  element={<RoleRoute roles={['fan', 'artist']}><PlaylistCreate /></RoleRoute>} />
+                                <Route path="/playlists/:id"  element={<RoleRoute roles={['fan', 'artist']}><PlaylistDetail /></RoleRoute>} />
+                                <Route path="/users/:id"      element={<RoleRoute roles={['fan', 'artist']}><UserDetail /></RoleRoute>} />
+                            </Route>
                         </Route>
 
                         <Route path="/*" element={<NotFound />} />

@@ -246,7 +246,7 @@
 
 .fns__row {
     display: grid;
-    grid-template-columns: 40px 1fr 90px 80px 44px 44px 44px 100px;
+    grid-template-columns: 40px 1fr 90px 70px 54px 54px 100px;
     align-items: center;
     gap: .75rem;
     padding: .65rem 1rem;
@@ -357,10 +357,13 @@
 .fns__col {
     font-size: .82rem;
     color: var(--color-ink-soft);
-    text-align: right;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.fns__col--left { text-align: left; }
+.fns__col--left { justify-content: flex-start; text-align: left; }
 
 /* Top track */
 .fns__track-name {
@@ -375,7 +378,7 @@
 .fns__active {
     font-size: .75rem;
     color: var(--color-ink-mute);
-    text-align: right;
+    text-align: center;
 }
 
 /* Empty */
@@ -555,6 +558,7 @@
 @media (max-width: 900px) {
     .fns__body { grid-template-columns: 1fr; }
     .fns__kpis { grid-template-columns: repeat(2, 1fr); }
-    .fns__row  { grid-template-columns: 36px 1fr 72px 40px 40px; }
-    .fns__row .fns__col--hide { display: none; }
+    .fns__row  { grid-template-columns: 36px 1fr 80px 60px 90px; }
+    .fns__row > :nth-child(5),
+    .fns__row > :nth-child(6) { display: none; }
 }

@@ -1,22 +1,6 @@
 import { Link } from 'react-router-dom'
+import UserAvatar from '../../../../components/UserAvatar.jsx'
 import './TopFans.css'
-
-function Avatar({ fan }) {
-    if (fan.avatarUrl) {
-        return <img src={fan.avatarUrl} alt={fan.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-    }
-    const hue = (fan.id * 83) % 360
-    return (
-        <div style={{
-            width: '100%', height: '100%', borderRadius: '50%',
-            background: `hsl(${hue} 55% 42%)`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontSize: 13, fontWeight: 700,
-        }}>
-            {fan.name?.[0]?.toUpperCase() ?? '?'}
-        </div>
-    )
-}
 
 export default function TopFans({ fans, loading }) {
     const top = [...fans].sort((a, b) => b.plays - a.plays).slice(0, 5)
@@ -40,7 +24,7 @@ export default function TopFans({ fans, loading }) {
                         #{i + 1}
                     </div>
                     <div className="fans-row__avatar">
-                        <Avatar fan={f} />
+                        <UserAvatar id={f.id} name={f.name} imageUrl={f.avatarUrl} style={{ width: '100%', height: '100%' }} />
                     </div>
                     <div className="fans-row__info">
                         <div className="fans-row__name">{f.name}</div>

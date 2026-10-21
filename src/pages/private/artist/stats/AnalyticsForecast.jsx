@@ -1,20 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
 import { API, getToken } from '../../../../utils/auth.js'
+import { fmtDateShort, fmtNum } from '../../../../utils/formatters'
 import './Analytics.css'
 import './AnalyticsForecast.css'
 
 const H   = 220
 const PAD = { t: 20, r: 20, b: 36, l: 52 }
-
-function fmtDate(iso) {
-    if (!iso) return ''
-    return new Date(iso + 'T00:00:00').toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' })
-}
-
-function fmtNum(n) {
-    if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
-    return String(n)
-}
 
 function smoothPath(pts) {
     if (pts.length < 2) return pts.length === 1 ? `M ${pts[0].x} ${pts[0].y}` : ''
@@ -121,7 +112,7 @@ export default function AnalyticsForecast() {
                 <div>
                     <h3 className="fcst__title">Previsão de reproduções</h3>
                     <p className="fcst__sub">
-                        {fmtDate(historical[0]?.day)} a {fmtDate(
+                        {fmtDateShort(historical[0]?.day)} a {fmtDateShort(
                             forecast.length > 0 ? forecast[forecast.length - 1]?.day : historical[historical.length - 1]?.day
                         )}
                     </p>
@@ -178,7 +169,7 @@ export default function AnalyticsForecast() {
 
                     {xTicks.map(idx => (
                         <text key={idx} x={xOf(idx)} y={H - 6} textAnchor="middle" fontSize="10" fill="var(--color-ink-mute)" fontFamily="var(--font-mono, ui-monospace, monospace)">
-                            {fmtDate(allData[idx]?.day)}
+                            {fmtDateShort(allData[idx]?.day)}
                         </text>
                     ))}
 
@@ -243,7 +234,7 @@ export default function AnalyticsForecast() {
                             }}
                         >
                             <div className="anl__tooltip-date">
-                                {fmtDate(hover.d.day)}{hover.isForecast ? ' (previsão)' : ''}
+                                {fmtDateShort(hover.d.day)}{hover.isForecast ? ' (previsão)' : ''}
                             </div>
                             <div className="anl__tooltip-val">
                                 {hover.d.plays.toLocaleString('pt-PT')} rep.

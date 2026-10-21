@@ -1,8 +1,8 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    CommunitySidebar.jsx, Online agora + Tags em tendência.
    ───────────────────────────────────────────────────────────────── */
 
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 
 export default function CommunitySidebar({ onlineNow, trendingTags, totalOnline }) {
     return (

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import './MarketplaceRoleModal.css'
 
 const ROLE_LABEL = {
@@ -9,37 +10,35 @@ const ROLE_LABEL = {
 export default function MarketplaceRoleModal({ onChoose, onBack }) {
     const [pending, setPending] = useState(null)
 
-    if (pending) {
-        return (
-            <div className="mkt-modal__backdrop">
-                <div className="mkt-modal__content">
-                    <p className="mkt-modal__question">Tens a certeza?</p>
-                    <p className="mkt-modal__sub">
-                        {ROLE_LABEL[pending]}<br />
-                        Não pode ser alterada depois.
-                    </p>
-                    <div className="mkt-modal__actions">
-                        <button
-                            type="button"
-                            className="mkt-modal__btn mkt-modal__btn--yes"
-                            onClick={() => onChoose(pending)}
-                        >
-                            Sim, confirmar
-                        </button>
-                        <button
-                            type="button"
-                            style={{ background: 'none', border: 'none', color: 'var(--color-ink-mute)', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline', marginTop: '8px' }}
-                            onClick={() => setPending(null)}
-                        >
-                            Voltar atrás
-                        </button>
-                    </div>
+    const confirmView = (
+        <div className="mkt-modal__backdrop">
+            <div className="mkt-modal__content">
+                <p className="mkt-modal__question">Tens a certeza?</p>
+                <p className="mkt-modal__sub">
+                    {ROLE_LABEL[pending]}<br />
+                    Não pode ser alterada depois.
+                </p>
+                <div className="mkt-modal__actions">
+                    <button
+                        type="button"
+                        className="mkt-modal__btn mkt-modal__btn--yes"
+                        onClick={() => onChoose(pending)}
+                    >
+                        Sim, confirmar
+                    </button>
+                    <button
+                        type="button"
+                        style={{ background: 'none', border: 'none', color: 'var(--color-ink-mute)', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline', marginTop: '8px' }}
+                        onClick={() => setPending(null)}
+                    >
+                        Voltar atrás
+                    </button>
                 </div>
             </div>
-        )
-    }
+        </div>
+    )
 
-    return (
+    const chooseView = (
         <div className="mkt-modal__backdrop">
             <div className="mkt-modal__content">
                 <p className="mkt-modal__question">
@@ -82,4 +81,6 @@ export default function MarketplaceRoleModal({ onChoose, onBack }) {
             </div>
         </div>
     )
+
+    return createPortal(pending ? confirmView : chooseView, document.body)
 }

@@ -3,12 +3,11 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { FaDiscord }      from 'react-icons/fa'
-import AppShell           from '../../../../components/HomeComponents/AppShell.jsx'
 import './Community.css'
 
 export default function Community() {
     return (
-        <AppShell>
+        <>
             <div className="com__header">
                 <div>
                     <h1 className="com__title">Comunidade</h1>
@@ -29,6 +28,6 @@ export default function Community() {
                 <p style={{ fontSize: 16, marginBottom: 8 }}>A comunidade está a ser preparada.</p>
                 <p style={{ fontSize: 13 }}>Em breve poderás interagir com outros fãs e artistas.</p>
             </div>
-        </AppShell>
+        </>
     );
 }

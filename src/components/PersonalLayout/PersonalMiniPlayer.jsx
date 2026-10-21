@@ -4,13 +4,9 @@ import {
     FaRandom, FaSyncAlt,
 } from 'react-icons/fa'
 import { HiVolumeUp } from 'react-icons/hi'
+import CoverImg from '../CoverImg.jsx'
+import { fmtTime } from '../../utils/formatters'
 import './PersonalMiniPlayer.css'
-
-function fmtTime(ms) {
-    if (!ms && ms !== 0) return '0:00'
-    const s = Math.floor(ms / 1000)
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
-}
 
 function waveformBars(seed, n = 60) {
     let s = 0
@@ -209,10 +205,7 @@ export default function PersonalMiniPlayer({ tracks, currentIndex, onIndexChange
             {/* Faixa */}
             <div className="pmp__track">
                 <div className="pmp__cover">
-                    {track.coverUrl
-                        ? <img src={track.coverUrl} alt={track.title} />
-                        : <div className="pmp__cover-empty" />
-                    }
+                    <CoverImg src={track.coverUrl} alt={track.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
                 <div key={track.id} className="pmp__info">
                     <div className="pmp__title">{track.title}</div>

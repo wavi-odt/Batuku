@@ -1,9 +1,9 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    DiscoverReleases.jsx, Novos lançamentos recentes.
    ───────────────────────────────────────────────────────────────── */
 
 import { Link }   from 'react-router-dom'
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import { usePlayer }  from '../../../../context/PlayerContext.jsx'
 import TrackMenu      from '../../../../components/TrackMenu.jsx'
 import NowPlayingEq   from '../../../../components/NowPlayingEq.jsx'

@@ -1,15 +1,13 @@
 import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaMusic, FaCamera } from 'react-icons/fa'
-import AppShell from '../../../components/HomeComponents/AppShell'
-import { API, getToken, getRole } from '../../../utils/auth.js'
+import { API, getToken } from '../../../utils/auth.js'
 import '../DetailPage.css'
 import '../profile/Settings.css'
 import './PlaylistCreate.css'
 
 export default function PlaylistCreate() {
     const navigate = useNavigate();
-    const role = getRole() === 'artist' ? 'artist' : 'fan';
 
     const [name,        setName]        = useState('');
     const [description, setDescription] = useState('');
@@ -53,8 +51,7 @@ export default function PlaylistCreate() {
     }
 
     return (
-        <AppShell role={role}>
-            <div className="settings-page">
+        <div className="settings-page">
                 <h1 className="settings-page__title">Nova playlist</h1>
 
                 <form className="card settings-card pl-create-form" onSubmit={handleSubmit}>
@@ -119,7 +116,6 @@ export default function PlaylistCreate() {
                     </div>
 
                 </form>
-            </div>
-        </AppShell>
+        </div>
     );
 }

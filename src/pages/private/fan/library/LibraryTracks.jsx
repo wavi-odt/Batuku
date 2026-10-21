@@ -1,14 +1,10 @@
-import { FaPlay, FaPause, FaMusic } from 'react-icons/fa'
+import { FaPlay, FaPause } from 'react-icons/fa'
 import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import { usePlayer }  from '../../../../context/PlayerContext.jsx'
 import LikeButton     from '../../../../components/LikeButton.jsx'
 import TrackMenu      from '../../../../components/TrackMenu.jsx'
-
-function fmtMs(ms) {
-    if (!ms) return ''
-    const s = Math.floor(ms / 1000)
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
-}
+import CoverImg       from '../../../../components/CoverImg.jsx'
+import { fmtMs } from '../../../../utils/formatters'
 
 export default function LibraryTracks({ tracks, loading }) {
     const { track: currentTrack, setTrack } = usePlayer()
@@ -52,10 +48,7 @@ export default function LibraryTracks({ tracks, loading }) {
                                 </span>
 
                                 <div className="lib__track-thumb cover-hover">
-                                    {t.coverUrl
-                                        ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                        : <div className="lib__track-thumb-empty"><FaMusic size={13} /></div>
-                                    }
+                                    <CoverImg src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} iconSize={13} />
                                     {t.audioUrl && (
                                         <button type="button" className="lib__track-play" aria-label={isPlaying ? 'A reproduzir' : 'Reproduzir'}>
                                             {isPlaying ? <FaPause size={10} /> : <FaPlay size={10} />}

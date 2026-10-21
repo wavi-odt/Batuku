@@ -3,7 +3,6 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { FaPlus, FaSearch, FaCompactDisc, FaTrash, FaCheck, FaChevronDown } from 'react-icons/fa'
 import { HiOutlineMusicNote } from 'react-icons/hi'
 import { TbDisc } from 'react-icons/tb'
-import AppShell from '../../../../components/HomeComponents/AppShell.jsx'
 import { usePublish } from '../../../../context/PublishContext.jsx'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import { useMyTracks } from '../../../../hooks/useMyTracks.js'
@@ -184,7 +183,7 @@ export default function Tracks() {
 
 
     return (
-        <AppShell role="artist">
+        <>
 
             {/* ─── Header ───────────────────────────────────── */}
             <div className="trk__header">
@@ -406,6 +405,6 @@ export default function Tracks() {
                 />
             )}
 
-        </AppShell>
+        </>
     );
 }

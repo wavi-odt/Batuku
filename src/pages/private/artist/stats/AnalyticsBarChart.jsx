@@ -1,18 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
+import { fmtDateShort, fmtNum } from '../../../../utils/formatters'
 
 const H   = 200
 const PAD = { t: 20, r: 20, b: 36, l: 52 }
 const GAP = 3
-
-function fmtDate(iso) {
-    if (!iso) return ''
-    return new Date(iso + 'T00:00:00').toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' })
-}
-
-function fmtNum(n) {
-    if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
-    return String(n)
-}
 
 export default function AnalyticsBarChart({ dailyLikes }) {
     const containerRef = useRef(null)
@@ -50,7 +41,7 @@ export default function AnalyticsBarChart({ dailyLikes }) {
                 <div>
                     <h3 className="anl__line-title">Likes ao longo do tempo</h3>
                     <p className="anl__line-sub">
-                        {fmtDate(dailyLikes[0]?.day)} a {fmtDate(dailyLikes[n - 1]?.day)}
+                        {fmtDateShort(dailyLikes[0]?.day)} a {fmtDateShort(dailyLikes[n - 1]?.day)}
                     </p>
                 </div>
                 <div className="anl__line-total">
@@ -111,7 +102,7 @@ export default function AnalyticsBarChart({ dailyLikes }) {
                             textAnchor="middle" fontSize="10"
                             fill="var(--color-ink-mute)"
                             fontFamily="var(--font-mono, ui-monospace, monospace)">
-                            {fmtDate(dailyLikes[idx]?.day)}
+                            {fmtDateShort(dailyLikes[idx]?.day)}
                         </text>
                     ))}
                 </svg>
@@ -126,7 +117,7 @@ export default function AnalyticsBarChart({ dailyLikes }) {
                             right: flip ? W - cx + 10 : 'auto',
                             top:   Math.max(PAD.t, cy - 52),
                         }}>
-                            <div className="anl__tooltip-date">{fmtDate(hover.d.day)}</div>
+                            <div className="anl__tooltip-date">{fmtDateShort(hover.d.day)}</div>
                             <div className="anl__tooltip-val">{hover.d.likes.toLocaleString('pt-PT')} likes</div>
                         </div>
                     )

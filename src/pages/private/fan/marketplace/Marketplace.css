@@ -560,6 +560,86 @@
     white-space: nowrap;
 }
 
+/* License dropdown + header spacer (mobile only) */
+.mkt__lic-drop,
+.mkt__lic-drop-spacer {
+    display: none;
+    position: relative;
+}
+
+.mkt__lic-drop__btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 5px 10px 5px 12px;
+    font-size: 12px;
+    font-weight: var(--fw-medium);
+    color: var(--color-ink-mute);
+    font-family: inherit;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color var(--duration-fast) var(--ease-out),
+                color var(--duration-fast) var(--ease-out);
+}
+.mkt__lic-drop__btn:hover,
+.mkt__lic-drop__btn--open {
+    border-color: var(--color-border-strong);
+    color: var(--color-ink-soft);
+}
+
+.mkt__lic-drop__chevron {
+    opacity: 0.5;
+    transition: transform 0.15s var(--ease-out);
+}
+.mkt__lic-drop__chevron--open { transform: rotate(180deg); }
+
+.mkt__lic-drop__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    min-width: 160px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.2);
+    padding: 4px;
+    z-index: 60;
+    animation: mkt-sort-in 0.12s var(--ease-out);
+}
+
+.mkt__lic-drop__option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    background: transparent;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-soft);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    font-family: inherit;
+    transition: background-color var(--duration-fast) var(--ease-out),
+                color var(--duration-fast) var(--ease-out);
+}
+.mkt__lic-drop__option:hover {
+    background-color: rgba(255,255,255,0.06);
+    color: var(--color-ink);
+}
+.mkt__lic-drop__option--active { color: var(--color-ink); font-weight: var(--fw-semibold); }
+
+.mkt__lic-drop__price {
+    font-size: var(--fs-xs);
+    color: var(--color-mustard);
+    font-weight: var(--fw-semibold);
+}
+
 /* License pills on each row */
 .mkt__beat-licenses {
     display: flex;
@@ -688,7 +768,7 @@
 @media (max-width: 900px) {
     .mkt__beat-header,
     .mkt__beat-row {
-        grid-template-columns: 44px 1fr 68px 36px;
+        grid-template-columns: 44px 1fr 80px 68px 36px;
     }
     .mkt__beat-genre,
     .mkt__beat-bpm,
@@ -696,6 +776,9 @@
     .mkt__beat-col--genre,
     .mkt__beat-col--bpm,
     .mkt__beat-col--lic { display: none; }
+
+    .mkt__lic-drop { display: block; }
+    .mkt__lic-drop-spacer { display: block; padding-left: 13px; }
 
     .mkt__beat-header--readonly,
     .mkt__beat-row--readonly {

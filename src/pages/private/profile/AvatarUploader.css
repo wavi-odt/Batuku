@@ -18,10 +18,11 @@
     border-radius: 20px;
     width: 100%;
     max-width: 420px;
+    max-height: calc(100dvh - 48px);
     box-shadow: var(--shadow-lg);
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 /* ─── Header ──────────────────────────────────────────────────────── */

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom'
-import { FaTrophy, FaUserPlus, FaUserCheck, FaPlay, FaMusic, FaGlobe, FaUser, FaCheckCircle } from 'react-icons/fa'
-import AppShell from '../../../components/HomeComponents/AppShell'
-import { getToken, getRole } from '../../../utils/auth.js'
+import { FaTrophy, FaUserPlus, FaUserCheck, FaPlay, FaGlobe, FaUser, FaCheckCircle } from 'react-icons/fa'
+import { getToken } from '../../../utils/auth.js'
 import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import { useToast } from '../../../context/ToastContext'
 import { usePlayer } from '../../../context/PlayerContext'
 import { CardTitle, BadgesGrid, GenreBars } from '../profile/ProfileBlocks'
+import CoverImg from '../../../components/CoverImg.jsx'
+import UserAvatar from '../../../components/UserAvatar.jsx'
 import '../profile/Profile.css'
 import '../DetailPage.css'
 import '../fan/library/Library.css'
@@ -32,7 +33,6 @@ function tierFromPoints(pts) {
 export default function UserDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const shellRole = getRole() === 'artist' ? 'artist' : 'fan';
     const { showToast } = useToast();
     const currentUser = useCurrentUser();
     const { setTrack } = usePlayer();
@@ -128,17 +128,13 @@ export default function UserDetail() {
     }
 
     if (loading) return (
-        <AppShell role={shellRole}>
-            <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>
-        </AppShell>
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>
     );
 
     if (error || !user) return (
-        <AppShell role={shellRole}>
-            <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-danger)' }}>
-                {error || 'Utilizador não encontrado.'}
-            </div>
-        </AppShell>
+        <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-danger)' }}>
+            {error || 'Utilizador não encontrado.'}
+        </div>
     );
 
     const isMe       = currentUser?.id != null && String(currentUser.id) === String(id);
@@ -167,8 +163,7 @@ export default function UserDetail() {
     ];
 
     return (
-        <AppShell role={shellRole}>
-            <div style={{ marginTop: -8 }}>
+        <div style={{ marginTop: -8 }}>
 
                 {/* ── Cover ─────────────────────────────────────────────── */}
                 <div className="prof__cover">
@@ -267,10 +262,7 @@ export default function UserDetail() {
                                             {publicPlaylists.slice(0, 4).map(pl => (
                                                 <Link key={pl.id} to={`/playlists/${pl.id}`} className="lib__pl-card">
                                                     <div className="lib__pl-cover lib__pl-cover--img" style={{ marginBottom: 10 }}>
-                                                        {pl.coverUrl
-                                                            ? <img src={pl.coverUrl} alt={pl.name} className="lib__pl-cover-img" />
-                                                            : <div className="lib__pl-cover-empty"><FaMusic size={26} /></div>
-                                                        }
+                                                        <CoverImg src={pl.coverUrl} alt={pl.name} className="lib__pl-cover-img" iconSize={26} />
                                                         <span className="lib__pl-play" aria-hidden="true"><FaPlay size={11} /></span>
                                                     </div>
                                                     <div className="lib__pl-title">{pl.name}</div>
@@ -299,10 +291,7 @@ export default function UserDetail() {
                                             {followingArtists.slice(0, 6).map(a => (
                                                 <Link key={a.id} to={`/artists/${a.id}`} className="follow-card">
                                                     <div className="follow-card__avatar">
-                                                        {a.avatarUrl
-                                                            ? <img src={a.avatarUrl} alt={a.name} className="follow-card__avatar-img" />
-                                                            : <div className="follow-card__avatar-empty"><FaUser size={20} /></div>
-                                                        }
+                                                        <UserAvatar name={a.name} imageUrl={a.avatarUrl} className="follow-card__avatar-img" size={20} />
                                                     </div>
                                                     <div className="follow-card__name">{a.name}</div>
                                                     {a.genre && <div className="follow-card__genre">{a.genre}</div>}
@@ -321,10 +310,7 @@ export default function UserDetail() {
                                                 onClick={() => handlePlayRecent(t, userRecentTracks)}
                                             >
                                                 <div className="playlist-item__cover prof-recent__cover">
-                                                    {t.coverUrl
-                                                        ? <img src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" />
-                                                        : <div className="playlist-item__cover-empty"><FaMusic size={12} /></div>
-                                                    }
+                                                    <CoverImg src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" iconSize={12} />
                                                     {(t.audioUrl || t.spotifyId) && (
                                                         <span className="prof-recent__play"><FaPlay size={9} /></span>
                                                     )}
@@ -359,10 +345,7 @@ export default function UserDetail() {
                                                 {publicPlaylists.map(pl => (
                                                     <Link key={pl.id} to={`/playlists/${pl.id}`} className="lib__pl-card">
                                                         <div className="lib__pl-cover lib__pl-cover--img" style={{ marginBottom: 10 }}>
-                                                            {pl.coverUrl
-                                                                ? <img src={pl.coverUrl} alt={pl.name} className="lib__pl-cover-img" />
-                                                                : <div className="lib__pl-cover-empty"><FaMusic size={26} /></div>
-                                                            }
+                                                            <CoverImg src={pl.coverUrl} alt={pl.name} className="lib__pl-cover-img" iconSize={26} />
                                                             <span className="lib__pl-play" aria-hidden="true"><FaPlay size={11} /></span>
                                                         </div>
                                                         <div className="lib__pl-title">{pl.name}</div>
@@ -396,10 +379,7 @@ export default function UserDetail() {
                                                 onClick={() => handlePlayRecent(t, userRecentTracks)}
                                             >
                                                 <div className="playlist-item__cover prof-recent__cover">
-                                                    {t.coverUrl
-                                                        ? <img src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" />
-                                                        : <div className="playlist-item__cover-empty"><FaMusic size={12} /></div>
-                                                    }
+                                                    <CoverImg src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" iconSize={12} />
                                                     {(t.audioUrl || t.spotifyId) && (
                                                         <span className="prof-recent__play"><FaPlay size={9} /></span>
                                                     )}
@@ -441,10 +421,7 @@ export default function UserDetail() {
                                     {followingArtists.map(a => (
                                         <Link key={a.id} to={`/artists/${a.id}`} className="follow-card">
                                             <div className="follow-card__avatar">
-                                                {a.avatarUrl
-                                                    ? <img src={a.avatarUrl} alt={a.name} className="follow-card__avatar-img" />
-                                                    : <div className="follow-card__avatar-empty"><FaUser size={20} /></div>
-                                                }
+                                                <UserAvatar name={a.name} imageUrl={a.avatarUrl} className="follow-card__avatar-img" size={20} />
                                             </div>
                                             <div className="follow-card__name">{a.name}</div>
                                             {a.genre && <div className="follow-card__genre">{a.genre}</div>}
@@ -456,7 +433,6 @@ export default function UserDetail() {
                     )}
 
                 </div>
-            </div>
-        </AppShell>
+        </div>
     );
 }

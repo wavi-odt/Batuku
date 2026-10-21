@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { HiMenu, HiX } from 'react-icons/hi'
 import logo from '../../assets/batuku-icone-C-escuro.svg'
-import '../PublicComponets/NavbarPublic.css'
+import '../PublicComponents/NavbarPublic.css'
 
 const NAV_LINKS = [];
 

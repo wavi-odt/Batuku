@@ -1,6 +1,7 @@
-import { FaCompactDisc, FaPlay, FaHeart } from 'react-icons/fa'
+import { FaPlay, FaHeart } from 'react-icons/fa'
 import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import { usePlayer } from '../../../../context/PlayerContext.jsx'
+import CoverImg from '../../../../components/CoverImg.jsx'
 
 export default function AnalyticsTopTracks({ tracks }) {
     const { track: currentTrack, setTrack, togglePlayRef } = usePlayer()
@@ -56,10 +57,7 @@ export default function AnalyticsTopTracks({ tracks }) {
                             }}
                             style={{ cursor: queueEntry ? 'pointer' : 'default' }}
                         >
-                            {t.coverUrl
-                                ? <img src={t.coverUrl} alt={t.title} />
-                                : <div className="anl__top-cover-empty"><FaCompactDisc size={13} /></div>
-                            }
+                            <CoverImg src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} iconSize={13} />
                             {queueEntry && (
                                 <div className="anl__top-cover-overlay">
                                     {isPlaying ? <NowPlayingEq /> : <FaPlay size={10} />}

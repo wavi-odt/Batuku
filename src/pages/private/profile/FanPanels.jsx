@@ -6,11 +6,13 @@
 
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { FaHeart, FaMusic, FaUser } from 'react-icons/fa'
+import { FaHeart } from 'react-icons/fa'
 import { API, getToken } from '../../../utils/auth.js'
 import {
     CardTitle, BadgesGrid, GenreBars, ActivityList,
 } from './ProfileBlocks'
+import CoverImg from '../../../components/CoverImg.jsx'
+import UserAvatar from '../../../components/UserAvatar.jsx'
 
 /* ─── Hooks ───────────────────────────────────────────────────────── */
 function useFanPlaylists() {
@@ -107,10 +109,7 @@ function PlaylistCard({ pl }) {
     return (
         <Link to={`/playlists/${pl.id}`} className="playlist-item">
             <div className="playlist-item__cover">
-                {pl.coverUrl
-                    ? <img src={pl.coverUrl} alt={pl.name} className="playlist-item__cover-img" />
-                    : <div className="playlist-item__cover-empty"><FaMusic size={14} /></div>
-                }
+                <CoverImg src={pl.coverUrl} alt={pl.name} className="playlist-item__cover-img" iconSize={14} />
             </div>
             <div>
                 <div className="playlist-item__name">{pl.name}</div>
@@ -124,10 +123,7 @@ function ArtistCard({ a }) {
     return (
         <Link to={`/artists/${a.id}`} className="follow-card">
             <div className="follow-card__avatar">
-                {a.avatarUrl
-                    ? <img src={a.avatarUrl} alt={a.name} className="follow-card__avatar-img" />
-                    : <div className="follow-card__avatar-empty"><FaUser size={20} /></div>
-                }
+                <UserAvatar name={a.name} imageUrl={a.avatarUrl} className="follow-card__avatar-img" size={20} />
             </div>
             <div className="follow-card__name">{a.name}</div>
             {a.genre && <div className="follow-card__genre">{a.genre}</div>}
@@ -200,10 +196,7 @@ export function FanOverview({ fan }) {
                             : recentTracks.slice(0, 5).map(t => (
                                 <div key={t.trackId} className="playlist-item prof-recent">
                                     <div className="playlist-item__cover prof-recent__cover">
-                                        {t.coverUrl
-                                            ? <img src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" />
-                                            : <div className="playlist-item__cover-empty"><FaMusic size={12} /></div>
-                                        }
+                                        <CoverImg src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" iconSize={12} />
                                     </div>
                                     <div>
                                         <div className="playlist-item__name prof-recent__name">{t.title}</div>

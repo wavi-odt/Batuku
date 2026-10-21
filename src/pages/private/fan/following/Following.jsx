@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import AppShell             from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }    from '../../../../utils/auth.js'
 import { useNotifications } from '../../../../context/NotificationsContext.jsx'
 import FollowingUpdates     from './FollowingUpdates.jsx'
@@ -39,15 +38,12 @@ export default function Following() {
 
     if (loading) {
         return (
-            <AppShell role="fan">
-                <div style={{ padding: 40, color: 'var(--color-ink-mute)' }}>A carregar…</div>
-            </AppShell>
+            <div style={{ padding: 40, color: 'var(--color-ink-mute)' }}>A carregar…</div>
         )
     }
 
     return (
-        <AppShell role="fan">
-            <div className="flw__page">
+        <div className="flw__page">
 
                 {/* ─── Coluna principal (scroll) ────────────────────── */}
                 <div className="flw__main">
@@ -87,7 +83,6 @@ export default function Following() {
                     />
                 </aside>
 
-            </div>
-        </AppShell>
+        </div>
     )
 }

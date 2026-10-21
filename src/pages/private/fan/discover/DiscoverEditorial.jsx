@@ -1,10 +1,10 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    DiscoverEditorial.jsx, Playlists editoriais curadas pelo Batuku.
    ───────────────────────────────────────────────────────────────── */
 
 import { Link }    from 'react-router-dom'
 import { FaPlay }  from 'react-icons/fa'
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 
 export default function DiscoverEditorial({ playlists }) {
     return (

@@ -1,8 +1,7 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { FaPlay, FaArrowLeft }    from 'react-icons/fa'
-import AppShell                from '../../../../components/HomeComponents/AppShell.jsx'
-import ArtistArtwork           from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork           from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import { API, getToken }       from '../../../../utils/auth.js'
 import { usePlayer }           from '../../../../context/PlayerContext.jsx'
 import { useGenres }           from '../../../../context/GenresContext.jsx'
@@ -54,7 +53,7 @@ export default function GenrePage() {
     const hue = genre?.hue ?? 220
 
     return (
-        <AppShell role="fan">
+        <>
             {/* ─── Hero ─────────────────────────────────────────── */}
             <div className="genre__hero" style={{ '--genre-hue': hue }}>
                 <button type="button" className="genre__back" onClick={() => navigate(-1)}>
@@ -146,6 +145,6 @@ export default function GenrePage() {
                     Ainda não há música neste género.
                 </div>
             )}
-        </AppShell>
+        </>
     )
 }

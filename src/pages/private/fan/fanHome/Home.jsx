@@ -1,6 +1,5 @@
 import { useState, useEffect }  from 'react'
 import { useLocation, Link } from 'react-router-dom'
-import AppShell           from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }  from '../../../../utils/auth.js'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import { useToast }       from '../../../../context/ToastContext.jsx'
@@ -50,7 +49,7 @@ export default function Home() {
     }, [])
 
     return (
-        <AppShell role="fan">
+        <>
 
             {/* ─── Greeting ──────────────────────────────────────── */}
             <div className="home__greet">
@@ -98,6 +97,6 @@ export default function Home() {
             )}
 
 
-        </AppShell>
+        </>
     )
 }

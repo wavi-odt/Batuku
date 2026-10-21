@@ -1,36 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { timeAgo } from '../../../../utils/timeAgo.js'
 import { FaReply } from 'react-icons/fa'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
+import UserAvatar from '../../../../components/UserAvatar.jsx'
 import './PendingComments.css'
-
-function Avatar({ name, avatarUrl, size = 28 }) {
-    if (avatarUrl) {
-        return <img src={avatarUrl} alt={name} style={{ width: size, height: size, objectFit: 'cover', borderRadius: '50%' }} />
-    }
-    const hue = (name?.charCodeAt(0) ?? 0) * 47 % 360
-    return (
-        <div style={{
-            width: size, height: size, borderRadius: '50%',
-            background: `hsl(${hue} 50% 40%)`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontSize: size * 0.43, fontWeight: 700, flexShrink: 0,
-        }}>
-            {name?.[0]?.toUpperCase() ?? '?'}
-        </div>
-    )
-}
-
-function timeAgo(isoStr) {
-    if (!isoStr) return ''
-    const m = Math.floor((Date.now() - new Date(isoStr)) / 60000)
-    if (m < 1)   return 'agora'
-    if (m < 60)  return `há ${m} min`
-    const h = Math.floor(m / 60)
-    if (h < 24)  return `há ${h}h`
-    const d = Math.floor(h / 24)
-    return `há ${d} dia${d > 1 ? 's' : ''}`
-}
 
 function CommentRow({ c, onReply, currentUser }) {
     const [open,    setOpen]    = useState(false)
@@ -55,7 +29,7 @@ function CommentRow({ c, onReply, currentUser }) {
         <div className="comment-row">
             <div className="comment-row__head">
                 <div className="comment-row__avatar">
-                    <Avatar name={c.authorName} avatarUrl={c.authorAvatarUrl} />
+                    <UserAvatar name={c.authorName} imageUrl={c.authorAvatarUrl} size={28} />
                 </div>
                 <span className="comment-row__user">{c.authorName}</span>
                 {c.trackTitle && <span className="comment-row__track">· em {c.trackTitle}</span>}
@@ -66,7 +40,7 @@ function CommentRow({ c, onReply, currentUser }) {
 
             {reply && !open && (
                 <div className="comment-row__reply">
-                    <Avatar name={currentUser?.name} avatarUrl={currentUser?.picture} size={22} />
+                    <UserAvatar name={currentUser?.name} imageUrl={currentUser?.picture} size={22} />
                     <div className="comment-row__reply-body">
                         <span className="comment-row__reply-author">{currentUser?.name ?? 'Tu'}</span>
                         <span className="comment-row__reply-text">{reply.content}</span>
@@ -76,7 +50,7 @@ function CommentRow({ c, onReply, currentUser }) {
 
             {open && (
                 <div className="comment-row__composer">
-                    <Avatar name={currentUser?.name} avatarUrl={currentUser?.picture} size={24} />
+                    <UserAvatar name={currentUser?.name} imageUrl={currentUser?.picture} size={24} />
                     <div className="comment-row__composer-inner">
                         <textarea
                             className="comment-row__composer-ta"

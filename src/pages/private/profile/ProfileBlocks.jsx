@@ -7,7 +7,7 @@ import { FaPlay, FaAward, FaUsers, FaRegComment, FaRegHeart,
          FaSun, FaFire, FaCompass, FaHeart, FaList,
          FaCrown, FaHeadphones, FaBolt, FaGem } from 'react-icons/fa'
 import { HiOutlineLibrary, HiArrowUp } from 'react-icons/hi'
-import ArtistArtwork from '../../../components/PublicComponets/ArtistArtwork'
+import ArtistArtwork from '../../../components/PublicComponents/ArtistArtwork'
 
 const BADGE_ICONS = {
     'Madrugador':    FaSun,

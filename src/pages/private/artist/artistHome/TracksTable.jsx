@@ -2,24 +2,8 @@ import { Link } from 'react-router-dom'
 import { FaPlay } from 'react-icons/fa'
 import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import { usePlayer } from '../../../../context/PlayerContext.jsx'
+import CoverImg from '../../../../components/CoverImg.jsx'
 import './TracksTable.css'
-
-function Cover({ coverUrl, title }) {
-    if (coverUrl) {
-        return <img src={coverUrl} alt={title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 4 }} />
-    }
-    const hue = (title?.charCodeAt(0) ?? 0) * 37 % 360
-    return (
-        <div style={{
-            width: '100%', height: '100%', borderRadius: 4,
-            background: `hsl(${hue} 45% 30%)`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: '#fff', fontSize: 18,
-        }}>
-            ♪
-        </div>
-    )
-}
 
 export default function TracksTable({ tracks }) {
     const { track: currentTrack, setTrack, togglePlayRef } = usePlayer()
@@ -63,7 +47,7 @@ export default function TracksTable({ tracks }) {
                                 }}
                                 style={{ cursor: queueEntry ? 'pointer' : 'default', position: 'relative' }}
                             >
-                                <Cover coverUrl={t.coverUrl} title={t.title} />
+                                <CoverImg src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 4 }} />
                                 {queueEntry && (
                                     <div className="tracks-row__play-overlay">
                                         {isPlaying ? <NowPlayingEq /> : <FaPlay size={11} />}

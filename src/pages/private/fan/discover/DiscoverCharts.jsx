@@ -1,10 +1,10 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    DiscoverCharts.jsx, Top 10 por gostos em dois painéis.
    ───────────────────────────────────────────────────────────────── */
 
 import { useState } from 'react'
 import { FaPlay, FaRegComment } from 'react-icons/fa'
-import ArtistArtwork  from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork  from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import { usePlayer }  from '../../../../context/PlayerContext.jsx'
 import TrackMenu      from '../../../../components/TrackMenu.jsx'
 import LikeButton     from '../../../../components/LikeButton.jsx'
@@ -29,7 +29,7 @@ function delta(track, rank) {
 }
 
 function ChartRow({ track, rank, queue }) {
-    const { track: currentTrack, setTrack } = usePlayer()
+    const { track: currentTrack, setTrack, togglePlayRef } = usePlayer()
     const [commentsOpen, setCommentsOpen] = useState(false)
     const active = currentTrack?.id === track.id
     return (
@@ -37,18 +37,25 @@ function ChartRow({ track, rank, queue }) {
             <div
                 className={`disc__chart-row${active ? ' disc__chart-row--active' : ''}`}
                 style={{ cursor: track.audioUrl ? 'pointer' : 'default' }}
-                onClick={() => track.audioUrl && setTrack({ ...track, name: track.title, playContext: 'discover' }, queue.map(q => ({ ...q, name: q.title, playContext: 'discover' })))}
+                onClick={() => {
+                    if (!track.audioUrl) return
+                    if (active) { togglePlayRef.current?.(); return }
+                    setTrack({ ...track, name: track.title, playContext: 'discover' }, queue.map(q => ({ ...q, name: q.title, playContext: 'discover' })))
+                }}
             >
-                <span className="disc__chart-rank">{active ? <NowPlayingEq /> : rank}</span>
+                <span className="disc__chart-rank">{rank}</span>
                 {delta(track, rank)}
-                <div className="disc__chart-thumb">
+                <div className={`disc__chart-thumb${active ? ' disc__chart-thumb--active' : ''}`}>
                     <ArtistArtwork
                         shape={shapeFromId(track.id)}
                         hue={hueFromId(track.id)}
                         image={track.coverUrl ?? null}
                         rounded={6}
                     />
-                    <span className="lib__track-play" aria-hidden="true"><FaPlay size={9} /></span>
+                    {active
+                        ? <span className="track-card__eq-wrap"><NowPlayingEq /></span>
+                        : <span className="lib__track-play" aria-hidden="true"><FaPlay size={9} /></span>
+                    }
                 </div>
                 <div className="disc__chart-info">
                     <div className="disc__chart-title">{track.title}</div>

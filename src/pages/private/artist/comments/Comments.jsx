@@ -1,7 +1,6 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FaCommentAlt, FaClock, FaThumbtack, FaSearch, FaChevronDown, FaCheck } from 'react-icons/fa'
-import AppShell   from '../../../../components/HomeComponents/AppShell.jsx'
 import CommentCard from './CommentCard.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
 import { usePendingComments } from '../../../../context/PendingCommentsContext.jsx'
@@ -174,7 +173,7 @@ export default function Comments() {
     }
 
     return (
-        <AppShell role="artist">
+        <>
 
             {/* ── Header ─────────────────────────────────────────── */}
             <div className="cmt__header">
@@ -252,6 +251,6 @@ export default function Comments() {
                 </div>
             )}
 
-        </AppShell>
+        </>
     )
 }

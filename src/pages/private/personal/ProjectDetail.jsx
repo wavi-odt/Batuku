@@ -9,20 +9,11 @@ import PersonalMiniPlayer from '../../../components/PersonalLayout/PersonalMiniP
 import ConfirmModal from '../../../components/ConfirmModal.jsx'
 import { API, getToken } from '../../../utils/auth.js'
 import { useCurrentUser } from '../../../hooks/useCurrentUser.js'
+import { fmtDateLong, fmtDuration } from '../../../utils/formatters'
 import './ProjectDetail.css'
 
 const MAX_AUDIO = 60 * 1024 * 1024
 const MAX_IMAGE = 5 * 1024 * 1024
-
-function fmtDate(d) {
-    if (!d) return ''
-    return new Date(d).toLocaleDateString('pt-PT', { day: '2-digit', month: 'short', year: 'numeric' })
-}
-
-function fmtDuration(s) {
-    if (!s && s !== 0) return ''
-    return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`
-}
 
 function EqBars({ playing }) {
     return (
@@ -540,7 +531,7 @@ export default function ProjectDetail() {
                                         </span>
                                         <div className="pd__track-info">
                                             <span className="pd__track-title">{t.title}</span>
-                                            {t.createdAt && <span className="pd__track-date">{fmtDate(t.createdAt)}</span>}
+                                            {t.createdAt && <span className="pd__track-date">{fmtDateLong(t.createdAt)}</span>}
                                         </div>
                                         <span className="pd__track-duration">{fmtDuration(t.duration)}</span>
                                         <TrackMenu onDelete={() => setConfirmDelTrack(t)} />

@@ -111,7 +111,7 @@
 
 .disc__hero-dot { color: var(--color-ink-mute); }
 
-.disc__hero-cta { gap: 10px; }
+.disc__hero-cta { gap: 10px; min-width: 130px; justify-content: center; }
 
 .disc__hero-art {
     width: 220px;
@@ -335,11 +335,10 @@
 
 @media (max-width: 700px) {
     .disc__chart-row {
-        grid-template-columns: 36px 1fr auto auto 28px;
+        grid-template-columns: 24px 36px 1fr auto auto 28px;
         gap: 8px;
         padding: 6px 8px;
     }
-    .disc__chart-rank,
     .disc__chart-delta { display: none; }
 }
 
@@ -381,6 +380,18 @@
     overflow: hidden;
     position: relative;
     flex-shrink: 0;
+}
+
+.disc__chart-thumb--active > :not(.track-card__eq-wrap) {
+    filter: blur(2px) brightness(0.45);
+}
+
+.disc__chart-thumb .track-card__eq-wrap .eq {
+    height: 12px;
+    gap: 2px;
+}
+.disc__chart-thumb .track-card__eq-wrap .eq i {
+    width: 3px;
 }
 
 .disc__chart-info { min-width: 0; }

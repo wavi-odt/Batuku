@@ -1,16 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { API, getToken } from '../../../../utils/auth.js'
-
-function Avatar({ name, avatarUrl }) {
-    if (avatarUrl) {
-        return <img src={avatarUrl} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-    }
-    return (
-        <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, color: 'var(--color-ink-mute)' }}>
-            {name.charAt(0).toUpperCase()}
-        </div>
-    )
-}
+import UserAvatar from '../../../../components/UserAvatar.jsx'
 
 export default function FollowingSuggestions({ artists, onFollowed }) {
     const [loading,   setLoading]   = useState(new Set())
@@ -71,7 +61,7 @@ export default function FollowingSuggestions({ artists, onFollowed }) {
                     return (
                         <div key={a.id} className={cls}>
                             <div className="flw__suggest-avatar">
-                                <Avatar name={a.name} avatarUrl={a.avatarUrl} />
+                                <UserAvatar name={a.name} imageUrl={a.avatarUrl} style={{ width: '100%', height: '100%' }} />
                             </div>
                             <div className="flw__suggest-info">
                                 <div className="flw__suggest-name">{a.name}</div>

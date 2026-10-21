@@ -1,11 +1,11 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    FollowingLive.jsx → A ouvir agora.
    Mostra o que as pessoas/artistas que segues estão a ouvir
    neste momento, estilo "Friend Activity" do Spotify.
    ───────────────────────────────────────────────────────────────── */
 
 import { FaPlay } from 'react-icons/fa'
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 
 export default function FollowingNowListening({ items }) {
     if (!items.length) return null;

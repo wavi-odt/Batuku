@@ -10,7 +10,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FaTrophy, FaCheckCircle, FaCamera, FaCog, FaUser } from 'react-icons/fa'
-import AppShell from '../../../components/HomeComponents/AppShell'
 import { useCurrentUser } from '../../../hooks/useCurrentUser'
 import { API, getToken } from '../../../utils/auth.js'
 import {
@@ -297,8 +296,7 @@ export default function Profile({ role = 'fan' }) {
     const ActivePanel = tabs[safeActive].Panel;
 
     return (
-        <AppShell role={role}>
-            <div style={{ marginTop: -8 }}>
+        <div style={{ marginTop: -8 }}>
                 <ProfileHeader
                     role={role}
                     data={data}
@@ -327,7 +325,6 @@ export default function Profile({ role = 'fan' }) {
                         artist={role === 'artist' ? data : undefined}
                     />
                 </div>
-            </div>
 
             {showUploader && (
                 <AvatarUploader
@@ -346,6 +343,6 @@ export default function Profile({ role = 'fan' }) {
                     onArtistSaved={refreshArtistMe}
                 />
             )}
-        </AppShell>
+        </div>
     );
 }

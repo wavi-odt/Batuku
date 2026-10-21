@@ -1,4 +1,5 @@
 ﻿import { useState, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { FaTimes, FaCamera, FaCheck, FaExclamationTriangle } from 'react-icons/fa'
 import './AvatarUploader.css'
 
@@ -74,7 +75,7 @@ export default function AvatarUploader({ currentAvatarUrl, isArtist, onSuccess, 
 
     const avatarClass = 'av-up__avatar' + (isArtist ? ' av-up__avatar--artist' : '')
 
-    return (
+    return createPortal(
         <div className="av-up-overlay" onClick={onClose}>
             <div
                 className="av-up-modal"
@@ -170,6 +171,7 @@ export default function AvatarUploader({ currentAvatarUrl, isArtist, onSuccess, 
                     </button>
                 </div>
             </div>
-        </div>
+        </div>,
+        document.body
     )
 }

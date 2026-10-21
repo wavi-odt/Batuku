@@ -1,6 +1,8 @@
 import { useState, useMemo, useEffect, useRef } from 'react'
-import { FaSearch, FaChevronDown, FaCheck } from 'react-icons/fa'
+import { FaSearch, FaChevronDown, FaCheck, FaComment, FaHeart } from 'react-icons/fa'
 import { Link, useSearchParams } from 'react-router-dom'
+import { timeAgo } from '../../../../utils/timeAgo.js'
+import UserAvatar from '../../../../components/UserAvatar.jsx'
 
 const TIER_TABS = [
     { key: 'all',      label: 'Todos'      },
@@ -64,40 +66,9 @@ function SortDropdown({ value, onChange, options }) {
     )
 }
 
-function hueFromId(id) {
-    return (id * 83) % 360
-}
-
-function timeAgo(isoStr) {
-    if (!isoStr) return ''
-    const m = Math.floor((Date.now() - new Date(isoStr)) / 60000)
-    if (m < 1)   return 'agora mesmo'
-    if (m < 60)  return `há ${m} min`
-    const h = Math.floor(m / 60)
-    if (h < 24)  return `há ${h}h`
-    const d = Math.floor(h / 24)
-    if (d < 30)  return `há ${d} dia${d > 1 ? 's' : ''}`
-    return new Date(isoStr).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' })
-}
-
 function isWithinDays(isoStr, days) {
     if (!isoStr) return false
     return (Date.now() - new Date(isoStr).getTime()) < days * 86_400_000
-}
-
-function Avatar({ fan }) {
-    if (fan.avatarUrl) {
-        return <img src={fan.avatarUrl} alt={fan.name} className="fns__avatar-img" />
-    }
-    const hue = hueFromId(fan.id)
-    return (
-        <div
-            className="fns__avatar-placeholder"
-            style={{ background: `hsl(${hue} 55% 42%)` }}
-        >
-            {fan.name?.[0]?.toUpperCase() ?? '?'}
-        </div>
-    )
 }
 
 export default function FansTable({ fans, loading }) {
@@ -167,8 +138,8 @@ export default function FansTable({ fans, loading }) {
                     <div className="fns__col fns__col--left">Fã</div>
                     <div className="fns__col fns__col--left">Tier</div>
                     <div className="fns__col">Reprod.</div>
-                    <div className="fns__col">❤</div>
-                    <div className="fns__col">💬</div>
+                    <div className="fns__col"><FaHeart size={11} /></div>
+                    <div className="fns__col"><FaComment size={11} /></div>
                     <div className="fns__col">Ativo</div>
                 </div>
 
@@ -189,7 +160,7 @@ export default function FansTable({ fans, loading }) {
                     return (
                         <div key={fan.id} className="fns__row">
                             <div className="fns__avatar">
-                                <Avatar fan={fan} />
+                                <UserAvatar id={fan.id} name={fan.name} imageUrl={fan.avatarUrl} size={36} />
                             </div>
 
                             <div className="fns__fan-info">

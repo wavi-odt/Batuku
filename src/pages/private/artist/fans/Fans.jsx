@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
 import { FaUsers, FaUserPlus, FaHeart, FaBolt } from 'react-icons/fa'
-import AppShell  from '../../../../components/HomeComponents/AppShell.jsx'
 import FansTable from './FansTable.jsx'
 import FansSidebar from './FansSidebar.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
@@ -43,7 +42,7 @@ export default function Fans() {
     ]
 
     return (
-        <AppShell role="artist">
+        <>
 
             <div className="fns__header">
                 <div>
@@ -76,6 +75,6 @@ export default function Fans() {
                 <FansSidebar fans={fans} loading={loading} />
             </div>
 
-        </AppShell>
+        </>
     )
 }

@@ -11,13 +11,9 @@ import { usePlayer } from '../../context/PlayerContext'
 import { API, getToken } from '../../utils/auth'
 import LikeButton from '../LikeButton'
 import TrackMenu from '../TrackMenu'
+import CoverImg from '../CoverImg.jsx'
+import { fmtTime } from '../../utils/formatters'
 import './MiniPlayer.css'
-
-function fmtTime(ms) {
-    if (!ms && ms !== 0) return '0:00'
-    const s = Math.floor(ms / 1000)
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
-}
 
 export default function MiniPlayer() {
     const { track, nextTrack, prevTrack, hasNext, hasPrev, setIsPlaying, togglePlayRef } = usePlayer()
@@ -526,10 +522,7 @@ export default function MiniPlayer() {
                 </button>
                 <div ref={expBodyRef} className="player__exp-body">
                     <div className="player__exp-cover">
-                        {track.coverUrl
-                            ? <img src={track.coverUrl} alt={track.name} />
-                            : <div className="player__exp-cover-empty" />
-                        }
+                        <CoverImg src={track.coverUrl} alt={track.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     <div className="player__exp-info">
                         <div className="player__exp-title">{track.name ?? 'Sem título'}</div>
@@ -598,11 +591,7 @@ export default function MiniPlayer() {
             <div className="player__track">
                 <div className="player__cover-wrap">
                     <div className="player__cover">
-                        {track?.coverUrl
-                            ? <img src={track.coverUrl} alt={track.name}
-                                   style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            : <div style={{ width: '100%', height: '100%', background: 'var(--color-surface)' }} />
-                        }
+                        <CoverImg src={track?.coverUrl} alt={track?.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
                     {!track?.audioUrl && track?.spotifyId && (
                         <div className="player__spotify-badge" title="Via Spotify">

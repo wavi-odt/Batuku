@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { HiArrowLeft } from 'react-icons/hi'
 import { usePlayer } from '../../context/PlayerContext'
-import ArtistArtwork from '../../components/PublicComponets/ArtistArtwork'
+import ArtistArtwork from '../../components/PublicComponents/ArtistArtwork'
 import './notFound.css'
 
 const SHAPE_KEYS = ['circles', 'arch', 'stripes', 'split', 'orbit', 'wave', 'sun', 'triangles'];

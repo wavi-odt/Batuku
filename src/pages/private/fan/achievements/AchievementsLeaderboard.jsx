@@ -3,21 +3,10 @@
    Mostra o top 10 + posição do utilizador (com gap se necessário).
    ───────────────────────────────────────────────────────────────── */
 
-import { FaUser } from 'react-icons/fa'
 import ClickableName from '../../../../components/ClickableName'
+import UserAvatar from '../../../../components/UserAvatar.jsx'
 
 const MEDAL = { 1: '🥇', 2: '🥈', 3: '🥉' };
-
-function LbAvatar({ imageUrl, name }) {
-    return (
-        <div className="ach__lb-avatar">
-            {imageUrl
-                ? <img src={imageUrl} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                : <div className="prof__avatar-placeholder"><FaUser size={12} /></div>
-            }
-        </div>
-    );
-}
 
 export default function AchievementsLeaderboard({ entries }) {
     const top10  = entries.filter(e => e.rank <= 10);
@@ -39,7 +28,7 @@ export default function AchievementsLeaderboard({ entries }) {
                         <span className="ach__lb-rank">
                             {MEDAL[e.rank] ?? `#${e.rank}`}
                         </span>
-                        <LbAvatar imageUrl={e.imageUrl} name={e.name} />
+                        <UserAvatar imageUrl={e.imageUrl} name={e.name} className="ach__lb-avatar" size={28} />
                         <span className="ach__lb-name">
                             <ClickableName userId={e.userId} name={e.name} />
                             {e.isYou ? ' (tu)' : ''}
@@ -55,7 +44,7 @@ export default function AchievementsLeaderboard({ entries }) {
                         <li className="ach__lb-gap" aria-hidden="true">· · ·</li>
                         <li className="ach__lb-row ach__lb-row--me">
                             <span className="ach__lb-rank">#{me.rank}</span>
-                            <LbAvatar imageUrl={me.imageUrl} name={me.name} />
+                            <UserAvatar imageUrl={me.imageUrl} name={me.name} className="ach__lb-avatar" size={28} />
                             <span className="ach__lb-name">
                             <ClickableName userId={me.userId} name={me.name} />
                             {' (tu)'}

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, useLocation } from 'react-router-dom'
-import AppShell         from '../../../../components/HomeComponents/AppShell.jsx'
 import { useCurrentUser } from '../../../../hooks/useCurrentUser.js'
 import { API, getToken } from '../../../../utils/auth.js'
 import { usePendingComments } from '../../../../context/PendingCommentsContext.jsx'
@@ -67,7 +66,7 @@ export default function Dashboard() {
     const pending   = comments.filter(c => !c.reply)
 
     return (
-        <AppShell role="artist">
+        <>
 
             {/* ─── Greeting ──────────────────────────────────────── */}
             <div className="dash__greet">
@@ -107,6 +106,6 @@ export default function Dashboard() {
                 </div>
             </section>
 
-        </AppShell>
+        </>
     )
 }

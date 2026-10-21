@@ -1,20 +1,14 @@
-import { FaMusic }          from 'react-icons/fa'
 import { Link }             from 'react-router-dom'
 import { usePlayer }        from '../../../../context/PlayerContext'
 import { toPlayerTrack }    from '../../../../utils/toPlayerTrack'
 import TimeAgo              from '../../../../components/TimeAgo.jsx'
 import TrackMenu            from '../../../../components/TrackMenu.jsx'
-
-function ArtistAvatar({ name }) {
-    return (
-        <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, color: 'var(--color-ink-mute)' }}>
-            {name.charAt(0).toUpperCase()}
-        </div>
-    )
-}
+import UserAvatar           from '../../../../components/UserAvatar.jsx'
+import NowPlayingEq         from '../../../../components/NowPlayingEq.jsx'
+import CoverImg             from '../../../../components/CoverImg.jsx'
 
 export default function FollowingFeed({ tracks }) {
-    const { setTrack } = usePlayer()
+    const { setTrack, track: currentTrack, togglePlayRef } = usePlayer()
     const queue = tracks.map(t => toPlayerTrack(t, 'following'))
 
     return (
@@ -27,11 +21,13 @@ export default function FollowingFeed({ tracks }) {
             </div>
 
             <div className="flw__feed">
-                {tracks.map((t, i) => (
+                {tracks.map((t, i) => {
+                    const isActive = currentTrack?.id === t.id
+                    return (
                     <div key={t.id} className="flw__feed-item">
 
                         <div className="flw__feed-avatar">
-                            <ArtistAvatar name={t.artistName} />
+                            <UserAvatar name={t.artistName} imageUrl={t.artistAvatarUrl} style={{ width: '100%', height: '100%' }} />
                         </div>
 
                         <div className="flw__feed-body">
@@ -40,7 +36,6 @@ export default function FollowingFeed({ tracks }) {
                                     {t.artistName}
                                 </Link>
                                 <span className="flw__feed-action">lançou uma nova faixa</span>
-                                <span className="flw__feed-tag flw__feed-tag--release">Lançamento</span>
                                 <TimeAgo isoStr={t.createdAt} className="flw__feed-time" />
                             </div>
 
@@ -49,15 +44,14 @@ export default function FollowingFeed({ tracks }) {
                                     type="button"
                                     className="flw__feed-content"
                                     style={{ flex: 1, minWidth: 0 }}
-                                    onClick={() => setTrack(queue[i], queue)}
+                                    onClick={() => {
+                                        if (isActive) { togglePlayRef.current?.(); return }
+                                        setTrack(queue[i], queue)
+                                    }}
                                 >
-                                    <div className="flw__feed-content-thumb">
-                                        {t.coverUrl
-                                            ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }} />
-                                            : <div style={{ width: '100%', height: '100%', borderRadius: 6, background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                                <FaMusic size={14} style={{ color: 'var(--color-ink-mute)' }} />
-                                              </div>
-                                        }
+                                    <div className={`flw__feed-content-thumb${isActive ? ' flw__feed-content-thumb--active' : ''}`}>
+                                        <CoverImg src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 6 }} />
+                                        {isActive && <span className="track-card__eq-wrap"><NowPlayingEq /></span>}
                                     </div>
                                     <span className="flw__feed-content-title">{t.title}</span>
                                 </button>
@@ -67,7 +61,8 @@ export default function FollowingFeed({ tracks }) {
                             </div>
                         </div>
                     </div>
-                ))}
+                    )
+                })}
             </div>
         </div>
     )

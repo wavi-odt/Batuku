@@ -1,18 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
+import { fmtDateShort, fmtNum } from '../../../../utils/formatters'
 import './Analytics.css'
 
 const H   = 320
 const PAD = { t: 20, r: 20, b: 36, l: 52 }
-
-function fmtDate(iso) {
-    if (!iso) return ''
-    return new Date(iso + 'T00:00:00').toLocaleDateString('pt-PT', { day: 'numeric', month: 'short' })
-}
-
-function fmtNum(n) {
-    if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
-    return String(n)
-}
 
 /* Catmull-Rom → cúbicas Bézier suavizadas */
 function smoothPath(pts) {
@@ -81,7 +72,7 @@ export default function AnalyticsLineChart({ dailyPlays, period, onPeriodChange 
                 <div>
                     <h3 className="anl__line-title">Reproduções ao longo do tempo</h3>
                     <p className="anl__line-sub">
-                        {fmtDate(dailyPlays[0]?.day)} a {fmtDate(dailyPlays[dailyPlays.length - 1]?.day)}
+                        {fmtDateShort(dailyPlays[0]?.day)} a {fmtDateShort(dailyPlays[dailyPlays.length - 1]?.day)}
                     </p>
                 </div>
                 {onPeriodChange ? (
@@ -177,7 +168,7 @@ export default function AnalyticsLineChart({ dailyPlays, period, onPeriodChange 
                             fill="var(--color-ink-mute)"
                             fontFamily="var(--font-mono, ui-monospace, monospace)"
                         >
-                            {fmtDate(dailyPlays[idx]?.day)}
+                            {fmtDateShort(dailyPlays[idx]?.day)}
                         </text>
                     ))}
 
@@ -237,7 +228,7 @@ export default function AnalyticsLineChart({ dailyPlays, period, onPeriodChange 
                                 pointerEvents: 'none',
                             }}
                         >
-                            <div className="anl__tooltip-date">{fmtDate(hover.d.day)}</div>
+                            <div className="anl__tooltip-date">{fmtDateShort(hover.d.day)}</div>
                             <div className="anl__tooltip-val">{hover.d.plays.toLocaleString('pt-PT')} rep.</div>
                         </div>
                     )

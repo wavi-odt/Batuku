@@ -3,7 +3,6 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect }    from 'react'
-import AppShell                   from '../../../../components/HomeComponents/AppShell.jsx'
 import LevelCard                  from '../fanHome/LevelCard.jsx'
 import AchievementsChallenges     from './AchievementsChallenges.jsx'
 import AchievementsBadges         from './AchievementsBadges.jsx'
@@ -136,7 +135,7 @@ export default function Achievements() {
     const rank   = profile?.rank   ?? ''
 
     return (
-        <AppShell>
+        <>
             {/* ─── Header ─────────────────────────────────────────── */}
             <div className="ach__header">
                 <div>
@@ -191,6 +190,6 @@ export default function Achievements() {
 
             {/* ─── Milestones ─────────────────────────────────────── */}
             <AchievementsMilestones milestones={milestones} />
-        </AppShell>
+        </>
     )
 }

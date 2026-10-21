@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { FaPlay, FaUsers, FaHeart, FaCheckCircle } from 'react-icons/fa'
-import AppShell from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
 import AnalyticsLineChart from './AnalyticsLineChart.jsx'
 import AnalyticsBarChart   from './AnalyticsBarChart.jsx'
@@ -61,7 +60,7 @@ export default function Analytics() {
     const locations      = data?.locations ?? []
 
     return (
-        <AppShell role="artist">
+        <>
 
             {/* ─── Header ───────────────────────────────────────── */}
             <div className="anl__header">
@@ -159,6 +158,6 @@ export default function Analytics() {
                 </>
             )}
 
-        </AppShell>
+        </>
     )
 }

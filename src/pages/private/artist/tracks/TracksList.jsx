@@ -6,42 +6,11 @@ import { usePlayer } from '../../../../context/PlayerContext.jsx'
 import { useToast } from '../../../../context/ToastContext.jsx'
 import { useGenres } from '../../../../context/GenresContext.jsx'
 import ConfirmModal from '../../../../components/ConfirmModal.jsx'
+import CoverImg from '../../../../components/CoverImg.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
+import { fmtMs, fmtDateLong, fmtNum } from '../../../../utils/formatters'
 
 const STATUS_LABEL = { PUBLISHED: 'Publicada', SCHEDULED: 'Agendada', DRAFT: 'Rascunho' }
-
-function fmtMs(ms) {
-    if (!ms) return ''
-    const s = Math.floor(ms / 1000)
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
-}
-
-function fmtDate(iso) {
-    if (!iso) return null
-    return new Date(iso).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' })
-}
-
-function fmtNum(n) {
-    if (n == null) return ''
-    if (n >= 1000) return `${(n / 1000).toFixed(1)}k`
-    return String(n)
-}
-
-function CoverPlaceholder({ title }) {
-    let n = 0
-    for (const c of title ?? '') n = (n * 31 + c.charCodeAt(0)) & 0xffff
-    const hue = n % 360
-    return (
-        <div style={{
-            width: '100%', height: '100%',
-            background: `linear-gradient(135deg, hsl(${hue} 45% 30%), hsl(${(hue + 40) % 360} 50% 20%))`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: `hsl(${hue} 60% 75%)`, fontSize: 16,
-        }}>
-            ♪
-        </div>
-    )
-}
 
 function EditRow({ track, onSave, onUpdate, onCancel }) {
     const [title,          setTitle]          = useState(track.title)
@@ -105,10 +74,7 @@ function EditRow({ track, onSave, onUpdate, onCancel }) {
                 className={'trk__cover' + (canEditCover ? ' trk__cover--editable' : ' cover-hover')}
                 onClick={canEditCover ? () => coverRef.current?.click() : undefined}
             >
-                {coverPreview
-                    ? <img src={coverPreview} alt={track.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : <CoverPlaceholder title={track.title} />
-                }
+                <CoverImg src={coverPreview} alt={track.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 {canEditCover && (
                     <div className={'trk__cover-edit' + (uploadingCover ? ' trk__cover-edit--loading' : '')}>
                         {uploadingCover ? <div className="trk__cover-spinner" /> : <FaCamera size={12} />}
@@ -234,10 +200,7 @@ export default function TracksList({ tracks, loading, onDelete, onUpdate, artist
                             if (currentTrack?.id === t.id) { togglePlayRef.current?.(); return }
                             setTrack(queue[i], queue)
                         }}>
-                            {t.coverUrl
-                                ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                : <CoverPlaceholder title={t.title} />
-                            }
+                            <CoverImg src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                             {t.audioUrl && (
                                 <button type="button" className="trk__play-overlay" aria-label={isPlaying ? 'A reproduzir' : 'Reproduzir'}>
                                     {isPlaying ? <NowPlayingEq /> : <FaPlay size={12} />}
@@ -261,7 +224,7 @@ export default function TracksList({ tracks, loading, onDelete, onUpdate, artist
                             </span>
                             {t.status === 'SCHEDULED' && t.scheduledAt && (
                                 <div style={{ fontSize: 10, color: 'var(--color-ink-mute)', marginTop: 3 }}>
-                                    {fmtDate(t.scheduledAt)}
+                                    {fmtDateLong(t.scheduledAt)}
                                 </div>
                             )}
                         </div>

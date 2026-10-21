@@ -1,14 +1,12 @@
 import { Link } from 'react-router-dom'
 import { FaUser } from 'react-icons/fa'
+import UserAvatar from '../../../../components/UserAvatar.jsx'
 
 function ArtistCard({ a }) {
     return (
         <Link to={`/artists/${a.id}`} className="lib__artist-card">
             <div className="lib__artist-avatar">
-                {a.avatarUrl
-                    ? <img src={a.avatarUrl} alt={a.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : <div className="lib__artist-avatar-empty"><FaUser size={28} /></div>
-                }
+                <UserAvatar name={a.name} imageUrl={a.avatarUrl} style={{ width: '100%', height: '100%' }} />
             </div>
             <div className="lib__artist-name">{a.name}</div>
             {a.genre && <div className="lib__artist-genre">{a.genre}</div>}

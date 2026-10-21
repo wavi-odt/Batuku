@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
 import { useSearchParams, useParams, useNavigate, Navigate } from 'react-router-dom'
 import { FaSearch, FaChevronDown, FaCheck } from 'react-icons/fa'
-import AppShell                         from '../../../../components/HomeComponents/AppShell.jsx'
 import { API, getToken }                from '../../../../utils/auth.js'
 import { useCurrentUser }               from '../../../../hooks/useCurrentUser.js'
 import { useNotifications }            from '../../../../context/NotificationsContext.jsx'
@@ -257,7 +256,7 @@ export default function Marketplace() {
     }
 
     return (
-        <AppShell>
+        <>
 
             {/* Modal de escolha de papel */}
             {roleKnown && marketplaceRole === null && (
@@ -481,6 +480,6 @@ export default function Marketplace() {
                 </>
             )}
 
-        </AppShell>
+        </>
     )
 }

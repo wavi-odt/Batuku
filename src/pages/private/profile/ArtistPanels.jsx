@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from 'react'
-import { FaPlay, FaCompactDisc, FaRegComment } from 'react-icons/fa'
+import { FaPlay, FaRegComment } from 'react-icons/fa'
 import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { SiSpotify } from 'react-icons/si'
 import { Link } from 'react-router-dom'
@@ -14,14 +14,10 @@ import {
 } from './ProfileBlocks'
 import TrackMenu from '../../../components/TrackMenu'
 import TrackComments from '../../../components/TrackComments'
+import CoverImg from '../../../components/CoverImg.jsx'
 import '../DetailPage.css'
+import { fmtMs } from '../../../utils/formatters'
 import '../release/ReleaseDetail.css'
-
-function fmtMs(ms) {
-    if (!ms) return '';
-    const s = Math.floor(ms / 1000);
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
-}
 
 function useTopTracks(artistProfileId) {
     const [tracks, setTracks] = useState([]);
@@ -77,10 +73,7 @@ function LocalTrackList({ tracks, artistName, artistProfileId }) {
                                     : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
                                 }
                             </div>
-                            {t.coverUrl
-                                ? <img src={t.coverUrl} alt={t.title} className="strack__cover" />
-                                : <div className="strack__cover strack__cover--placeholder" />
-                            }
+                            <CoverImg src={t.coverUrl} alt={t.title} className="strack__cover" />
                             <div className="strack__info">
                                 <div className="strack__title">{t.title}</div>
                                 <div className="strack__sub">{isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}</div>
@@ -152,10 +145,7 @@ function SpotifyTrackList({ artistProfileId, artistName }) {
                                 : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
                             }
                         </div>
-                        {t.coverUrl
-                            ? <img src={t.coverUrl} alt={t.name} className="strack__cover" />
-                            : <div className="strack__cover strack__cover--placeholder" />
-                        }
+                        <CoverImg src={t.coverUrl} alt={t.name} className="strack__cover" />
                         <div className="strack__info">
                             <div className="strack__title">{t.name}</div>
                             <div className="strack__sub">{isPlaying ? 'A reproduzir…' : fmtMs(t.durationMs)}</div>
@@ -188,10 +178,7 @@ function ReleaseCard({ release }) {
     return (
         <Link to={`/releases/${release.id}`} className="rel-card rel-card--link">
             <div className="rel-card__cover cover-hover">
-                {release.coverUrl
-                    ? <img src={release.coverUrl} alt={release.title} />
-                    : <div className="rel-card__cover-placeholder"><FaCompactDisc size={28} /></div>
-                }
+                <CoverImg src={release.coverUrl} alt={release.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} iconSize={28} />
                 <span className="rel-card__badge">{label}</span>
             </div>
             <div className="rel-card__info">

@@ -6,6 +6,7 @@ import { API, getToken } from '../utils/auth'
 import { useToast } from '../context/ToastContext'
 import { useLikes } from '../context/LikeContext'
 import PlaylistCreateModal from '../pages/private/playlist/PlaylistCreateModal'
+import CoverImg from './CoverImg.jsx'
 import './TrackMenu.css'
 
 export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemove }) {
@@ -90,6 +91,7 @@ export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemo
             if (!res.ok) throw new Error()
             const plName = playlists?.find(p => p.id === pid)?.name ?? 'playlist'
             showToast(`Adicionado a "${plName}"`)
+            window.dispatchEvent(new CustomEvent('batuku:playlist-track-added', { detail: { playlistId: pid } }))
             setAdded(pid)
             setTimeout(() => { setAdded(null); setOpen(false) }, 900)
         } catch {
@@ -183,10 +185,7 @@ export default function TrackMenu({ trackId, artistProfileId, playlistId, onRemo
                             onClick={e => addToPlaylist(e, pl.id)}
                             disabled={added !== null}
                         >
-                            {pl.coverUrl
-                                ? <img src={pl.coverUrl} alt={pl.name} className="trk-menu__pl-cover" />
-                                : <div className="trk-menu__pl-cover trk-menu__pl-cover--empty" />
-                            }
+                            <CoverImg src={pl.coverUrl} alt={pl.name} className="trk-menu__pl-cover" />
                             <span className="trk-menu__pl-name">{pl.name}</span>
                             {added === pl.id && <FaCheck size={11} className="trk-menu__check" />}
                         </button>

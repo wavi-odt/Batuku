@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react'
+﻿import { useState, useEffect } from 'react'
 import { FaDownload, FaPlay, FaPause } from 'react-icons/fa'
-import ArtistArtwork           from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork           from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import { API, getToken }       from '../../../../utils/auth.js'
 
 const LIC_LABELS  = { LEASE: 'Lease', PREMIUM: 'Premium', EXCLUSIVE: 'Exclusiva' }

@@ -1,13 +1,14 @@
-import { FaPlay, FaMusic }  from 'react-icons/fa'
+import { FaPlay }           from 'react-icons/fa'
 import { Link }             from 'react-router-dom'
 import { usePlayer }        from '../../../../context/PlayerContext'
 import { toPlayerTrack }    from '../../../../utils/toPlayerTrack'
 import TimeAgo              from '../../../../components/TimeAgo.jsx'
 import TrackMenu            from '../../../../components/TrackMenu.jsx'
 import NowPlayingEq         from '../../../../components/NowPlayingEq.jsx'
+import CoverImg             from '../../../../components/CoverImg.jsx'
 
 export default function FollowingUpdates({ tracks }) {
-    const { track: currentTrack, setTrack } = usePlayer()
+    const { track: currentTrack, setTrack, togglePlayRef } = usePlayer()
     const queue = tracks.map(t => toPlayerTrack(t, 'following'))
 
     return (
@@ -26,15 +27,10 @@ export default function FollowingUpdates({ tracks }) {
                     <div key={t.id} className="track-card">
                         <div
                             className={`track-card__cover${active ? ' track-card__cover--active' : ''}`}
-                            onClick={() => setTrack(queue[i], queue)}
+                            onClick={() => { if (active) { togglePlayRef.current?.(); return } setTrack(queue[i], queue) }}
                             style={{ cursor: 'pointer' }}
                         >
-                            {t.coverUrl
-                                ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} />
-                                : <div style={{ width: '100%', height: '100%', borderRadius: 10, background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <FaMusic size={20} style={{ color: 'var(--color-ink-mute)' }} />
-                                  </div>
-                            }
+                            <CoverImg src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} iconSize={20} />
                             {active
                                 ? <span className="track-card__eq-wrap"><NowPlayingEq /></span>
                                 : <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
@@ -43,7 +39,7 @@ export default function FollowingUpdates({ tracks }) {
                         </div>
                         <div
                             className="track-card__bottom"
-                            onClick={() => setTrack(queue[i], queue)}
+                            onClick={() => { if (active) { togglePlayRef.current?.(); return } setTrack(queue[i], queue) }}
                             style={{ cursor: 'pointer' }}
                         >
                             <div className="track-card__title-row">

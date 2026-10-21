@@ -1,9 +1,9 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    MarketplaceFeatured.jsx, Card hero do beat em destaque.
    ───────────────────────────────────────────────────────────────── */
 
 import { useState }   from 'react'
-import ArtistArtwork  from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork  from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import ClickableName  from '../../../../components/ClickableName.jsx'
 
 const LICENSE_KEYS = ['lease', 'premium', 'exclusive'];

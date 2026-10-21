@@ -1,11 +1,11 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    DiscoverFeatured.jsx, Faixa em destaque no topo da página.
    ───────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect } from 'react'
 import { FaPlay } from 'react-icons/fa'
 import { Link }   from 'react-router-dom'
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import { usePlayer }  from '../../../../context/PlayerContext.jsx'
 import NowPlayingEq   from '../../../../components/NowPlayingEq.jsx'
 
@@ -60,7 +60,7 @@ function useDominantHue(imageUrl, fallback) {
 }
 
 export default function DiscoverFeatured({ track: t, allTracks }) {
-    const { track: currentTrack, isPlaying, setTrack } = usePlayer()
+    const { track: currentTrack, isPlaying, setTrack, togglePlayRef } = usePlayer()
     const fallbackHue = t ? hueFromId(t.id) : 0
     const hue = useDominantHue(t?.coverUrl ?? null, fallbackHue)
 
@@ -81,12 +81,18 @@ export default function DiscoverFeatured({ track: t, allTracks }) {
                         <button
                             type="button"
                             className="btn btn--primary btn--sm disc__hero-cta"
-                            onClick={() => t.audioUrl && setTrack({ ...t, name: t.title, playContext: 'discover' }, allTracks.map(q => ({ ...q, name: q.title, playContext: 'discover' })))}
+                            onClick={() => {
+                                if (!t.audioUrl) return
+                                if (active) { togglePlayRef.current?.(); return }
+                                setTrack({ ...t, name: t.title, playContext: 'discover' }, allTracks.map(q => ({ ...q, name: q.title, playContext: 'discover' })))
+                            }}
                             disabled={!t.audioUrl}
                         >
                             {active && isPlaying
                                 ? <><NowPlayingEq className="eq--white" /> A tocar</>
-                                : <><FaPlay size={11} /> Ouvir agora</>
+                                : active
+                                    ? <><FaPlay size={11} /> Continuar</>
+                                    : <><FaPlay size={11} /> Ouvir agora</>
                             }
                         </button>
                         <div className="disc__hero-stats">

@@ -1,18 +1,8 @@
 import { Link } from 'react-router-dom'
+import UserAvatar from '../../../../components/UserAvatar.jsx'
 
 function fmt(n) {
     return n >= 1000 ? `${(n / 1000).toFixed(1)}K` : String(n)
-}
-
-function Avatar({ name, avatarUrl }) {
-    if (avatarUrl) {
-        return <img src={avatarUrl} alt={name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
-    }
-    return (
-        <div style={{ width: '100%', height: '100%', borderRadius: '50%', background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: 14, color: 'var(--color-ink-mute)' }}>
-            {name.charAt(0).toUpperCase()}
-        </div>
-    )
 }
 
 export default function FollowingRoster({ artists }) {
@@ -41,7 +31,7 @@ export default function FollowingRoster({ artists }) {
                 {artists.slice(0, 5).map(a => (
                     <Link key={a.id} to={`/artists/${a.id}`} className="flw__roster-row" style={{ textDecoration: 'none' }}>
                         <div className="flw__roster-avatar">
-                            <Avatar name={a.name} avatarUrl={a.avatarUrl} />
+                            <UserAvatar name={a.name} imageUrl={a.avatarUrl} style={{ width: '100%', height: '100%' }} />
                         </div>
                         <div className="flw__roster-info">
                             <div className="flw__roster-name">{a.name}</div>

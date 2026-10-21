@@ -1,10 +1,10 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    MarketplaceSidebar.jsx, Carrinho + Top Produtores.
    ───────────────────────────────────────────────────────────────── */
 
 import { useState }          from 'react'
 import { FaShoppingCart }   from 'react-icons/fa'
-import ArtistArtwork  from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork  from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import ClickableName  from '../../../../components/ClickableName.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
 import { useToast }   from '../../../../context/ToastContext.jsx'

@@ -2,13 +2,59 @@
    MarketplaceGrid.jsx, Lista de beats com seleção de licença.
    ───────────────────────────────────────────────────────────────── */
 
-import { FaPlay, FaPause, FaShoppingCart, FaCheck, FaHandshake } from 'react-icons/fa'
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import { useState, useRef, useEffect } from 'react'
+import { FaPlay, FaPause, FaShoppingCart, FaCheck, FaHandshake, FaChevronDown } from 'react-icons/fa'
+import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import ClickableName from '../../../../components/ClickableName.jsx'
 
 const LIC_KEYS   = ['lease', 'premium', 'exclusive'];
 const LIC_ABBREV = { lease: 'L', premium: 'P', exclusive: 'E' };
 const LIC_LABELS = { lease: 'Lease', premium: 'Premium', exclusive: 'Excl.' };
+
+function LicDropdown({ beatId, lic, prices, exclusiveNegotiable, onLicense }) {
+    const [open, setOpen] = useState(false)
+    const ref = useRef(null)
+
+    useEffect(() => {
+        if (!open) return
+        function onDown(e) {
+            if (!ref.current?.contains(e.target)) setOpen(false)
+        }
+        document.addEventListener('mousedown', onDown)
+        return () => document.removeEventListener('mousedown', onDown)
+    }, [open])
+
+    return (
+        <div className="mkt__lic-drop" ref={ref}>
+            <button
+                type="button"
+                className={`mkt__lic-drop__btn${open ? ' mkt__lic-drop__btn--open' : ''}`}
+                onClick={e => { e.stopPropagation(); setOpen(v => !v) }}
+            >
+                {LIC_LABELS[lic]}
+                <FaChevronDown size={9} className={`mkt__lic-drop__chevron${open ? ' mkt__lic-drop__chevron--open' : ''}`} />
+            </button>
+
+            {open && (
+                <div className="mkt__lic-drop__menu" onClick={e => e.stopPropagation()}>
+                    {LIC_KEYS.map(k => (
+                        <button
+                            key={k}
+                            type="button"
+                            className={`mkt__lic-drop__option${lic === k ? ' mkt__lic-drop__option--active' : ''}`}
+                            onClick={() => { onLicense(beatId, k); setOpen(false) }}
+                        >
+                            <span>{LIC_LABELS[k]}</span>
+                            <span className="mkt__lic-drop__price">
+                                {k === 'exclusive' && exclusiveNegotiable ? 'Negociar' : `€${prices[k].toFixed(2)}`}
+                            </span>
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
 
 export default function MarketplaceGrid({
     beats,
@@ -31,7 +77,12 @@ export default function MarketplaceGrid({
                 <div className="mkt__beat-col-label">Título</div>
                 <div className="mkt__beat-col-label mkt__beat-col--genre">Género</div>
                 <div className="mkt__beat-col-label mkt__beat-col--bpm">BPM · Tom</div>
-                {!readOnly && <div className="mkt__beat-col-label mkt__beat-col--lic">Licença</div>}
+                {!readOnly && (
+                    <>
+                        <div className="mkt__beat-col-label mkt__beat-col--lic">Licença</div>
+                        <div className="mkt__beat-col-label mkt__lic-drop-spacer">Licença</div>
+                    </>
+                )}
                 <div className="mkt__beat-col-label" style={{ textAlign: 'right' }}>Preço</div>
                 {!readOnly && <div />}
             </div>
@@ -90,19 +141,28 @@ export default function MarketplaceGrid({
 
                             {/* License selector (hidden in readOnly) */}
                             {!readOnly && (
-                                <div className="mkt__beat-licenses">
-                                    {LIC_KEYS.map(k => (
-                                        <button
-                                            key={k}
-                                            type="button"
-                                            className={`mkt__beat-lic-btn${lic === k ? ' mkt__beat-lic-btn--active' : ''}`}
-                                            title={k === 'exclusive' && beat.exclusiveNegotiable ? `${LIC_LABELS[k]} · Negociar` : `${LIC_LABELS[k]} · €${beat.prices[k].toFixed(2)}`}
-                                            onClick={() => onLicense(beat.id, k)}
-                                        >
-                                            {LIC_ABBREV[k]}
-                                        </button>
-                                    ))}
-                                </div>
+                                <>
+                                    <div className="mkt__beat-licenses">
+                                        {LIC_KEYS.map(k => (
+                                            <button
+                                                key={k}
+                                                type="button"
+                                                className={`mkt__beat-lic-btn${lic === k ? ' mkt__beat-lic-btn--active' : ''}`}
+                                                title={k === 'exclusive' && beat.exclusiveNegotiable ? `${LIC_LABELS[k]} · Negociar` : `${LIC_LABELS[k]} · €${beat.prices[k].toFixed(2)}`}
+                                                onClick={() => onLicense(beat.id, k)}
+                                            >
+                                                {LIC_ABBREV[k]}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <LicDropdown
+                                        beatId={beat.id}
+                                        lic={lic}
+                                        prices={beat.prices}
+                                        exclusiveNegotiable={beat.exclusiveNegotiable}
+                                        onLicense={onLicense}
+                                    />
+                                </>
                             )}
 
                             {/* Price */}

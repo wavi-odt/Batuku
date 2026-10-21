@@ -2,14 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import { FaPlay, FaLock, FaGlobe, FaHeart, FaMusic, FaEllipsisH, FaPen, FaTrash, FaBookmark } from 'react-icons/fa'
-
-function CoverPlaceholder() {
-    return (
-        <div className="lib__pl-cover-empty">
-            <FaMusic size={26} />
-        </div>
-    );
-}
+import CoverImg from '../../../../components/CoverImg.jsx'
 
 function FavoritosCard({ playlist }) {
     const to    = playlist ? `/playlists/${playlist.id}` : '#';
@@ -75,10 +68,7 @@ function PlaylistCard({ pl, onEdit, onDelete, onToggleVisibility, onUnsave }) {
         <div className="lib__pl-card">
             <div className="lib__pl-cover-wrap">
                 <Link to={`/playlists/${pl.id}`} className="lib__pl-cover lib__pl-cover--img cover-hover">
-                    {pl.coverUrl
-                        ? <img src={pl.coverUrl} alt={pl.name} className="lib__pl-cover-img" />
-                        : <CoverPlaceholder />
-                    }
+                    <CoverImg src={pl.coverUrl} alt={pl.name} className="lib__pl-cover-img" iconSize={26} />
                     <span className="lib__pl-play" aria-hidden="true">
                         <FaPlay size={11} />
                     </span>

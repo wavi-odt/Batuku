@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import ArtistArtwork           from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+﻿import { useState, useEffect } from 'react'
+import ArtistArtwork           from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import { API, getToken }       from '../../../../utils/auth.js'
 import './MarketplaceOffers.css'
 

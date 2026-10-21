@@ -1,10 +1,10 @@
-/* ─────────────────────────────────────────────────────────────────
+﻿/* ─────────────────────────────────────────────────────────────────
    DiscoverSpotlight.jsx, Artistas em destaque para descobrir.
    ───────────────────────────────────────────────────────────────── */
 
 import { useState }  from 'react'
 import { Link }      from 'react-router-dom'
-import ArtistArtwork from '../../../../components/PublicComponets/ArtistArtwork.jsx'
+import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
 
 const SHAPES = ['circles', 'orbit', 'arch', 'sun', 'triangles', 'wave', 'stripes', 'split']

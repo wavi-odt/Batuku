@@ -1,9 +1,10 @@
-import { FaPlay, FaMusic } from 'react-icons/fa'
+import { FaPlay } from 'react-icons/fa'
 import { Link }            from 'react-router-dom'
 import { usePlayer }       from '../../../../context/PlayerContext'
 import ClickableName       from '../../../../components/ClickableName'
 import TrackMenu           from '../../../../components/TrackMenu.jsx'
 import NowPlayingEq        from '../../../../components/NowPlayingEq.jsx'
+import CoverImg            from '../../../../components/CoverImg.jsx'
 import './ContinueListening.css'
 
 export default function ContinueListening({ tracks }) {
@@ -44,12 +45,7 @@ export default function ContinueListening({ tracks }) {
                     return (
                     <div key={t.trackId} className="track-card">
                         <div className={`track-card__cover${active ? ' track-card__cover--active' : ''}`} onClick={() => handlePlay(t, tracks)}>
-                            {t.coverUrl
-                                ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} />
-                                : <div style={{ width: '100%', height: '100%', borderRadius: 10, background: 'var(--color-surface-2)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                    <FaMusic size={20} style={{ color: 'var(--color-ink-mute)' }} />
-                                  </div>
-                            }
+                            <CoverImg src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} iconSize={20} />
                             {active
                                 ? <span className="track-card__eq-wrap"><NowPlayingEq /></span>
                                 : <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
