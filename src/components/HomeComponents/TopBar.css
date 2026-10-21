@@ -36,8 +36,8 @@
     transition: border-color var(--duration-fast) var(--ease-out);
 }
 .topbar__search-input::placeholder { color: var(--color-ink-mute); }
-.topbar__search-input:focus { border-color: var(--color-border-strong); }
-.topbar__search-input:focus-visible { outline: none; }
+.topbar__search-input:focus { outline: none; }
+.topbar__search-input:focus-visible { outline: none; border-radius: var(--radius-full); }
 
 .topbar__search-icon {
     position: absolute;
