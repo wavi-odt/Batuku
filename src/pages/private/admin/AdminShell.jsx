@@ -11,9 +11,9 @@ import '../../../components/HomeComponents/TopBar.css'
 import './AdminHome.css'
 
 const ADMIN_NAV = [
-    { icon: HiHome,    label: 'Dashboard',          to: '/admin',               end: true  },
-    { icon: FaSpotify, label: 'Importar artistas',  to: '/admin/artist-import', end: false },
-    { icon: FaFlag,    label: 'Reclamações',         to: '/admin/claims',        end: false },
+    { icon: HiHome,    label: 'Dashboard',         to: '/admin',               end: true  },
+    { icon: FaSpotify, label: 'Importar artistas', to: '/admin/artist-import', end: false },
+    { icon: FaFlag,    label: 'Reclamações',        to: '/admin/claims',        end: false },
 ];
 
 export default function AdminShell({ children }) {
@@ -137,7 +137,6 @@ export default function AdminShell({ children }) {
                         </div>
                         <div className="sidebar__profile-info">
                             <div className="sidebar__profile-name">{user?.name || 'Admin'}</div>
-                            <div className="sidebar__profile-sub">Administrador</div>
                         </div>
                         <HiChevronUp
                             size={14}

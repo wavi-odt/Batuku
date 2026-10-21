@@ -9,12 +9,56 @@
    (sem AppShell), simples cabeçalho + conteúdo.
    ───────────────────────────────────────────────────────────────── */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { FaSpotify, FaFlag, FaExclamationTriangle, FaStar, FaUsers, FaMusic, FaCheckCircle, FaSearch, FaPlay } from 'react-icons/fa'
+import { FaSpotify, FaFlag, FaExclamationTriangle, FaStar, FaUsers, FaMusic, FaCheckCircle, FaSearch, FaPlay, FaChevronDown } from 'react-icons/fa'
 import { getToken } from '../../../utils/auth.js'
 import AdminShell from './AdminShell.jsx'
 import './AdminHome.css'
+
+function AdminDropdown({ value, onChange, options, placeholder = 'Selecionar…' }) {
+    const [open, setOpen] = useState(false)
+    const ref = useRef(null)
+
+    useEffect(() => {
+        if (!open) return
+        function onDown(e) { if (!ref.current?.contains(e.target)) setOpen(false) }
+        document.addEventListener('mousedown', onDown)
+        return () => document.removeEventListener('mousedown', onDown)
+    }, [open])
+
+    const selected = options.find(o => o.value === value)
+
+    return (
+        <div className="admin-dropdown" ref={ref}>
+            <button
+                type="button"
+                className={`admin-dropdown__btn${open ? ' admin-dropdown__btn--open' : ''}`}
+                onClick={() => setOpen(v => !v)}
+            >
+                <span className={selected ? '' : 'admin-dropdown__placeholder'}>
+                    {selected ? selected.label : placeholder}
+                </span>
+                <FaChevronDown size={10} className={`admin-dropdown__chevron${open ? ' admin-dropdown__chevron--open' : ''}`} />
+            </button>
+
+            {open && (
+                <div className="admin-dropdown__menu">
+                    {options.map(o => (
+                        <button
+                            key={o.value}
+                            type="button"
+                            className={`admin-dropdown__option${o.value === value ? ' admin-dropdown__option--active' : ''}`}
+                            onClick={() => { onChange(o.value); setOpen(false) }}
+                        >
+                            {o.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    )
+}
 
 const API     = `${import.meta.env.VITE_API_BASE_URL}/api/admin`
 const MKT_API = `${import.meta.env.VITE_API_BASE_URL}/api/marketplace`
@@ -127,16 +171,15 @@ function QuoteForm({ page, label, artists }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
                 <label className="admin-migration__title">Artista</label>
-                <select
-                    className="input"
+                <AdminDropdown
                     value={artistId}
-                    onChange={e => handleArtistChange(e.target.value)}
-                >
-                    <option value="">Sem artista</option>
-                    {artists.map(a => (
-                        <option key={a.id} value={a.id}>{a.name}</option>
-                    ))}
-                </select>
+                    onChange={handleArtistChange}
+                    placeholder="Sem artista"
+                    options={[
+                        { value: '', label: 'Sem artista' },
+                        ...artists.map(a => ({ value: String(a.id), label: a.name })),
+                    ]}
+                />
                 {preview && (preview.genre || preview.location) && (
                     <div className="admin-migration__desc">
                         {[preview.genre, preview.location].filter(Boolean).join(' · ')}

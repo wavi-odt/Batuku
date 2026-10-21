@@ -94,15 +94,30 @@
 .admin-metric {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
-    border-top: 3px solid var(--admin-metric-accent, var(--color-border));
     border-radius: var(--radius-lg);
     padding: var(--space-5);
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+.admin-metric::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(232, 93, 60, 0.10);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.admin-metric:hover { transform: none !important; }
+.admin-metric:hover::before { opacity: 1; }
 .admin-metric--alert {
     border-color: rgba(248, 113, 113, 0.4);
-    border-top-color: var(--color-danger);
     background: linear-gradient(180deg, rgba(248, 113, 113, 0.06), var(--color-surface) 60%);
 }
 
@@ -174,9 +189,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    transition: background-color var(--duration-base) var(--ease-out),
+                color var(--duration-base) var(--ease-out);
 }
-.admin-tool__icon--green   { background: var(--color-green-dim);   color: var(--color-green); }
-.admin-tool__icon--mustard { background: var(--color-mustard-dim); color: var(--color-mustard); }
+.admin-tool__icon--green   { background: rgba(255, 255, 255, 0.05); color: var(--color-ink-mute); }
+.admin-tool__icon--mustard { background: rgba(255, 255, 255, 0.05); color: var(--color-ink-mute); }
 
 .admin-tool__body { min-width: 0; }
 
@@ -256,8 +273,8 @@
 }
 
 .admin-tool__icon--blue {
-    background: rgba(99, 102, 241, 0.12);
-    color: #818cf8;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-ink-mute);
     flex-shrink: 0;
 }
 
@@ -331,6 +348,70 @@
     white-space: nowrap;
 }
 .admin-migration__reset:hover { color: var(--color-ink); }
+
+/* ─── Dropdown customizado ────────────────────────────────────────── */
+.admin-dropdown {
+    position: relative;
+}
+
+.admin-dropdown__btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    color: var(--color-ink);
+    font-size: var(--fs-base);
+    cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-out);
+    text-align: left;
+}
+.admin-dropdown__btn:hover,
+.admin-dropdown__btn--open { border-color: var(--color-border-strong); }
+.admin-dropdown__btn--open { border-color: var(--color-coral); }
+
+.admin-dropdown__placeholder { color: var(--color-ink-mute); }
+
+.admin-dropdown__chevron {
+    flex-shrink: 0;
+    color: var(--color-ink-mute);
+    transition: transform 0.2s ease;
+}
+.admin-dropdown__chevron--open { transform: rotate(180deg); }
+
+.admin-dropdown__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-md);
+    padding: var(--space-1);
+    z-index: 50;
+    max-height: 220px;
+    overflow-y: auto;
+    box-shadow: var(--shadow-float);
+}
+
+.admin-dropdown__option {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-size: var(--fs-base);
+    color: var(--color-ink-soft);
+    cursor: pointer;
+    transition: background-color var(--duration-fast) var(--ease-out),
+                color var(--duration-fast) var(--ease-out);
+}
+.admin-dropdown__option:hover { background-color: rgba(255, 255, 255, 0.06); color: var(--color-ink); }
+.admin-dropdown__option--active { color: var(--color-coral); background-color: var(--color-coral-dim); }
 
 /* ─── Beats em destaque ───────────────────────────────────────────── */
 .admin-beats {
@@ -425,5 +506,56 @@
 .admin-beat-row__star:disabled {
     opacity: 0.4;
     cursor: default;
+}
+
+/* ─── Gráfico de barras ───────────────────────────────────────────── */
+.adm-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 160px;
+    padding-bottom: 28px;
+    position: relative;
+}
+
+.adm-chart__col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.adm-chart__bar-wrap {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.adm-chart__bar {
+    width: 100%;
+    background: var(--color-coral);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    opacity: 0.75;
+    min-height: 2px;
+    transition: opacity 0.2s ease;
+}
+.adm-chart__col:hover .adm-chart__bar { opacity: 1; }
+
+.adm-chart__lbl {
+    position: absolute;
+    bottom: -24px;
+    font-size: 10px;
+    color: var(--color-ink-mute);
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* Hover icon coral — vem depois das regras --green/--mustard/--blue (0,3,0 > 0,1,0) */
+.admin-metric:hover .admin-tool__icon {
+    background-color: var(--color-coral-dim);
+    color: var(--color-coral);
 }
 
