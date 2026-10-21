@@ -6,7 +6,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ArtistArtwork from '../PublicComponets/ArtistArtwork.jsx'
-import logo from '../../assets/batuku.png'
+import logo from '../../assets/batuku-icone-C-escuro.svg'
 import './auth.css'
 
 const SHAPE_KEYS = ['circles', 'arch', 'stripes', 'split', 'orbit', 'wave', 'sun', 'triangles'];

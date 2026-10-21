@@ -2,7 +2,7 @@
    Footer, Rodapé com colunas de links e copyright.
    ───────────────────────────────────────────────────────────────── */
 
-import logo from '../../assets/batuku.png'
+import logo from '../../assets/batuku-icone-C-escuro.svg'
 import './footer.css'
 
 export default function Footer() {

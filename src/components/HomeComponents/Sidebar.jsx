@@ -9,7 +9,7 @@ import { usePendingComments } from '../../context/PendingCommentsContext'
 import { useNotifications } from '../../context/NotificationsContext'
 import { useCurrentUser } from '../../hooks/useCurrentUser'
 import { ICONS } from './icons'
-import logo from '../../assets/batuku.png'
+import logo from '../../assets/batuku-icone-C-escuro.svg'
 import './Sidebar.css'
 
 export default function Sidebar({ role = 'fan' }) {
