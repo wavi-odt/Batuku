@@ -1,5 +1,6 @@
 import { useState, useEffect, Fragment } from 'react'
 import { FaPlay, FaCompactDisc, FaRegComment } from 'react-icons/fa'
+import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { SiSpotify } from 'react-icons/si'
 import { Link } from 'react-router-dom'
 import { API, getToken } from '../../../utils/auth.js'
@@ -71,8 +72,10 @@ function LocalTrackList({ tracks, artistName, artistProfileId }) {
                             onClick={() => setTrack(queue[i], queue)}
                         >
                             <div className="strack__num-wrap">
-                                <span className="strack__num">{i + 1}</span>
-                                <span className="strack__play-icon"><FaPlay size={11} /></span>
+                                {isPlaying
+                                    ? <NowPlayingEq />
+                                    : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
+                                }
                             </div>
                             {t.coverUrl
                                 ? <img src={t.coverUrl} alt={t.title} className="strack__cover" />
@@ -144,8 +147,10 @@ function SpotifyTrackList({ artistProfileId, artistName }) {
                         )}
                     >
                         <div className="strack__num-wrap">
-                            <span className="strack__num">{i + 1}</span>
-                            <span className="strack__play-icon"><FaPlay size={11} /></span>
+                            {isPlaying
+                                ? <NowPlayingEq />
+                                : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
+                            }
                         </div>
                         {t.coverUrl
                             ? <img src={t.coverUrl} alt={t.name} className="strack__cover" />
@@ -182,7 +187,7 @@ function ReleaseCard({ release }) {
     const count = release.tracks?.length ?? 0;
     return (
         <Link to={`/releases/${release.id}`} className="rel-card rel-card--link">
-            <div className="rel-card__cover">
+            <div className="rel-card__cover cover-hover">
                 {release.coverUrl
                     ? <img src={release.coverUrl} alt={release.title} />
                     : <div className="rel-card__cover-placeholder"><FaCompactDisc size={28} /></div>

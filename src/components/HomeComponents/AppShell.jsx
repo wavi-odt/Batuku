@@ -6,6 +6,7 @@
    admin, que não usam AppShell, também não devem ter MiniPlayer).
    ───────────────────────────────────────────────────────────────── */
 
+import { useLocation } from 'react-router-dom'
 import Sidebar    from './Sidebar'
 import TopBar     from './TopBar'
 import BottomNav  from './BottomNav'
@@ -14,11 +15,12 @@ import './AppShell.css'
 
 function AppShell({ role, children }) {
     const resolvedRole = role ?? getRole() ?? 'fan';
+    const location = useLocation();
     return (
         <div className="shell">
             <Sidebar role={resolvedRole} />
             <TopBar  role={resolvedRole} />
-            <main className="shell__main">
+            <main className="shell__main page-enter" key={location.pathname}>
                 {children}
             </main>
             <BottomNav role={resolvedRole} />

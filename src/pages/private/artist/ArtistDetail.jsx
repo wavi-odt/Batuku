@@ -1,4 +1,5 @@
 import { useEffect, useState, Fragment } from 'react'
+import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { useParams, Link, useSearchParams } from 'react-router-dom'
 import { FaUserPlus, FaUserCheck, FaPlay, FaCompactDisc, FaRegComment, FaCheckCircle } from 'react-icons/fa'
 import { SiSpotify } from 'react-icons/si'
@@ -157,8 +158,10 @@ export default function ArtistDetail() {
                                 onClick={() => setTrack(localQueue[i], localQueue)}
                             >
                                 <div className="strack__num-wrap">
-                                    <span className="strack__num">{i + 1}</span>
-                                    <span className="strack__play-icon"><FaPlay size={11} /></span>
+                                    {isPlaying
+                                        ? <NowPlayingEq />
+                                        : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
+                                    }
                                 </div>
                                 {t.coverUrl
                                     ? <img src={t.coverUrl} alt={t[nameKey]} className="strack__cover" />
@@ -206,8 +209,10 @@ export default function ArtistDetail() {
                             )}
                         >
                             <div className="strack__num-wrap">
-                                <span className="strack__num">{i + 1}</span>
-                                <span className="strack__play-icon"><FaPlay size={11} /></span>
+                                {isPlaying
+                                    ? <NowPlayingEq />
+                                    : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
+                                }
                             </div>
                             {t.coverUrl
                                 ? <img src={t.coverUrl} alt={t.name} className="strack__cover" />
@@ -238,7 +243,7 @@ export default function ArtistDetail() {
                     const count = r.tracks?.length ?? 0;
                     return (
                         <Link key={r.id} to={`/releases/${r.id}`} className="rel-card rel-card--link">
-                            <div className="rel-card__cover">
+                            <div className="rel-card__cover cover-hover">
                                 {r.coverUrl
                                     ? <img src={r.coverUrl} alt={r.title} />
                                     : <div className="rel-card__cover-placeholder"><FaCompactDisc size={28} /></div>
@@ -267,7 +272,10 @@ export default function ArtistDetail() {
                 </div>
 
                 {/* ── Header ────────────────────────────────────────────── */}
-                <div className="prof__header">
+                <div
+                    className="prof__header ambient"
+                    style={artist.imageUrl ? { '--cover': `url(${artist.imageUrl})` } : undefined}
+                >
                     <div className="prof__avatar prof__avatar--artist">
                         {artist.imageUrl
                             ? <img src={artist.imageUrl} alt={artist.name} className="prof__avatar-img" />

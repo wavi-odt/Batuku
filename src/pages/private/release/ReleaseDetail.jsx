@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
+import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { FaPlay, FaCompactDisc, FaArrowLeft, FaShareAlt, FaTrash, FaRegComment, FaCamera, FaPen, FaCheck } from 'react-icons/fa'
 import AppShell from '../../../components/HomeComponents/AppShell'
@@ -384,8 +385,10 @@ export default function ReleaseDetail() {
                                                 onClick={() => setTrack(pt, queue)}
                                             >
                                                 <div className="strack__num-wrap">
-                                                    <span className="strack__num">{i + 1}</span>
-                                                    <span className="strack__play-icon"><FaPlay size={11} /></span>
+                                                    {isActive
+                                                        ? <NowPlayingEq />
+                                                        : <><span className="strack__num">{i + 1}</span><span className="strack__play-icon"><FaPlay size={11} /></span></>
+                                                    }
                                                 </div>
                                                 {pt.coverUrl
                                                     ? <img src={pt.coverUrl} alt={t.title} className="strack__cover" />

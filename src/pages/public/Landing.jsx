@@ -16,7 +16,7 @@ export default function Landing() {
     useEffect(() => { setTrack(null) }, [])
 
     return (
-        <div>
+        <div className="page-enter">
             <NavbarPublic />
             <Hero />
             <Ticker />

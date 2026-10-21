@@ -20,7 +20,7 @@ export default function DiscoverEditorial({ playlists }) {
             <div className="disc__editorial">
                 {playlists.map(pl => (
                     <Link key={pl.id} to={`/playlists/${pl.id}`} className="disc__ed-card">
-                        <div className="disc__ed-cover">
+                        <div className="disc__ed-cover cover-hover">
                             <ArtistArtwork shape={pl.shape} hue={pl.hue} image={pl.image} rounded={12} />
                             <span className="lib__pl-play" aria-hidden="true">
                                 <FaPlay size={11} />

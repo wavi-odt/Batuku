@@ -37,7 +37,7 @@ export default function DiscoverReleases({ tracks, queue }) {
             <div className="disc__releases">
                 {tracks.map(t => (
                     <div key={t.id} className="track-card">
-                        <div className="track-card__cover" onClick={() => t.audioUrl && setTrack({ ...t, name: t.title, playContext: 'discover' }, queue.map(q => ({ ...q, name: q.title, playContext: 'discover' })))}>
+                        <div className="track-card__cover cover-hover" onClick={() => t.audioUrl && setTrack({ ...t, name: t.title, playContext: 'discover' }, queue.map(q => ({ ...q, name: q.title, playContext: 'discover' })))}>
                             <ArtistArtwork
                                 shape={shapeFromId(t.id)}
                                 hue={hueFromId(t.id)}

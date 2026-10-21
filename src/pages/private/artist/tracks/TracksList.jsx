@@ -100,7 +100,7 @@ function EditRow({ track, onSave, onUpdate, onCancel }) {
     return (
         <div className="trk__row trk__row--editing">
             <div
-                className={'trk__cover' + (canEditCover ? ' trk__cover--editable' : '')}
+                className={'trk__cover' + (canEditCover ? ' trk__cover--editable' : ' cover-hover')}
                 onClick={canEditCover ? () => coverRef.current?.click() : undefined}
             >
                 {coverPreview
@@ -226,7 +226,7 @@ export default function TracksList({ tracks, loading, onDelete, onUpdate, artist
                 return (
                     <div key={t.id} className={'trk__row' + (isPlaying ? ' trk__row--playing' : '')}>
 
-                        <div className="trk__cover" onClick={() => t.audioUrl && setTrack(queue[i], queue)}>
+                        <div className="trk__cover cover-hover" onClick={() => t.audioUrl && setTrack(queue[i], queue)}>
                             {t.coverUrl
                                 ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                 : <CoverPlaceholder title={t.title} />

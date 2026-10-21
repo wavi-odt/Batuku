@@ -53,7 +53,7 @@ export default function MarketplaceGrid({
                     return (
                         <div key={beat.id} className={rowCls}>
                             {/* Cover + play */}
-                            <div className="mkt__beat-cover">
+                            <div className="mkt__beat-cover cover-hover">
                                 <ArtistArtwork
                                     shape="circles"
                                     hue={beat.hue}

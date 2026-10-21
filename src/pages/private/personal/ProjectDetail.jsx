@@ -378,7 +378,7 @@ export default function ProjectDetail() {
                     <div className="pd__cover-outer">
                         <button
                             type="button"
-                            className={'pd__cover-btn' + (uploadingCover ? ' pd__cover-btn--busy' : '')}
+                            className={'pd__cover-btn cover-hover' + (uploadingCover ? ' pd__cover-btn--busy' : '')}
                             onClick={() => coverFileRef.current?.click()}
                             disabled={uploadingCover}
                             title="Alterar capa"

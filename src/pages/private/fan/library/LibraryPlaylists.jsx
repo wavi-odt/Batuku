@@ -74,7 +74,7 @@ function PlaylistCard({ pl, onEdit, onDelete, onToggleVisibility, onUnsave }) {
     return (
         <div className="lib__pl-card">
             <div className="lib__pl-cover-wrap">
-                <Link to={`/playlists/${pl.id}`} className="lib__pl-cover lib__pl-cover--img">
+                <Link to={`/playlists/${pl.id}`} className="lib__pl-cover lib__pl-cover--img cover-hover">
                     {pl.coverUrl
                         ? <img src={pl.coverUrl} alt={pl.name} className="lib__pl-cover-img" />
                         : <CoverPlaceholder />

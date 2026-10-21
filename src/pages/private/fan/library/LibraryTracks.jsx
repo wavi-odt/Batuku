@@ -1,4 +1,5 @@
 import { FaPlay, FaPause, FaMusic } from 'react-icons/fa'
+import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import { usePlayer }  from '../../../../context/PlayerContext.jsx'
 import LikeButton     from '../../../../components/LikeButton.jsx'
 import TrackMenu      from '../../../../components/TrackMenu.jsx'
@@ -47,13 +48,10 @@ export default function LibraryTracks({ tracks, loading }) {
                                 onClick={() => t.audioUrl && setTrack(queue[i], queue)}
                             >
                                 <span className="lib__track-num">
-                                    {isPlaying
-                                        ? <FaPause size={10} />
-                                        : i + 1
-                                    }
+                                    {isPlaying ? <NowPlayingEq /> : i + 1}
                                 </span>
 
-                                <div className="lib__track-thumb">
+                                <div className="lib__track-thumb cover-hover">
                                     {t.coverUrl
                                         ? <img src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                         : <div className="lib__track-thumb-empty"><FaMusic size={13} /></div>
