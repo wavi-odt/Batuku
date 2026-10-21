@@ -41,7 +41,31 @@
     flex-direction: column;
     gap: var(--space-4);
     min-height: 240px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+/* Override .card:hover translateY — moving the card off the cursor breaks hover detection.
+   !important because Vite CSS injection order isn't guaranteed in dev mode. */
+.features__card:hover,
+.features__card--hovered {
+    transform: none !important;
+}
+
+.features__card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(232, 93, 60, 0.10);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+.features__card:hover::before,
+.features__card--hovered::before { opacity: 1; }
 
 .features__icon {
     width: 44px;
@@ -51,12 +75,18 @@
     align-items: center;
     justify-content: center;
     font-size: 22px;
+    transition: background-color var(--duration-base) var(--ease-out),
+                color var(--duration-base) var(--ease-out);
 }
 
-.features__card--coral   .features__icon { background-color: var(--color-coral-dim);   color: var(--color-coral); }
-.features__card--ocean   .features__icon { background-color: var(--color-ocean-dim);   color: var(--color-ocean); }
-.features__card--mustard .features__icon { background-color: var(--color-mustard-dim); color: var(--color-mustard); }
-.features__card--green   .features__icon { background-color: var(--color-green-dim);   color: var(--color-green); }
+/* Default grey icon for all accent variants */
+.features__card--coral   .features__icon,
+.features__card--ocean   .features__icon,
+.features__card--mustard .features__icon,
+.features__card--green   .features__icon {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--color-ink-mute);
+}
 
 .features__card-title {
     font-size: var(--fs-lg);
@@ -82,3 +112,12 @@
 .features__card--ocean   .features__link { color: var(--color-ocean); }
 .features__card--mustard .features__link { color: var(--color-mustard); }
 .features__card--green   .features__link { color: var(--color-green); }
+
+/* Hover icon coral — must come AFTER accent rules for equal-specificity win.
+   .features__card:hover .features__icon = 0,3,0 → always beats accent 0,2,0.
+   .features__card--hovered .features__icon = 0,2,0 → wins by source order (comes last). */
+.features__card:hover .features__icon,
+.features__card--hovered .features__icon {
+    background-color: var(--color-coral-dim);
+    color: var(--color-coral);
+}

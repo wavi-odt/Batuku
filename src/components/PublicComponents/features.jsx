@@ -1,7 +1,8 @@
-﻿/* ─────────────────────────────────────────────────────────────────
+/* ─────────────────────────────────────────────────────────────────
    Features, Quatro cartões com as razões para usar o Batuku.
    ───────────────────────────────────────────────────────────────── */
 
+import { useState } from 'react'
 import { FaChartLine, FaStore, FaTrophy, FaDiscord } from 'react-icons/fa'
 import { FEATURES } from '../../data/landing.js'
 import useReveal from '../../hooks/useReveal.js'
@@ -18,6 +19,7 @@ const ACCENTS = ['coral', 'ocean', 'mustard', 'green'];
 
 export default function Features() {
     const ref = useReveal();
+    const [hovered, setHovered] = useState(null);
 
     return (
         <section className="features section" id="features">
@@ -35,10 +37,16 @@ export default function Features() {
 
                 <div className="features__grid reveal">
                     {FEATURES.map((f, i) => {
-                        const Icon = ICONS[f.icon];
-                        const accent = ACCENTS[i % ACCENTS.length];
+                        const Icon    = ICONS[f.icon];
+                        const accent  = ACCENTS[i % ACCENTS.length];
+                        const isHover = hovered === i;
                         return (
-                            <article key={i} className={'features__card card features__card--' + accent}>
+                            <article
+                                key={i}
+                                className={`features__card card features__card--${accent}${isHover ? ' features__card--hovered' : ''}`}
+                                onPointerEnter={() => setHovered(i)}
+                                onPointerLeave={() => setHovered(null)}
+                            >
                                 <div className="features__icon">{Icon && <Icon />}</div>
                                 <div>
                                     <h3 className="features__card-title">{f.title}</h3>
