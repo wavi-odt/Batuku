@@ -11,8 +11,8 @@
     --color-bg-2:           #101013;
     --color-surface:        #15151A;
     --color-surface-2:      #1C1C24;
-    --color-border:         rgba(255, 255, 255, 0.08);
-    --color-border-strong:  rgba(255, 255, 255, 0.16);
+    --color-border:         transparent;
+    --color-border-strong:  rgba(255, 255, 255, 0.06);
 
     /* ═══ COLORS · INK (texto sobre dark) ════════════════════════════ */
     --color-ink:        #F5F1EA;
@@ -20,9 +20,9 @@
     --color-ink-mute:   #9A938A;
 
     /* ═══ COLORS · BRAND ═════════════════════════════════════════════ */
-    --color-coral:       #E85D3C;   /* primário · acento principal       */
-    --color-coral-soft:  #F08266;   /* hover do primário                 */
-    --color-coral-dim:   rgba(232, 93, 60, 0.16);
+    --color-coral:      #FF5A1F;
+    --color-coral-soft: #FF7A47;
+    --color-coral-dim:  rgba(255, 90, 31, 0.16);
     --color-ocean:       #3B6EFF;   /* secundário · azul                 */
     --color-ocean-dim:   rgba(59, 110, 255, 0.16);
     --color-mustard:     #E6A532;   /* gamificação · dourado             */
@@ -119,6 +119,8 @@
     --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.4);
     --shadow-glow-coral: 0 0 40px rgba(232, 93, 60, 0.25);
+    --shadow-float:       0 2px 6px rgba(0, 0, 0, 0.25), 0 10px 30px rgba(0, 0, 0, 0.35);
+    --shadow-float-hover: 0 4px 10px rgba(0, 0, 0, 0.30), 0 18px 44px rgba(0, 0, 0, 0.45);
 
     /* ═══ LAYOUT ════════════════════════════════════════════════════ */
     --container-max: 1280px;
