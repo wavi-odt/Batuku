@@ -2,7 +2,8 @@
    pages/fan/achievements/Achievements.jsx, Conquistas do fã.
    ───────────────────────────────────────────────────────────────── */
 
-import { useState, useEffect }    from 'react'
+import { useState, useEffect, useCallback } from 'react'
+import { useLocation }            from 'react-router-dom'
 import LevelCard                  from '../fanHome/LevelCard.jsx'
 import AchievementsChallenges     from './AchievementsChallenges.jsx'
 import AchievementsBadges         from './AchievementsBadges.jsx'
@@ -40,6 +41,7 @@ function formatEarned(iso) {
 export default function Achievements() {
     const { user: currentUser } = useCurrentUser()
     const { clearRouteNotifications, refresh: refreshNotifications } = useNotifications()
+    const location = useLocation()
 
     useEffect(() => { clearRouteNotifications('/achievements') }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -50,12 +52,12 @@ export default function Achievements() {
     const [milestones,  setMilestones]  = useState([])
     const [loading,     setLoading]     = useState(true)
 
-    useEffect(() => {
+    const fetchAll = useCallback(() => {
         const headers = { Authorization: `Bearer ${getToken()}` }
         // Challenges são buscados primeiro porque o backend auto-recompensa desafios
         // recém-completados durante esse request. O perfil é buscado depois para
         // garantir que os pontos atualizados já estão refletidos.
-        Promise.all([
+        return Promise.all([
             fetch(`${API}/api/gamification/badges`,               { headers }).then(r => r.ok ? r.json() : []),
             fetch(`${API}/api/gamification/leaderboard?limit=10`, { headers }).then(r => r.ok ? r.json() : null),
             fetch(`${API}/api/gamification/challenges`,           { headers }).then(r => r.ok ? r.json() : []),
@@ -73,6 +75,9 @@ export default function Achievements() {
         .catch(console.error)
         .finally(() => setLoading(false))
     }, [])
+
+    // Carrega ao montar e sempre que o utilizador navega para esta página
+    useEffect(() => { fetchAll() }, [location.key, fetchAll]) // eslint-disable-line react-hooks/exhaustive-deps
 
     /* ─── Mapear badges: todos + marcar quais estão ganhos ─────── */
     const earnedIds = new Set((profile?.badges ?? []).map(b => b.id))
@@ -122,6 +127,8 @@ export default function Achievements() {
     const userCard = profile ? {
         level:      profile.level,
         points:     profile.totalPoints,
+        xp:         profile.experiencePoints ?? 0,
+        pointsToNextLevel: profile.pointsToNextLevel ?? 0,
         nextLevelAt: profile.totalPoints + (profile.pointsToNextLevel || 0),
         rank:       profile.rank,
         badges:     (profile.badges ?? []).length,
@@ -161,19 +168,11 @@ export default function Achievements() {
                         })
                         if (res.status === 409) {
                             // Backend calculou que nem todos os desafios estão completos
-                            const fresh = await fetch(`${API}/api/gamification/challenges`, {
-                                headers: { Authorization: `Bearer ${getToken()}` },
-                            })
-                            if (fresh.ok) setChallenges(await fresh.json())
+                            await fetchAll()
                             return
                         }
                         if (!res.ok) return
-                        setChallenges(await res.json())
-                        const [profRes] = await Promise.all([
-                            fetch(`${API}/api/gamification/me`, { headers: { Authorization: `Bearer ${getToken()}` } }),
-                            refreshNotifications(),
-                        ])
-                        if (profRes.ok) setProfile(await profRes.json())
+                        await Promise.all([fetchAll(), refreshNotifications()])
                     }}
                 />
 

@@ -52,6 +52,21 @@ export default function OAuthCallback() {
                 return
             }
 
+            if (pendingRole === 'fan' && isNewUser) {
+                try {
+                    const res = await fetch(`${API}/api/auth/welcome`, {
+                        method: 'POST',
+                        headers: { Authorization: `Bearer ${token}` },
+                    })
+                    if (res.ok) {
+                        const data = await res.json().catch(() => null)
+                        if (data?.token) saveAuth(data.token)
+                    }
+                } catch (_) {}
+                navigate('/home', { replace: true })
+                return
+            }
+
             if (pendingRole && !isNewUser) {
                 const role = getRole()
                 const roleLabel = role === 'artist' ? 'artista' : 'fã'
@@ -97,10 +112,14 @@ export default function OAuthCallback() {
         }
 
         try {
-            await fetch(`${API}/api/auth/welcome`, {
+            const res = await fetch(`${API}/api/auth/welcome`, {
                 method: 'POST',
                 headers: { Authorization: `Bearer ${token}` },
             })
+            if (res.ok) {
+                const data = await res.json().catch(() => null)
+                if (data?.token) saveAuth(data.token)
+            }
         } catch (_) {}
 
         navigate('/home', { replace: true })

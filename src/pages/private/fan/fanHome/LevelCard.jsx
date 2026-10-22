@@ -7,9 +7,11 @@ import './LevelCard.css'
 const MAX_LEVEL = 10
 
 export default function LevelCard({ user }) {
-    const isMaxLevel = user.level >= MAX_LEVEL
-    const pct        = isMaxLevel ? 100 : Math.min(100, (user.points / user.nextLevelAt) * 100)
-    const remaining  = isMaxLevel ? 0   : user.nextLevelAt - user.points
+    const isMaxLevel  = user.level >= MAX_LEVEL
+    const xpInLevel   = user.xp ?? 0
+    const xpForLevel  = xpInLevel + (user.pointsToNextLevel ?? Math.max(0, user.nextLevelAt - user.points))
+    const pct         = isMaxLevel ? 100 : (xpForLevel > 0 ? Math.min(100, (xpInLevel / xpForLevel) * 100) : 0)
+    const remaining   = isMaxLevel ? 0   : user.pointsToNextLevel ?? Math.max(0, user.nextLevelAt - user.points)
 
     return (
         <div className="level-card">

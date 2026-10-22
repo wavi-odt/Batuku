@@ -33,7 +33,10 @@ export default function DiscoverSpotlight({ artists }) {
                 method:  'POST',
                 headers: { Authorization: `Bearer ${getToken()}` },
             })
-            if (res.ok) setFollowed(prev => new Set([...prev, id]))
+            if (res.ok) {
+                setFollowed(prev => new Set([...prev, id]))
+                window.dispatchEvent(new Event('batuku:gamification-updated'))
+            }
         } finally {
             setLoading(prev => { const s = new Set(prev); s.delete(id); return s })
         }

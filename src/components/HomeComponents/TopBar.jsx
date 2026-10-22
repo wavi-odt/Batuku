@@ -272,14 +272,15 @@ export default function TopBar({ role = 'fan' }) {
                                             key={t.id}
                                             track={t}
                                             onPlay={() => {
-                                                if (t.audioUrl) {
+                                                if (t.audioUrl || t.spotifyId) {
                                                     setTrack({
                                                         id:              t.id,
                                                         name:            t.title,
                                                         artistName:      t.artist ?? '',
                                                         artistProfileId: t.artistProfileId ?? null,
                                                         coverUrl:        t.imageUrl ?? null,
-                                                        audioUrl:        t.audioUrl,
+                                                        audioUrl:        t.audioUrl ?? null,
+                                                        spotifyId:       t.spotifyId ?? null,
                                                         durationMs:      t.durationMs ?? null,
                                                         source:          'upload',
                                                         playContext:     'search',

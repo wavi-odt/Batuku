@@ -7,7 +7,11 @@ export function PlayerProvider({ children }) {
     const [queue,     setQueue]      = useState([])
     const [queueIdx,  setQueueIdx]   = useState(-1)
     const [isPlaying, setIsPlaying]  = useState(false)
+    const [oneOff,    setOneOff]     = useState(false)
+    const [shuffle,   setShuffle]    = useState(false)
     const togglePlayRef = useRef(null)
+
+    const toggleShuffle = useCallback(() => setShuffle(s => !s), [])
 
     const setTrack = useCallback((t, list) => {
         setTrackState(t)
@@ -17,14 +21,25 @@ export function PlayerProvider({ children }) {
             )
             setQueue(list)
             setQueueIdx(idx)
-        } else {
+            setOneOff(false)
+        } else if (!t) {
             setQueue([])
             setQueueIdx(-1)
+            setOneOff(false)
+        } else {
+            setOneOff(true)
         }
     }, [])
 
     const nextTrack = useCallback(() => {
+        setOneOff(false)
         setQueueIdx(prev => {
+            if (shuffle && queue.length > 1) {
+                let next
+                do { next = Math.floor(Math.random() * queue.length) } while (next === prev)
+                setTrackState(queue[next])
+                return next
+            }
             const next = prev + 1
             if (next < queue.length) {
                 setTrackState(queue[next])
@@ -32,9 +47,10 @@ export function PlayerProvider({ children }) {
             }
             return prev
         })
-    }, [queue])
+    }, [queue, shuffle])
 
     const prevTrack = useCallback(() => {
+        setOneOff(false)
         setQueueIdx(prev => {
             const p = prev - 1
             if (p >= 0) {
@@ -51,11 +67,14 @@ export function PlayerProvider({ children }) {
             setTrack,
             nextTrack,
             prevTrack,
-            hasNext:    queueIdx >= 0 && queueIdx < queue.length - 1,
-            hasPrev:    queueIdx > 0,
+            hasNext:    !oneOff && (shuffle ? queue.length > 1 : queueIdx >= 0 && queueIdx < queue.length - 1),
+            hasPrev:    !oneOff && queueIdx > 0,
             isPlaying,
             setIsPlaying,
             togglePlayRef,
+            shuffle,
+            toggleShuffle,
+            oneOff,
         }}>
             {children}
         </PlayerContext.Provider>

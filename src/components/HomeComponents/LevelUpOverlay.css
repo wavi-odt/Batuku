@@ -1,0 +1,126 @@
+/* ─────────────────────────────────────────────────────────────────
+   LevelUpOverlay.css
+   ───────────────────────────────────────────────────────────────── */
+
+.lvlup {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    background: rgba(10, 10, 11, 0.78);
+    cursor: pointer;
+    animation: lvlup-bg-in 0.3s var(--ease-out) both;
+}
+
+.lvlup--closing {
+    animation: lvlup-bg-out 0.28s ease forwards;
+}
+
+@keyframes lvlup-bg-in  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes lvlup-bg-out { to   { opacity: 0 } }
+
+/* ─── Card ─────────────────────────────────────────────────────── */
+
+.lvlup__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-10);
+    background: var(--color-surface);
+    border: none;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-lg), 0 0 80px rgba(230, 165, 50, 0.13);
+    width: min(300px, 84vw);
+    pointer-events: none;
+    animation: lvlup-card-in 0.4s var(--ease-out) 0.06s both;
+}
+
+.lvlup--closing .lvlup__card {
+    animation: lvlup-card-out 0.28s ease forwards;
+}
+
+@keyframes lvlup-card-in {
+    from { opacity: 0; transform: translateY(28px) scale(0.95) }
+    to   { opacity: 1; transform: translateY(0)    scale(1)    }
+}
+
+@keyframes lvlup-card-out {
+    to { opacity: 0; transform: scale(0.94) }
+}
+
+/* ─── Ícone ─────────────────────────────────────────────────────── */
+
+.lvlup__icon {
+    color: var(--color-mustard);
+    font-size: 34px;
+    animation: lvlup-icon 0.5s var(--ease-out) 0.15s both;
+}
+
+@keyframes lvlup-icon {
+    from { opacity: 0; transform: scale(0.4) rotate(-20deg) }
+    to   { opacity: 1; transform: scale(1)   rotate(0deg)   }
+}
+
+/* ─── Label e número ────────────────────────────────────────────── */
+
+.lvlup__label {
+    margin: 0;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    letter-spacing: var(--tracking-wider);
+    text-transform: uppercase;
+    color: var(--color-mustard);
+}
+
+.lvlup__number {
+    margin: 0;
+    font-size: clamp(80px, 22vw, 112px);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    letter-spacing: var(--tracking-tight);
+    color: var(--color-mustard);
+    animation: lvlup-num 0.5s var(--ease-out) 0.2s both;
+}
+
+@keyframes lvlup-num {
+    from { opacity: 0; transform: scale(0.72) }
+    to   { opacity: 1; transform: scale(1)    }
+}
+
+/* ─── Barra de XP ───────────────────────────────────────────────── */
+
+.lvlup__xp-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+}
+
+.lvlup__xp-bar {
+    width: 100%;
+    height: 5px;
+    background: var(--color-mustard-dim);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.lvlup__xp-fill {
+    height: 100%;
+    background: var(--color-mustard);
+    border-radius: var(--radius-full);
+    width: 0%;
+    transition: width 0.9s var(--ease-out);
+}
+
+.lvlup__xp-text {
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: var(--color-ink-mute);
+    text-align: center;
+}

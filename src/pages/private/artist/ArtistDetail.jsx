@@ -303,6 +303,7 @@ export default function ArtistDetail() {
                                     setFollowers(data.followers);
                                     setFollowing(data.following ?? next);
                                     showToast(next ? `A seguir ${artist.name}` : `Deixaste de seguir ${artist.name}`);
+                                    if (next) window.dispatchEvent(new Event('batuku:gamification-updated'));
                                 } catch {
                                     showToast('Erro ao atualizar follow', 'error');
                                 }

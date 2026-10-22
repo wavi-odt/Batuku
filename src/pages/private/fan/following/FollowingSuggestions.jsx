@@ -31,6 +31,7 @@ export default function FollowingSuggestions({ artists, onFollowed }) {
                 headers: { Authorization: `Bearer ${getToken()}` },
             })
             if (res.ok) {
+                window.dispatchEvent(new Event('batuku:gamification-updated'))
                 setExitingId(a.id)
                 setTimeout(() => {
                     setExitingId(null)

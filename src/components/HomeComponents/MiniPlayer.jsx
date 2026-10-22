@@ -16,7 +16,7 @@ import { fmtTime } from '../../utils/formatters'
 import './MiniPlayer.css'
 
 export default function MiniPlayer() {
-    const { track, nextTrack, prevTrack, hasNext, hasPrev, setIsPlaying, togglePlayRef } = usePlayer()
+    const { track, nextTrack, prevTrack, hasNext, hasPrev, setIsPlaying, togglePlayRef, shuffle, toggleShuffle, oneOff } = usePlayer()
 
     // ── Spotify iFrame ────────────────────────────────────────────────
     const embedRef       = useRef(null)
@@ -535,7 +535,7 @@ export default function MiniPlayer() {
                     </div>
                     <div className="player__exp-btns">
                         <div className="player__exp-btns-side">
-                            <button type="button" className="player__btn player__btn--soon" disabled aria-label="Aleatório">
+                            <button type="button" className={'player__btn' + (shuffle ? ' is-active' : '')} onClick={toggleShuffle} disabled={oneOff} aria-label="Aleatório">
                                 <FaRandom size={14} />
                             </button>
                             <button type="button" className="player__btn" onClick={handlePrev} disabled={!track} aria-label="Anterior">
@@ -614,13 +614,13 @@ export default function MiniPlayer() {
             {/* Playback controls */}
             <div className="player__controls">
                 <div className="player__btns">
-                    {/* TODO: shuffle, embaralhar a queue restante (PlayerContext.shuffleQueue) */}
                     <button
                         type="button"
-                        className="player__btn player__btn--soon"
-                        aria-label="Aleatório (em breve)"
-                        title="Aleatório (em breve)"
-                        disabled
+                        className={'player__btn' + (shuffle ? ' is-active' : '')}
+                        aria-label="Aleatório"
+                        title="Aleatório"
+                        onClick={toggleShuffle}
+                        disabled={oneOff}
                     >
                         <FaRandom size={14} />
                     </button>

@@ -9,8 +9,9 @@ import { PlaylistLikeProvider } from './context/PlaylistLikeContext'
 import { PendingCommentsProvider } from './context/PendingCommentsContext'
 import { NotificationsProvider } from './context/NotificationsContext'
 import { GenresProvider } from './context/GenresContext'
-import MiniPlayer  from './components/HomeComponents/MiniPlayer'
-import BottomNav   from './components/HomeComponents/BottomNav'
+import MiniPlayer      from './components/HomeComponents/MiniPlayer'
+import BottomNav       from './components/HomeComponents/BottomNav'
+import LevelUpOverlay  from './components/HomeComponents/LevelUpOverlay'
 import PublishModal from './pages/private/artist/Publish.jsx'
 import Landing from './pages/public/Landing'
 import NotFound from './pages/Denied/notFound'
@@ -75,6 +76,7 @@ function PlayerLayer() {
             <Outlet />
             <MiniPlayer />
             <BottomNav role={role} />
+            <LevelUpOverlay />
         </>
     )
 }

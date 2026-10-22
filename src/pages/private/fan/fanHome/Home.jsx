@@ -67,6 +67,8 @@ export default function Home() {
                     <LevelCard user={{
                         level:      gamification.level,
                         points:     gamification.totalPoints,
+                        xp:         gamification.experiencePoints ?? 0,
+                        pointsToNextLevel: gamification.pointsToNextLevel ?? 0,
                         nextLevelAt: gamification.totalPoints + (gamification.pointsToNextLevel || 0),
                         rank:       gamification.rank,
                         badges:     (gamification.badges ?? []).length,
