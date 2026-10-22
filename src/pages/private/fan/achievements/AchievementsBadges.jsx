@@ -53,10 +53,7 @@ export default function AchievementsBadges({ badges }) {
                         <div className="ach__badge-name">{b.name}</div>
                         <div className="ach__badge-desc">{b.desc}</div>
                         <div className="ach__badge-meta">
-                            {b.got
-                                ? <><span className="ach__badge-xp">+{b.xp} xp</span> · {b.meta}</>
-                                : b.meta
-                            }
+                            {b.meta}
                         </div>
                     </div>
                 ))}

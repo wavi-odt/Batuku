@@ -327,7 +327,9 @@ export default function TopBar({ role = 'fan' }) {
                 )}
             </div>
 
-            <img src="/batuku-logo-H-escuro.svg" alt="Batuku" className="topbar__logo" />
+            <Link to="/home" className="topbar__logo-link">
+                <img src="/batuku-logo-H-escuro.svg" alt="Batuku" className="topbar__logo" />
+            </Link>
 
             <div className="topbar__spacer" />
 

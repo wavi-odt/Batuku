@@ -91,7 +91,6 @@ export default function Achievements() {
             icon: b.iconUrl,
             name: b.name,
             desc: b.description,
-            xp:   b.pointsRequired,
             tier: got ? tierFromPoints(b.pointsRequired) : 'locked',
             got,
             meta: got

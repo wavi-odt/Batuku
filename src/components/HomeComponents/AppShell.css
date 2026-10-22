@@ -15,6 +15,7 @@
     grid-area: main;
     padding: var(--space-7) var(--space-7) 120px;
     min-width: 0;
+    overflow-x: hidden;
 }
 
 @media (max-width: 900px) {

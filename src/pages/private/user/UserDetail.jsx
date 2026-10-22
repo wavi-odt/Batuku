@@ -146,12 +146,11 @@ export default function UserDetail() {
         icon: b.iconUrl,
         name: b.name,
         desc: b.description,
-        xp:   b.pointsRequired,
         tier: b.got ? tierFromPoints(b.pointsRequired) : 'locked',
         got:  b.got,
         meta: b.got
             ? (b.earnedAt ? new Date(b.earnedAt).toLocaleDateString('pt-PT', { day: 'numeric', month: 'short', year: 'numeric' }) : '')
-            : `${(user.points ?? 0).toLocaleString('pt-PT')} / ${b.pointsRequired.toLocaleString('pt-PT')} pts`,
+            : 'Bloqueado',
     }));
 
     const stats = [

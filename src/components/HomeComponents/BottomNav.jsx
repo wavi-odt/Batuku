@@ -19,6 +19,12 @@ export default function BottomNav({ role = 'fan' }) {
             : location.pathname === item.to
     )
 
+    const isProfilePage = location.pathname === '/profile'
+        || location.pathname.startsWith('/users/')
+        || location.pathname.startsWith('/artists/')
+
+    if (isProfilePage) return null
+
     return (
         <nav className="bottom-nav" aria-label="Navegação principal">
             <span

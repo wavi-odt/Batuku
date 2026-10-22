@@ -125,8 +125,14 @@
     flex-shrink: 0;
 }
 
-.topbar__logo {
+.topbar__logo-link {
     display: none;
+    align-items: center;
+    line-height: 0;
+}
+
+.topbar__logo {
+    display: block;
 }
 
 .topbar__notif-wrap { position: relative; }
@@ -301,16 +307,19 @@
 
     .topbar__publish { display: none; }
 
-    .topbar__logo {
-        display: block;
+    .topbar__logo-link {
+        display: flex;
         position: absolute;
         left: 50%;
         transform: translateX(-50%);
-        height: 28px;
-        width: auto;
-        pointer-events: none;
         opacity: 1;
         transition: opacity 0.2s ease 0.36s;
+    }
+
+    .topbar__logo {
+        display: block;
+        height: 28px;
+        width: auto;
     }
 
     /* ── Caixa colapsada: só o ícone ── */
@@ -341,7 +350,7 @@
     .topbar__search-clear { display: none; }
 
     /* ── Expandida: logo desaparece suavemente ── */
-    .topbar--search-open .topbar__logo { opacity: 0; transition: opacity 0.15s ease; }
+    .topbar--search-open .topbar__logo-link { opacity: 0; transition: opacity 0.15s ease; pointer-events: none; }
 
     .topbar--search-open .topbar__search {
         max-width: 520px;

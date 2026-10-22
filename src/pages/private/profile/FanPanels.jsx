@@ -4,7 +4,7 @@
    Badges e atividade ficam em mock até haver endpoints.
    ───────────────────────────────────────────────────────────────── */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { FaHeart } from 'react-icons/fa'
 import { API, getToken } from '../../../utils/auth.js'
@@ -90,6 +90,43 @@ function useFanTopGenres() {
     return { genres, loading }
 }
 
+/* ─── Drag-to-scroll vertical ────────────────────────────────────── */
+function useDragScroll() {
+    const ref     = useRef(null)
+    const active  = useRef(false)
+    const startX  = useRef(0)
+    const scrollL = useRef(0)
+
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const down = (e) => {
+            active.current  = true
+            startX.current  = e.pageX
+            scrollL.current = el.scrollLeft
+            el.classList.add('is-dragging')
+        }
+        const move = (e) => {
+            if (!active.current) return
+            e.preventDefault()
+            el.scrollLeft = scrollL.current - (e.pageX - startX.current)
+        }
+        const up = () => { active.current = false; el.classList.remove('is-dragging') }
+        el.addEventListener('mousedown',  down)
+        el.addEventListener('mousemove',  move)
+        el.addEventListener('mouseup',    up)
+        el.addEventListener('mouseleave', up)
+        return () => {
+            el.removeEventListener('mousedown',  down)
+            el.removeEventListener('mousemove',  move)
+            el.removeEventListener('mouseup',    up)
+            el.removeEventListener('mouseleave', up)
+        }
+    }, [])
+
+    return ref
+}
+
 /* ─── Cards reutilizáveis ─────────────────────────────────────────── */
 function PlaylistCard({ pl }) {
     const count = pl.trackCount ?? 0
@@ -122,9 +159,7 @@ function PlaylistCard({ pl }) {
 function ArtistCard({ a }) {
     return (
         <Link to={`/artists/${a.id}`} className="follow-card">
-            <div className="follow-card__avatar">
-                <UserAvatar name={a.name} imageUrl={a.avatarUrl} className="follow-card__avatar-img" size={20} />
-            </div>
+            <UserAvatar name={a.name} imageUrl={a.avatarUrl} className="follow-card__avatar" size={72} />
             <div className="follow-card__name">{a.name}</div>
             {a.genre && <div className="follow-card__genre">{a.genre}</div>}
         </Link>
@@ -137,6 +172,7 @@ export function FanOverview({ fan }) {
     const { artists,   loading: loadingAr } = useFanFollowing()
     const { genres,    loading: loadingGn } = useFanTopGenres()
     const { tracks: recentTracks, loading: loadingRc } = useFanRecentlyPlayed()
+    const dragRef = useDragScroll()
 
     const previewPlaylists = playlists.slice(0, 4)
     const previewArtists   = artists.slice(0, 6)
@@ -148,7 +184,9 @@ export function FanOverview({ fan }) {
                     <CardTitle link={`${fan.badges.filter(b => b.got).length} de ${fan.badges.length}`}>
                         Conquistas
                     </CardTitle>
-                    <BadgesGrid badges={fan.badges.slice(0, 4)} />
+                    <div className="badges-pager" ref={dragRef}>
+                        <BadgesGrid badges={fan.badges} />
+                    </div>
                 </div>
 
                 <div className="prof-card">

@@ -1,21 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 import { FaTrophy } from 'react-icons/fa'
 import { API, getToken } from '../../utils/auth'
+import { useNotifications } from '../../context/NotificationsContext'
 import './LevelUpOverlay.css'
 
-const LS_KEY = 'batuku_known_level'
-
-function readStoredLevel() {
-    const v = parseInt(localStorage.getItem(LS_KEY) ?? '0', 10)
-    return v > 0 ? v : null
-}
-
 export default function LevelUpOverlay() {
-    const prevLevelRef = useRef(readStoredLevel())
-    const timerRef     = useRef(null)
-    const fillRef      = useRef(null)
-    const [data,      setData]      = useState(null)
-    const [closing,   setClosing]   = useState(false)
+    const { notifications, loaded } = useNotifications()
+    const seenIds  = useRef(new Set())
+    const snapRef  = useRef(false)
+    const timerRef = useRef(null)
+    const fillRef  = useRef(null)
+    const [data,    setData]    = useState(null)
+    const [closing, setClosing] = useState(false)
 
     function dismiss() {
         clearTimeout(timerRef.current)
@@ -24,40 +20,52 @@ export default function LevelUpOverlay() {
     }
 
     useEffect(() => {
-        async function onUpdate() {
-            const token = getToken()
-            if (!token) return
-            try {
-                const res = await fetch(`${API}/api/gamification/me`, {
-                    headers: { Authorization: `Bearer ${token}` },
+        if (!loaded) {
+            snapRef.current = false
+            seenIds.current.clear()
+            return
+        }
+
+        // Transição false → true: marcar todos os IDs existentes como vistos (histórico)
+        if (!snapRef.current) {
+            snapRef.current = true
+            for (const n of notifications) {
+                seenIds.current.add(n.id)
+            }
+            return
+        }
+
+        // loaded já era true: verificar novas notificações LEVEL_UP
+        const newLevelUps = notifications.filter(
+            n => n.type === 'LEVEL_UP' && !seenIds.current.has(n.id)
+        )
+        if (newLevelUps.length === 0) return
+
+        for (const n of newLevelUps) {
+            seenIds.current.add(n.id)
+        }
+
+        const token = getToken()
+        if (!token) return
+
+        fetch(`${API}/api/gamification/me`, {
+            headers: { Authorization: `Bearer ${token}` },
+        })
+            .then(r => r.ok ? r.json() : null)
+            .then(prof => {
+                if (!prof) return
+                const xpTotal = (prof.experiencePoints ?? 0) + (prof.pointsToNextLevel ?? 0)
+                clearTimeout(timerRef.current)
+                setClosing(false)
+                setData({
+                    level:   prof.level,
+                    xpPct:   xpTotal > 0 ? Math.round((prof.experiencePoints / xpTotal) * 100) : 0,
+                    xpLabel: `${prof.experiencePoints ?? 0} / ${xpTotal} XP`,
                 })
-                if (!res.ok) return
-                const prof = await res.json()
-                const newLevel = prof.level
-
-                if (prevLevelRef.current !== null && newLevel > prevLevelRef.current) {
-                    const xpTotal = (prof.experiencePoints ?? 0) + (prof.pointsToNextLevel ?? 0)
-                    clearTimeout(timerRef.current)
-                    setClosing(false)
-                    setData({
-                        level:   newLevel,
-                        xpPct:   xpTotal > 0 ? Math.round((prof.experiencePoints / xpTotal) * 100) : 0,
-                        xpLabel: `${prof.experiencePoints ?? 0} / ${xpTotal} XP`,
-                    })
-                    timerRef.current = setTimeout(dismiss, 4000)
-                }
-
-                prevLevelRef.current = newLevel
-                try { localStorage.setItem(LS_KEY, String(newLevel)) } catch { /* ignora */ }
-            } catch { /* ignora */ }
-        }
-
-        window.addEventListener('batuku:gamification-updated', onUpdate)
-        return () => {
-            window.removeEventListener('batuku:gamification-updated', onUpdate)
-            clearTimeout(timerRef.current)
-        }
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+                timerRef.current = setTimeout(dismiss, 4000)
+            })
+            .catch(() => {})
+    }, [notifications, loaded])
 
     useEffect(() => {
         if (!fillRef.current) return

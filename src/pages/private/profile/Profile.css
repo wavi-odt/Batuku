@@ -230,7 +230,7 @@
 }
 
 /* ─── Content layout ──────────────────────────────────────────────── */
-.prof__body { padding: 28px 24px; }
+.prof__body { padding: 28px 24px; overflow-x: hidden; }
 
 .prof__grid {
     display: grid;
@@ -238,6 +238,7 @@
     gap: 28px;
     align-items: start;
 }
+.prof__grid > div { min-width: 0; }
 @media (max-width: 1000px) { .prof__grid { grid-template-columns: 1fr; } }
 
 .prof__col-side { display: flex; flex-direction: column; gap: 20px; }
@@ -304,6 +305,38 @@
 
 .badge-item__name { font-size: 13px; font-weight: 600; margin: 0 0 3px; }
 .badge-item__desc { font-size: 11px; color: var(--color-ink-mute); line-height: 1.4; margin: 0; }
+
+/* ─── Pager de badges (visão geral) ──────────────────────────────── */
+.badges-pager {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    cursor: grab;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+.badges-pager::-webkit-scrollbar { display: none; }
+.badges-pager.is-dragging { cursor: grabbing; user-select: none; }
+
+/* transforma o grid num flex row sem quebra de linha */
+.badges-pager .badges-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+}
+
+/* cada badge ocupa 1/3 do contentor → 3 visíveis de cada vez */
+.badges-pager .badge-item {
+    flex: 0 0 calc(33.333% - 8px);
+    scroll-snap-align: start;
+}
+
+/* ecrãs pequenos: 2 visíveis de cada vez */
+@media (max-width: 599px) {
+    .badges-pager .badge-item {
+        flex: 0 0 calc(50% - 6px);
+    }
+}
 
 /* ─── Playlists ───────────────────────────────────────────────────── */
 .playlist-grid {

@@ -17,6 +17,7 @@ const NotificationsContext = createContext(null)
 
 export function NotificationsProvider({ children }) {
     const [notifications, setNotifications] = useState([])
+    const [loaded, setLoaded] = useState(false)
     const stompRef = useRef(null)
     const { showToast } = useToast()
 
@@ -26,7 +27,10 @@ export function NotificationsProvider({ children }) {
             headers: { Authorization: `Bearer ${getToken()}` },
         })
             .then(r => r.ok ? r.json() : [])
-            .then(data => setNotifications(Array.isArray(data) ? data : []))
+            .then(data => {
+                setNotifications(Array.isArray(data) ? data : [])
+                setLoaded(true)
+            })
             .catch(() => {})
     }, [])
 
@@ -85,7 +89,12 @@ export function NotificationsProvider({ children }) {
         connect()
 
         // Liga após login (o provider pode montar antes do utilizador autenticar)
-        const handleLogin = () => { fetchAll(); connect() }
+        const handleLogin = () => {
+            setLoaded(false)
+            setNotifications([])
+            fetchAll()
+            connect()
+        }
         window.addEventListener('batuku:login', handleLogin)
 
         return () => {
@@ -138,6 +147,7 @@ export function NotificationsProvider({ children }) {
     return (
         <NotificationsContext.Provider value={{
             notifications,
+            loaded,
             badgesPerRoute,
             totalUnread,
             markRead,
