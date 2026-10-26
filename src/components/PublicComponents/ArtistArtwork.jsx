@@ -88,6 +88,8 @@ export default function ArtistArtwork({
                     src={image}
                     alt={name || ''}
                     draggable={false}
+                    loading="lazy"
+                    decoding="async"
                 />
             ) : (
                 <svg className="artwork__svg" viewBox="0 0 100 100" preserveAspectRatio="none"

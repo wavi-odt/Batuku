@@ -11,6 +11,8 @@ export default function CoverImg({ src, alt, className, style, iconSize = 14 }) 
                 alt={alt ?? ''}
                 className={className}
                 style={style}
+                loading="lazy"
+                decoding="async"
                 onError={() => setFailed(true)}
             />
         )
