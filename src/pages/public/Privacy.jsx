@@ -26,11 +26,10 @@ export default function Privacy() {
                     <h2>2. Dados que recolhemos</h2>
                     <p>Recolhemos os seguintes dados quando utilizas o Batuku:</p>
                     <ul>
-                        <li><strong>Dados de registo</strong> — nome, username, email e password (armazenada de forma encriptada).</li>
-                        <li><strong>Dados de perfil</strong> — país, localização, foto de perfil e links sociais fornecidos voluntariamente.</li>
-                        <li><strong>Dados de utilização</strong> — faixas ouvidas, gostos, comentários, playlists criadas e interações na plataforma.</li>
-                        <li><strong>Dados de autenticação OAuth</strong> — quando entras com Google ou Discord, recebemos o teu nome, email e foto de perfil desses serviços.</li>
-                        <li><strong>Dados técnicos</strong> — endereço IP, país de acesso e informações do browser, usados para análises agregadas.</li>
+                        <li><strong>Dados de registo</strong>:nome, username, email e password (armazenada de forma encriptada).</li>
+                        <li><strong>Dados de perfil</strong>:país, localização, foto de perfil e links sociais fornecidos voluntariamente.</li>
+                        <li><strong>Dados de utilização</strong>:faixas ouvidas, gostos, comentários, playlists criadas e interações na plataforma.</li>
+                        <li><strong>Dados de autenticação OAuth</strong>:quando entras com Google ou Discord, recebemos o teu nome, email e foto de perfil desses serviços.</li>
                     </ul>
 
                     <h2>3. Como utilizamos os teus dados</h2>
@@ -50,10 +49,10 @@ export default function Privacy() {
                     <h2>4. Partilha de dados com terceiros</h2>
                     <p>Os teus dados podem ser partilhados com os seguintes serviços para o funcionamento da plataforma:</p>
                     <ul>
-                        <li><strong>Spotify</strong> — para reprodução de pré-visualizações de faixas via Spotify Embed.</li>
-                        <li><strong>Google e Discord</strong> — caso uses autenticação OAuth com esses serviços.</li>
-                        <li><strong>Brevo</strong> — serviço de envio de emails transacionais.</li>
-                        <li><strong>Cloudflare R2</strong> — armazenamento de ficheiros de áudio, capas e imagens.</li>
+                        <li><strong>Spotify</strong>:para reprodução de pré-visualizações de faixas via Spotify Embed.</li>
+                        <li><strong>Google e Discord</strong>:caso uses autenticação OAuth com esses serviços.</li>
+                        <li><strong>Brevo</strong>:serviço de envio de emails transacionais.</li>
+                        <li><strong>Cloudflare R2</strong>:armazenamento de ficheiros de áudio, capas e imagens.</li>
                     </ul>
                     <p>
                         Todos os serviços terceiros utilizados operam sob as suas próprias políticas de privacidade.
@@ -62,7 +61,7 @@ export default function Privacy() {
                     <h2>5. Retenção de dados</h2>
                     <p>
                         Os teus dados são mantidos enquanto a tua conta estiver ativa.
-                        Após o encerramento da conta, os dados pessoais são eliminados num prazo de 30 dias, exceto os que sejam necessários para cumprir obrigações legais.
+                        Após o encerramento da conta, os dados pessoais serão eliminados, exceto os necessários para cumprir obrigações legais.
                     </p>
 
                     <h2>6. Segurança</h2>

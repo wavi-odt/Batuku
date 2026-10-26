@@ -38,8 +38,8 @@ export default function Terms() {
                         Existem dois tipos de conta:
                     </p>
                     <ul>
-                        <li><strong>Fã</strong> — acesso a todas as funcionalidades de descoberta, interação e gamificação.</li>
-                        <li><strong>Artista</strong> — adicionalmente, permite publicar música e aceder a analytics. Requer verificação de identidade pela equipa Batuku.</li>
+                        <li><strong>Fã:</strong> acesso a todas as funcionalidades de descoberta, interação e gamificação.</li>
+                        <li><strong>Artista:</strong> adicionalmente, permite publicar música e aceder a analytics. Requer verificação de identidade pela equipa Batuku.</li>
                     </ul>
 
                     <h2>4. Conteúdo publicado</h2>
@@ -65,13 +65,13 @@ export default function Terms() {
                     <h2>6. Marketplace de beats</h2>
                     <p>
                         O Batuku disponibiliza um espaço para produtores venderem beats. As transações são realizadas entre os utilizadores e o Batuku não assume responsabilidade por disputas resultantes dessas transações.
-                        Cada listagem deve respeitar os direitos de autor e indicar claramente as condições de licenciamento.
+                        Cada listagem deve respeitar os direitos de autor. As condições de licenciamento são definidas e padronizadas pelo Batuku.
                     </p>
 
                     <h2>7. Suspensão e encerramento de conta</h2>
                     <p>
                         O Batuku reserva-se o direito de suspender ou encerrar contas que violem estes termos, a qualquer momento e sem aviso prévio.
-                        Podes também encerrar a tua conta a qualquer momento através das definições do perfil ou contactando-nos.
+                        Podes também encerrar a tua conta a qualquer momento, basta nos contactar.
                     </p>
 
                     <h2>8. Limitação de responsabilidade</h2>
