@@ -455,6 +455,10 @@ body.has-player .player {
 
 /* ─── Mobile ──────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
+    body.has-player.no-bottom-nav .player {
+        bottom: env(safe-area-inset-bottom, 0px);
+    }
+
     body.has-player .player {
         bottom: calc(60px + env(safe-area-inset-bottom));
         /* flex row: track | controls | expand */

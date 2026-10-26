@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { homeData } from '../../data/home'
 import { ICONS } from './icons'
@@ -22,6 +23,11 @@ export default function BottomNav({ role = 'fan' }) {
     const isProfilePage = location.pathname === '/profile'
         || location.pathname.startsWith('/users/')
         || location.pathname.startsWith('/artists/')
+
+    useEffect(() => {
+        document.body.classList.toggle('no-bottom-nav', isProfilePage)
+        return () => document.body.classList.remove('no-bottom-nav')
+    }, [isProfilePage])
 
     if (isProfilePage) return null
 
