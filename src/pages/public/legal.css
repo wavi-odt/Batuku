@@ -1,0 +1,89 @@
+.legal {
+    min-height: 100vh;
+    background: var(--color-bg);
+    padding: 80px 24px;
+}
+
+.legal__container {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.legal__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    margin-bottom: var(--space-10);
+    transition: color var(--duration-fast) var(--ease-out);
+}
+.legal__back:hover { color: var(--color-ink); }
+
+.legal__eyebrow {
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    letter-spacing: var(--tracking-wide);
+    text-transform: uppercase;
+    color: var(--color-coral);
+    margin-bottom: var(--space-3);
+}
+
+.legal__title {
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: var(--fw-semibold);
+    letter-spacing: var(--tracking-tight);
+    line-height: var(--lh-tight);
+    margin: 0 0 var(--space-3);
+}
+
+.legal__meta {
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    margin-bottom: var(--space-10);
+    padding-bottom: var(--space-8);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.legal__body h2 {
+    font-size: var(--fs-lg);
+    font-weight: var(--fw-semibold);
+    color: var(--color-ink);
+    margin: var(--space-10) 0 var(--space-3);
+}
+
+.legal__body h2:first-child { margin-top: 0; }
+
+.legal__body p {
+    font-size: var(--fs-base);
+    color: var(--color-ink-soft);
+    line-height: var(--lh-base);
+    margin: 0 0 var(--space-4);
+}
+
+.legal__body ul {
+    margin: 0 0 var(--space-4);
+    padding-left: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.legal__body li {
+    font-size: var(--fs-base);
+    color: var(--color-ink-soft);
+    line-height: var(--lh-base);
+}
+
+.legal__body a {
+    color: var(--color-coral);
+}
+.legal__body a:hover { color: var(--color-coral-soft); }
+
+.legal__footer {
+    margin-top: var(--space-12);
+    padding-top: var(--space-8);
+    border-top: 1px solid var(--color-border);
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+}

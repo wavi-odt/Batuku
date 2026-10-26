@@ -19,6 +19,8 @@ import Login from "./pages/public/Login.jsx";
 import Register from "./pages/public/Register.jsx";
 import ForgotPassword from "./pages/public/ForgotPassword.jsx";
 import ResetPassword from "./pages/public/ResetPassword.jsx";
+import Terms from "./pages/public/Terms.jsx";
+import Privacy from "./pages/public/Privacy.jsx";
 import Dashboard from "./pages/private/artist/artistHome/Dashboard.jsx";
 import FanHome from "./pages/private/fan/fanHome/Home.jsx";
 import Profile from "./pages/private/profile/Profile.jsx";
@@ -102,6 +104,8 @@ function App() {
                         <Route path="/register"         element={<Register />} />
                         <Route path="/forgot-password"  element={<ForgotPassword />} />
                         <Route path="/reset-password"   element={<ResetPassword />} />
+                        <Route path="/terms"            element={<Terms />} />
+                        <Route path="/privacy"          element={<Privacy />} />
                         <Route path="/oauth2/callback"      element={<OAuthCallback />} />
                         <Route path="/aguardar-validacao"  element={<AguardarValidacao />} />
                         <Route path="/verify-email"        element={<VerifyEmail />} />
