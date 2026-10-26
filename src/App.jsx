@@ -17,6 +17,8 @@ import Landing from './pages/public/Landing'
 import NotFound from './pages/Denied/notFound'
 import Login from "./pages/public/Login.jsx";
 import Register from "./pages/public/Register.jsx";
+import ForgotPassword from "./pages/public/ForgotPassword.jsx";
+import ResetPassword from "./pages/public/ResetPassword.jsx";
 import Dashboard from "./pages/private/artist/artistHome/Dashboard.jsx";
 import FanHome from "./pages/private/fan/fanHome/Home.jsx";
 import Profile from "./pages/private/profile/Profile.jsx";
@@ -96,8 +98,10 @@ function App() {
                     <Routes>
                         {/* Públicas */}
                         <Route path="/" element={<Landing />} />
-                        <Route path="/login"           element={<Login />} />
-                        <Route path="/register"        element={<Register />} />
+                        <Route path="/login"            element={<Login />} />
+                        <Route path="/register"         element={<Register />} />
+                        <Route path="/forgot-password"  element={<ForgotPassword />} />
+                        <Route path="/reset-password"   element={<ResetPassword />} />
                         <Route path="/oauth2/callback"      element={<OAuthCallback />} />
                         <Route path="/aguardar-validacao"  element={<AguardarValidacao />} />
                         <Route path="/verify-email"        element={<VerifyEmail />} />

@@ -451,6 +451,34 @@
     margin-bottom: var(--space-4);
 }
 
+/* ─── Success message ─────────────────────────────────────────────── */
+.auth__success {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: var(--fs-sm);
+    color: var(--color-green);
+    background-color: rgba(52, 211, 153, 0.08);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin-bottom: var(--space-4);
+    line-height: var(--lh-base);
+}
+.auth__success svg { flex-shrink: 0; margin-top: 1px; }
+
+/* ─── Back link ───────────────────────────────────────────────────── */
+.auth__back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--fs-sm);
+    color: var(--color-ink-mute);
+    margin-top: var(--space-5);
+    transition: color var(--duration-fast) var(--ease-out);
+}
+.auth__back-link:hover { color: var(--color-ink); }
+
 /* ─── Logo on top of form ─────────────────────────────────────────── */
 .auth__brand {
     display: inline-flex;
