@@ -699,8 +699,10 @@
 .rel-mgmt-card__title:hover { text-decoration: underline; }
 
 .rel-mgmt-card__sub {
+    display: block;
     font-size: var(--fs-xs);
     color: var(--color-ink-mute);
+    margin-top: 3px;
 }
 
 /* Responsive */
