@@ -10,10 +10,12 @@ import { useMyReleases } from '../../../../hooks/useMyReleases.js'
 import { useToast } from '../../../../context/ToastContext.jsx'
 import ConfirmModal from '../../../../components/ConfirmModal.jsx'
 import { API, getToken } from '../../../../utils/auth.js'
+import { fmtDateLong } from '../../../../utils/formatters'
 import TracksList from './TracksList.jsx'
 import './Tracks.css'
 
-const TYPE_LABEL  = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape', SINGLE: 'Single' };
+const TYPE_LABEL   = { ALBUM: 'Álbum', EP: 'EP', MIXTAPE: 'Mixtape', SINGLE: 'Single' };
+const STATUS_LABEL = { PUBLISHED: 'Publicado', SCHEDULED: 'Agendado', DRAFT: 'Rascunho' };
 
 const STATUS_TABS = [
     { key: 'all',       label: 'Todas'      },
@@ -131,13 +133,13 @@ export default function Tracks() {
     const scheduled         = rawTracks.filter(t => t.status === 'SCHEDULED' && !releaseTrackIds.has(t.id));
     const totalLikes        = rawTracks.reduce((acc, t) => acc + (t.likeCount ?? 0), 0);
     const totalPlays        = rawTracks.reduce((acc, t) => acc + (t.playCount ?? 0), 0);
-    const publishedReleases = releases.filter(r => r.status === 'PUBLISHED');
-    const draftReleases     = releases.filter(r => r.status === 'DRAFT');
+    const publishedReleases  = releases.filter(r => r.status === 'PUBLISHED');
+    const scheduledReleases  = releases.filter(r => r.status === 'SCHEDULED');
 
     const filteredReleases = useMemo(() => {
         let list = releases;
-        if (relStatus === 'PUBLISHED') list = list.filter(r => r.status === 'PUBLISHED');
-        if (relStatus === 'DRAFT')     list = list.filter(r => r.status === 'DRAFT');
+        if (relStatus === 'PUBLISHED')  list = list.filter(r => r.status === 'PUBLISHED');
+        if (relStatus === 'SCHEDULED') list = list.filter(r => r.status === 'SCHEDULED');
         if (relQuery.trim()) {
             const q = relQuery.toLowerCase();
             list = list.filter(r => r.title.toLowerCase().includes(q));
@@ -296,7 +298,7 @@ export default function Tracks() {
                         </div>
                         <div className="trk__stat">
                             <div className="trk__stat-val trk__stat-val--scheduled">
-                                {relLoading ? '…' : draftReleases.length}
+                                {relLoading ? '…' : scheduledReleases.length}
                             </div>
                             <div className="trk__stat-label">Agendados</div>
                         </div>
@@ -323,7 +325,7 @@ export default function Tracks() {
                             {[
                                 { key: 'all',       label: 'Todos'      },
                                 { key: 'PUBLISHED', label: 'Publicados' },
-                                { key: 'DRAFT',     label: 'Agendados'  },
+                                { key: 'SCHEDULED', label: 'Agendados'  },
                             ].map(tab => (
                                 <button
                                     key={tab.key}
@@ -359,9 +361,10 @@ export default function Tracks() {
                     ) : (
                         <div className="rel-mgmt-grid">
                             {filteredReleases.map(r => {
-                                const label = TYPE_LABEL[r.albumType] ?? r.albumType;
-                                const count = r.tracks?.length ?? 0;
-                                const isDraft = r.status === 'DRAFT';
+                                const label       = TYPE_LABEL[r.albumType] ?? r.albumType;
+                                const count       = r.tracks?.length ?? 0;
+                                const isDraft     = r.status === 'DRAFT';
+                                const isScheduled = r.status === 'SCHEDULED';
                                 return (
                                     <div key={r.id} className={'rel-mgmt-card' + (isDraft ? ' rel-mgmt-card--draft' : '')}>
                                         <Link to={`/releases/${r.id}`} className="rel-mgmt-card__cover">
@@ -370,11 +373,22 @@ export default function Tracks() {
                                                 : <div className="rel-mgmt-card__placeholder"><FaCompactDisc size={32} /></div>
                                             }
                                             <span className="rel-card__badge">{label}</span>
-                                            {isDraft && <span className="rel-mgmt-card__status-badge">Rascunho</span>}
+                                            {isDraft     && <span className="rel-mgmt-card__status-badge">Rascunho</span>}
+                                            {isScheduled && <span className="rel-mgmt-card__status-badge rel-mgmt-card__status-badge--scheduled">Agendado</span>}
                                         </Link>
                                         <div className="rel-mgmt-card__footer">
                                             <div className="rel-mgmt-card__info">
                                                 <Link to={`/releases/${r.id}`} className="rel-mgmt-card__title">{r.title}</Link>
+                                                <span className="rel-mgmt-card__sub">
+                                                    <span className={`trk__status trk__status--${r.status.toLowerCase()}`}>
+                                                        {STATUS_LABEL[r.status] ?? r.status}
+                                                    </span>
+                                                    {isScheduled && r.scheduledAt && (
+                                                        <span style={{ marginLeft: 6, fontSize: 11, color: 'var(--color-ink-mute)' }}>
+                                                            {fmtDateLong(r.scheduledAt)}
+                                                        </span>
+                                                    )}
+                                                </span>
                                                 <span className="rel-mgmt-card__sub">{count} {count === 1 ? 'faixa' : 'faixas'}</span>
                                             </div>
                                             <button

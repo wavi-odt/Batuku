@@ -649,6 +649,11 @@
     letter-spacing: 0.04em;
 }
 
+.rel-mgmt-card__status-badge--scheduled {
+    background: rgba(234, 179, 8, 0.18);
+    color: #f5c518;
+}
+
 /* Badge de tipo (Álbum, EP…) */
 .rel-card__badge {
     position: absolute;
