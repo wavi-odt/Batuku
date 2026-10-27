@@ -379,16 +379,14 @@ export default function Tracks() {
                                         <div className="rel-mgmt-card__footer">
                                             <div className="rel-mgmt-card__info">
                                                 <Link to={`/releases/${r.id}`} className="rel-mgmt-card__title">{r.title}</Link>
-                                                <span className="rel-mgmt-card__sub" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                                                <span className="rel-mgmt-card__sub">
                                                     <span className={`trk__status trk__status--${r.status.toLowerCase()}`}>
                                                         {STATUS_LABEL[r.status] ?? r.status}
                                                     </span>
-                                                    {isScheduled && r.scheduledAt && (
-                                                        <span style={{ fontSize: 11, color: 'var(--color-ink-mute)' }}>
-                                                            {fmtDateLong(r.scheduledAt)}
-                                                        </span>
-                                                    )}
                                                 </span>
+                                                {isScheduled && r.scheduledAt && (
+                                                    <span className="rel-mgmt-card__sub">{fmtDateLong(r.scheduledAt)}</span>
+                                                )}
                                                 <span className="rel-mgmt-card__sub">{count} {count === 1 ? 'faixa' : 'faixas'}</span>
                                             </div>
                                             <button
