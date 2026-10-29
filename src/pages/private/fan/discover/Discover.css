@@ -239,6 +239,37 @@
     filter: brightness(1.15);
 }
 
+/* Género com foto: a imagem ocupa a caixa e um degradê com a cor do género
+   garante a leitura do nome */
+.disc__genre--photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top,
+        oklch(0.16 0.10 var(--genre-hue) / 0.92) 0%,
+        oklch(0.16 0.10 var(--genre-hue) / 0.35) 55%,
+        transparent 100%
+    );
+    pointer-events: none;
+}
+
+.disc__genre-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-base) var(--ease-out);
+}
+
+.disc__genre--photo:hover .disc__genre-img { transform: scale(1.05); }
+
+.disc__genre--photo .disc__genre-name,
+.disc__genre--photo .disc__genre-count {
+    position: relative;
+    z-index: 1;
+}
+
 .disc__genre-name {
     font-size: var(--fs-lg);
     font-weight: var(--fw-semibold);

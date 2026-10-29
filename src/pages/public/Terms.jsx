@@ -74,7 +74,7 @@ export default function Terms() {
                         Podes também encerrar a tua conta a qualquer momento, basta nos contactar.
                     </p>
 
-                    <h2>8. Limitação de responsabilidade</h2>
+                    <h2>8. Limitação de responsabilidade</h2>got
                     <p>
                         O Batuku é fornecido "tal como está", sem garantias de qualquer tipo.
                         Não nos responsabilizamos por perdas de dados, interrupções do serviço ou danos resultantes da utilização da plataforma.

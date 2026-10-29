@@ -5,6 +5,18 @@
 import { useState }                    from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
+/* Fotos dos géneros: basta colocar o ficheiro em src/assets/genres/ com o nome do
+   género sem acentos, em minúsculas e com hífens (ex.: funana.webp, hip-hop.webp,
+   cabo-love.webp). Os géneros sem foto mantêm o gradiente. */
+const GENRE_FILES = import.meta.glob('../../../../assets/genres/*.{webp,jpg,jpeg,png}', {
+    eager: true, query: '?url', import: 'default',
+})
+const slugify = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+const GENRE_PHOTOS = Object.fromEntries(
+    Object.entries(GENRE_FILES).map(([path, url]) => [slugify(path.split('/').pop().replace(/\.\w+$/, '')), url])
+)
+
 function GenreGroup({ label, labelClass = '', gridClass = '', genres, showCount, initialCount, isOpen, onToggle }) {
     const [showAll, setShowAll] = useState(false)
     const navigate = useNavigate()
@@ -27,20 +39,32 @@ function GenreGroup({ label, labelClass = '', gridClass = '', genres, showCount,
             <div className={`disc__genre-list${isOpen ? ' disc__genre-list--open' : ''}`}>
                 <div className="disc__genre-list__inner">
                     <div className={`disc__genres ${gridClass}`}>
-                        {visible.map(g => (
-                            <button
-                                key={g.id}
-                                type="button"
-                                className="disc__genre"
-                                style={{ '--genre-hue': g.hue }}
-                                onClick={() => navigate(`/genres/${g.id}`)}
-                            >
-                                <span className="disc__genre-name">{g.label}</span>
-                                {showCount && (
-                                    <span className="disc__genre-count">{g.tracks.toLocaleString('pt-PT')} faixas</span>
-                                )}
-                            </button>
-                        ))}
+                        {visible.map(g => {
+                            const photo = GENRE_PHOTOS[slugify(g.label)]
+                            return (
+                                <button
+                                    key={g.id}
+                                    type="button"
+                                    className={`disc__genre${photo ? ' disc__genre--photo' : ''}`}
+                                    style={{ '--genre-hue': g.hue }}
+                                    onClick={() => navigate(`/genres/${g.id}`)}
+                                >
+                                    {photo && (
+                                        <img
+                                            className="disc__genre-img"
+                                            src={photo}
+                                            alt=""
+                                            loading="lazy"
+                                            decoding="async"
+                                        />
+                                    )}
+                                    <span className="disc__genre-name">{g.label}</span>
+                                    {showCount && (
+                                        <span className="disc__genre-count">{g.tracks.toLocaleString('pt-PT')} faixas</span>
+                                    )}
+                                </button>
+                            )
+                        })}
                     </div>
                     {hidden > 0 && (
                         <button type="button" className="disc__genre-more" onClick={() => setShowAll(v => !v)}>
