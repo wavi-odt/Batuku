@@ -251,7 +251,9 @@ export default function UserDetail() {
                                         <CardTitle link={`${badges.filter(b => b.got).length} de ${badges.length}`}>
                                             Conquistas
                                         </CardTitle>
-                                        <BadgesGrid badges={badges.slice(0, 4)} />
+                                        <div className="badges-pager">
+                                            <BadgesGrid badges={badges.slice(0, 4)} />
+                                        </div>
                                     </div>
                                 )}
                                 <div className="prof-card">
@@ -289,9 +291,7 @@ export default function UserDetail() {
                                         <div className="prof-following prof-following--compact">
                                             {followingArtists.slice(0, 6).map(a => (
                                                 <Link key={a.id} to={`/artists/${a.id}`} className="follow-card">
-                                                    <div className="follow-card__avatar">
-                                                        <UserAvatar name={a.name} imageUrl={a.avatarUrl} className="follow-card__avatar-img" size={20} />
-                                                    </div>
+                                                    <UserAvatar name={a.name} imageUrl={a.avatarUrl} className="follow-card__avatar" size={72} />
                                                     <div className="follow-card__name">{a.name}</div>
                                                     {a.genre && <div className="follow-card__genre">{a.genre}</div>}
                                                 </Link>
@@ -419,9 +419,7 @@ export default function UserDetail() {
                                 : <div className="prof-following">
                                     {followingArtists.map(a => (
                                         <Link key={a.id} to={`/artists/${a.id}`} className="follow-card">
-                                            <div className="follow-card__avatar">
-                                                <UserAvatar name={a.name} imageUrl={a.avatarUrl} className="follow-card__avatar-img" size={20} />
-                                            </div>
+                                            <UserAvatar name={a.name} imageUrl={a.avatarUrl} className="follow-card__avatar" size={72} />
                                             <div className="follow-card__name">{a.name}</div>
                                             {a.genre && <div className="follow-card__genre">{a.genre}</div>}
                                         </Link>

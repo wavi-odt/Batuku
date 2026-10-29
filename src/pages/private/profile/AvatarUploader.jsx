@@ -5,6 +5,31 @@ import './AvatarUploader.css'
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL
 const MAX_SIZE = 5 * 1024 * 1024 // 5 MB
+const AVATAR_PX = 400 // tamanho normalizado do avatar
+
+function resizeToSquare(file) {
+    return new Promise((resolve, reject) => {
+        const img = new Image()
+        const url = URL.createObjectURL(file)
+        img.onload = () => {
+            URL.revokeObjectURL(url)
+            const size = Math.min(img.width, img.height)
+            const sx = (img.width  - size) / 2
+            const sy = (img.height - size) / 2
+            const canvas = document.createElement('canvas')
+            canvas.width  = AVATAR_PX
+            canvas.height = AVATAR_PX
+            canvas.getContext('2d').drawImage(img, sx, sy, size, size, 0, 0, AVATAR_PX, AVATAR_PX)
+            canvas.toBlob(
+                blob => blob ? resolve(new File([blob], 'avatar.jpg', { type: 'image/jpeg' })) : reject(new Error('Falha no resize')),
+                'image/jpeg',
+                0.92,
+            )
+        }
+        img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Imagem inválida')) }
+        img.src = url
+    })
+}
 
 export default function AvatarUploader({ currentAvatarUrl, isArtist, onSuccess, onClose }) {
     const [preview, setPreview]   = useState(null)
@@ -42,12 +67,21 @@ export default function AvatarUploader({ currentAvatarUrl, isArtist, onSuccess, 
     async function handleUpload() {
         if (!file) return
 
-        const token = localStorage.getItem('token')
-        const formData = new FormData()
-        formData.append('file', file)
-
         setLoading(true)
         setError(null)
+
+        let resized
+        try {
+            resized = await resizeToSquare(file)
+        } catch {
+            setError('Não foi possível processar a imagem. Tenta com outro ficheiro.')
+            setLoading(false)
+            return
+        }
+
+        const token = localStorage.getItem('token')
+        const formData = new FormData()
+        formData.append('file', resized)
 
         try {
             const res = await fetch(`${API_BASE}/api/media/avatar`, {
