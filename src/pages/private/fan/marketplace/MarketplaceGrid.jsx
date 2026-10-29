@@ -4,6 +4,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { FaPlay, FaPause, FaShoppingCart, FaCheck, FaHandshake, FaChevronDown } from 'react-icons/fa'
+import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import ArtistArtwork from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import ClickableName from '../../../../components/ClickableName.jsx'
 
@@ -118,7 +119,7 @@ export default function MarketplaceGrid({
                                     aria-label={playing_ ? 'Pausar' : 'Pré-ouvir'}
                                     onClick={() => onPlay(playing_ ? null : beat.id)}
                                 >
-                                    {playing_ ? <FaPause /> : <FaPlay />}
+                                    {playing_ ? <NowPlayingEq /> : <FaPlay />}
                                 </button>
                             </div>
 

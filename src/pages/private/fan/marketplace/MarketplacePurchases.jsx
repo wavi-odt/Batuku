@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect } from 'react'
-import { FaDownload, FaPlay, FaPause } from 'react-icons/fa'
+import { FaDownload, FaPlay } from 'react-icons/fa'
+import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import ArtistArtwork           from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import { API, getToken }       from '../../../../utils/auth.js'
 
@@ -73,7 +74,7 @@ export default function MarketplacePurchases({ playing, onPlay }) {
                                     aria-label={isPlaying ? 'Pausar' : 'Pré-ouvir'}
                                     onClick={() => onPlay?.(isPlaying ? null : p.id, p.audioUrl)}
                                 >
-                                    {isPlaying ? <FaPause size={12} /> : <FaPlay size={12} />}
+                                    {isPlaying ? <NowPlayingEq /> : <FaPlay size={12} />}
                                 </button>
                             )}
                         </div>

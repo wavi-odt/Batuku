@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect } from 'react'
-import { FaEdit, FaTrash, FaPlay, FaPause } from 'react-icons/fa'
+import { FaEdit, FaTrash, FaPlay } from 'react-icons/fa'
+import NowPlayingEq from '../../../../components/NowPlayingEq.jsx'
 import { API, getToken }       from '../../../../utils/auth.js'
 import ArtistArtwork           from '../../../../components/PublicComponents/ArtistArtwork.jsx'
 import BeatUploadModal         from './BeatUploadModal.jsx'
@@ -151,7 +152,7 @@ export default function MarketplaceProducer({ playing, onPlay }) {
                                             aria-label={isPlaying ? 'Pausar' : 'Pré-ouvir'}
                                             onClick={() => onPlay?.(isPlaying ? null : beat.id)}
                                         >
-                                            {isPlaying ? <FaPause /> : <FaPlay />}
+                                            {isPlaying ? <NowPlayingEq /> : <FaPlay />}
                                         </button>
                                     )}
                                 </div>
