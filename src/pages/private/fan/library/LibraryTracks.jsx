@@ -7,7 +7,7 @@ import CoverImg       from '../../../../components/CoverImg.jsx'
 import { fmtMs } from '../../../../utils/formatters'
 
 export default function LibraryTracks({ tracks, loading }) {
-    const { track: currentTrack, setTrack } = usePlayer()
+    const { track: currentTrack, setTrack, togglePlayRef } = usePlayer()
 
     const queue = tracks.map(t => ({
         id: t.id, name: t.title, coverUrl: t.coverUrl,
@@ -41,7 +41,11 @@ export default function LibraryTracks({ tracks, loading }) {
                             <div
                                 key={t.id}
                                 className={'lib__track-row' + (isPlaying ? ' lib__track-row--active' : '')}
-                                onClick={() => t.audioUrl && setTrack(queue[i], queue)}
+                                onClick={() => {
+                                    if (!t.audioUrl) return
+                                    if (isPlaying) { togglePlayRef.current?.(); return }
+                                    setTrack(queue[i], queue)
+                                }}
                             >
                                 <span className="lib__track-num">
                                     {isPlaying ? <NowPlayingEq /> : i + 1}
