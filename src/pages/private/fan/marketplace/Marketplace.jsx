@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react'
-import { useSearchParams, useParams, useNavigate, Navigate } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { FaSearch, FaChevronDown, FaCheck } from 'react-icons/fa'
 import { API, getToken }                from '../../../../utils/auth.js'
 import { useCurrentUser }               from '../../../../hooks/useCurrentUser.js'
@@ -103,15 +103,15 @@ export default function Marketplace() {
     /* ─── Estado de filtros ──────────────────────────────────────── */
     const [query,   setQuery]   = useState('')
     const [searchParams, setSearchParams] = useSearchParams()
-    const genre = searchParams.get('genre') ?? 'Todos'
-    const sort  = searchParams.get('sort')  ?? 'newest'
-    const sp    = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p }, { preventScrollReset: true })
+    const genre    = searchParams.get('genre') ?? 'Todos'
+    const sort     = searchParams.get('sort')  ?? 'newest'
+    const tabParam = searchParams.get('tab')   ?? sessionStorage.getItem('mkt_tab') ?? ''
+    const sp       = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p }, { preventScrollReset: true })
 
     const [playing,  setPlaying]  = useState(null)
     const [licenses, setLicenses] = useState({})
     const handleLicense = (beatId, lic) => setLicenses(prev => ({ ...prev, [beatId]: lic }))
 
-    const { tab: tabParam = '' } = useParams()
     const navigate = useNavigate()
 
     /* Guardar tab actual */
@@ -121,7 +121,7 @@ export default function Marketplace() {
 
     const activeTab   = ['beats', 'purchases', 'offers'].includes(tabParam) ? tabParam : 'beats'
     const producerTab = ['discover', 'my-beats', 'offers'].includes(tabParam) ? tabParam : 'my-beats'
-    const changeTab   = t => navigate(`/marketplace/${t}`)
+    const changeTab   = t => sp('tab', t)
 
     const [offerBeat, setOfferBeat] = useState(null)
 
@@ -248,12 +248,6 @@ export default function Marketplace() {
 
     /* ─── Aguardar que o currentUser carregue antes de mostrar modal */
     const roleKnown = !userLoading && currentUser !== null && marketplaceRole !== undefined
-
-    /* Redirect síncrono, sem flash */
-    if (!tabParam) {
-        const last = sessionStorage.getItem('mkt_tab')
-        if (last) return <Navigate to={`/marketplace/${last}`} replace />
-    }
 
     return (
         <>

@@ -1,20 +1,23 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useLocation, useNavigationType } from 'react-router-dom'
 
 export default function ScrollManager() {
-    const location = useLocation()
-    const navType  = useNavigationType()
+    const location     = useLocation()
+    const navType      = useNavigationType()
+    const prevPathname = useRef(location.pathname)
 
     useEffect(() => {
+        const sameRoute = location.pathname === prevPathname.current
+        prevPathname.current = location.pathname
+
         if (navType === 'POP') {
             const saved = sessionStorage.getItem(`scroll:${location.key}`)
             if (saved != null) {
-                // aguarda o render da página antes de restaurar
                 requestAnimationFrame(() =>
                     window.scrollTo({ top: parseInt(saved, 10), behavior: 'instant' })
                 )
             }
-        } else {
+        } else if (!sameRoute) {
             window.scrollTo({ top: 0, behavior: 'instant' })
         }
 

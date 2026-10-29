@@ -132,8 +132,7 @@ function App() {
                                 <Route path="/genres/:id"     element={<RoleRoute roles={['fan']}><GenrePage /></RoleRoute>} />
                                 <Route path="/following"      element={<RoleRoute roles={['fan']}><Following /></RoleRoute>} />
                                 <Route path="/achievements"   element={<RoleRoute roles={['fan']}><Achievements /></RoleRoute>} />
-                                <Route path="/marketplace"      element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
-                                <Route path="/marketplace/:tab" element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
+                                <Route path="/marketplace" element={<RoleRoute roles={['fan', 'artist']}><Marketplace /></RoleRoute>} />
                                 <Route path="/community"      element={<RoleRoute roles={['fan', 'artist']}><Community /></RoleRoute>} />
                                 <Route path="/tracks"         element={<RoleRoute roles={['artist']}><Tracks /></RoleRoute>} />
                                 <Route path="/analytics"      element={<RoleRoute roles={['artist']}><Analytics /></RoleRoute>} />
