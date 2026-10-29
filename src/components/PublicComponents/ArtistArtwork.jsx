@@ -86,7 +86,7 @@ export default function ArtistArtwork({
                 <img
                     className="artwork__photo"
                     src={image}
-                    alt={name || ''}
+                    alt=""
                     draggable={false}
                     loading="lazy"
                     decoding="async"

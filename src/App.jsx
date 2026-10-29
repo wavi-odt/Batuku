@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { PlayerProvider } from './context/PlayerContext'
 import { usePlayer } from './context/PlayerContext'
 import { PublishProvider } from './context/PublishContext'
@@ -15,51 +15,55 @@ import LevelUpOverlay  from './components/HomeComponents/LevelUpOverlay'
 import PublishModal from './pages/private/artist/Publish.jsx'
 import Landing from './pages/public/Landing'
 import NotFound from './pages/Denied/notFound'
-import Login from "./pages/public/Login.jsx";
-import Register from "./pages/public/Register.jsx";
-import ForgotPassword from "./pages/public/ForgotPassword.jsx";
-import ResetPassword from "./pages/public/ResetPassword.jsx";
-import Terms from "./pages/public/Terms.jsx";
-import Privacy from "./pages/public/Privacy.jsx";
-import Dashboard from "./pages/private/artist/artistHome/Dashboard.jsx";
-import FanHome from "./pages/private/fan/fanHome/Home.jsx";
-import Profile from "./pages/private/profile/Profile.jsx";
 import RoleRoute from "./components/RoleRoute.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
-import OAuthCallback from "./pages/public/OAuthCallback.jsx";
-import AguardarValidacao from "./pages/public/AguardarValidacao.jsx";
-import VerifyEmail from "./pages/public/VerifyEmail.jsx";
-import AutoLogin from "./pages/public/AutoLogin.jsx";
-import AdminHome from "./pages/private/admin/AdminHome.jsx";
-import ArtistImport from "./pages/private/admin/ArtistImport.jsx";
-import AdminClaims from "./pages/private/admin/AdminClaims.jsx";
-import ArtistDetail from "./pages/private/artist/ArtistDetail.jsx";
-import ReleaseDetail from "./pages/private/release/ReleaseDetail.jsx";
-
-import PlaylistDetail from "./pages/private/playlist/PlaylistDetail.jsx";
-import PlaylistCreate from "./pages/private/playlist/PlaylistCreate.jsx";
-
-import UserDetail from "./pages/private/user/UserDetail.jsx";
-import ClaimProfile from "./pages/private/artist/ClaimProfile.jsx";
-import Library      from "./pages/private/fan/library/Library.jsx";
-import MyUploads      from "./pages/private/personal/MyUploads.jsx";
-import ProjectDetail  from "./pages/private/personal/ProjectDetail.jsx";
-import SharedTrack    from "./pages/public/SharedTrack.jsx";
-import SharedProject  from "./pages/public/SharedProject.jsx";
-import Discover     from "./pages/private/fan/discover/Discover.jsx"
-import GenrePage    from "./pages/private/fan/genre/GenrePage.jsx";
-import Following    from "./pages/private/fan/following/Following.jsx";
-import Achievements  from "./pages/private/fan/achievements/Achievements.jsx";
-import Marketplace   from "./pages/private/fan/marketplace/Marketplace.jsx";
-import Community     from "./pages/private/fan/community/Community.jsx";
-import Tracks        from "./pages/private/artist/tracks/Tracks.jsx";
-import Analytics     from "./pages/private/artist/stats/Analytics.jsx";
-import Fans          from "./pages/private/artist/fans/Fans.jsx";
-import Comments      from "./pages/private/artist/comments/Comments.jsx";
-
 import AppShell from "./components/HomeComponents/AppShell.jsx";
 import ScrollManager from "./components/ScrollManager.jsx";
 import { getRole } from "./utils/auth.js";
+
+// Páginas carregadas a pedido (code splitting): cada rota gera o seu próprio ficheiro JS
+const Login             = lazy(() => import('./pages/public/Login.jsx'))
+const Register          = lazy(() => import('./pages/public/Register.jsx'))
+const ForgotPassword    = lazy(() => import('./pages/public/ForgotPassword.jsx'))
+const ResetPassword     = lazy(() => import('./pages/public/ResetPassword.jsx'))
+const Terms             = lazy(() => import('./pages/public/Terms.jsx'))
+const Privacy           = lazy(() => import('./pages/public/Privacy.jsx'))
+const Dashboard         = lazy(() => import('./pages/private/artist/artistHome/Dashboard.jsx'))
+const FanHome           = lazy(() => import('./pages/private/fan/fanHome/Home.jsx'))
+const Profile           = lazy(() => import('./pages/private/profile/Profile.jsx'))
+const OAuthCallback     = lazy(() => import('./pages/public/OAuthCallback.jsx'))
+const AguardarValidacao = lazy(() => import('./pages/public/AguardarValidacao.jsx'))
+const VerifyEmail       = lazy(() => import('./pages/public/VerifyEmail.jsx'))
+const AutoLogin         = lazy(() => import('./pages/public/AutoLogin.jsx'))
+const AdminHome         = lazy(() => import('./pages/private/admin/AdminHome.jsx'))
+const ArtistImport      = lazy(() => import('./pages/private/admin/ArtistImport.jsx'))
+const AdminClaims       = lazy(() => import('./pages/private/admin/AdminClaims.jsx'))
+const ArtistDetail      = lazy(() => import('./pages/private/artist/ArtistDetail.jsx'))
+const ReleaseDetail     = lazy(() => import('./pages/private/release/ReleaseDetail.jsx'))
+const PlaylistDetail    = lazy(() => import('./pages/private/playlist/PlaylistDetail.jsx'))
+const PlaylistCreate    = lazy(() => import('./pages/private/playlist/PlaylistCreate.jsx'))
+const UserDetail        = lazy(() => import('./pages/private/user/UserDetail.jsx'))
+const ClaimProfile      = lazy(() => import('./pages/private/artist/ClaimProfile.jsx'))
+const Library           = lazy(() => import('./pages/private/fan/library/Library.jsx'))
+const MyUploads         = lazy(() => import('./pages/private/personal/MyUploads.jsx'))
+const ProjectDetail     = lazy(() => import('./pages/private/personal/ProjectDetail.jsx'))
+const SharedTrack       = lazy(() => import('./pages/public/SharedTrack.jsx'))
+const SharedProject     = lazy(() => import('./pages/public/SharedProject.jsx'))
+const Discover          = lazy(() => import('./pages/private/fan/discover/Discover.jsx'))
+const GenrePage         = lazy(() => import('./pages/private/fan/genre/GenrePage.jsx'))
+const Following         = lazy(() => import('./pages/private/fan/following/Following.jsx'))
+const Achievements      = lazy(() => import('./pages/private/fan/achievements/Achievements.jsx'))
+const Marketplace       = lazy(() => import('./pages/private/fan/marketplace/Marketplace.jsx'))
+const Community         = lazy(() => import('./pages/private/fan/community/Community.jsx'))
+const Tracks            = lazy(() => import('./pages/private/artist/tracks/Tracks.jsx'))
+const Analytics         = lazy(() => import('./pages/private/artist/stats/Analytics.jsx'))
+const Fans              = lazy(() => import('./pages/private/artist/fans/Fans.jsx'))
+const Comments          = lazy(() => import('./pages/private/artist/comments/Comments.jsx'))
+
+// Mostrado apenas enquanto o ficheiro da rota ainda não chegou
+function RouteFallback() {
+    return <div style={{ minHeight: '100vh', background: 'var(--color-bg, #0A0A0B)' }} aria-busy="true" />
+}
 
 function ProfileRouter() {
     return <Profile role={getRole()} />;
@@ -97,6 +101,7 @@ function App() {
             <PublishProvider>
                 <BrowserRouter>
                     <ScrollManager />
+                    <Suspense fallback={<RouteFallback />}>
                     <Routes>
                         {/* Públicas */}
                         <Route path="/" element={<Landing />} />
@@ -152,6 +157,7 @@ function App() {
 
                         <Route path="/*" element={<NotFound />} />
                     </Routes>
+                    </Suspense>
 
                     {/* Modal global, renderizado fora das rotas via portal */}
                     <PublishModal />

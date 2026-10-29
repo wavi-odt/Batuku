@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Batuku</title>
     <meta name="description" content="Batuku: plataforma de música cabo-verdiana para artistas e fãs. Descobre, ouve e apoia artistas emergentes." />
 
@@ -22,7 +22,11 @@
     <!-- fonte Grotesk-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@800&display=swap" rel="stylesheet" />
+    <!-- carregada sem bloquear a renderização: preload + troca para stylesheet no onload -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Unbounded:wght@800&display=swap" />
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

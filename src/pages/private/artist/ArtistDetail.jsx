@@ -249,7 +249,7 @@ export default function ArtistDetail() {
                 >
                     <div className="prof__avatar prof__avatar--artist">
                         {artist.imageUrl
-                            ? <img src={artist.imageUrl} alt={artist.name} className="prof__avatar-img" />
+                            ? <img src={artist.imageUrl} alt="" className="prof__avatar-img" />
                             : <div style={{
                                 width: '100%', height: '100%',
                                 background: 'var(--color-bg-2)',

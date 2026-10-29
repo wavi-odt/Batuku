@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { FaMusic } from 'react-icons/fa'
 
-export default function CoverImg({ src, alt, className, style, iconSize = 14 }) {
+// As capas aparecem sempre junto do título/nome em texto, por isso são decorativas:
+// repetir o nome no alt faria o leitor de ecrã lê-lo duas vezes.
+export default function CoverImg({ src, className, style, iconSize = 14 }) {
     const [failed, setFailed] = useState(false)
 
     if (src && !failed) {
         return (
             <img
                 src={src}
-                alt={alt ?? ''}
+                alt=""
                 className={className}
                 style={style}
                 loading="lazy"

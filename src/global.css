@@ -319,3 +319,13 @@ body { font-variant-numeric: tabular-nums; }
     .cover-hover img, button, .btn { transition: none; }
     .cover-hover:hover img, button:active, .btn:active { transform: none; }
 }
+
+/* iOS faz zoom ao focar campos com texto abaixo de 16px; como o zoom do utilizador
+   já não está bloqueado no viewport, garantimos 16px nos campos em iOS. */
+@supports (-webkit-touch-callout: none) {
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+    textarea,
+    select {
+        font-size: 16px !important;
+    }
+}

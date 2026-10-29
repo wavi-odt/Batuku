@@ -6,6 +6,7 @@
    admin, que não usam AppShell, também não devem ter MiniPlayer).
    ───────────────────────────────────────────────────────────────── */
 
+import { Suspense } from 'react'
 import { useLocation, Outlet } from 'react-router-dom'
 import Sidebar    from './Sidebar'
 import TopBar     from './TopBar'
@@ -20,7 +21,10 @@ function AppShell() {
             <Sidebar role={resolvedRole} />
             <TopBar  role={resolvedRole} />
             <main className="shell__main page-enter" key={location.pathname}>
-                <Outlet />
+                {/* Suspense local: ao trocar de página só a área de conteúdo espera, a barra e o player mantêm-se */}
+                <Suspense fallback={null}>
+                    <Outlet />
+                </Suspense>
             </main>
         </div>
     );

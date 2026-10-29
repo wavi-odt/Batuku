@@ -23,7 +23,7 @@ function ResultItem({ to, img, imgCircle, name, sub, onSelect }) {
             {img
                 ? <img
                     src={img}
-                    alt={name}
+                    alt=""
                     className={`topbar__result-img${imgCircle ? ' topbar__result-img--circle' : ''}`}
                   />
                 : <div className={`topbar__result-img topbar__result-img--placeholder${imgCircle ? ' topbar__result-img--circle' : ''}`}>
@@ -46,7 +46,7 @@ function TrackResultItem({ track, onPlay }) {
             onClick={onPlay}
         >
             {track.imageUrl
-                ? <img src={track.imageUrl} alt={track.title} className="topbar__result-img" />
+                ? <img src={track.imageUrl} alt="" className="topbar__result-img" />
                 : <div className="topbar__result-img topbar__result-img--placeholder"><FaMusic size={12} /></div>
             }
             <div className="topbar__result-info">
@@ -362,7 +362,7 @@ export default function TopBar({ role = 'fan' }) {
                             <Link to="/profile" className="sidebar__menu-header sidebar__menu-header--link" onClick={() => setAvatarMenuOpen(false)}>
                                 <div className="sidebar__menu-avatar">
                                     {realUser?.picture && !picError
-                                        ? <img src={realUser.picture} alt={realUser?.name ?? ''} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} onError={() => setPicError(true)} />
+                                        ? <img src={realUser.picture} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} onError={() => setPicError(true)} />
                                         : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
                                 </div>
                                 <div>

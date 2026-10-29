@@ -18,14 +18,16 @@ export default function Landing() {
     return (
         <div className="page-enter">
             <NavbarPublic />
-            <Hero />
-            <Ticker />
-<Features />
-            <HowItWorks />
-<Marketplace />
-<Discord />
-            <FAQ />
-            <CTA />
+            <main>
+                <Hero />
+                <Ticker />
+                <Features />
+                <HowItWorks />
+                <Marketplace />
+                <Discord />
+                <FAQ />
+                <CTA />
+            </main>
             <Footer />
         </div>
     )

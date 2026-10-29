@@ -62,7 +62,7 @@ export default function Sidebar({ role = 'fan' }) {
             <NavLink to="/profile" className="sidebar__profile" aria-label="O meu perfil">
                 <div className="sidebar__profile-avatar">
                     {realUser?.picture && !picError
-                        ? <img src={realUser.picture} alt={user.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} onError={() => setPicError(true)} />
+                        ? <img src={realUser.picture} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} onError={() => setPicError(true)} />
                         : <div className="prof__avatar-placeholder"><FaUser size={16} /></div>}
                 </div>
                 <div className="sidebar__profile-info">
