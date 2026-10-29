@@ -252,7 +252,7 @@ export default function UserDetail() {
                                             Conquistas
                                         </CardTitle>
                                         <div className="badges-pager">
-                                            <BadgesGrid badges={badges.slice(0, 4)} />
+                                            <BadgesGrid badges={badges} />
                                         </div>
                                     </div>
                                 )}

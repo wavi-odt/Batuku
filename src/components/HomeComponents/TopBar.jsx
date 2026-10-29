@@ -164,7 +164,8 @@ export default function TopBar({ role = 'fan' }) {
                 setAvatarMenuOpen(false);
             }
         }
-        function onScroll() {
+        function onScroll(e) {
+            if (wrapperRef.current?.contains(e.target)) return;
             handleClose();
             setNotifOpen(false);
             setAvatarMenuOpen(false);
