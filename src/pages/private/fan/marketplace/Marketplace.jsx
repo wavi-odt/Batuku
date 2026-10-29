@@ -105,7 +105,7 @@ export default function Marketplace() {
     const [searchParams, setSearchParams] = useSearchParams()
     const genre = searchParams.get('genre') ?? 'Todos'
     const sort  = searchParams.get('sort')  ?? 'newest'
-    const sp    = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p })
+    const sp    = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p }, { preventScrollReset: true })
 
     const [playing,  setPlaying]  = useState(null)
     const [licenses, setLicenses] = useState({})

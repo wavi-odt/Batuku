@@ -27,7 +27,7 @@ export default function Dashboard() {
         }
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
     const period    = searchParams.get('period') ?? '30d'
-    const setPeriod = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('period', val); return p })
+    const setPeriod = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('period', val); return p }, { preventScrollReset: true })
     const [stats, setStats]     = useState(null)
     const [fans, setFans]       = useState([])
     const [comments, setComments] = useState([])

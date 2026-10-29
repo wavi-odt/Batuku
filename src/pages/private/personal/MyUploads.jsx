@@ -87,7 +87,7 @@ export default function MyUploads() {
     const [error,        setError]        = useState(null)
     const [showForm,     setShowForm]     = useState(false)
     const filter    = searchParams.get('filter') ?? 'all'
-    const setFilter = (key) => setSearchParams({ filter: key })
+    const setFilter = (key) => setSearchParams({ filter: key }, { preventScrollReset: true })
     const [confirmDel,   setConfirmDel]   = useState(null)
     const [confirmRegen, setConfirmRegen] = useState(null)
     const [deleting,     setDeleting]     = useState(false)

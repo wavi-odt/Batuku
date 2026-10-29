@@ -81,7 +81,7 @@ export default function Comments() {
     const [searchParams, setSearchParams] = useSearchParams()
     const status    = searchParams.get('status') ?? 'all'
     const sort      = searchParams.get('sort')   ?? 'recent'
-    const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p })
+    const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p }, { preventScrollReset: true })
     const setStatus = (val) => sp('status', val)
     const setSort   = (val) => sp('sort',   val)
 

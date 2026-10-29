@@ -100,7 +100,7 @@ export default function Tracks() {
     const activeTab  = searchParams.get('tab')       ?? 'tracks'
     const relStatus  = searchParams.get('relStatus') ?? 'all'
     const relSort    = searchParams.get('relSort')   ?? 'recent'
-    const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p })
+    const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p }, { preventScrollReset: true })
     const setStatus    = (val) => sp('status',    val)
     const setSort      = (val) => sp('sort',      val)
     const setActiveTab = (val) => sp('tab',       val)

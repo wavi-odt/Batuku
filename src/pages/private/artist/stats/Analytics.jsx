@@ -23,7 +23,7 @@ const KPI_META = [
 export default function Analytics() {
     const [searchParams, setSearchParams] = useSearchParams()
     const period    = searchParams.get('period') ?? '30d'
-    const setPeriod = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('period', val); return p })
+    const setPeriod = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('period', val); return p }, { preventScrollReset: true })
     const [data,    setData]    = useState(null)
     const [loading, setLoading] = useState(true)
     const [error,   setError]   = useState('')

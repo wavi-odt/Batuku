@@ -152,7 +152,7 @@ export default function Profile({ role = 'fan' }) {
 
     const [searchParams, setSearchParams]   = useSearchParams()
     const active    = parseInt(searchParams.get('tab') ?? '0', 10) || 0
-    const setActive = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('tab', String(val)); return p })
+    const setActive = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('tab', String(val)); return p }, { preventScrollReset: true })
     const [avatarUrl, setAvatarUrl]         = useState(null);
     const [showUploader, setShowUploader]   = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);

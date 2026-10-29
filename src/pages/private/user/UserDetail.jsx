@@ -42,7 +42,7 @@ export default function UserDetail() {
     const [error,            setError]            = useState('');
     const [searchParams, setSearchParams]         = useSearchParams();
     const active    = parseInt(searchParams.get('tab') ?? '0', 10) || 0;
-    const setActive = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('tab', String(val)); return p });
+    const setActive = (val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set('tab', String(val)); return p }, { preventScrollReset: true });
     const [following,        setFollowing]        = useState(false);
     const [followers,        setFollowers]        = useState(0);
     const [publicPlaylists,  setPublicPlaylists]  = useState([]);

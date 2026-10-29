@@ -20,7 +20,7 @@ export default function Library() {
     const { showToast } = useToast();
     const [searchParams, setSearchParams]       = useSearchParams();
     const filter = searchParams.get('filter') ?? 'all';
-    const setFilter = (key) => setSearchParams({ filter: key });
+    const setFilter = (key) => setSearchParams({ filter: key }, { preventScrollReset: true });
     const [playlists,       setPlaylists]       = useState([]);
     const [tracks,          setTracks]          = useState([]);
     const [artists,         setArtists]         = useState([]);

@@ -76,7 +76,7 @@ export default function FansTable({ fans, loading }) {
     const [searchParams, setSearchParams] = useSearchParams()
     const tier    = searchParams.get('tier') ?? 'all'
     const sort    = searchParams.get('sort') ?? 'plays'
-    const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p })
+    const sp = (key, val) => setSearchParams(prev => { const p = new URLSearchParams(prev); p.set(key, val); return p }, { preventScrollReset: true })
     const setTier = (val) => sp('tier', val)
     const setSort = (val) => sp('sort', val)
 
