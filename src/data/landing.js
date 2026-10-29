@@ -1,18 +1,3 @@
-import BeatImg0 from '../assets/beats/img.webp'
-import BeatImg1 from '../assets/beats/img_1.webp'
-import BeatImg2 from '../assets/beats/img_2.webp'
-import BeatImg3 from '../assets/beats/img_3.webp'
-import BeatImg4 from '../assets/beats/img_4.webp'
-
-import Djossa from '../assets/artists/djossa.webp'
-import Naia   from '../assets/artists/naia.webp'
-import Bento  from '../assets/artists/Bento Lima.webp'
-import Ines   from '../assets/artists/Inês.webp'
-import Yuri   from '../assets/artists/Yuri Brava.webp'
-import Khris  from '../assets/artists/Khris T.webp'
-import Mada   from '../assets/artists/Madá.webp'
-import Soso   from '../assets/artists/Sosó Mendes.webp'
-
 // Proposta de valor em vez de números inflacionados
 export const STATS = [
     { value: 'Grátis',         label: 'Para artistas e fãs, para sempre' },
@@ -22,22 +7,22 @@ export const STATS = [
 ];
 
 export const ARTISTS = [
-    { name: 'Djossa',          city: 'Praia',      genre: 'Funaná',    hue: 14,  shape: 'circles',   image: Djossa },
-    { name: 'Naia',            city: 'Mindelo',    genre: 'Morna',     hue: 220, shape: 'arch',       image: Naia   },
-    { name: 'Bento Lima',      city: 'São Filipe', genre: 'Coladeira', hue: 42,  shape: 'stripes',    image: Bento  },
-    { name: 'Inês d\'Praia',   city: 'Praia',      genre: 'Batuque',   hue: 340, shape: 'split',      image: Ines   },
-    { name: 'Yuri Brava',      city: 'Sal',        genre: 'Cabo Love', hue: 145, shape: 'orbit',      image: Yuri   },
-    { name: 'Khris T.',        city: 'Mindelo',    genre: 'Kizomba',   hue: 280, shape: 'wave',       image: Khris  },
-    { name: 'Madá',            city: 'Tarrafal',   genre: 'Tabanka',   hue: 8,   shape: 'sun',        image: Mada   },
-    { name: 'Sosó Mendes',     city: 'Boa Vista',  genre: 'Kola',      hue: 195, shape: 'triangles',  image: Soso   },
+    { name: 'Djossa',          city: 'Praia',      genre: 'Funaná',    hue: 14,  shape: 'circles' },
+    { name: 'Naia',            city: 'Mindelo',    genre: 'Morna',     hue: 220, shape: 'arch' },
+    { name: 'Bento Lima',      city: 'São Filipe', genre: 'Coladeira', hue: 42,  shape: 'stripes' },
+    { name: 'Inês d\'Praia',   city: 'Praia',      genre: 'Batuque',   hue: 340, shape: 'split' },
+    { name: 'Yuri Brava',      city: 'Sal',        genre: 'Cabo Love', hue: 145, shape: 'orbit' },
+    { name: 'Khris T.',        city: 'Mindelo',    genre: 'Kizomba',   hue: 280, shape: 'wave' },
+    { name: 'Madá',            city: 'Tarrafal',   genre: 'Tabanka',   hue: 8,   shape: 'sun' },
+    { name: 'Sosó Mendes',     city: 'Boa Vista',  genre: 'Kola',      hue: 195, shape: 'triangles' },
 ];
 
 export const BEATS = [
-    { title: 'Mar Salgado',  producer: 'Prod. Djo',   bpm: 92,  key: 'Am', price: 19.99, genre: 'Funaná',    hue: 14,  image: BeatImg0 },
-    { title: 'Noite di Lua', producer: 'Prod. Naia',  bpm: 78,  key: 'Dm', price: 24.99, genre: 'Morna',     hue: 220, image: BeatImg1 },
-    { title: 'Riba Mar',     producer: 'Prod. Yuri',  bpm: 102, key: 'G',  price: 14.99, genre: 'Cabo Love', hue: 145, image: BeatImg2 },
-    { title: 'Tabanka 81',   producer: 'Prod. Madá',  bpm: 88,  key: 'F',  price: 29.99, genre: 'Tabanka',   hue: 8,   image: BeatImg3 },
-    { title: 'Sodade Beat',  producer: 'Prod. Bento', bpm: 84,  key: 'Em', price: 17.50, genre: 'Coladeira', hue: 42,  image: BeatImg4 },
+    { title: 'Mar Salgado',  producer: 'Prod. Djo',   bpm: 92,  key: 'Am', price: 19.99, genre: 'Funaná',    hue: 14 },
+    { title: 'Noite di Lua', producer: 'Prod. Naia',  bpm: 78,  key: 'Dm', price: 24.99, genre: 'Morna',     hue: 220 },
+    { title: 'Riba Mar',     producer: 'Prod. Yuri',  bpm: 102, key: 'G',  price: 14.99, genre: 'Cabo Love', hue: 145 },
+    { title: 'Tabanka 81',   producer: 'Prod. Madá',  bpm: 88,  key: 'F',  price: 29.99, genre: 'Tabanka',   hue: 8 },
+    { title: 'Sodade Beat',  producer: 'Prod. Bento', bpm: 84,  key: 'Em', price: 17.50, genre: 'Coladeira', hue: 42 },
 ];
 
 export const STEPS = [
