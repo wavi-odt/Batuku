@@ -255,12 +255,12 @@
 
 .disc__genre-img {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    top: -31.6%;
+    right: -20%;
+    height: 240%;
+    aspect-ratio: 1;
+    pointer-events: none;
     transition: transform var(--duration-base) var(--ease-out);
-    object-position: center top;
 }
 
 .disc__genre--photo:hover .disc__genre-img { transform: scale(1.05); }
