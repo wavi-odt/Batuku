@@ -260,6 +260,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform var(--duration-base) var(--ease-out);
+    object-position: center top;
 }
 
 .disc__genre--photo:hover .disc__genre-img { transform: scale(1.05); }
