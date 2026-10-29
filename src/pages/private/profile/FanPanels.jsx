@@ -6,8 +6,10 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { FaHeart } from 'react-icons/fa'
+import { FaHeart, FaPlay } from 'react-icons/fa'
 import { API, getToken } from '../../../utils/auth.js'
+import { usePlayQueue } from '../../../hooks/usePlayQueue'
+import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import {
     CardTitle, BadgesGrid, GenreBars, ActivityList,
 } from './ProfileBlocks'
@@ -172,6 +174,7 @@ export function FanOverview({ fan }) {
     const { artists,   loading: loadingAr } = useFanFollowing()
     const { genres,    loading: loadingGn } = useFanTopGenres()
     const { tracks: recentTracks, loading: loadingRc } = useFanRecentlyPlayed()
+    const { currentTrack, playRecent } = usePlayQueue()
     const dragRef = useDragScroll()
 
     const previewPlaylists = playlists.slice(0, 4)
@@ -231,17 +234,28 @@ export function FanOverview({ fan }) {
                         ? <p className="ftrack__empty">A carregar…</p>
                         : recentTracks.length === 0
                             ? <p className="ftrack__empty">Ainda não ouviste nenhuma faixa.</p>
-                            : recentTracks.slice(0, 5).map(t => (
-                                <div key={t.trackId} className="playlist-item prof-recent">
-                                    <div className="playlist-item__cover prof-recent__cover">
-                                        <CoverImg src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" iconSize={12} />
+                            : recentTracks.slice(0, 5).map(t => {
+                                const isPlaying = currentTrack?.id === t.trackId
+                                return (
+                                    <div
+                                        key={t.trackId}
+                                        className={'playlist-item prof-recent' + ((t.audioUrl || t.spotifyId) ? ' prof-recent--playable' : '') + (isPlaying ? ' is-playing' : '')}
+                                        onClick={() => playRecent(t, recentTracks, 'fan')}
+                                    >
+                                        <div className="playlist-item__cover prof-recent__cover">
+                                            <CoverImg src={t.coverUrl} alt={t.title} className="playlist-item__cover-img" iconSize={12} />
+                                            {isPlaying
+                                                ? <span className="prof-recent__play"><NowPlayingEq /></span>
+                                                : (t.audioUrl || t.spotifyId) && <span className="prof-recent__play"><FaPlay size={9} /></span>
+                                            }
+                                        </div>
+                                        <div>
+                                            <div className="playlist-item__name prof-recent__name">{t.title}</div>
+                                            <div className="playlist-item__count">{t.artistName}</div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div className="playlist-item__name prof-recent__name">{t.title}</div>
-                                        <div className="playlist-item__count">{t.artistName}</div>
-                                    </div>
-                                </div>
-                            ))
+                                )
+                            })
                     }
                 </div>
             </div>

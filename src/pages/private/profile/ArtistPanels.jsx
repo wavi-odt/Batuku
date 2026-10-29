@@ -5,6 +5,7 @@ import { SiSpotify } from 'react-icons/si'
 import { Link } from 'react-router-dom'
 import { API, getToken } from '../../../utils/auth.js'
 import { usePlayer } from '../../../context/PlayerContext'
+import { uploadToTrack, spotifyToTrack } from '../../../hooks/usePlayQueue'
 import { usePublish } from '../../../context/PublishContext'
 import { useMyTracks } from '../../../hooks/useMyTracks'
 import { useMyReleases } from '../../../hooks/useMyReleases'
@@ -49,12 +50,7 @@ function LocalTrackList({ tracks, artistName, artistProfileId }) {
 
     if (!tracks.length) return null;
 
-    const queue = tracks.map(tr => ({
-        id: tr.id, name: tr.title, artistName,
-        artistProfileId: tr.artistProfileId ?? artistProfileId ?? null,
-        coverUrl: tr.coverUrl, durationMs: tr.durationMs, audioUrl: tr.audioUrl, source: 'upload',
-        playContext: 'artist',
-    }));
+    const queue = tracks.map(tr => uploadToTrack(tr, artistName, artistProfileId, 'artist'));
 
     return (
         <ul className="strack-list">
@@ -118,25 +114,8 @@ function SpotifyTrackList({ artistProfileId, artistName }) {
                         key={t.spotifyId ?? i}
                         className={'strack strack--playable' + (isPlaying ? ' is-playing' : '')}
                         onClick={() => setTrack(
-                            {
-                                spotifyId:  t.spotifyId,
-                                name:       t.name,
-                                artistName,
-                                coverUrl:   t.coverUrl,
-                                durationMs: t.durationMs,
-                                spotifyUrl: t.spotifyUrl,
-                                source:     'spotify',
-                            },
-                            tracks.map(tr => ({
-                                spotifyId:  tr.spotifyId,
-                                name:       tr.name,
-                                artistName,
-                                coverUrl:   tr.coverUrl,
-                                durationMs: tr.durationMs,
-                                spotifyUrl: tr.spotifyUrl,
-                                source:     'spotify',
-                                playContext: 'artist',
-                            }))
+                            spotifyToTrack(t, artistName, 'artist'),
+                            tracks.map(tr => spotifyToTrack(tr, artistName, 'artist'))
                         )}
                     >
                         <div className="strack__num-wrap">

@@ -1,6 +1,6 @@
 import { FaPlay } from 'react-icons/fa'
 import { Link }            from 'react-router-dom'
-import { usePlayer }       from '../../../../context/PlayerContext'
+import { usePlayQueue }    from '../../../../hooks/usePlayQueue'
 import ClickableName       from '../../../../components/ClickableName'
 import TrackMenu           from '../../../../components/TrackMenu.jsx'
 import NowPlayingEq        from '../../../../components/NowPlayingEq.jsx'
@@ -8,26 +8,7 @@ import CoverImg            from '../../../../components/CoverImg.jsx'
 import './ContinueListening.css'
 
 export default function ContinueListening({ tracks }) {
-    const { track: currentTrack, setTrack, togglePlayRef } = usePlayer()
-
-    function handlePlay(t, list) {
-        if (!t.audioUrl && !t.spotifyId) return
-        if (currentTrack?.id === t.trackId) {
-            togglePlayRef.current?.()
-            return
-        }
-        const toTrack = x => ({
-            id:              x.trackId,
-            name:            x.title,
-            artistName:      x.artistName,
-            artistProfileId: x.artistId ?? null,
-            coverUrl:        x.coverUrl ?? null,
-            audioUrl:        x.audioUrl ?? null,
-            spotifyId:       x.spotifyId ?? null,
-            playContext:     'home',
-        })
-        setTrack(toTrack(t), list.filter(x => x.audioUrl || x.spotifyId).map(toTrack))
-    }
+    const { currentTrack, playRecent } = usePlayQueue()
 
     return (
         <section className="home__section">
@@ -44,14 +25,14 @@ export default function ContinueListening({ tracks }) {
                     const active = currentTrack?.id === t.trackId
                     return (
                     <div key={t.trackId} className="track-card">
-                        <div className={`track-card__cover${active ? ' track-card__cover--active' : ''}`} onClick={() => handlePlay(t, tracks)}>
+                        <div className={`track-card__cover${active ? ' track-card__cover--active' : ''}`} onClick={() => playRecent(t, tracks, 'home')}>
                             <CoverImg src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} iconSize={20} />
                             {active
                                 ? <span className="track-card__eq-wrap"><NowPlayingEq /></span>
                                 : <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
                             }
                         </div>
-                        <div className="track-card__bottom" onClick={() => handlePlay(t, tracks)}>
+                        <div className="track-card__bottom" onClick={() => playRecent(t, tracks, 'home')}>
                             <div className="track-card__title-row">
                                 <div className="track-card__title">{t.title}</div>
                                 <div onClick={e => e.stopPropagation()}>

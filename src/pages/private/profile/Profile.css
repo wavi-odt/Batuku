@@ -616,6 +616,7 @@
     transition: opacity 0.15s;
 }
 .prof-recent--playable:hover .prof-recent__play { opacity: 1; }
+.prof-recent.is-playing .prof-recent__play { opacity: 1; }
 
 .prof-recent__name { font-size: 13px; }
 

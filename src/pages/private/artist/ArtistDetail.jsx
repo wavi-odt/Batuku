@@ -8,6 +8,7 @@ import { API, getToken } from '../../../utils/auth.js'
 import { useToast } from '../../../context/ToastContext'
 import { CardTitle, ArtistAbout, ArtistLinks } from '../profile/ProfileBlocks'
 import { usePlayer } from '../../../context/PlayerContext'
+import { uploadToTrack, spotifyToTrack } from '../../../hooks/usePlayQueue'
 import TrackMenu from '../../../components/TrackMenu'
 import TrackComments from '../../../components/TrackComments'
 import CoverImg from '../../../components/CoverImg.jsx'
@@ -117,17 +118,7 @@ export default function ArtistDetail() {
     };
     const social = Array.isArray(artist.links) ? artist.links : [];
 
-    const localQueue = localTracks.map(tr => ({
-        id:               tr.id,
-        name:             tr.title,
-        artistName:       artist.name,
-        artistProfileId:  parseInt(id),
-        coverUrl:         tr.coverUrl,
-        durationMs:       tr.durationMs,
-        audioUrl:         tr.audioUrl,
-        source:           'upload',
-        playContext:      'artist',
-    }));
+    const localQueue = localTracks.map(tr => uploadToTrack(tr, artist.name, parseInt(id), 'artist'));
 
     const stats = [
         { v: followers != null ? followers.toLocaleString('pt-PT') : '',                l: 'Seguidores' },
@@ -191,8 +182,8 @@ export default function ArtistDetail() {
                             key={t.spotifyId ?? i}
                             className={'strack strack--playable' + (isPlaying ? ' is-playing' : '')}
                             onClick={() => setTrack(
-                                { spotifyId: t.spotifyId, name: t.name, artistName: artist.name, coverUrl: t.coverUrl, durationMs: t.durationMs, spotifyUrl: t.spotifyUrl, source: 'spotify', playContext: 'artist' },
-                                topTracks.map(tr => ({ spotifyId: tr.spotifyId, name: tr.name, artistName: artist.name, coverUrl: tr.coverUrl, durationMs: tr.durationMs, spotifyUrl: tr.spotifyUrl, source: 'spotify', playContext: 'artist' }))
+                                spotifyToTrack(t, artist.name, 'artist'),
+                                topTracks.map(tr => spotifyToTrack(tr, artist.name, 'artist'))
                             )}
                         >
                             <div className="strack__num-wrap">
