@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { useParams, Link, useNavigate } from 'react-router-dom'
+import NotFound from '../../Denied/notFound'
 import { FaPlay, FaArrowLeft, FaShareAlt, FaTrash, FaRegComment, FaCamera, FaPen, FaCheck } from 'react-icons/fa'
 import { API, getToken, getRole } from '../../../utils/auth.js'
 import { usePlayer } from '../../../context/PlayerContext'
@@ -145,6 +146,7 @@ export default function ReleaseDetail() {
     const { showToast } = useToast()
     const coverInputRef = useRef(null)
 
+    const [notFound,         setNotFound]         = useState(false)
     const [release,          setRelease]          = useState(null)
     const [loading,          setLoading]           = useState(true)
     const [error,            setError]             = useState('')
@@ -159,11 +161,14 @@ export default function ReleaseDetail() {
         fetch(`${API}/api/releases/${id}`, {
             headers: { Authorization: `Bearer ${getToken()}` },
         })
-            .then(res => res.ok ? res.json() : Promise.reject(`Erro ${res.status}`))
+            .then(res => {
+                if (res.status === 404) return Promise.reject('404');
+                return res.ok ? res.json() : Promise.reject(`Erro ${res.status}`);
+            })
             .then(data => {
                 setRelease(data)
             })
-            .catch(err => setError(String(err)))
+            .catch(err => { if (String(err) === '404') setNotFound(true); else setError(String(err)); })
             .finally(() => setLoading(false))
     }, [id])
 
@@ -226,6 +231,7 @@ export default function ReleaseDetail() {
         setOpenCommentTrack(prev => prev === trackId ? null : trackId)
     }
 
+    if (notFound) return <NotFound />
     if (loading) return <div className="detail-loading">A carregar…</div>
     if (error || !release) return <div className="detail-error">{error || 'Lançamento não encontrado.'}</div>
 

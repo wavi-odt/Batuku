@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import { createPortal } from 'react-dom'
 import { useParams, useNavigate } from 'react-router-dom'
+import NotFound from '../../Denied/notFound'
 import ClickableName from '../../../components/ClickableName'
 import { FaPlay, FaArrowLeft, FaHeart, FaPen, FaCheck, FaRegComment, FaEllipsisH, FaGlobe, FaLock, FaTrash, FaBookmark, FaRegBookmark } from 'react-icons/fa'
 import { getToken } from '../../../utils/auth.js'
@@ -28,6 +29,7 @@ export default function PlaylistDetail() {
     const { track: currentTrack, setTrack } = usePlayer()
 
     const { showToast } = useToast()
+    const [notFound,         setNotFound]         = useState(false)
     const [playlist,         setPlaylist]         = useState(null)
     const [loading,          setLoading]          = useState(true)
     const [error,            setError]            = useState('')
@@ -46,9 +48,9 @@ export default function PlaylistDetail() {
         fetch(`${API}/playlists/${id}`, {
             headers: { Authorization: `Bearer ${getToken()}` },
         })
-            .then(res => { if (!res.ok) throw new Error(`Erro ${res.status}`); return res.json() })
+            .then(res => { if (res.status === 404) throw new Error('404'); if (!res.ok) throw new Error(`Erro ${res.status}`); return res.json() })
             .then(data => { setPlaylist(data); setNameDraft(data.name) })
-            .catch(err => setError(err.message))
+            .catch(err => { if (err.message === '404') setNotFound(true); else setError(err.message); })
             .finally(() => setLoading(false))
     }, [id])
 
@@ -193,6 +195,7 @@ export default function PlaylistDetail() {
         setOpenCommentTrack(prev => prev === trackId ? null : trackId)
     }
 
+    if (notFound) return <NotFound />
     if (loading) return <div className="detail-loading">A carregar…</div>
     if (error)   return <div className="detail-error">{error}</div>
     if (!playlist) return null

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom'
+import NotFound from '../../Denied/notFound'
 import { FaTrophy, FaUserPlus, FaUserCheck, FaPlay, FaGlobe, FaUser, FaCheckCircle } from 'react-icons/fa'
 import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { getToken } from '../../../utils/auth.js'
@@ -38,6 +39,7 @@ export default function UserDetail() {
     const currentUser = useCurrentUser();
     const { currentTrack, playRecent } = usePlayQueue();
 
+    const [notFound,          setNotFound]         = useState(false);
     const [user,             setUser]             = useState(null);
     const [loading,          setLoading]          = useState(true);
     const [error,            setError]            = useState('');
@@ -57,7 +59,7 @@ export default function UserDetail() {
         setActive(0);
 
         fetch(`${import.meta.env.VITE_API_BASE_URL}/api/users/${id}`, auth)
-            .then(res => { if (!res.ok) throw new Error(`Erro ${res.status}`); return res.json(); })
+            .then(res => { if (res.status === 404) throw new Error('404'); if (!res.ok) throw new Error(`Erro ${res.status}`); return res.json(); })
             .then(async data => {
                 if (data.artistProfileId) {
                     navigate(`/artists/${data.artistProfileId}`, { replace: true })
@@ -84,7 +86,7 @@ export default function UserDetail() {
                 })) : []);
                 setUserRecentTracks(Array.isArray(recent) ? recent : []);
             })
-            .catch(err => setError(err.message))
+            .catch(err => { if (err.message === '404') setNotFound(true); else setError(err.message); })
             .finally(() => setLoading(false));
     }, [id]);
 
@@ -105,6 +107,8 @@ export default function UserDetail() {
         }
     }
 
+
+    if (notFound) return <NotFound />;
 
     if (loading) return (
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>

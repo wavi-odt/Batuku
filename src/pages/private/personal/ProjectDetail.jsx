@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
+import NotFound from '../../Denied/notFound'
 import {
     FaPlay, FaPause, FaMusic, FaTimes, FaCheck,
     FaCamera, FaLink, FaSearch, FaEllipsisH, FaPlus,
@@ -71,6 +72,7 @@ export default function ProjectDetail() {
     const navigate    = useNavigate()
     const currentUser = useCurrentUser()
 
+    const [notFound, setNotFound] = useState(false)
     const [project, setProject] = useState(null)
     const [tracks,  setTracks]  = useState([])
     const [loading, setLoading] = useState(true)
@@ -122,11 +124,11 @@ export default function ProjectDetail() {
 
     useEffect(() => {
         Promise.all([
-            fetch(`${API}/api/my-projects/${id}`,        { headers: authHeader }).then(r => r.ok ? r.json() : Promise.reject()),
+            fetch(`${API}/api/my-projects/${id}`,        { headers: authHeader }).then(r => { if (r.status === 404) return Promise.reject(new Error('404')); return r.ok ? r.json() : Promise.reject(new Error(`Erro ${r.status}`)); }),
             fetch(`${API}/api/my-projects/${id}/tracks`, { headers: authHeader }).then(r => r.ok ? r.json() : []),
         ])
             .then(([proj, trks]) => { setProject(proj); setTracks(Array.isArray(trks) ? trks : []) })
-            .catch(() => setError('Não foi possível carregar o projeto.'))
+            .catch(err => { if (err?.message === '404') setNotFound(true); else setError('Não foi possível carregar o projeto.'); })
             .finally(() => setLoading(false))
     }, [id]) // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -289,6 +291,8 @@ export default function ProjectDetail() {
     }
 
     /* ─── Loading / error ───────────────────────────────────────────────── */
+    if (notFound) return <NotFound />
+
     if (loading) return (
         <PersonalLayout>
             <Link to="/pessoal" className="pd__back">← Projetos</Link>

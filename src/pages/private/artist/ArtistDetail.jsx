@@ -1,6 +1,7 @@
 ﻿import { useEffect, useState, Fragment } from 'react'
 import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { useParams, Link, useSearchParams } from 'react-router-dom'
+import NotFound from '../../Denied/notFound'
 import { FaUserPlus, FaUserCheck, FaPlay, FaRegComment, FaCheckCircle } from 'react-icons/fa'
 import { SiSpotify } from 'react-icons/si'
 import ArtistArtwork from '../../../components/PublicComponents/ArtistArtwork.jsx'
@@ -26,6 +27,7 @@ export default function ArtistDetail() {
 
     const { showToast } = useToast()
     const [artist,           setArtist]           = useState(null);
+    const [notFound,         setNotFound]         = useState(false);
     const [loading,          setLoading]          = useState(true);
     const [error,            setError]            = useState('');
     const [searchParams, setSearchParams] = useSearchParams()
@@ -50,7 +52,7 @@ export default function ArtistDetail() {
             fetch(`${API}/api/releases/artist/${id}`, auth),
         ])
             .then(([artistRes, statusRes, localRes, releasesRes]) => Promise.all([
-                artistRes.ok ? artistRes.json() : Promise.reject(new Error(`Erro ${artistRes.status}`)),
+                artistRes.status === 404 ? Promise.reject(new Error('404')) : (artistRes.ok ? artistRes.json() : Promise.reject(new Error(`Erro ${artistRes.status}`))),
                 statusRes.ok ? statusRes.json() : Promise.resolve(null),
                 localRes.ok ? localRes.json() : Promise.resolve([]),
                 releasesRes.ok ? releasesRes.json() : Promise.resolve([]),
@@ -63,7 +65,7 @@ export default function ArtistDetail() {
                 setLocalTracks(uploaded);
                 setReleases(Array.isArray(releasesData) ? releasesData : []);
             })
-            .catch(err => setError(err.message))
+            .catch(err => { if (err.message === '404') setNotFound(true); else setError(err.message); })
             .finally(() => setLoading(false));
     }, [id]);
 
@@ -91,6 +93,8 @@ export default function ArtistDetail() {
         e.stopPropagation();
         setOpenCommentTrack(prev => prev === trackId ? null : trackId);
     }
+
+    if (notFound) return <NotFound />;
 
     if (loading) return (
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>
