@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link, useSearchParams, useNavigate } from 'react-router-dom'
-import NotFound from '../../Denied/notFound'
+import { useParams, Link, useSearchParams, useNavigate, Navigate } from 'react-router-dom'
 import { FaTrophy, FaUserPlus, FaUserCheck, FaPlay, FaGlobe, FaUser, FaCheckCircle } from 'react-icons/fa'
 import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
 import { getToken } from '../../../utils/auth.js'
@@ -108,7 +107,7 @@ export default function UserDetail() {
     }
 
 
-    if (notFound) return <NotFound />;
+    if (notFound) return <Navigate to="/not-found" replace />;
 
     if (loading) return (
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>

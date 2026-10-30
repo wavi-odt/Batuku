@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import { createPortal } from 'react-dom'
-import { useParams, useNavigate } from 'react-router-dom'
-import NotFound from '../../Denied/notFound'
+import { useParams, useNavigate, Navigate } from 'react-router-dom'
 import ClickableName from '../../../components/ClickableName'
 import { FaPlay, FaArrowLeft, FaHeart, FaPen, FaCheck, FaRegComment, FaEllipsisH, FaGlobe, FaLock, FaTrash, FaBookmark, FaRegBookmark } from 'react-icons/fa'
 import { getToken } from '../../../utils/auth.js'
@@ -195,7 +194,7 @@ export default function PlaylistDetail() {
         setOpenCommentTrack(prev => prev === trackId ? null : trackId)
     }
 
-    if (notFound) return <NotFound />
+    if (notFound) return <Navigate to="/not-found" replace />
     if (loading) return <div className="detail-loading">A carregar…</div>
     if (error)   return <div className="detail-error">{error}</div>
     if (!playlist) return null

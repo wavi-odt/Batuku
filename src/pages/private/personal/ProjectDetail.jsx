@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
-import NotFound from '../../Denied/notFound'
+import { useParams, useNavigate, Link, Navigate } from 'react-router-dom'
 import {
     FaPlay, FaPause, FaMusic, FaTimes, FaCheck,
     FaCamera, FaLink, FaSearch, FaEllipsisH, FaPlus,
@@ -291,7 +290,7 @@ export default function ProjectDetail() {
     }
 
     /* ─── Loading / error ───────────────────────────────────────────────── */
-    if (notFound) return <NotFound />
+    if (notFound) return <Navigate to="/not-found" replace />
 
     if (loading) return (
         <PersonalLayout>

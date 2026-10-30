@@ -1,7 +1,6 @@
 ﻿import { useEffect, useState, Fragment } from 'react'
 import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
-import { useParams, Link, useSearchParams } from 'react-router-dom'
-import NotFound from '../../Denied/notFound'
+import { useParams, Link, useSearchParams, Navigate } from 'react-router-dom'
 import { FaUserPlus, FaUserCheck, FaPlay, FaRegComment, FaCheckCircle } from 'react-icons/fa'
 import { SiSpotify } from 'react-icons/si'
 import ArtistArtwork from '../../../components/PublicComponents/ArtistArtwork.jsx'
@@ -94,7 +93,7 @@ export default function ArtistDetail() {
         setOpenCommentTrack(prev => prev === trackId ? null : trackId);
     }
 
-    if (notFound) return <NotFound />;
+    if (notFound) return <Navigate to="/not-found" replace />;
 
     if (loading) return (
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>

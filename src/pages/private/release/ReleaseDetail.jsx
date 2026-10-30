@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef, Fragment } from 'react'
 import NowPlayingEq from '../../../components/NowPlayingEq.jsx'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import NotFound from '../../Denied/notFound'
+import { useParams, Link, useNavigate, Navigate } from 'react-router-dom'
 import { FaPlay, FaArrowLeft, FaShareAlt, FaTrash, FaRegComment, FaCamera, FaPen, FaCheck } from 'react-icons/fa'
 import { API, getToken, getRole } from '../../../utils/auth.js'
 import { usePlayer } from '../../../context/PlayerContext'
@@ -231,7 +230,7 @@ export default function ReleaseDetail() {
         setOpenCommentTrack(prev => prev === trackId ? null : trackId)
     }
 
-    if (notFound) return <NotFound />
+    if (notFound) return <Navigate to="/not-found" replace />
     if (loading) return <div className="detail-loading">A carregar…</div>
     if (error || !release) return <div className="detail-error">{error || 'Lançamento não encontrado.'}</div>
 
