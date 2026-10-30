@@ -31,15 +31,6 @@ export const STEPS = [
     { n: '03', title: 'Ganha com a tua arte', body: 'Vende beats no marketplace, recebe gorjetas e acede a oportunidades curadas.' },
 ];
 
-// Sem pontos fictícios, mostra só o conceito do ranking
-export const LEADERBOARD = [
-    { rank: 1, name: 'Djossa',     badge: 'Ouro'   },
-    { rank: 2, name: 'Naia',       badge: 'Ouro'   },
-    { rank: 3, name: 'Yuri Brava', badge: 'Prata'  },
-    { rank: 4, name: 'Madá',       badge: 'Prata'  },
-    { rank: 5, name: 'Khris T.',   badge: 'Bronze' },
-];
-
 // Artistas fundadores, sem citações fabricadas
 export const FOUNDERS = [
     { name: 'Djossa',     role: 'Funaná · Praia',       hue: 14  },
@@ -61,5 +52,3 @@ export const FEATURES = [
     { icon: 'trophy',     title: 'Gamificação',            body: 'Ganha pontos a cada interação, sobe no ranking semanal e desbloqueia destaques.' },
     { icon: 'discord',    title: 'Comunidade Discord',     body: 'Liga-te a outros artistas, produtores e fãs. Sessões ao vivo, feedback, colaborações.' },
 ];
-
-export const GENRES = ['Funaná', 'Morna', 'Coladeira', 'Batuque', 'Cabo Love', 'Kizomba', 'Tabanka', 'Kola San Jon'];
