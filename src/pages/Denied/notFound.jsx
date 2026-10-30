@@ -5,7 +5,7 @@
    ───────────────────────────────────────────────────────────────── */
 
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { HiArrowLeft } from 'react-icons/hi'
 import { usePlayer } from '../../context/PlayerContext'
 import ArtistArtwork from '../../components/PublicComponents/ArtistArtwork'
@@ -26,6 +26,7 @@ const LAYOUTS = [
 
 export default function NotFound() {
     const navigate = useNavigate();
+    const { state } = useLocation();
     const { setTrack } = usePlayer()
     const [heroArtists, setHeroArtists] = useState(null);
 
@@ -86,7 +87,7 @@ export default function NotFound() {
                     <button
                         type="button"
                         className="btn btn--ghost"
-                        onClick={() => window.history.length > 1 ? navigate(-1) : navigate('/')}
+                        onClick={() => state?.blocked ? navigate('/home') : (window.history.length > 1 ? navigate(-1) : navigate('/'))}
                     >
                         <HiArrowLeft size={16} /> Voltar atrás
                     </button>

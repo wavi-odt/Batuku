@@ -290,7 +290,7 @@ export default function ProjectDetail() {
     }
 
     /* ─── Loading / error ───────────────────────────────────────────────── */
-    if (notFound) return <Navigate to="/not-found" replace />
+    if (notFound) return <Navigate to="/not-found" replace state={{ blocked: true }} />
 
     if (loading) return (
         <PersonalLayout>

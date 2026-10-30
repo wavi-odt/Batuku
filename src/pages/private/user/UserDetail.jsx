@@ -107,7 +107,7 @@ export default function UserDetail() {
     }
 
 
-    if (notFound) return <Navigate to="/not-found" replace />;
+    if (notFound) return <Navigate to="/not-found" replace state={{ blocked: true }} />;
 
     if (loading) return (
         <div style={{ padding: 40, textAlign: 'center', color: 'var(--color-ink-mute)' }}>A carregar…</div>

@@ -194,7 +194,7 @@ export default function PlaylistDetail() {
         setOpenCommentTrack(prev => prev === trackId ? null : trackId)
     }
 
-    if (notFound) return <Navigate to="/not-found" replace />
+    if (notFound) return <Navigate to="/not-found" replace state={{ blocked: true }} />
     if (loading) return <div className="detail-loading">A carregar…</div>
     if (error)   return <div className="detail-error">{error}</div>
     if (!playlist) return null

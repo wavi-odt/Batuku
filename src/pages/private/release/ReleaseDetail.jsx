@@ -230,7 +230,7 @@ export default function ReleaseDetail() {
         setOpenCommentTrack(prev => prev === trackId ? null : trackId)
     }
 
-    if (notFound) return <Navigate to="/not-found" replace />
+    if (notFound) return <Navigate to="/not-found" replace state={{ blocked: true }} />
     if (loading) return <div className="detail-loading">A carregar…</div>
     if (error || !release) return <div className="detail-error">{error || 'Lançamento não encontrado.'}</div>
 
