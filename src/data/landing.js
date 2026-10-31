@@ -39,11 +39,11 @@ export const FOUNDERS = [
 ];
 
 export const FAQ = [
-    { q: 'O Batuku é grátis?',                a: 'Sim. Criar conta, publicar faixas, seguir artistas e usar o Discord é grátis para sempre. Só pagas comissão (8%) quando vendes beats no marketplace.' },
-    { q: 'Posso publicar música em crioulo?', a: 'Claro. Aceitamos todas as línguas e géneros: crioulo, português, inglês ou misturas. Os filtros de descoberta respeitam as variantes.' },
-    { q: 'Como funciona a gamificação?',      a: 'Cada interação (ouvir, seguir, comentar, partilhar) gera pontos para o artista. Os pontos sobem no ranking semanal e desbloqueiam badges, destaques na homepage e oportunidades curadas.' },
+    { q: 'O Batuku é grátis?',                a: 'Sim. Criar conta, publicar faixas, seguir artistas e usar o Discord é grátis para sempre.' },
+    { q: 'Posso publicar música em crioulo?', a: 'Claro. Aceitamos todas as línguas e géneros: crioulo, português, inglês ou misturas.' },
+    { q: 'Como funciona a gamificação?',      a: 'Cada interação gera pontos para o artista. Os pontos sobem no ranking semanal e desbloqueiam badges, destaques na homepage e oportunidades curadas.' },
     { q: 'Preciso de viver em Cabo Verde?',   a: 'Não. Se a tua música respira CV, onde quer que estejas no mundo, tens lugar aqui. A diáspora é parte da casa.' },
-    { q: 'Quem está por trás do Batuku?',     a: 'Uma equipa pequena de cabo-verdianos a viver entre Praia, Lisboa e Boston. Independentes, sem grandes investidores, guiados pela comunidade.' },
+    { q: 'Quem está por trás do Batuku?',     a: 'Uma equipa pequena de cabo-verdianos a viver entre Portugal, USA e Cabo Verde. Independentes, sem grandes investidores, guiados pela comunidade.' },
 ];
 
 export const FEATURES = [

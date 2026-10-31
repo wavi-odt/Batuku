@@ -24,7 +24,7 @@ export default function Footer() {
 
                 <div className="footer__bottom">
                     <span>© 2026 Batuku. Todos os direitos reservados.</span>
-                    <span>Feito com o coração 🇨🇻, Praia · Lisboa · Boston</span>
+                    <span>Feito com o coração 0district production</span>
                 </div>
             </div>
         </footer>
