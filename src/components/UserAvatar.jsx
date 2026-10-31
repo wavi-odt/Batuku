@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { spotifySized } from '../utils/spotifyImg'
 
 function hueFromId(id)   { return (Number(id) * 137) % 360 }
 function hueFromStr(str) {
@@ -21,6 +22,7 @@ function hueFromStr(str) {
  */
 export default function UserAvatar({ id, name, imageUrl, size = 36, className, style }) {
     const [imgFailed, setImgFailed] = useState(false)
+    const [useOriginal, setUseOriginal] = useState(false)   // se a versão pequena do Spotify não existir
     const hue = id != null ? hueFromId(id) : hueFromStr(name)
     const base = {
         width:        size,
@@ -34,11 +36,11 @@ export default function UserAvatar({ id, name, imageUrl, size = 36, className, s
     if (imageUrl && !imgFailed) {
         return (
             <img
-                src={imageUrl}
+                src={useOriginal ? imageUrl : spotifySized(imageUrl, size)}
                 alt={name ?? ''}
                 className={className}
                 style={base}
-                onError={() => setImgFailed(true)}
+                onError={() => (useOriginal || spotifySized(imageUrl, size) === imageUrl) ? setImgFailed(true) : setUseOriginal(true)}
             />
         )
     }

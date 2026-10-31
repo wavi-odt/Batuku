@@ -3,6 +3,8 @@
    Usa `shape` + `hue` para uma composição única reproduzível.
    ───────────────────────────────────────────────────────────────── */
 
+import { useState } from 'react'
+import { spotifySized } from '../../utils/spotifyImg'
 import './ArtistArtwork.css'
 
 const SHAPES = {
@@ -72,7 +74,10 @@ export default function ArtistArtwork({
     image = null,
     rounded = 14,
     showGloss = true,
+    priority = false,  // imagem principal da página (LCP): carrega já e com prioridade alta
+    px = 200,          // tamanho aproximado em pixéis CSS, para pedir ao Spotify a imagem certa
 }) {
+    const [useOriginal, setUseOriginal] = useState(false)   // se a versão pequena não existir
     const bg  = `oklch(0.52 0.18 ${hue})`;
     const fg  = `oklch(0.86 0.14 ${hue})`;
     const fg2 = `oklch(0.94 0.08 ${(hue + 30) % 360})`;
@@ -85,11 +90,13 @@ export default function ArtistArtwork({
             {image ? (
                 <img
                     className="artwork__photo"
-                    src={image}
+                    src={useOriginal ? image : spotifySized(image, px)}
                     alt=""
                     draggable={false}
-                    loading="lazy"
+                    loading={priority ? 'eager' : 'lazy'}
+                    fetchPriority={priority ? 'high' : undefined}
                     decoding="async"
+                    onError={() => { if (!useOriginal) setUseOriginal(true) }}
                 />
             ) : (
                 <svg className="artwork__svg" viewBox="0 0 100 100" preserveAspectRatio="none"

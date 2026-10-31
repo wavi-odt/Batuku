@@ -3,7 +3,8 @@ import { FaMusic } from 'react-icons/fa'
 
 // As capas aparecem sempre junto do título/nome em texto, por isso são decorativas:
 // repetir o nome no alt faria o leitor de ecrã lê-lo duas vezes.
-export default function CoverImg({ src, className, style, iconSize = 14 }) {
+// priority: imagem principal da página (LCP): carrega já e com prioridade alta, sem lazy-load.
+export default function CoverImg({ src, className, style, iconSize = 14, priority = false }) {
     const [failed, setFailed] = useState(false)
 
     if (src && !failed) {
@@ -13,7 +14,8 @@ export default function CoverImg({ src, className, style, iconSize = 14 }) {
                 alt=""
                 className={className}
                 style={style}
-                loading="lazy"
+                loading={priority ? 'eager' : 'lazy'}
+                fetchPriority={priority ? 'high' : undefined}
                 decoding="async"
                 onError={() => setFailed(true)}
             />

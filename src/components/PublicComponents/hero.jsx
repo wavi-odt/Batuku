@@ -90,6 +90,7 @@ function HeroWall({ artists }) {
                                     image={a.imageUrl || null}
                                     name={a.name}
                                     rounded={14}
+                                    px={115}
                                 />
                             </div>
                         ))}

@@ -108,6 +108,7 @@ export default function DiscoverFeatured({ track: t, allTracks }) {
                     hue={hue}
                     image={t.coverUrl ?? null}
                     rounded={16}
+                    priority
                 />
             </div>
         </div>

@@ -30,7 +30,7 @@ export default function FollowingUpdates({ tracks }) {
                             onClick={() => { if (active) { togglePlayRef.current?.(); return } setTrack(queue[i], queue) }}
                             style={{ cursor: 'pointer' }}
                         >
-                            <CoverImg src={t.coverUrl} alt={t.title} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} iconSize={20} />
+                            <CoverImg src={t.coverUrl} alt={t.title} priority={i === 0} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 10 }} iconSize={20} />
                             {active
                                 ? <span className="track-card__eq-wrap"><NowPlayingEq /></span>
                                 : <span className="track-card__play" aria-hidden="true"><FaPlay size={12} /></span>
